@@ -17,7 +17,7 @@
       "items": { "type": "string", "pattern": "^DAT-" },
       "uniqueItems": true
     },
-    "status": { "type": "string", "enum": ["completed", "failed", "capability_unavailable"] },
+    "status": { "type": "string", "enum": ["completed", "validated", "failed", "capability_unavailable"] },
     "outputs": { "type": "object" },
     "assumption_checks": {
       "type": "array",

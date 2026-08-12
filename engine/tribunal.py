@@ -280,3 +280,40 @@ def save_decision_snapshot(project: ProjectWorkspace, snapshot: dict) -> Path:
     path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n",
                     encoding="utf-8")
     return path
+
+
+def decision_diff(previous: dict | None, current: dict, *,
+                  previous_gaps: tuple[dict, ...] = (),
+                  current_gaps: tuple[dict, ...] = ()) -> dict:
+    """Machine-readable diff between two revision-bound DecisionSnapshots.
+
+    `resolved_gaps` / `new_gaps` are computed from the GAP inputs, never
+    claimed by the report layer. The diff never attributes graph change to
+    the report.
+    """
+    prev_links = set(previous.get("key_evidence_links", [])) if previous else set()
+    cur_links = set(current.get("key_evidence_links", []))
+    prev_claims = dict(previous.get("claim_assessments", {})) if previous else {}
+    cur_claims = dict(current.get("claim_assessments", {}))
+
+    prev_gap_ids = {g["gap_id"] for g in previous_gaps}
+    cur_gap_ids = {g["gap_id"] for g in current_gaps}
+
+    changed_claims = []
+    if previous:
+        for cid in sorted(prev_claims | cur_claims):
+            if prev_claims.get(cid) != cur_claims.get(cid):
+                changed_claims.append(cid)
+
+    return {
+        "from_decision_snapshot_id": (previous or {}).get("decision_snapshot_id"),
+        "to_decision_snapshot_id": current.get("decision_snapshot_id"),
+        "from_graph_revision": (previous or {}).get("graph_revision"),
+        "to_graph_revision": current.get("graph_revision"),
+        "action_changed": (previous or {}).get("decision") != current.get("decision"),
+        "confidence_changed": (previous or {}).get("confidence_label") != current.get("confidence_label"),
+        "changed_claims": changed_claims,
+        "new_key_evidence_links": sorted(cur_links - prev_links),
+        "resolved_gaps": sorted(prev_gap_ids - cur_gap_ids),
+        "new_gaps": sorted(cur_gap_ids - prev_gap_ids),
+    }
