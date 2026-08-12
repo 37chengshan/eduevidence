@@ -92,6 +92,69 @@ target: teaching_decision # evidence_review | teaching_decision | pilot_design |
 **RULE 8 — 完成声明前必须通过 Final Verification**
 宣布完成之前，必须通过第 14 章的 9 项 Final Verification checklist；未通过 → `FINAL_VERIFICATION_FAILED`，禁止声明完成。
 
+## 5.5 启动确认（Step 0：研究开始前一次性确认）
+
+用户输入研究问题后，**先展示以下启动清单，一次性收集三项选择，再开始执行**。禁止未经确认直接跑。
+
+### 启动清单模板
+
+```markdown
+# EduEvidence 研究启动确认
+
+## 📌 研究问题
+「<用户输入的问题>」
+
+## 1️⃣ 难度等级判定（复杂度分级门）
+判定结果：**<S/M/L> 级**
+依据：<单一问题单一 Outcome | 多篇研究 2-3 Outcome 部分冲突 | 多种 Outcome 多人群明显冲突需落地方案>
+
+## 2️⃣ 研究深度（三选一）
+- [ ] quick   — 快速路径（Frame→Retrieve→Extract→Answer）
+- [ ] standard — 标准路径（+Skeptic/Method Review 简化）
+- [ ] deep    — 深度路径（完整 8 角色 + Pre-Verdict Gate + 交叉审核）← 本题推荐
+
+## 3️⃣ 运行模式（三选一）
+| 模式 | 说明 | 适合 |
+|------|------|------|
+| **A. Agent MCP 增强**（推荐） | 多 CLI+多模型编排，跨上下文 + 交叉审核 | 深度研究 |
+| B. 宿主原生子代理 | 主会话用自身子代理派发（同一模型池） | 无 Agent MCP 时 |
+| C. 主会话直接 | 单 Agent 串行，不派发 | 快速/简单 |
+
+### 当前会话能力检测
+- Agent MCP：● 已连接（spawn_agent 可用）/ ○ 不可用
+- 可用 CLI + 模型（不同系列各列最新，供选择；思考等级为默认值，无需确认）：
+  `omp`: gpt-5.6-sol(high) · deepseek-v4-flash(max) · glm-5.2(high) · kimi-k2.7(high) …
+  `codex`: <实际扫描> …
+- （无 Agent MCP 时列出宿主原生子代理池——主会话直接可见，无需探测）
+
+> **模型默认思考等级（主会话内置，无需用户确认）**：deepseek 系 = `max`；gpt / claude / glm / kimi / qwen / minimax / grok 系 = `high`。派发子代理时按此设置 thinking，不逐项询问。
+>
+> **模型前缀即端点**：中转站注入的模型名带前缀（如 `opencodex/gpt-5.6-sol`、`opencode-go/deepseek-v4-flash`、`jbb/gpt-5.6-luna`），同一后缀不同前缀是不同端点，**必须保留完整模型名**（含前缀）派发，禁止只取后缀或自行改名。
+
+## 4️⃣ 网页风格（五选一）
+| 风格 | 定位 |
+|------|------|
+| claude（默认） | 温暖研究风 |
+| academic | 论文风 |
+| editorial | 编辑风 |
+| datalab | 数据实验室 |
+| presentation | 演讲深色大屏 |
+
+## ✅ 请一次性回复三项
+1. 运行模式：A / B / C（推荐 A）
+2. 使用的 CLI+模型：如 `omp + gpt-5.6-sol(pro) + deepseek-v4-flash(普通)`
+3. 网页风格：claude / academic / editorial / datalab / presentation
+
+确认后全自动执行，产出 HTML + Markdown，完成后打开浏览器展示并说明结果。
+```
+
+### 执行规则
+
+- **三项缺一不可**：模式、CLI+模型、风格。缺省时用推荐值（A / omp 扫描结果 / claude）并注明。
+- 用户确认后**不再逐阶段询问**，全自动跑到 Present（第 10 步）。
+- 深度=deep 且用户选 A 时，默认启用 Cross-Model Review（模式 2，第 8.5 节），除非用户明确只要同一模型。
+- 最终交付：`EduEvidence_Report.html` + `RESEARCH.md`（Markdown 版）+ 浏览器打开 + 3-5 句结果说明。
+
 ## 6 Workflow Overview
 
 严格按以下 10 步执行，**每一步产出经过 Schema 校验的数据，再进入下一步**。资源发现（第 7 章）与执行后端选择（第 8 章）在步骤 1–2 之间完成；Confirmation Gate（第 9 章）在委派执行前完成。
@@ -180,15 +243,44 @@ task benefits from delegation?
   ├─ NO → Native（Tier 2 / Tier 3）
   └─ YES
        ↓
-Agent MCP available?
-  ├─ NO → Native（Tier 2 / Tier 3）
+宿主会话是否暴露 Agent MCP 编排工具（spawn_agent 等）？
+  ├─ NO → Native（Tier 2 / Tier 3）——用宿主自身子代理机制执行
   └─ YES
        ↓
 Mandatory Confirmation Gate（第 9 章）
 ```
 
+> **Agent MCP 可用性判定 = 当前会话内 `spawn_agent` 等 MCP 工具可见且可调用**（如 `~/.omp/agent/mcp.json` 中 `agent-mcp ● connected`）。不是 env 变量、不是端口探测、不是文件存在。执行前必须先检查会话工具列表。
+
+**两种 spawn 机制（确认门通过后二选一）：**
+
+```text
+机制 A  Agent MCP spawn：通过 MCP 工具 spawn_agent 派发到用户批准的 CLI+模型，
+        跨上下文执行，产物由 MCP 回传（multi_cli_dispatch / cross_model_review /
+        memory_bank 可用）。
+机制 B  宿主原生子代理：主 agent 用自身 task/subagent 工具派发，
+        角色分工与模型映射与机制 A 完全一致，但无 MCP 增强特性。
+
+优先机制 A；会话工具不可见/调用失败 → 机制 B（同一角色映射）。
+```
+
 - 角色数量 ≠ 必须启动的 Agent 数量。Native Mode（Tier 2 / Tier 3）由单 Agent 串行执行角色协议。
 - 三层后端共享同一 Scientific Protocol（第 6 章），仅执行方式不同。
+
+## 8.5 Cross-Model Review 模式（可选，需用户确认）
+
+两种审核模式，执行前与用户确认：
+
+```text
+模式 1  同一模型串行：8 角色由已批准映射执行（Skeptic/Judge 用高级模型），
+        无独立交叉审核。
+模式 2  交叉审核（Cross-Model Review）：同一流程跑完后，用【不同 model
+        family】的独立模型对 raw_verdict 做独立审核（cross_model_review），
+        输出 agreement + 分歧清单；仅"同一模型不同 session"不算交叉审核。
+```
+
+- 模式 2 需额外确认独立审核模型（不得与主映射同 family）。
+- 交叉审核产物写入 `cross_model_review.schema.json` 契约，作为 Pre-Verdict Gate 的可选输入。
 
 ## 9 Agent MCP Confirmation Gate
 
