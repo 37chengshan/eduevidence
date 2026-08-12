@@ -1,6 +1,6 @@
 {
   "generated_by": "build_report.py",
-  "source": "result.json",
+  "source": "result.json + result.zh.json",
   "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
   "theme_default": "claude",
   "theme_switchable": [
@@ -9,6 +9,11 @@
     "editorial",
     "datalab",
     "presentation"
+  ],
+  "lang_default": "zh",
+  "lang_switchable": [
+    "zh",
+    "en"
   ],
   "charts": [
     {
@@ -82,7 +87,11 @@
     "no_axis_distortion": true,
     "no_false_precision": true,
     "colorblind_safe": true,
+    "langs": [
+      "zh",
+      "en"
+    ],
     "generated_by": "build_report.py",
-    "source": "examples/ai-coding-assistant/result.json"
+    "source": "examples/ai-coding-assistant/result.json + examples/ai-coding-assistant/result.zh.json"
   }
 }

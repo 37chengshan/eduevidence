@@ -93,6 +93,88 @@ ACTION_ZH = {
 }
 
 
+# 英文可读标签（lang=en 时显示；无映射时显示原始枚举值）
+OUTCOME_EN = {
+    "knowledge_gain": "Knowledge gain",
+    "concept_understanding": "Concept understanding",
+    "retention": "Retention",
+    "transfer": "Transfer",
+    "independent_problem_solving": "Independent problem solving",
+    "completion_time": "Completion time",
+    "accuracy": "Accuracy",
+    "code_quality": "Code quality",
+    "assignment_score": "Assignment score",
+    "engagement": "Engagement",
+    "motivation": "Motivation",
+    "cognitive_load": "Cognitive load",
+    "help_seeking": "Help seeking",
+    "metacognition": "Metacognition",
+    "ai_dependency": "AI dependency",
+    "over_reliance": "Over-reliance",
+    "reduced_effort": "Reduced effort",
+    "reduced_transfer": "Reduced transfer",
+    "academic_integrity_risk": "Academic integrity risk",
+    "false_confidence": "False confidence",
+    "learning_gain": "Learning gain",
+    "task_performance": "Task performance",
+    "programming_skill": "Programming skill",
+    "writing_skill": "Writing skill",
+}
+STUDY_EN = {
+    "rct": "Randomized controlled trial",
+    "quasi_experiment": "Quasi-experiment",
+    "mixed_methods": "Mixed methods",
+    "case_study": "Case study",
+    "longitudinal": "Longitudinal",
+    "meta_analysis": "Meta-analysis",
+    "systematic_review": "Systematic review",
+    "survey": "Survey",
+    "qualitative": "Qualitative",
+    "correlational": "Correlational",
+}
+AUTHORITY_EN = {
+    "tier1_peer_reviewed_journal": "Tier 1 peer-reviewed journal",
+    "tier2_peer_reviewed_conference": "Tier 2 peer-reviewed conference",
+    "tier3_professional_institution": "Tier 3 professional institution",
+    "tier4_reputable_media": "Tier 4 reputable media",
+    "tier5_unverified": "Tier 5 unverified",
+}
+STATUS_EN = {
+    "SUPPORTED": "Supported",
+    "UNSUPPORTED": "Unsupported",
+    "DOWNGRADE_CONFIDENCE": "Confidence downgraded",
+}
+VERDICT_EN = {
+    "met": "Met", "partial": "Partial", "not_applicable": "N/A",
+    "concern": "Concern", "CONCERN": "Concern", "PASS": "Pass", "FAIL": "Fail",
+}
+CONFIDENCE_EN = {
+    "High": "High", "Moderate": "Moderate", "Low": "Low", "Insufficient": "Insufficient",
+}
+MODE_EN = {
+    "platform_native": "Platform native", "agent_mcp_enhanced": "Agent MCP enhanced",
+}
+ACTION_EN = {
+    "adopt": "Adopt", "pilot": "Pilot", "reject": "Reject",
+    "insufficient_evidence": "Insufficient evidence",
+}
+DIR_EN = {"support": "Support", "contradict": "Contradict", "neutral": "Neutral"}
+DIR_ZH = {"support": "支持", "contradict": "反驳", "neutral": "中性"}
+
+
+def label(lang: str, kind: str, value: str) -> str:
+    """按语言取枚举可读标签：zh → 中文；en → 英文（无映射时返回原值）。"""
+    if lang == "zh":
+        table = {"outcome": OUTCOME_ZH, "study": STUDY_ZH, "authority": AUTHORITY_ZH,
+                 "status": CLAIM_STATUS_ZH, "verdict": VERDICT_ZH, "confidence": CONFIDENCE_ZH,
+                 "mode": MODE_ZH, "action": ACTION_ZH, "dir": DIR_ZH}
+    else:
+        table = {"outcome": OUTCOME_EN, "study": STUDY_EN, "authority": AUTHORITY_EN,
+                 "status": STATUS_EN, "verdict": VERDICT_EN, "confidence": CONFIDENCE_EN,
+                 "mode": MODE_EN, "action": ACTION_EN, "dir": DIR_EN}
+    return table.get(kind, {}).get(value, value)
+
+
 def zh_outcome(value: str) -> str:
     return OUTCOME_ZH.get(value, value)
 
