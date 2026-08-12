@@ -22,6 +22,11 @@ Consumers:
     Claim Audit                    -> claim_relation
     Outcome Visualization          -> effect_direction
     Cross-study Consistency        -> decision_relation
+
+V2 note: the Research Engine's V2 semantics live in `engine/semantics.py`
+(finding_effect / claim_relation / decision_implication) and operate on the
+versioned graph entities. This module keeps its legacy flat-evidence API for
+V1 callers; the two layers are structurally different and must not be mixed.
 """
 from __future__ import annotations
 
