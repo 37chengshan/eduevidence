@@ -449,7 +449,7 @@
 :root[data-theme="presentation"] .report-brand-row { margin-bottom:12px; }
 :root[data-theme="presentation"] .report-brand { color:var(--primary); text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; }
 :root[data-theme="presentation"] .generated-theme-chip { background:#242A33; border-color:#3C4450; color:#B8C0CB; }
-:root[data-theme="presentation"] .report-header h1 { max-width:980px; font-size:clamp(1.9rem,4vw,3rem); line-height:1.08; letter-spacing:-.022em; }
+:root[data-theme="presentation"] .report-header h1 { max-width:980px; font-size:clamp(1.5rem,2.6vw,2.1rem); line-height:1.08; letter-spacing:-.022em; }
 :root[data-theme="presentation"] .report-header .meta { margin:10px 0 0; color:var(--text-muted); font-size:.86rem; overflow-wrap:anywhere; }
 :root[data-theme="presentation"] .report-view-switcher { display:inline-flex; margin-top:18px; padding:4px; border:1px solid var(--border); border-radius:999px; background:#12151A; }
 :root[data-theme="presentation"] .report-view-btn { min-height:36px; border:0; background:transparent; color:#BBC2CC; padding:7px 15px; }
@@ -467,14 +467,14 @@
   border:1px solid var(--border); border-radius:18px; background:linear-gradient(145deg,var(--surface),var(--surface2));
   box-shadow:0 18px 50px rgba(0,0,0,.30); padding:clamp(28px,4vw,48px);
 }
-:root[data-theme="presentation"] .decision-value { font-size:clamp(2.5rem,6vw,4.4rem); line-height:.98; letter-spacing:-.04em; color:var(--primary); }
+:root[data-theme="presentation"] .decision-value { font-size:clamp(2rem,4vw,2.9rem); line-height:.98; letter-spacing:-.04em; color:var(--primary); }
 :root[data-theme="presentation"] .confidence-badge { font-size:.92rem; padding:6px 13px; color:#15181D; }
-:root[data-theme="presentation"] .hero-rationale { max-width:900px; font-family:var(--font-ui); font-size:clamp(1.08rem,2vw,1.45rem); line-height:1.5; color:#E5E8ED; }
+:root[data-theme="presentation"] .hero-rationale { max-width:900px; font-family:var(--font-ui); font-size:clamp(0.95rem,1.4vw,1.12rem); line-height:1.5; color:#E5E8ED; }
 :root[data-theme="presentation"] .hero-insights { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
 :root[data-theme="presentation"] .hero-insight { min-height:112px; background:#191D23; border-radius:11px; padding:16px 18px; }
-:root[data-theme="presentation"] .brief-block-header h2 { font-size:1.45rem; line-height:1.2; }
-:root[data-theme="presentation"] .brief-block-header p { color:#ABB3BE; font-size:.92rem; line-height:1.55; }
-:root[data-theme="presentation"] .outcome-separation .visual-heading h3 { font-size:1.25rem; }
+:root[data-theme="presentation"] .brief-block-header h2 { font-size:1.15rem; line-height:1.2; }
+:root[data-theme="presentation"] .brief-block-header p { color:#ABB3BE; font-size:.86rem; line-height:1.55; }
+:root[data-theme="presentation"] .outcome-separation .visual-heading h3 { font-size:1.05rem; }
 :root[data-theme="presentation"] .outcome-groups { grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
 :root[data-theme="presentation"] .outcome-group,
 :root[data-theme="presentation"] .tribunal-card,
@@ -491,7 +491,7 @@
 :root[data-theme="presentation"] .academic-figure svg { background:#fff; }
 
 :root[data-theme="presentation"] .full-report-intro { width:100%; max-width:1060px; margin:44px auto 26px; }
-:root[data-theme="presentation"] .full-report-intro h2 { font-size:clamp(2rem,3vw,2.5rem); line-height:1.08; }
+:root[data-theme="presentation"] .full-report-intro h2 { font-size:clamp(1.5rem,2.2vw,1.9rem); line-height:1.08; }
 :root[data-theme="presentation"] .full-report-layout { width:100%; max-width:1160px; margin:0 auto; grid-template-columns:minmax(190px,230px) minmax(0,1fr); gap:28px; }
 :root[data-theme="presentation"] .full-report-toc { top:16px; padding:14px; border:1px solid var(--border); border-radius:12px; background:#171B21; box-shadow:0 10px 28px rgba(0,0,0,.22); }
 :root[data-theme="presentation"] .full-report-toc a { border-radius:7px; border-left:0; padding:9px 10px; color:#AEB6C1; font-size:.84rem; }
@@ -499,7 +499,7 @@
 :root[data-theme="presentation"] .full-report-content { max-width:none; }
 :root[data-theme="presentation"] .full-chapter { margin-bottom:28px; padding:clamp(22px,3vw,30px); border:1px solid var(--border); border-radius:16px; background:var(--surface); box-shadow:0 12px 30px rgba(0,0,0,.20); }
 :root[data-theme="presentation"] .full-chapter-header { max-width:900px; margin-bottom:24px; }
-:root[data-theme="presentation"] .full-chapter-header h2 { font-size:clamp(1.45rem,2.5vw,2rem); line-height:1.12; }
+:root[data-theme="presentation"] .full-chapter-header h2 { font-size:clamp(1.2rem,1.9vw,1.5rem); line-height:1.12; }
 :root[data-theme="presentation"] .full-chapter-lead { color:#AEB6C1; font-size:.96rem; line-height:1.6; }
 :root[data-theme="presentation"] .scope-card,
 :root[data-theme="presentation"] .retrieval-grid>article,
@@ -521,11 +521,11 @@
   :root[data-theme="presentation"] .controls { width:calc(100% - 24px); border-radius:10px; }
   :root[data-theme="presentation"] .report-shell { padding-left:14px; padding-right:14px; }
   :root[data-theme="presentation"] .report-header { padding:18px 16px; border-radius:12px; }
-  :root[data-theme="presentation"] .report-header h1 { font-size:1.55rem; }
+  :root[data-theme="presentation"] .report-header h1 { font-size:1.25rem; }
   :root[data-theme="presentation"] .brief-block { padding:18px 16px; }
   :root[data-theme="presentation"] .brief-decision { padding:0; }
   :root[data-theme="presentation"] .brief-decision .decision-hero { min-height:0; padding:24px 18px; border-radius:13px; }
-  :root[data-theme="presentation"] .decision-value { font-size:2.6rem; }
+  :root[data-theme="presentation"] .decision-value { font-size:2rem; }
   :root[data-theme="presentation"] .hero-insights,
   :root[data-theme="presentation"] .tribunal-grid,
   :root[data-theme="presentation"] .brief-source-grid { grid-template-columns:1fr; }
