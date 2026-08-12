@@ -166,9 +166,9 @@ target: teaching_decision # evidence_review | teaching_decision | pilot_design |
 
 ```text
 1. Frame          构建 EducationResearchFrame（问题/学习者/课程/干预/对照/Outcome/范围/纳入排除标准）
-2. Retrieve       文献与证据检索（支持证据 + 独立反方证据检索，RULE 4）
+2. Retrieve       文献与证据检索（支持证据 + 独立反方证据检索，RULE 4；执行细则见 retrieval-protocol.md）
 3. Fetch          获取来源全文/可验证内容（snippet ≠ 内容，RULE 2）
-4. Validate       校验来源与内容（来源有效、抓取完整、Schema 校验）
+4. Validate       校验来源与内容（来源有效、抓取完整、Schema 校验；判定标准见 source-validity.md）
 5. Extract        抽取 Claim-Level Evidence（Evidence Object，绑定 Outcome）
 6. Challenge      Skeptic 反证协议（固定 9 项检查）
 7. Audit          Method Reviewer 方法学审查（15 项清单）
@@ -213,7 +213,7 @@ result.json + result.zh.json（中文平行数据，AI 直接产出双语）
 ## 7 Resource Discovery
 
 - **SCP 可用则动态发现**：以 Scientific Resource Capability Layer（SCP）为科学能力层，按 capability 动态发现可用资源（literature_search / scholar_metadata / web_fetch / pdf_extraction / document_conversion / citation_validation / statistical_analysis / meta_analysis / data_visualization 等）。
-- **SCP 不可用则 fallback 到本地 `references/`**：方法论文档（education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design）与原生工具（Native Search / Smart Web Fetch / 本地解析器）。
+- **SCP 不可用则 fallback 到本地 `references/`**：方法论文档（education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design / retrieval-protocol / source-validity）与原生工具（Native Search / Smart Web Fetch / 本地解析器）。
 - **不硬编码资源清单**：不把任何资源生态的完整清单（如 SCP 的 Scientific Skills 全集）写死进本 Skill；按 capability 优先级路由，优先级按 capability 决定，不做全局死顺序。典型优先级：
 
 ```text
@@ -441,7 +441,7 @@ EduEvidence 是**教学决策辅助**，不代替教师或学校最终决策。�
 
 ## 17 References
 
-- 教育方法论文档（`references/`）：education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design
+- 教育方法论文档（`references/`）：education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design / retrieval-protocol / source-validity
 - 数据契约（`schemas/`）：education-frame / source / fetch-result / evidence / cross-model-review / methodology / verdict / intervention / evaluation / report-result
 - 确定性逻辑（`scripts/`）：validate_schema / evidence_score / evidence_matrix / claim_audit / compute_confidence / benchmark / render_report
 - 文档（`docs/`）：architecture / methodology / benchmark / demo / reproducibility
