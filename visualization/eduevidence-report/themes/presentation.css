@@ -1,52 +1,48 @@
-/* Theme 05 — Presentation Dark (v5 方案 §8).
-   演讲大屏/答辩演示：深色背景、高对比数字、大字号、更少文字、更强视觉焦点。
-   只用于 Presentation Mode；同一数据，禁止因为 Dark Mode 改变图表语义。 */
+/* Theme 05 — Presentation / Judge.
+   Competition review mode: strong first screen, large decision typography,
+   high-value visuals foregrounded and secondary detail progressively quieter. */
 :root[data-theme="presentation"] {
-  --bg: #14161A;
-  --surface: #1D2026;
-  --surface2: #262A32;
-  --text: #F2F3F5;
-  --text-muted: #9AA0AA;
-  --primary: #E8A87C;
-  --primary-soft: #3A322B;
-  --support: #7BC48F;
-  --support-soft: #22332A;
-  --contradict: #E28B7E;
-  --contradict-soft: #3A2623;
-  --uncertain: #E4C07A;
-  --uncertain-soft: #38301F;
-  --insufficient: #8A8F98;
-  --border: #343A44;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-  --font-head: 'Helvetica Neue', 'Arial Black', 'PingFang SC', sans-serif;
-  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
-  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
-  --density: 0.9;
-  --spacing: 32px;
+  --bg:#14161A; --surface:#1D2026; --surface2:#262A32; --text:#F2F3F5;
+  --text-muted:#9AA0AA; --primary:#E8A87C; --primary-soft:#3A322B;
+  --support:#7BC48F; --support-soft:#22332A; --contradict:#E28B7E;
+  --contradict-soft:#3A2623; --uncertain:#E4C07A; --uncertain-soft:#38301F;
+  --insufficient:#8A8F98; --border:#343A44; --radius:14px; --radius-sm:9px;
+  --shadow:0 12px 38px rgba(0,0,0,.28); --font-head:'Helvetica Neue','Arial Black','PingFang SC',sans-serif;
+  --font-ui:'Helvetica Neue',Arial,'PingFang SC',sans-serif; --font-mono:'SF Mono',Menlo,Consolas,monospace;
 }
-
-/* 大字号、高对比数字、更少文字 */
-:root[data-theme="presentation"] .report-shell { max-width: 1000px; }
-:root[data-theme="presentation"] .report-header h1 { font-size: 2.6rem; }
-:root[data-theme="presentation"] .report-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-:root[data-theme="presentation"] .report-section h2 { font-size: 1.6rem; }
-:root[data-theme="presentation"] .decision-value { font-size: 2.2rem; }
-:root[data-theme="presentation"] .key-number,
-:root[data-theme="presentation"] .num {
-  color: var(--primary);
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-}
-:root[data-theme="presentation"] .data-table { font-size: 1rem; }
-:root[data-theme="presentation"] .theme-btn {
-  background: var(--surface); color: var(--text); border-color: var(--border);
-}
-:root[data-theme="presentation"] .theme-btn.active {
-  background: var(--primary); color: #14161A; border-color: var(--primary);
+:root[data-theme="presentation"] .controls { max-width:1180px; margin:0 auto 10px; border-color:var(--border); }
+:root[data-theme="presentation"] .report-shell { max-width:1180px; padding:26px 28px 90px; }
+:root[data-theme="presentation"] .report-header { border:0; margin-bottom:34px; max-width:1040px; }
+:root[data-theme="presentation"] .report-header h1 { font-size:clamp(2.2rem,5vw,4rem); line-height:1.02; letter-spacing:-.025em; }
+:root[data-theme="presentation"] .report-section { max-width:1080px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px 28px; margin-bottom:34px; }
+:root[data-theme="presentation"] .report-section>h2 { font-size:1.45rem; border-bottom:0; }
+:root[data-theme="presentation"] .section-lead { background:transparent; border:0; padding:0; color:var(--text-muted); }
+:root[data-theme="presentation"] .section-decision:first-of-type { padding:0; border:0; box-shadow:none; background:transparent; max-width:1120px; }
+:root[data-theme="presentation"] .section-decision:first-of-type>h2,
+:root[data-theme="presentation"] .section-decision:first-of-type>.section-lead { display:none; }
+:root[data-theme="presentation"] .decision-hero { min-height:520px; display:flex; flex-direction:column; justify-content:center; border:1px solid var(--border); background:linear-gradient(145deg,var(--surface),var(--surface2)); box-shadow:0 24px 70px rgba(0,0,0,.36); }
+:root[data-theme="presentation"] .decision-value { font-size:clamp(2.8rem,8vw,6rem); line-height:.95; letter-spacing:-.04em; color:var(--primary); }
+:root[data-theme="presentation"] .confidence-badge { font-size:.95rem; padding:7px 14px; color:#14161A; }
+:root[data-theme="presentation"] .hero-rationale { font-family:var(--font-ui); max-width:920px; font-size:clamp(1.2rem,2.3vw,1.7rem); color:#E5E7EB; }
+:root[data-theme="presentation"] .hero-insights { grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+:root[data-theme="presentation"] .hero-insight { min-height:128px; background:#191C21; border-radius:10px; }
+:root[data-theme="presentation"] .outcome-separation .visual-heading h3 { font-size:1.35rem; }
+:root[data-theme="presentation"] .outcome-groups { grid-template-columns:repeat(3,minmax(0,1fr)); }
+:root[data-theme="presentation"] .outcome-group,
+:root[data-theme="presentation"] .tribunal-card,
+:root[data-theme="presentation"] .trace-chain-card,
+:root[data-theme="presentation"] .action-node { background:var(--surface2); border-color:var(--border); }
+:root[data-theme="presentation"] .tribunal-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+:root[data-theme="presentation"] .tribunal-card { min-height:220px; }
+:root[data-theme="presentation"] .evidence-to-action { gap:8px; }
+:root[data-theme="presentation"] .action-node { min-width:170px; }
+:root[data-theme="presentation"] .matrix-row-detail,
+:root[data-theme="presentation"] .supporting-visual { opacity:.86; }
+:root[data-theme="presentation"] .data-table { font-size:.88rem; }
+:root[data-theme="presentation"] .data-table th { color:#D1D5DB; }
+:root[data-theme="presentation"] .report-section svg { background:#fff; }
+@media (max-width:900px) {
+  :root[data-theme="presentation"] .hero-insights,
+  :root[data-theme="presentation"] .tribunal-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :root[data-theme="presentation"] .outcome-groups { grid-template-columns:1fr; }
 }

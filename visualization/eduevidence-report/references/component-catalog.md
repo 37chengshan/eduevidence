@@ -2,14 +2,15 @@
 
 > 固定组件，不让 LLM 自由创建 DOM 结构（v5 方案 §36 / §10）。Report Spec 只能使用以下组件。避免：每次报告形态漂移、LLM 写坏 HTML、无意义组件、视觉风格漂移、可访问性失控、数据展示错误。
 
-## 一、组件清单（22 个，冻结）
+## 一、组件清单（23 个，冻结）
 
 ### Shell / 导航
 
 | 组件 | 职责 | 实现 |
 |---|---|---|
 | `ReportShell` | 报告外壳：header / 内容 / footer，响应式容器 | HTML/CSS |
-| `ThemeSwitcher` | 五主题切换（claude/academic/editorial/datalab/presentation）+ localStorage 持久化 | CSS variables + `data-theme` + Vanilla JS |
+| `GeneratedThemeMarker` | 展示生成时选定的视觉系统；主题不在成品 HTML 内切换 | `data-theme` + CSS |
+| `LanguageSwitcher` | 中文 / English 平行内容切换，保持报告数据结构一致 | Vanilla JS + `aria-pressed` |
 | `SectionNav` | 章节导航（桌面 sticky sidebar / 平板 top tabs） | HTML/CSS |
 
 ### 决策

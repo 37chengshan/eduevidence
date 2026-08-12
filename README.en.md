@@ -9,10 +9,77 @@
 EduEvidence helps university teachers, education researchers, and teaching administrators turn "should we adopt an AI-based teaching method?" from an intuition-driven choice into a **traceable, challengeable, verifiable evidence decision process**.
 
 - ⚖️ It does not generate answers for teachers — it shows what the evidence supports, what it cannot support, who it applies to, and how to pilot and verify it.
-- 🧪 Built on real research (examples include CHI 2023 / PNAS 2026 / ACL 2025 / Springer 2024 empirical evidence); no claims without sources.
+- 🧪 Built on real research (examples include CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 empirical evidence); no claims without sources.
 - 🚦 The output is not a binary "allow/forbid" answer but a four-state decision — **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** — plus an actionable teaching intervention and evaluation plan.
 
+![EduEvidence overview banner](assets/top-banner.png)
+
 ---
+
+## Quick Install
+
+```bash
+git clone https://github.com/37chengshan/eduevidence.git
+cd eduevidence
+bash install.sh              # one-click: venv + deps + self-check + tests
+```
+
+Open the example report right away:
+
+```bash
+open examples/ai-coding-assistant/EduEvidence_Report.html
+```
+
+> Requires Python 3.10+; the core has zero third-party dependencies. `pip install matplotlib` is optional for academic-figure PNG/PDF export.
+> After install, the script prompts you to star the repo (auto-runs `gh repo star 37chengshan/eduevidence` when GitHub CLI is logged in, otherwise opens the browser prompt).
+
+---
+
+## Install as a Skill (for AI Agent users)
+
+> EduEvidence itself is an **AI Agent Skill** (`SKILL.md` + `skill/agents/` + `references/` + `schemas/` + `scripts/`).
+> Once installed, your host agent (Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …) can auto-load this Skill when it receives teaching-decision questions.
+
+```bash
+bash install.sh --skill              # interactive: choose which agent to install to
+bash install.sh --list-hosts         # list supported agents and skill locations
+bash install.sh --skill --dry-run    # preview only, write nothing
+```
+
+Before writing, the script automatically backs up any existing skill directory (`cp -r` to `.bak-<timestamp>`); `--dry-run` only previews the changes.
+
+### Supported agents and install locations
+
+| Agent | Detection path | Skill install location |
+|---|---|---|
+| Claude Code | `~/.claude` | `~/.claude/skills/eduevidence/` (project `.claude/skills/` when no user-level config) |
+| Codex | `~/.codex` or `codex` command | `~/.agents/skills/` (falls back to `~/.codex/skills/`, `~/.codex/prompts/`) |
+| OMP | `~/.omp` | `~/.omp/agent/skills/eduevidence/` |
+| OpenCode | `~/.config/opencode` | `~/.config/opencode/skills/eduevidence/` |
+| Kimi Code | `$KIMI_CODE_HOME` or `~/.kimi-code` | `~/.kimi-code/skills/eduevidence/` |
+| ZCode | `~/.zcode` | `~/.zcode/skills/eduevidence/` |
+| OpenClaw | `~/.openclaw` | `~/.openclaw/skills/eduevidence/` |
+| Harness | `~/.harness` | `~/.harness/skills/eduevidence/` |
+| Grok | `~/.grok` | `~/.grok/skills/eduevidence/` |
+| GitHub Copilot CLI | `~/.copilot` | `~/.copilot/skills/eduevidence/` |
+| Cline | `~/.cline` or `~/.config/cline` | `~/.cline/skills/eduevidence/` |
+
+In the interactive menu: pick `all` to install to every agent, `custom` to type a directory manually, or `local` for local-only install (venv + pytest + self-check).
+
+### Method 3: Universal prompt (agents not listed)
+
+Your agent is not in the list? Paste the following prompt **verbatim** into any AI that supports skills / custom instructions:
+
+```text
+Please install EduEvidence from https://github.com/37chengshan/eduevidence as a skill:
+1. Copy SKILL.md, skill/, references/, schemas/, scripts/ from the repo root into your
+   skill directory (e.g. ~/.claude/skills/eduevidence/, ~/.omp/agent/skills/eduevidence/,
+   ~/.agents/skills/eduevidence/), or import it via your skill loading mechanism;
+2. After install, confirm you can read SKILL.md and run the deterministic scripts under scripts/;
+3. Tell me the result, and remind me to star the repo.
+```
+
+The script also prints this universal prompt after a `--skill` install completes.
 
 ## What Problem We Solve
 
@@ -131,6 +198,8 @@ The demo's highlight: in Kazemitabaar et al. (CHI 2023), the AI code assistant r
 - Can Claim / Cannot Claim boundaries
 - four-state decision + Confidence (rule-based, not model-generated freely)
 
+![Evidence Tribunal Workflow](assets/tribunal-workflow.png)
+
 ## From Evidence to Action
 
 Evidence must connect to the real classroom (`references/applicability-policy.md`, `intervention-design.md`, `evaluation-design.md`):
@@ -220,7 +289,7 @@ EduEvidence/  (= one Skill package)
 └─ Demos & distribution
    ├─ examples/              3 complete Research & Decision Packs (incl. bilingual HTML reports)
    ├─ docs/                  architecture / methodology / benchmark / demo / reproducibility
-   ├─ install.sh             one-click install + self-check
+   ├─ install.sh             one-click install (local / multi-agent Skill) + self-check
    ├─ pyproject.toml         packaging metadata (core has zero third-party deps)
    └─ README(.en).md         bilingual docs
 ```
@@ -247,22 +316,10 @@ Agent MCP is a **performance & reliability enhancement layer, not a prerequisite
 
 > Number of roles ≠ number of agents that must be launched. Platform Native Mode runs the role protocols sequentially in a single agent.
 
-## Install
+> 🔒 Agent MCP principle: **Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** No spawn without user approval; reject → fall back to Native.
 
-```bash
-git clone https://github.com/37chengshan/eduevidence.git
-cd eduevidence
-bash install.sh              # one-click: venv + deps + self-check + tests
-```
+![Controlled Multi-Agent Research](assets/multi-agent-research.png)
 
-Or manually:
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e '.[dev]'      # core has zero third-party deps; dev adds pytest
-```
-
-> Optional: `pip install matplotlib` for academic-figure PNG/PDF export (SVG always works without it).
 
 ## Usage
 

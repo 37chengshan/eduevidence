@@ -87,6 +87,13 @@ VALID_SAMPLES = {
         "agreement": "high",
         "final_recommendation": "approve with revisions",
     },
+    "agent-mcp-approval.schema.json": {
+        "approved": True,
+        "approved_at": "2026-08-12T10:00:00+00:00",
+        "allowed_clis": ["codex", "claude"],
+        "role_mapping_hash": "abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abcd",
+        "roles": {"skeptic": {"cli": "codex", "model": "claude-opus-4-6"}},
+    },
 }
 
 
@@ -108,8 +115,8 @@ def test_all_schemas_are_strict(schema_file):
         validate(bad, schema)
 
 
-def test_schema_count_is_twelve():
-    assert len(SCHEMA_FILES) == 12
+def test_schema_count_is_thirteen():
+    assert len(SCHEMA_FILES) == 13
 
 
 def test_extensions_container_allowed():

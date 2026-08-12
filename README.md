@@ -10,10 +10,77 @@
 EduEvidence 面向高校教师、教学研究者与教学管理者，把"是否采用一种 AI 教学方式"从经验判断转化为**可追溯、可质疑、可验证的证据决策流程**。
 
 - ⚖️ 不是替教师生成答案，而是帮助教师知道：证据支持什么、不能支持什么、适用于谁、应该怎样试点并验证。
-- 🧪 基于真实研究（示例包含 CHI 2023 / PNAS 2026 / ACL 2025 / Springer 2024 的实证证据），不做无来源断言。
+- 🧪 基于真实研究（示例包含 CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 的实证证据），不做无来源断言。
 - 🚦 最终输出不是"允许/禁止"的二元结论，而是 **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** 四态决策 + 可落地的教学干预与评价方案。
 
+![EduEvidence 顶层宣传图](assets/top-banner.png)
+
 ---
+
+## 快速安装
+
+```bash
+git clone https://github.com/37chengshan/eduevidence.git
+cd eduevidence
+bash install.sh              # 一键：venv + 依赖 + 自检 + 测试
+```
+
+安装后直接打开示例报告：
+
+```bash
+open examples/ai-coding-assistant/EduEvidence_Report.html
+```
+
+> 需要 Python 3.10+；核心零第三方依赖。学术图 PNG/PDF 导出可选装 matplotlib。
+> 安装完成后脚本会提示为项目点 star（GitHub CLI 已登录则自动执行 `gh repo star 37chengshan/eduevidence`，否则提示打开浏览器）。
+
+---
+
+## 安装为 Skill（AI Agent 用户）
+
+> EduEvidence 本体是一个 **AI Agent Skill**（SKILL.md + skill/agents/ + references/ + schemas/ + scripts/）。
+> 安装后，你的宿主 Agent（Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …）就能在收到教学决策类问题时自动装载本 Skill。
+
+```bash
+bash install.sh --skill              # 交互式选择安装到哪个 Agent
+bash install.sh --list-hosts         # 查看支持的 Agent 与 Skill 落点
+bash install.sh --skill --dry-run    # 只预览将执行的变更，不写入
+```
+
+安装前脚本会自动备份目标目录中已有的 skill（`cp -r` 到 `.bak-<时间戳>`）；`--dry-run` 只预览不写入。
+
+### 支持的 Agent 与配置落点
+
+| Agent | 探测路径 | Skill 安装落点 |
+|---|---|---|
+| Claude Code | `~/.claude` | `~/.claude/skills/eduevidence/`（无用户级配置则装到项目 `.claude/skills/`）|
+| Codex | `~/.codex` 或 `codex` 命令 | `~/.agents/skills/`（兼容 `~/.codex/skills/`、`~/.codex/prompts/`）|
+| OMP | `~/.omp` | `~/.omp/agent/skills/eduevidence/` |
+| OpenCode | `~/.config/opencode` | `~/.config/opencode/skills/eduevidence/` |
+| Kimi Code | `$KIMI_CODE_HOME` 或 `~/.kimi-code` | `~/.kimi-code/skills/eduevidence/` |
+| ZCode | `~/.zcode` | `~/.zcode/skills/eduevidence/` |
+| OpenClaw | `~/.openclaw` | `~/.openclaw/skills/eduevidence/` |
+| Harness | `~/.harness` | `~/.harness/skills/eduevidence/` |
+| Grok | `~/.grok` | `~/.grok/skills/eduevidence/` |
+| GitHub Copilot CLI | `~/.copilot` | `~/.copilot/skills/eduevidence/` |
+| Cline | `~/.cline` 或 `~/.config/cline` | `~/.cline/skills/eduevidence/` |
+
+交互菜单中：选择 `all` 安装到全部 Agent；`custom` 手动指定 skill 目录；`local` 只装本地（venv + pytest + 自检）。
+
+### 方式三：通用提示词（未列出的 Agent）
+
+你的 Agent 不在列表里？把下面这段提示词**原样**交给任意支持 skill / 自定义指令的 AI，即可手动安装：
+
+```text
+请把 https://github.com/37chengshan/eduevidence 仓库中的 EduEvidence 安装为 skill：
+1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/ 复制到你的 skill 目录
+   （如 ~/.claude/skills/eduevidence/、~/.omp/agent/skills/eduevidence/、~/.agents/skills/eduevidence/ 等），
+   或按你的 skill 装载机制导入；
+2. 安装完成后确认能读取 SKILL.md，并能运行 scripts/ 下的确定性脚本；
+3. 告诉我安装结果，并提醒我为项目点 star。
+```
+
+脚本在 `--skill` 安装完成后也会打印这段通用提示词。
 
 ## What Problem We Solve
 
@@ -131,6 +198,8 @@ EduEvidence 强制区分 20 类 Outcome（`references/outcome-taxonomy.md`）：
 - Can Claim / Cannot Claim 边界
 - 四态决策 + Confidence（规则化计算，不由模型自由生成）
 
+![Evidence Tribunal Workflow](assets/tribunal-workflow.png)
+
 ## From Evidence to Action
 
 证据必须连接到真实教学现场（`references/applicability-policy.md`、`intervention-design.md`、`evaluation-design.md`）：
@@ -219,7 +288,7 @@ EduEvidence/  （= 一个 Skill 包）
 └─ 演示与分发
    ├─ examples/              3 个完整 Research & Decision Pack（含双语 HTML 报告）
    ├─ docs/                  架构 / 方法论 / Benchmark / Demo / 复现指南
-   ├─ install.sh             一键安装 + 自检
+   ├─ install.sh             一键安装（本地 / 多 Agent Skill）+ 自检
    ├─ pyproject.toml         打包元数据（核心零第三方依赖）
    └─ README(.en).md         双语说明
 ```
@@ -246,22 +315,9 @@ Agent MCP 是**性能与可靠性增强层，不是 EduEvidence 成立的前提*
 
 > 角色数量 ≠ 必须启动的 Agent 数量。Platform Native Mode 由单 Agent 串行执行角色协议。
 
-## Install
+> 🔒 Agent MCP 原则：**Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** 未经用户确认不得 spawn；用户拒绝则回退 Native。
 
-```bash
-git clone https://github.com/37chengshan/eduevidence.git
-cd eduevidence
-bash install.sh              # 一键安装（创建 venv + 依赖 + 自检 + 测试）
-```
-
-或手动：
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e '.[dev]'      # 核心零第三方依赖；dev 额外装 pytest
-```
-
-> 学术图 PNG/PDF 导出为可选：`pip install matplotlib`（不装也能输出 SVG）。
+![Controlled Multi-Agent Research](assets/multi-agent-research.png)
 
 ## Usage
 

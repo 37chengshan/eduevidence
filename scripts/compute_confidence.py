@@ -155,7 +155,7 @@ def main() -> int:
     final["confidence_breakdown"] = computed["confidence_breakdown"]
     # 保留原始模型输出，供审计比对（模型值被覆盖而非丢弃）。
     final["raw_model_confidence"] = raw_verdict.get("confidence")
-    final["raw_model_confidence_breakdown"] = raw_verdict.get("confidence_breakdown")
+    final["raw_model_confidence_breakdown"] = raw_verdict.get("confidence_breakdown") or {}
 
     out_path = Path(args.out)
     out_path.write_text(json.dumps(final, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

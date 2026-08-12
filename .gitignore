@@ -14,6 +14,9 @@ htmlcov/
 benchmarks/results/*
 !benchmarks/results/.gitkeep
 
+# Model inventory / approval artifacts (generated at runtime)
+runs/
+
 # OS / editor
 .DS_Store
 *.swp

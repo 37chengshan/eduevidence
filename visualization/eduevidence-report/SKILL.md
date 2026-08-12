@@ -61,7 +61,7 @@ Report Spec 只能使用以上组件——固定目录防止每次报告形态�
 
 ## 五主题系统（§3-10）
 
-同一份 result.json + 同一份 report_spec.json + 同一套 Component Catalog，只变 Typography / Color Tokens / Spacing / Radius / Shadow / Chart Theme / Visual Density：
+同一份 result.json + 同一套 Component Catalog，生成报告前选择视觉系统。五种主题允许改变 Typography、页面宽度、章节节奏、卡片策略、表格密度、首屏构图和数据面板布局，但不得改变证据语义、数字或裁决结果：
 
 | theme | 定位 | 默认 |
 |---|---|---|
@@ -69,9 +69,9 @@ Report Spec 只能使用以上组件——固定目录防止每次报告形态�
 | `academic` | Academic Paper（纯白/高密度/论文式编号） | 论文导出 |
 | `editorial` | Editorial Journal（强 Typography/长文章/信息图穿插） | 公众传播 |
 | `datalab` | Data Lab（高密度/Filter 强/交互优先） | 深度查看 |
-| `presentation` | Presentation Dark（深色/高对比/大字号） | 答辩演示 |
+| `presentation` | Presentation / Judge（深色/高对比/强首屏/答辩路径） | 答辩演示 |
 
-实现：CSS variables + `data-theme=""`。Academic Figure **不随 HTML 主题改变**（§39）。
+实现：运行 `build_report.py` 时通过 `--theme` 指定；交互终端未指定时先询问用户，非交互环境默认 `claude`。主题写入生成 HTML 的 `data-theme`，报告内部只保留中文 / English 切换，不再提供五主题换皮按钮。Academic Figure **不随 HTML 主题改变**（§39）。
 
 ## Visualization Router（§34）
 

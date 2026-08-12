@@ -1,55 +1,42 @@
-/* Theme 02 — Academic Paper (v5 方案 §5).
-   最接近正式论文/学术报告：纯白背景、高文本密度、低装饰、小圆角或无圆角、
-   细边框、论文式编号（Figure/Table 编号）。优先使用 Academic Figures。 */
+/* Theme 02 — Academic Paper.
+   Formal review-paper reading and print: serif body, document rules, compact figures,
+   minimal decorative cards, strong provenance and grayscale-friendly structure. */
 :root[data-theme="academic"] {
-  --bg: #FFFFFF;
-  --surface: #FFFFFF;
-  --surface2: #F7F7F5;
-  --text: #1A1A1A;
-  --text-muted: #555555;
-  --primary: #1F4E5F;
-  --primary-soft: #E8EFF2;
-  --support: #2F6B3A;
-  --support-soft: #EAF2EB;
-  --contradict: #8A3A2F;
-  --contradict-soft: #F4E9E7;
-  --uncertain: #8A6D2F;
-  --uncertain-soft: #F3EFE3;
-  --insufficient: #666666;
-  --border: #CCCCCC;
-  --radius: 0px;
-  --radius-sm: 0px;
-  --shadow: none;
-  --font-head: 'Times New Roman', 'Songti SC', serif;
-  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
-  --font-mono: 'Courier New', Consolas, monospace;
-  --density: 1.15;
-  --spacing: 16px;
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface2:#FAFAF8; --text:#151515;
+  --text-muted:#555; --primary:#234B57; --primary-soft:#EEF2F3;
+  --support:#2F6B3A; --support-soft:#EDF4EE; --contradict:#8A3A2F;
+  --contradict-soft:#F5ECEA; --uncertain:#806727; --uncertain-soft:#F5F1E5;
+  --insufficient:#666; --border:#BFC1C2; --radius:0; --radius-sm:0; --shadow:none;
+  --font-head:'Times New Roman','Songti SC','STSong',serif;
+  --font-ui:'Times New Roman','Songti SC','STSong',serif; --font-mono:'Courier New',Consolas,monospace;
 }
-
-/* 论文式编号：Figure/Table caption 斜体、细边框表格 */
-:root[data-theme="academic"] .report-section h2 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
+:root[data-theme="academic"] body { font-size:15px; line-height:1.58; }
+:root[data-theme="academic"] .report-shell { max-width:980px; padding-top:22px; }
+:root[data-theme="academic"] .report-header { border-bottom:2px solid #222; margin-bottom:34px; }
+:root[data-theme="academic"] .report-header h1 { font-size:2rem; line-height:1.18; text-align:center; }
+:root[data-theme="academic"] .report-header .meta { text-align:center; }
+:root[data-theme="academic"] .report-section { background:transparent; border:0; box-shadow:none; padding:0; margin-bottom:34px; }
+:root[data-theme="academic"] .report-section>h2 { font-size:1.08rem; border-bottom:1px solid #444; border-radius:0; padding:0 0 5px; }
+:root[data-theme="academic"] .section-lead { background:transparent; border:0; padding:0; margin:4px 0 14px; font-style:italic; }
+:root[data-theme="academic"] .decision-hero { border:1px solid #444; background:#fff; border-radius:0; padding:22px 24px; }
+:root[data-theme="academic"] .hero-insight,
+:root[data-theme="academic"] .tribunal-card,
+:root[data-theme="academic"] .trace-chain-card,
+:root[data-theme="academic"] .action-node,
+:root[data-theme="academic"] .outcome-group { border-radius:0; background:#fff; box-shadow:none; }
+:root[data-theme="academic"] .hero-insights { gap:0; border-top:1px solid #999; border-left:1px solid #999; }
+:root[data-theme="academic"] .hero-insight { border:0; border-right:1px solid #999; border-bottom:1px solid #999; min-height:0; }
+:root[data-theme="academic"] .data-table { font-size:.82rem; }
 :root[data-theme="academic"] .data-table th,
-:root[data-theme="academic"] .data-table td {
-  border: 0.5px solid #BBBBBB;
-  font-size: 0.82rem;
-}
+:root[data-theme="academic"] .data-table td { border-left:0; border-right:0; border-color:#A8A8A8; padding:6px 8px; }
+:root[data-theme="academic"] .data-table thead th { border-top:1.5px solid #222; border-bottom:1px solid #222; background:#fff; }
+:root[data-theme="academic"] .data-table tbody tr:last-child td { border-bottom:1.5px solid #222; }
 :root[data-theme="academic"] figcaption,
-:root[data-theme="academic"] .figure-caption {
-  font-style: italic;
-  font-size: 0.82rem;
-  color: #333333;
-}
-:root[data-theme="academic"] .report-section {
-  box-shadow: none;
-  border: none;
-  padding: 12px 0;
-  margin-bottom: 8px;
-}
-:root[data-theme="academic"] .report-section h2 {
-  border-bottom: 1px solid #999999;
+:root[data-theme="academic"] .chart-summary { font-family:var(--font-ui); font-size:.8rem; font-style:italic; color:#333; }
+:root[data-theme="academic"] .dir { border:1px solid currentColor; background:transparent !important; color:#222 !important; border-radius:0; }
+:root[data-theme="academic"] .quality-meter i { background:#333; }
+@media print {
+  :root[data-theme="academic"] .generated-theme { display:none; }
+  :root[data-theme="academic"] .report-section { break-inside:auto; }
+  :root[data-theme="academic"] .data-table { font-size:8.5pt; }
 }

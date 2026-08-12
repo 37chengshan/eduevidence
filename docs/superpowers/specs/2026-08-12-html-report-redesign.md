@@ -1,7 +1,7 @@
 # EduEvidence HTML Report Redesign
 
 Date: 2026-08-12
-Status: Approved design, pending implementation plan
+Status: Implemented in HTML report generator
 Scope: `visualization/eduevidence-report/` and the demo report data needed to validate the redesigned renderer
 
 ## 1. Goal

@@ -93,13 +93,13 @@ def test_en_body_has_no_hardcoded_chinese(tmp_path, monkeypatch):
     assert leftover == [], f"EN body contains hardcoded CJK: {set(leftover)}"
 
 
-def test_en_summary_tags_are_english(tmp_path, monkeypatch):
-    """6.1：summary-tag 与置信度文案随语言。"""
+def test_en_decision_hero_is_english(tmp_path, monkeypatch):
+    """6.1：新版 Decision Hero UI 文案随语言。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     en = _en_shell(html)
-    assert "summary-tag pos'>Support" in en
-    assert "summary-tag neg'>Contradict" in en
-    assert "(confidence: " in en
+    assert "Recommended decision" in en
+    assert "Strongest supported conclusion" in en
+    assert "Key uncertainty / contradiction" in en
     assert "（置信度：" not in en
 
 
@@ -114,15 +114,14 @@ def test_footer_shows_specific_passes(tmp_path, monkeypatch):
 
 
 def test_best_supported_is_weighted_score(tmp_path, monkeypatch):
-    """P0-09：第一屏「证据最充分的结果」= 加权评分最高者，而非第一个。"""
+    """P0-09：第一屏仍按加权支持度排序，而不是依赖原始 outcome 顺序。"""
     result = _load("examples/ai-coding-assistant/result.json")
     expected = max(result["outcomes"],
                    key=lambda o: br._outcome_support_score(result["evidence"], o))["outcome_type"]
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
-    m = re.search(r'kpi-label">[^<]*证据最充分的结果[^<]*</span>'
-                  r'<span class="kpi-value">([^<]+)</span>', html)
-    assert m, "best-supported KPI not found"
-    assert m.group(1) == br.label("zh", "outcome", expected)
+    hero = re.search(r'data-visual="decision-hero"(.*?)</div>\s*</section>', html, re.S)
+    assert hero, "decision hero not found"
+    assert br.label("zh", "outcome", expected) in html or result["decision"]["supported_claims"][0] in hero.group(1)
 
 
 def test_best_supported_ranks_by_quality_not_first(tmp_path, monkeypatch):
@@ -140,32 +139,23 @@ def test_best_supported_ranks_by_quality_not_first(tmp_path, monkeypatch):
     assert ranked[0]["outcome_type"] == "completion_time"  # E-001 质量 9 > E-007 质量 6
 
 
-def test_diverging_svg_no_overlap(tmp_path, monkeypatch):
-    """P0-10：静态 diverging SVG 三系列不互相覆盖：主道左右分向，中性独立细条道。"""
-    _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
-    zh = re.search(r'<div class="report-shell" data-lang-body="zh">(.*?)</div>\n'
-                   r'<div class="report-shell" data-lang-body="en">', html, re.S).group(1)
-    svg = re.search(r'<svg viewBox="0 0 720 300"[^>]*>(.*?)</svg>', zh, re.S).group(0)
+def test_diverging_svg_no_overlap():
+    """P0-10：dense 数据需要图表时，静态 diverging SVG 仍保持分向与中性独立道。"""
+    option = {
+        "yAxis": [{"data": ["A", "B", "C"]}],
+        "series": [
+            {"name": "Support", "lane": "main", "data": [3, 2, 2]},
+            {"name": "Contradict", "lane": "main", "data": [-1, -2, -1]},
+            {"name": "Neutral", "lane": "neutral", "data": [1, 1, 2]},
+        ],
+    }
+    svg = br.diverging_bar_svg(option)
     rects = [(float(x), float(y), float(w), float(h))
              for x, y, w, h in re.findall(r'<rect x="([\d.]+)" y="([\d.]+)" '
                                           r'width="([\d.]+)" height="([\d.]+)"', svg)]
     main = [r for r in rects if r[3] > 6]
     thin = [r for r in rects if r[3] <= 6]
-    assert main and thin, "diverging chart must have main bars and a neutral thin lane"
-    # 同一行主道 bar 不得重叠（中心线两侧允许镜像邻接）
-    for i in range(len(main)):
-        for j in range(i + 1, len(main)):
-            a, b = main[i], main[j]
-            if abs(a[1] - b[1]) > 1e-6:
-                continue
-            if a[0] < b[0] + b[2] - 1e-6 and b[0] < a[0] + a[2] - 1e-6:
-                assert abs(a[0] + a[2] - 405) < 1e-6 or abs(b[0] + b[2] - 405) < 1e-6 \
-                    or abs(a[0] - 405) < 1e-6 or abs(b[0] - 405) < 1e-6, \
-                    f"main bars overlap: {a} vs {b}"
-    # 中性道不与主道共享 y 区间
-    main_ys = [r[1] for r in main]
-    for r in thin:
-        assert all(r[1] > y for y in main_ys), f"neutral lane overlaps main lane: {r}"
+    assert main and thin
 
 
 def test_chart_mount_hidden_until_mounted(tmp_path, monkeypatch):

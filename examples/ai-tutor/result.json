@@ -1,0 +1,830 @@
+{
+  "meta": {
+    "skill": "eduevidence",
+    "version": "1.0.0",
+    "generated_at": "2026-08-12T09:32:36.767716+00:00",
+    "mode": "platform_native",
+    "question": "大学高等数学课程是否应该使用 AI Tutor（GPT-4 等生成式 AI 辅导工具）辅助学习？它是否真的有助于概念理解与独立解题，还是只是把学生变成拐杖使用者？"
+  },
+  "execution": {
+    "complexity": "M",
+    "mode": "platform_native",
+    "agents": [],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "latency_s": 0.0
+    }
+  },
+  "research_frame": {
+    "question": "大学高等数学课程是否应该使用 AI Tutor（GPT-4 等生成式 AI 辅导工具）辅助学习？它是否真的有助于概念理解与独立解题，还是只是把学生变成拐杖使用者？",
+    "decision_target": "teaching_decision",
+    "learner": {
+      "education_level": "undergraduate_year_1",
+      "major": "science_and_engineering_majors",
+      "prior_knowledge": "high_school_mathematics_foundation",
+      "special_characteristics": "large_cohort_mixed_ability"
+    },
+    "course": {
+      "subject": "university_advanced_mathematics_calculus",
+      "course_type": "lecture_with_recitation",
+      "duration": "one_semester"
+    },
+    "intervention": {
+      "teaching_method": "lecture_plus_tutor_supported_practice",
+      "ai_tool": "gpt4_generative_ai_tutor",
+      "allowed_usage": "under_design_pending_evidence_review",
+      "frequency": "weekly_practice_sessions",
+      "duration": "one_semester"
+    },
+    "comparison": "no_ai_tutor_control",
+    "outcomes": {
+      "primary": [
+        "concept_understanding",
+        "independent_problem_solving"
+      ],
+      "secondary": [
+        "knowledge_gain",
+        "engagement"
+      ],
+      "risk": [
+        "ai_dependency",
+        "over_reliance",
+        "false_confidence"
+      ]
+    },
+    "context": {
+      "teacher_support": "TA_supported",
+      "class_size": "100_students",
+      "online_or_offline": "offline"
+    },
+    "scope": {
+      "time_range": "2021-2026",
+      "geography": "worldwide",
+      "study_types": [
+        "rct",
+        "quasi_experimental",
+        "observational"
+      ]
+    },
+    "inclusion_criteria": [
+      "studies_of_generative_AI_tutors_or_chatbots_in_mathematics_or_adjacent_subjects",
+      "outcomes_measuring_learning_not_only_practice_performance",
+      "randomized_or_controlled_designs_preferred"
+    ],
+    "exclusion_criteria": [
+      "practitioner_anecdotes_without_data",
+      "studies_of_non_AI_tutoring_tools"
+    ],
+    "success_condition": "护栏式 AI Tutor 在无 AI 独立考试与迁移任务上不劣于对照且概念理解改善，同时 AI 依赖风险受控；证据足以支撑一个有边界的试点而非全面铺开。"
+  },
+  "decision": {
+    "decision_question": "大学高等数学课程是否应该使用 AI Tutor（GPT-4 等生成式 AI 辅导工具）辅助学习？",
+    "target_population": "university first-year science-and-engineering students taking advanced mathematics (calculus)",
+    "target_context": "one-semester university advanced-mathematics course, large cohort, TA support, offline",
+    "supported_claims": [
+      "护栏式（提示不给答案）AI Tutor 在练习任务上显著提升表现（Bastani: +127%），无护栏版本也有 +48% — E-001。",
+      "无护栏的通用生成式 AI 会损害移除 AI 后的独立解题能力（Bastani: 独立考试 -17%）— E-002。",
+      "护栏设计（教师设计的提示式 Tutor）基本消除负效应 — E-003。",
+      "AI 辅导工具能提升学习参与度与满意度，且学习结果不受损（Lee）— E-004, E-005。"
+    ],
+    "uncertain_claims": [
+      "AI Tutor 是否能在大学高数课程中提高长期概念理解与迁移能力 — 直接证据缺失。",
+      "Kazemitabaar 一周保持测试不显著是否延伸到更长周期 — E-006。"
+    ],
+    "contradicted_claims": [
+      "'只要给学生用生成式 AI 就能提高学习' 被 E-002 否定（无护栏 GPT Base 独立考试 -17%）。"
+    ],
+    "reason_for_disagreement": "分歧来自结果分离（练习任务表现 vs 独立考试）、工具设计（护栏 vs 无护栏）与人群/学科直接性（高中生数学、高中生英语、K-12 编程 vs 大学高数）。任务表现证据一致为正，但唯一测到独立学习结果的 RCT（Bastani）显示无护栏有害、护栏可消除负效应。",
+    "methodology_summary": "三个来源均为随机对照（Bastani 近千人大规模 RCT、Lee 四班 RCT、Kazemitabaar 69 人受控实验），内部效度强；但对'大学高等数学 + 概念理解/长期学习'的直接性弱，且无大学数学学段的保留/迁移长周期证据。",
+    "outcome_specific_findings": {
+      "assignment_score": "positive during practice: +48% (unguarded), +127% (guardrailed) — E-001",
+      "independent_problem_solving": "negative -17% without guardrails; neutralized with guardrails — E-002, E-003",
+      "engagement": "positive: higher satisfaction and continued-use willingness — E-004",
+      "knowledge_gain": "not harmed, one group significantly better — E-005",
+      "retention": "neutral over 1 week in a programming context — E-006"
+    },
+    "short_term_effect": "练习任务表现提升明显；无护栏时独立考试受损，护栏可消除负效应。",
+    "long_term_effect": "无证据 — 无超过课程期末/一周的长期学习效应测量。",
+    "transfer_effect": "无直接迁移证据；Bastani 的闭卷独立考试是最接近'去除 AI 后'的学习测量。",
+    "risk_effect": "AI 依赖与过度依赖风险真实存在（Bastani 中学生把 GPT Base 当拐杖抄答案）；护栏设计可显著降低该风险。",
+    "applicability": {
+      "suitable_for": "大学高数课堂的护栏式 AI Tutor 试点",
+      "not_suitable_for": "无护栏的通用 AI 直接进入课堂",
+      "required_conditions": [
+        "只给提示不给答案的护栏策略",
+        "无 AI 独立考试与迁移测试",
+        "TA/教师监控与反思要求"
+      ]
+    },
+    "confidence": "Moderate",
+    "confidence_breakdown": {
+      "score": 0.568,
+      "evidence_quality": 0.767,
+      "consistency": 0.8,
+      "directness": 0.5,
+      "evidence_count": 6,
+      "independent_studies": 3,
+      "independent_samples": 3,
+      "count_term": 0.75,
+      "conflict_penalty": 0.15,
+      "unsupported_penalty": 0.0
+    },
+    "what_can_be_claimed": [
+      "护栏设计（提示而非答案）决定生成式 AI 辅导工具的学习效应方向 — 无护栏有害，护栏基本消除负效应。",
+      "AI 辅导工具能显著提升练习任务表现（+48%~+127%）。",
+      "AI 辅导工具可提升参与度与满意度，且学习结果不受损（至少在现有研究覆盖的学科/学段内）。",
+      "无护栏的通用生成式 AI 会损害独立解题能力。"
+    ],
+    "what_cannot_be_claimed": [
+      "AI Tutor 在大学高数课程中提高长期概念理解或迁移能力 — 直接证据缺失。",
+      "AI Tutor 对任何学段/学科/学生都有效 — 人群与学科直接性不足。",
+      "任务表现提升等于学习提升 — Bastani 内嵌对照已证伪。"
+    ],
+    "missing_evidence": [
+      "大学数学（高数/微积分）课堂的 RCT，含无 AI 独立考试与保持/迁移测试。",
+      "同一课程内对护栏 vs 无护栏 AI 使用策略的对照研究。",
+      "超越一个学期的 AI 依赖与学习保持数据。"
+    ],
+    "recommended_action": "pilot",
+    "decision_rationale": "护栏式 AI Tutor 在练习表现、参与度上证据积极，无护栏有害有实证；但'大学高数 + 长期理解'的直接证据缺失 → 有边界、有评估、带停止条件的护栏式试点，而非全面采用。",
+    "exceeds_evidence_boundary": [
+      "'AI Tutor 提高大学高数学习效果' — 超出：大学高数直接学习效应证据缺失。",
+      "'AI Tutor 无风险' — 超出：E-002 显示无护栏有害。",
+      "'AI Tutor 对所有学生有效' — 超出：学段/学科不匹配。"
+    ],
+    "confidence_score": 0.568,
+    "confidence_policy_version": "2026-08-12.v1",
+    "independent_studies": 3,
+    "independent_samples": 3,
+    "raw_model_confidence": "Moderate",
+    "raw_model_confidence_breakdown": {
+      "score": 0.568,
+      "evidence_quality": 0.767,
+      "consistency": 0.8,
+      "directness": 0.5,
+      "evidence_count": 6,
+      "count_term": 0.75,
+      "conflict_penalty": 0.15,
+      "unsupported_penalty": 0.0
+    }
+  },
+  "outcomes": [
+    {
+      "outcome_type": "knowledge_gain",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-005"
+      ]
+    },
+    {
+      "outcome_type": "retention",
+      "support_count": 0,
+      "contradict_count": 0,
+      "neutral_count": 1,
+      "evidence_ids": [
+        "E-006"
+      ]
+    },
+    {
+      "outcome_type": "independent_problem_solving",
+      "support_count": 1,
+      "contradict_count": 1,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-002",
+        "E-003"
+      ]
+    },
+    {
+      "outcome_type": "assignment_score",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-001"
+      ]
+    },
+    {
+      "outcome_type": "engagement",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-004"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim": "Access to GPT-4 during practice substantially improves practice problem performance (+48% for unguarded GPT Base, +127% for guardrailed GPT Tutor), but these task-performance gains do not transfer to independent exam performance.",
+      "outcome_type": "assignment_score",
+      "evidence_ids": [
+        "E-001"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Students using unguarded GPT-4 (GPT Base, general chat) performed 17% worse on the independent exam than the control group despite higher practice performance — unguarded generative AI harms learning.",
+      "outcome_type": "independent_problem_solving",
+      "evidence_ids": [
+        "E-002"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Guardrail design of the AI tutor (hints and guidance instead of direct answers, teacher-informed prompts) largely eliminated the negative learning effect on the independent exam.",
+      "outcome_type": "independent_problem_solving",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Replacing traditional homework with an interactive GPT-4 homework tutor produced higher student satisfaction and greater willingness to continue using the tool.",
+      "outcome_type": "engagement",
+      "evidence_ids": [
+        "E-004"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Learning outcomes were not harmed when homework was replaced by the GPT-4 interactive tutor, and one of the treatment groups showed significantly better learning gains.",
+      "outcome_type": "knowledge_gain",
+      "evidence_ids": [
+        "E-005"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "One week after training, retention differences between the AI-assistant group and the baseline group were not statistically significant — indirect evidence for a similar AI tutoring tool, but with a null learning effect in a different subject and age group.",
+      "outcome_type": "retention",
+      "evidence_ids": [
+        "E-006"
+      ],
+      "status": "SUPPORTED"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "canonical_url": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122"
+    },
+    {
+      "source_id": "S-2025-lee",
+      "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
+      "year": 2025,
+      "canonical_url": "https://aclanthology.org/2025.acl-long.1502/",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://aclanthology.org/2025.acl-long.1502/"
+    },
+    {
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "canonical_url": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E-001",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand (approx. 950) high school mathematics students in Turkey",
+      "sample_size": 950,
+      "intervention": "gpt4_based_tutor_access_during_practice_gpt_base_unguarded_and_gpt_tutor_guardrailed_arms",
+      "comparison": "no_generative_ai_control_group",
+      "outcome_type": "assignment_score",
+      "outcome_measure": "practice problem performance during in-class study sessions",
+      "claim": "Access to GPT-4 during practice substantially improves practice problem performance (+48% for unguarded GPT Base, +127% for guardrailed GPT Tutor), but these task-performance gains do not transfer to independent exam performance.",
+      "direction": "support",
+      "effect": "positive_48_to_127_percent_on_practice_problems",
+      "duration": "in_class_study_sessions",
+      "method": "large-scale randomized controlled trial, practice phase followed by closed-book independent exam",
+      "strengths": [
+        "large_sample_approx_950",
+        "randomized_controlled_design",
+        "within_study_task_vs_learning_separation"
+      ],
+      "limitations": [
+        "high_school_not_university_education_level_mismatch",
+        "single_country_turkey",
+        "no_long_term_retention_measure"
+      ],
+      "confounders": [
+        "education_level_mismatch_high_school_vs_university",
+        "task_familiarity"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_high_school_not_university",
+        "subject_match": "yes_mathematics",
+        "education_level": "mismatch_high_school_vs_undergraduate",
+        "tool_match": "gpt4_chat_based_tutor",
+        "scope": "practice_task_performance"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-002",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand (approx. 950) high school mathematics students in Turkey",
+      "sample_size": 950,
+      "intervention": "gpt4_based_tutor_gpt_base_unguarded_general_chat_access",
+      "comparison": "no_generative_ai_control_group",
+      "outcome_type": "independent_problem_solving",
+      "outcome_measure": "closed-book independent exam without AI access after practice phase",
+      "claim": "Students using unguarded GPT-4 (GPT Base, general chat) performed 17% worse on the independent exam than the control group despite higher practice performance — unguarded generative AI harms learning.",
+      "direction": "contradict",
+      "effect": "negative_17_percent_on_independent_exam",
+      "duration": "in_class_study_sessions",
+      "method": "large-scale randomized controlled trial, practice phase then closed-book independent exam",
+      "strengths": [
+        "large_scale_rct",
+        "independent_exam_without_ai",
+        "direct_measure_of_learning_not_task_speed"
+      ],
+      "limitations": [
+        "high_school_not_university_education_level_mismatch",
+        "single_country",
+        "no_long_term_follow_up"
+      ],
+      "confounders": [
+        "education_level_mismatch",
+        "tool_design_unguarded_vs_guardrailed"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_high_school_not_university",
+        "subject_match": "yes_mathematics",
+        "education_level": "mismatch_high_school_vs_undergraduate",
+        "tool_match": "gpt4_chat_interface",
+        "scope": "unguarded_general_chat_interface"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-003",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand (approx. 950) high school mathematics students in Turkey",
+      "sample_size": 950,
+      "intervention": "gpt4_tutor_with_teacher_designed_guardrails_hints_not_answers",
+      "comparison": "no_generative_ai_control_group",
+      "outcome_type": "independent_problem_solving",
+      "outcome_measure": "closed-book independent exam, guardrailed GPT Tutor arm vs control",
+      "claim": "Guardrail design of the AI tutor (hints and guidance instead of direct answers, teacher-informed prompts) largely eliminated the negative learning effect on the independent exam.",
+      "direction": "support",
+      "effect": "negative_effect_essentially_eliminated_no_positive_effect_observed",
+      "duration": "in_class_study_sessions",
+      "method": "large-scale randomized controlled trial with unguarded, guardrailed and control arms",
+      "strengths": [
+        "direct_manipulation_of_tool_design",
+        "large_sample",
+        "same_study_isolates_guardrail_effect"
+      ],
+      "limitations": [
+        "no_positive_learning_gain_even_with_guardrails",
+        "high_school_not_university"
+      ],
+      "confounders": [
+        "prompt_engineering_effort",
+        "education_level_mismatch"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_high_school_not_university",
+        "subject_match": "yes_mathematics",
+        "education_level": "mismatch_high_school_vs_undergraduate",
+        "tool_match": "guardrailed_tutor_design",
+        "scope": "guardrail_design_principle_transferable"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-004",
+      "source_id": "S-2025-lee",
+      "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "english_language",
+      "population": "four classes of high school English students",
+      "sample_size": null,
+      "intervention": "gpt4_interactive_homework_tutor_replacing_traditional_homework",
+      "comparison": "traditional_homework_without_ai_tutor",
+      "outcome_type": "engagement",
+      "outcome_measure": "student satisfaction survey and continued-use willingness",
+      "claim": "Replacing traditional homework with an interactive GPT-4 homework tutor produced higher student satisfaction and greater willingness to continue using the tool.",
+      "direction": "support",
+      "effect": "positive_higher_satisfaction_and_continued_use_willingness",
+      "duration": "course_length_homework_assignments",
+      "method": "randomized controlled trial across four classes, GPT-4 interactive homework vs traditional homework",
+      "strengths": [
+        "randomized_assignment_four_classes",
+        "real_course_context",
+        "engagement_and_learning_measured_together"
+      ],
+      "limitations": [
+        "high_school_english_not_university_mathematics",
+        "small_number_of_classes",
+        "no_long_term_retention"
+      ],
+      "confounders": [
+        "instructor_class_effects",
+        "novelty_effect"
+      ],
+      "source_location": "https://aclanthology.org/2025.acl-long.1502/",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 7.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_high_school_not_university",
+        "subject_match": "no_english_not_mathematics",
+        "education_level": "mismatch_high_school_vs_undergraduate",
+        "tool_match": "gpt4_interactive_tutor",
+        "scope": "engagement_and_willingness_to_continue"
+      },
+      "confidence": 0.65,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-005",
+      "source_id": "S-2025-lee",
+      "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "english_language",
+      "population": "four classes of high school English students",
+      "sample_size": null,
+      "intervention": "gpt4_interactive_homework_tutor_replacing_traditional_homework",
+      "comparison": "traditional_homework_without_ai_tutor",
+      "outcome_type": "knowledge_gain",
+      "outcome_measure": "course learning outcome assessments",
+      "claim": "Learning outcomes were not harmed when homework was replaced by the GPT-4 interactive tutor, and one of the treatment groups showed significantly better learning gains.",
+      "direction": "support",
+      "effect": "learning_not_harmed_one_group_significantly_better",
+      "duration": "course_length_homework_assignments",
+      "method": "randomized controlled trial across four classes with learning outcome assessments",
+      "strengths": [
+        "measured_learning_outcomes_not_only_satisfaction",
+        "randomized_assignment"
+      ],
+      "limitations": [
+        "high_school_english_not_university_mathematics",
+        "no_retention_or_transfer_test",
+        "small_number_of_classes"
+      ],
+      "confounders": [
+        "instructor_class_effects",
+        "homework_engagement_differences"
+      ],
+      "source_location": "https://aclanthology.org/2025.acl-long.1502/",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 7.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_high_school_not_university",
+        "subject_match": "no_english_not_mathematics",
+        "education_level": "mismatch_high_school_vs_undergraduate",
+        "tool_match": "gpt4_interactive_tutor",
+        "scope": "learning_outcomes_within_course"
+      },
+      "confidence": 0.65,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-006",
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "study_type": "rct",
+      "education_level": "k12_ages_10_17",
+      "subject": "introductory_programming",
+      "population": "69 novice programmers ages 10-17 with no prior text-based programming experience",
+      "sample_size": 69,
+      "intervention": "access_to_openai_codex_ai_coding_assistant_during_training",
+      "comparison": "baseline_group_without_ai_coding_assistant",
+      "outcome_type": "retention",
+      "outcome_measure": "retention test one week after training",
+      "claim": "One week after training, retention differences between the AI-assistant group and the baseline group were not statistically significant — indirect evidence for a similar AI tutoring tool, but with a null learning effect in a different subject and age group.",
+      "direction": "neutral",
+      "effect": "null_no_significant_difference",
+      "duration": "3_weeks_training_plus_1_week_retention",
+      "method": "controlled experiment with random assignment and delayed retention test",
+      "strengths": [
+        "randomized_controlled_design",
+        "delayed_retention_test_included",
+        "comparable_ai_tutor_family_tool"
+      ],
+      "limitations": [
+        "programming_subject_not_mathematics",
+        "young_k12_population_not_university",
+        "1_week_retention_window_is_short",
+        "small_sample_69"
+      ],
+      "confounders": [
+        "prior_programming_competency_interaction",
+        "age_mismatch"
+      ],
+      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_young_novices_not_university",
+        "subject_match": "no_programming_not_mathematics",
+        "education_level": "mismatch_k12_vs_undergraduate",
+        "tool_match": "codex_like_generative_ai_tool",
+        "scope": "retention_over_one_week_indirect"
+      },
+      "confidence": 0.6,
+      "status": "SUPPORTED"
+    }
+  ],
+  "methodology_reviews": [
+    {
+      "target": "overall",
+      "audit_items": {
+        "control_group": {
+          "status": "met",
+          "note": "All three sources include a no-AI comparison condition."
+        },
+        "randomization": {
+          "status": "met",
+          "note": "Bastani 2025 (large RCT), Lee 2025 (four-class RCT) and Kazemitabaar 2023 (randomized controlled experiment) all use randomized assignment."
+        },
+        "pre_test": {
+          "status": "partial",
+          "note": "Bastani 2025 measures baseline covariates; Kazemitabaar 2023 has a pre-study evaluation; Lee 2025 baseline not fully detailed."
+        },
+        "post_test": {
+          "status": "met",
+          "note": "Immediate post-measures present in all sources (practice exams, homework assessments, programming tests)."
+        },
+        "retention_test": {
+          "status": "partial",
+          "note": "Kazemitabaar 2023 has a 1-week retention test; Bastani 2025 has no delayed test; Lee 2025 covers course length but no delayed retention beyond the course."
+        },
+        "transfer_test": {
+          "status": "partial",
+          "note": "Bastani 2025's closed-book independent exam is the strongest transfer-adjacent measure (AI removed); no full novel-topic transfer task in any study."
+        },
+        "sample_bias": {
+          "status": "met",
+          "note": "Bastani 2025 ~950 students; Lee 2025 four intact classes; Kazemitabaar 2023 small (69) but explicitly randomized."
+        },
+        "self_selection": {
+          "status": "met",
+          "note": "Random assignment in all three studies limits self-selection."
+        },
+        "measurement_validity": {
+          "status": "partial",
+          "note": "Bastani 2025 correctly separates practice/task performance from independent exam learning; but no study directly measures university mathematics concept understanding."
+        },
+        "confounders": {
+          "status": "partial",
+          "note": "Education-level mismatch (high school / K-12 vs university) is the dominant issue; prior ability interacts with AI benefit in Kazemitabaar 2023."
+        },
+        "instructor_effect": {
+          "status": "partial",
+          "note": "Lee 2025 runs four intact classes — class/instructor effects possible; Bastani 2025 in-class sessions may carry teacher effects."
+        },
+        "novelty_effect": {
+          "status": "partial",
+          "note": "Short interventions and new tool exposure may inflate engagement; not controlled in any study."
+        },
+        "tool_version_effect": {
+          "status": "not_applicable",
+          "note": "Each study used one GPT/Codex version; rapid model iteration limits durability of findings."
+        },
+        "ai_usage_policy": {
+          "status": "met",
+          "note": "Bastani 2025 explicitly contrasts unguarded (GPT Base) vs guardrailed (GPT Tutor) usage policies — directly informative for policy design."
+        },
+        "dropout": {
+          "status": "partial",
+          "note": "Attrition not systematically reported across all studies."
+        }
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "practice/task performance vs independent exam performance",
+        "equates_task_with_learning": false,
+        "note": "Bastani 2025 provides an embedded contrast: +48%/+127% practice performance coexisted with -17% independent exam performance for the unguarded arm — practice performance must NOT be equated with learning."
+      },
+      "verdict": "CONCERN",
+      "limitations": [
+        "No study directly targets university advanced-mathematics (calculus) students.",
+        "Subject/level directness is insufficient: high-school math (Bastani 2025), high-school English (Lee 2025), K-12 programming (Kazemitabaar 2023).",
+        "No retention beyond 1 week (Kazemitabaar 2023) or beyond course end (Lee 2025); no long-term transfer evidence.",
+        "无护栏 GPT Base 的负效应 (-17%) 说明工具设计护栏是决定因素，直接照搬通用聊天工具进入大学课堂不可行。"
+      ],
+      "suggestions": [
+        "Treat all conclusions as indirect until a university-mathematics study exists.",
+        "Design the pilot's guardrailed tutor on Bastani 2025's GPT Tutor design (hints, not answers).",
+        "Include a no-AI independent exam and a retention/transfer test in the evaluation plan.",
+        "Vary the AI usage policy within the pilot to isolate guardrail effects."
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "reason_for_disagreement": "分歧来自结果分离（练习任务表现 vs 独立考试）、工具设计（护栏 vs 无护栏）与人群/学科直接性（高中生数学、高中生英语、K-12 编程 vs 大学高数）。任务表现证据一致为正，但唯一测到独立学习结果的 RCT（Bastani）显示无护栏有害、护栏可消除负效应。"
+    }
+  ],
+  "applicability": {
+    "suitable_for": "大学高数课堂的护栏式 AI Tutor 试点",
+    "not_suitable_for": "无护栏的通用 AI 直接进入课堂",
+    "required_conditions": [
+      "只给提示不给答案的护栏策略",
+      "无 AI 独立考试与迁移测试",
+      "TA/教师监控与反思要求"
+    ]
+  },
+  "intervention": {
+    "decision": "pilot",
+    "target_learners": "university first-year science-and-engineering students in advanced mathematics (calculus), large cohort",
+    "learning_goals": [
+      "independently solve routine and non-routine calculus problems without AI",
+      "understand core concepts: limits, derivatives, integrals and their geometric meaning",
+      "use the AI Tutor critically as a hint-and-explanation aid, not an answer machine"
+    ],
+    "pilot_duration": "8_weeks",
+    "phase_1": {
+      "name": "Phase 1 — 独立解题基线 (Independent Baseline)",
+      "activities": [
+        "无 AI 独立解题基线测验",
+        "前两周作业完全在无 AI 环境下完成"
+      ],
+      "ai_usage_rule": "AI Tutor 禁用，仅允许教材与讲义",
+      "outcome_check": "基线概念理解与独立解题测量"
+    },
+    "phase_2": {
+      "name": "Phase 2 — 提示式护栏 Tutor 辅导练习 (Hint-only Guardrailed Tutor)",
+      "activities": [
+        "第 3-4 周：引入护栏式 AI Tutor 辅导练习",
+        "Tutor 只给提示与思路引导，不直接给答案"
+      ],
+      "ai_usage_rule": "Tutor 只提供提示/分步引导/错误定位；禁止给出完整解答",
+      "outcome_check": "练习完成率、求助类型记录与中期无 AI 测验"
+    },
+    "phase_3": {
+      "name": "Phase 3 — 结构化合作 (Structured Collaboration)",
+      "activities": [
+        "第 5-7 周：先自己作答，再对照 Tutor 提示比对与订正",
+        "每次练习后书面写出与 Tutor 提示的差异及自己的错因"
+      ],
+      "ai_usage_rule": "必须先行独立尝试 10 分钟以上才能向 Tutor 求助；每次求助后提交反思记录",
+      "outcome_check": "每周作业正确率与反思记录质量"
+    },
+    "phase_4": {
+      "name": "Phase 4 — 无 AI 独立考试与迁移任务 (No-AI Independent Exam & Transfer)",
+      "activities": [
+        "第 8 周：无 AI 环境下的独立考试",
+        "新增题型（未在练习中出现）的迁移任务"
+      ],
+      "ai_usage_rule": "考试与迁移任务全程禁止 AI 访问",
+      "outcome_check": "独立考试得分、迁移任务得分、AI 依赖指标"
+    },
+    "ai_usage_policy": "明确护栏：AI Tutor 只允许提供提示、思路引导与错误诊断，禁止直接给出答案或完整解题过程；未先行独立尝试不得求助；直接复制 Tutor 输出视为学术诚信违规。",
+    "teacher_role": "设计护栏提示词与评分量规；每周审阅使用日志与反思记录；主持反思复盘",
+    "student_role": "按阶段规则使用 Tutor；先自答再求助；提交反思记录；诚实报告求助频率",
+    "reflection_requirement": "每次使用 Tutor 后书面说明：我卡在哪里、Tutor 给了什么提示、我如何用它自己完成；每阶段提交一份反思小结",
+    "assessment": "无 AI 基线测验、中期无 AI 测验、期末无 AI 独立考试、迁移任务、练习完成率、反思记录质量",
+    "risk_control": [
+      "护栏策略复刻 Bastani 2025 GPT Tutor 设计（提示不给答案）",
+      "无 AI 独立考试与迁移任务防止练习表现掩盖学习缺失",
+      "每周审阅使用日志识别'抄答案'拐杖行为",
+      "AI 依赖与虚假信心指标阈值监控"
+    ],
+    "stop_conditions": [
+      "无 AI 独立考试成绩较同校历史基线下降超过 10%",
+      "迁移任务得分显著低于对照组",
+      "反思记录中出现大量直接复制 Tutor 输出（学术诚信违规超过 20%）",
+      "AI 依赖指标连续两周超过预设阈值",
+      "教师/助教工作量不可持续"
+    ],
+    "evidence_alignment": [
+      "E-001",
+      "E-002",
+      "E-003",
+      "E-004",
+      "E-005",
+      "E-006"
+    ]
+  },
+  "evaluation": {
+    "research_question": "在大学高等数学课程中，护栏式 AI Tutor（只给提示不给答案）是否能在保持/提升参与度的同时，提高（或至少不损害）独立解题能力与概念理解，且不增加 AI 依赖？",
+    "groups": {
+      "treatment": "使用 4 阶段护栏式 AI Tutor 政策的教学班",
+      "comparison": "匹配教学班：不使用 AI Tutor，仅传统教材+习题课（同教师同材料）"
+    },
+    "baseline": "第 1 周无 AI 独立解题基线测验（概念理解 + 独立解题 + 完成时间）",
+    "post_test": "第 8 周无 AI 环境下的独立考试（概念理解与独立解题）",
+    "retention_test": "第 14-16 周（期末或延迟 4-8 周）无 AI 保持测验",
+    "transfer_test": "第 8 周新增题型（未在练习中出现、需迁移运用）的无 AI 迁移任务",
+    "process_metrics": [
+      "每周练习完成率",
+      "AI Tutor 使用日志：求助次数、提示类型、每次求助前的独立尝试时长",
+      "求助类型分类（实质求助 vs 答案抄写）",
+      "反思记录提交率与质量评分"
+    ],
+    "learning_metrics": [
+      "无 AI 独立考试成绩（独立解题）",
+      "概念理解测验得分",
+      "保持测验得分（retention）",
+      "迁移任务得分（transfer）",
+      "练习任务表现（单独报告，不与学习指标混同）"
+    ],
+    "risk_metrics": [
+      "AI 依赖指标（求助后能否独立复现解题过程）",
+      "过度依赖（求助频率高于阈值、独立尝试时长过短）",
+      "虚假信心（测验前自评信心 vs 实际得分差异）",
+      "学术诚信违规（直接复制 Tutor 输出）次数"
+    ],
+    "analysis_plan": "预注册的基线校正比较（ANCOVA）：treatment vs comparison 在无 AI 独立考试、保持测验、迁移任务上的差异；练习任务表现单独建模并明确标注为 task performance，不与学习效应混同；按学生先验水平与求助行为做亚组分析；在第 3、5、7 周检查停止条件。",
+    "success_threshold": "治疗组在无 AI 独立考试与迁移任务上不劣于对照组（差距 ≤5%）且概念理解不降，同时参与度（engagement）显著高于对照组、AI 依赖指标低于阈值；若无 AI 独立解题下降 >10%，无论练习表现多好均判试点失败。",
+    "stop_conditions": [
+      "无 AI 独立考试或迁移任务较对照下降 >10%",
+      "学术诚信违规出现在 >20% 的提交中",
+      "AI 依赖指标连续两周超阈值",
+      "教学负担不可持续"
+    ]
+  },
+  "benchmark": {},
+  "provenance": {
+    "search_provider": "n/a",
+    "fetched_at": "2026-08-12T09:32:36.768908+00:00"
+  }
+}

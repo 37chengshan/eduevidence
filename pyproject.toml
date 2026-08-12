@@ -20,10 +20,13 @@ classifiers = [
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
 
+[project.scripts]
+eduevidence = "eduevidence_cli:main"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-q"
 
 [tool.setuptools]
-py-modules = []
+py-modules = ["eduevidence_cli"]

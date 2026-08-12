@@ -1,50 +1,40 @@
-/* Theme 04 — Data Lab (v5 方案 §7).
-   偏数据研究工作台：高信息密度、轻量 Grid、紧凑 Table、Filter 强、交互优先、
-   Chart 优先。不使用视觉背景网格，只在布局系统内部保持严格数据对齐。 */
+/* Theme 04 — DataLab.
+   Research inspection workspace: wide canvas, compact rhythm, sticky controls,
+   dense but readable evidence matrix and numeric alignment. */
 :root[data-theme="datalab"] {
-  --bg: #F4F5F7;
-  --surface: #FFFFFF;
-  --surface2: #EEF0F3;
-  --text: #1F2329;
-  --text-muted: #6B7280;
-  --primary: #2563EB;
-  --primary-soft: #E8EEFC;
-  --support: #059669;
-  --support-soft: #E5F5EF;
-  --contradict: #DC2626;
-  --contradict-soft: #FCEBEB;
-  --uncertain: #D97706;
-  --uncertain-soft: #FCF0E1;
-  --insufficient: #9CA3AF;
-  --border: #D8DCE2;
-  --radius: 4px;
-  --radius-sm: 3px;
-  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --font-head: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
-  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
-  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
-  --density: 1.3;
-  --spacing: 12px;
+  --bg:#F4F5F7; --surface:#FFFFFF; --surface2:#EEF0F3; --text:#1F2329;
+  --text-muted:#6B7280; --primary:#2563EB; --primary-soft:#E8EEFC;
+  --support:#059669; --support-soft:#E5F5EF; --contradict:#DC2626;
+  --contradict-soft:#FCEBEB; --uncertain:#D97706; --uncertain-soft:#FCF0E1;
+  --insufficient:#9CA3AF; --border:#D8DCE2; --radius:5px; --radius-sm:4px;
+  --shadow:0 1px 2px rgba(16,24,40,.05); --font-head:'Helvetica Neue',Arial,'PingFang SC',sans-serif;
+  --font-ui:'Helvetica Neue',Arial,'PingFang SC',sans-serif; --font-mono:'SF Mono',Menlo,Consolas,monospace;
 }
-
-/* 紧凑表格、严格数据对齐、Filter 控件 */
-:root[data-theme="datalab"] .report-shell { max-width: 1400px; }
-:root[data-theme="datalab"] .report-section { padding: 12px 14px; margin-bottom: 10px; }
-:root[data-theme="datalab"] .report-section h2 {
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-}
-:root[data-theme="datalab"] .data-table { font-size: 0.78rem; }
-:root[data-theme="datalab"] .data-table th, :root[data-theme="datalab"] .data-table td {
-  padding: 4px 8px;
-}
-:root[data-theme="datalab"] .num { font-variant-numeric: tabular-nums; }
-:root[data-theme="datalab"] .filter-bar {
-  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
-}
-:root[data-theme="datalab"] .filter-input {
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  padding: 3px 8px; font-size: 0.8rem; background: var(--surface);
-}
+:root[data-theme="datalab"] .report-shell { max-width:1480px; padding:18px 24px 64px; }
+:root[data-theme="datalab"] .report-header { margin-bottom:22px; }
+:root[data-theme="datalab"] .report-header h1 { font-size:1.75rem; }
+:root[data-theme="datalab"] .report-section { max-width:none; margin-bottom:18px; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+:root[data-theme="datalab"] .report-section>h2 { font-family:var(--font-ui); font-size:.86rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); }
+:root[data-theme="datalab"] .section-lead { padding:6px 9px; margin-bottom:10px; font-size:.78rem; }
+:root[data-theme="datalab"] .decision-hero { display:grid; grid-template-columns:minmax(220px,.7fr) 2fr; gap:16px 22px; padding:18px; }
+:root[data-theme="datalab"] .hero-decision { align-content:start; margin:0; }
+:root[data-theme="datalab"] .hero-rationale { margin:0; font-family:var(--font-ui); font-size:1rem; }
+:root[data-theme="datalab"] .hero-insights { grid-column:1/-1; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+:root[data-theme="datalab"] .hero-insight { min-height:84px; padding:10px 12px; }
+:root[data-theme="datalab"] .hero-provenance { grid-column:1/-1; margin:0; }
+:root[data-theme="datalab"] .outcome-groups { grid-template-columns:repeat(4,minmax(190px,1fr)); gap:8px; }
+:root[data-theme="datalab"] .outcome-group { padding:10px 12px; }
+:root[data-theme="datalab"] .matrix-controls { position:sticky; top:0; z-index:5; padding:8px; background:color-mix(in srgb,var(--surface) 92%,transparent); backdrop-filter:blur(8px); border:1px solid var(--border); }
+:root[data-theme="datalab"] .matrix-tools { margin:0; }
+:root[data-theme="datalab"] .matrix-tools input,
+:root[data-theme="datalab"] .matrix-tools select { padding:4px 8px; }
+:root[data-theme="datalab"] .data-table { font-size:.76rem; }
+:root[data-theme="datalab"] .data-table th,
+:root[data-theme="datalab"] .data-table td { padding:5px 7px; }
+:root[data-theme="datalab"] .claim-cell { max-width:none; min-width:260px; }
+:root[data-theme="datalab"] .tribunal-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+:root[data-theme="datalab"] .tribunal-card,
+:root[data-theme="datalab"] .trace-chain-card,
+:root[data-theme="datalab"] .action-node { padding:10px 12px; }
+:root[data-theme="datalab"] .evidence-to-action { gap:6px; }
+:root[data-theme="datalab"] code { font-size:.76em; }

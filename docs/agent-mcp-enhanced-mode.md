@@ -73,7 +73,7 @@ python3 integrations/agent_mcp.py
 
 > **Fast models collect. Strong models reason. Independent models verify.**
 
-| 角色 | 类别 | 默认 CLI/模型 |
+| 角色 | 类别 | 建议（示例，须用户确认） |
 |---|---|---|
 | evidence-retriever | fast（资料搜索/整理/去重/初筛） | omp / fast-low-cost |
 | education-planner | strong（Framing） | claude / reasoning |
@@ -83,7 +83,7 @@ python3 integrations/agent_mcp.py
 | intervention-designer / evaluation-designer | strong | claude / reasoning |
 | skeptic | independent（反证） | claude / reasoning |
 
-具体模型与 CLI 不写死在 Skill 中——由主 Agent 现场决策（`integrations/agent_mcp.py` 的 `ROLE_ROUTING` 只提供默认值）。
+**具体模型与 CLI 不写死在代码中**——`integrations/agent_mcp.py` 的 `ROLE_REQUIREMENTS` 只描述**能力需求**（reasoning/speed/cost/structured_output/context/tool_use）。实际 CLI/模型必须来自用户确认的 `agent_mcp_approval.json`：先扫描（`model_inventory.json`）→ 展示推荐表 → 用户明确确认 → `safe_spawn()` 才放行；任何一步缺失都返回 `AGENT_MCP_APPROVAL_REQUIRED`，业务代码禁止绕过 `safe_spawn` 直接 spawn。
 
 ## 5. Cross-Model Review（独立模型交叉审核）
 
@@ -98,9 +98,15 @@ Primary Analysis → Draft Verdict → Independent Review → Judge → Final Ve
 ```python
 from integrations.agent_mcp import cross_model_review
 
-plan = cross_model_review(draft_verdict, independent_model="independent-reasoning")
+# 独立审核者的 CLI/模型必须是用户已确认的（skeptic 角色映射）；
+# 未确认时返回 AGENT_MCP_APPROVAL_REQUIRED，不会 spawn。
+plan = cross_model_review(draft_verdict, target_cli="claude",
+                          model="<用户确认的独立模型>", approval=approval_record)
 if plan["status"] == "READY":
     # 用 plan["spawn_call"] 通过 MCP 派发独立审核者
+    pass
+elif plan["status"] == "AGENT_MCP_APPROVAL_REQUIRED":
+    # 先展示推荐表，请用户确认映射后再重试
     pass
 else:
     # plan["status"] == "AGENT_MCP_UNAVAILABLE" → 单 Agent 自审降级
@@ -168,6 +174,7 @@ build_memory_recall_call("previous verdict on AI coding assistant", kind="resear
 | 症状 | 动作 |
 |---|---|
 | 未安装 / daemon 不可达 | `AGENT_MCP_UNAVAILABLE`，退化为 Platform Native Mode，照常出结果 |
+| 已安装但未确认模型映射 / approval 哈希不匹配 | `AGENT_MCP_APPROVAL_REQUIRED`，禁止 spawn；展示推荐表请用户确认后再执行 |
 | 派发超时 | 任务级 `timeout_seconds` 自动终止；等待超时看 wait 存活证据再决策 |
 | 独立审核者结果与主分析冲突 | Judge 裁定，必要时 `followup_task` 返工 |
 | 会话失联 | `list_agents`（include_other_sessions=true）找回；确认失联再重派 |

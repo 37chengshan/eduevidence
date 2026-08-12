@@ -1,0 +1,1199 @@
+{
+  "meta": {
+    "skill": "eduevidence",
+    "version": "1.0.0",
+    "generated_at": "2026-08-12T09:32:36.867114+00:00",
+    "mode": "platform_native",
+    "question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？应当如何引入？"
+  },
+  "execution": {
+    "complexity": "M",
+    "mode": "platform_native",
+    "agents": [],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "latency_s": 0.0
+    }
+  },
+  "research_frame": {
+    "question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？应当如何引入？",
+    "decision_target": "teaching_decision",
+    "learner": {
+      "education_level": "undergraduate",
+      "major": "undergraduate_academic_writing_course_learners",
+      "prior_knowledge": "first_academic_writing_course_including_esl_students",
+      "special_characteristics": "mixed_ability_including_non_native_speakers"
+    },
+    "course": {
+      "subject": "academic_writing",
+      "course_type": "lecture_workshop_seminar",
+      "duration": "16_weeks_one_semester"
+    },
+    "intervention": {
+      "teaching_method": "process_writing_with_formative_feedback",
+      "ai_tool": "chatgpt_generative_ai_writing_assistant",
+      "allowed_usage": "under_design_pending_evidence_review_formative_feedback_first",
+      "frequency": "weekly_writing_assignments",
+      "duration": "8_weeks_pilot"
+    },
+    "comparison": "no_ai_traditional_writing_instruction",
+    "outcomes": {
+      "primary": [
+        "independent_problem_solving",
+        "knowledge_gain"
+      ],
+      "secondary": [
+        "assignment_score",
+        "engagement",
+        "motivation",
+        "retention"
+      ],
+      "risk": [
+        "ai_dependency",
+        "academic_integrity_risk",
+        "false_confidence"
+      ]
+    },
+    "context": {
+      "teacher_support": "instructor_feedback_and_rubric_review",
+      "class_size": "30_60_students_two_sections",
+      "online_or_offline": "offline"
+    },
+    "scope": {
+      "time_range": "2024-2026",
+      "geography": "worldwide",
+      "study_types": [
+        "rct",
+        "quasi_experimental",
+        "mixed_methods"
+      ]
+    },
+    "inclusion_criteria": [
+      "studies_of_generative_AI_writing_assistants_in_learning_academic_or_esl_writing",
+      "outcomes_measuring_writing_skill_or_learning_not_only_task_speed",
+      "university_or_high_school_populations_learning_to_write"
+    ],
+    "exclusion_criteria": [
+      "practitioner_anecdotes_without_data",
+      "industry_professional_writing_settings_only"
+    ],
+    "success_condition": "independent writing ability improves or does not decline on no-AI assessments while AI dependency, academic integrity risk and false confidence stay controlled; evidence base supports a bounded pilot."
+  },
+  "decision": {
+    "decision_question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？",
+    "target_population": "university undergraduate students enrolled in academic writing courses",
+    "target_context": "university academic writing course (16-week semester), scaffolded formative-feedback instruction, instructor feedback available, offline",
+    "supported_claims": [
+      "Using ChatGPT as a formative feedback tool can significantly improve short-term academic writing scores and is positively perceived by students (E-001, E-002).",
+      "Guardrail design (hints and feedback instead of answers) eliminates the negative learning effect of unguarded AI access (E-004).",
+      "Interactive AI homework can raise engagement and satisfaction without harming learning outcomes (E-007, E-008).",
+      "Task/assignment scores must not be equated with independent writing ability (E-003, E-005)."
+    ],
+    "uncertain_claims": [
+      "Whether AI-assisted writing instruction improves or preserves long-term independent writing ability in university students — no direct evidence; E-003 (subject-mismatched) is the only independent-performance signal.",
+      "Whether the 6-hour Marzuki effect extends to a full semester (E-001).",
+      "Whether engagement gains from high school ESL homework (Lee) generalize to university academic writing courses (E-007, E-008)."
+    ],
+    "contradicted_claims": [
+      "The claim that 'AI writing assistants always improve independent writing performance' is contradicted by E-003 (unguarded access → 17% worse independent exam performance)."
+    ],
+    "reason_for_disagreement": "Disagreement comes from outcome separation (task/assignment scores vs independent ability), tool design (guarded feedback vs unguarded generation), and population (high school vs university). Writing-context evidence (Marzuki) is positive but short and uncontrolled; the strongest evidence (Bastani) shows unguarded AI harms independent performance but in a different subject and level.",
+    "methodology_summary": "One mixed-methods university writing study (Marzuki 2024: no randomization, 6-hour intervention, delayed test), one large high-school mathematics RCT (Bastani 2025: task-vs-learning separation, guardrail comparison), and one high-school ESL RCT (Lee 2025: engagement plus non-inferior learning). No randomized university-level academic writing study with a no-AI independent writing transfer test exists in the reviewed set.",
+    "outcome_specific_findings": {
+      "knowledge_gain": "positive short-term writing-skill gain with AI feedback (E-001); non-inferior with a significant gain in one group for ESL homework (E-008)",
+      "independent_problem_solving": "negative for unguarded access, neutralized by guardrails (E-003, E-004); never measured in a university writing context",
+      "assignment_score": "improves during practice but does not transfer to independent performance (E-005)",
+      "engagement": "positive for AI interactive homework (E-007) and positive student perceptions of AI feedback (E-002)",
+      "ai_dependency": "documented crutch behavior with unguarded access (E-006)"
+    },
+    "short_term_effect": "Positive: AI-assisted formative feedback improves short-term writing scores (E-001) and engagement (E-002, E-007).",
+    "long_term_effect": "Unknown: no university writing study measures independent writing ability beyond the intervention; Marzuki's delayed test follows only a 6-hour intervention (E-001).",
+    "transfer_effect": "Negative evidence from mathematics warns that task gains do not transfer to independent performance (E-003, E-005); no university writing transfer test exists.",
+    "risk_effect": "AI dependency, academic-integrity violations and false confidence are real risks for unguarded usage (E-006); guardrail design mitigates the negative learning effect (E-004).",
+    "applicability": {
+      "suitable_for": "bounded pilot in a university academic writing course with a guardrailed AI usage policy and independent no-AI writing assessment",
+      "not_suitable_for": "unrestricted student AI use without a usage policy or integrity safeguards",
+      "required_conditions": [
+        "guardrailed formative-feedback usage policy",
+        "independent no-AI writing transfer test",
+        "reflection requirement and usage logging",
+        "academic integrity policy covering AI-assisted writing"
+      ]
+    },
+    "confidence": "Moderate",
+    "confidence_breakdown": {
+      "score": 0.602,
+      "evidence_quality": 0.738,
+      "consistency": 0.875,
+      "directness": 0.625,
+      "evidence_count": 8,
+      "independent_studies": 3,
+      "independent_samples": 3,
+      "count_term": 0.75,
+      "conflict_penalty": 0.15,
+      "unsupported_penalty": 0.0
+    },
+    "what_can_be_claimed": [
+      "AI writing assistants used as formative feedback tools can improve short-term academic writing scores and are positively perceived by students.",
+      "Unguarded generative AI access carries a real risk of harming independent performance when the AI is removed.",
+      "Guardrail design (feedback/hints instead of answers) substantially mitigates that risk.",
+      "AI interactive homework can improve engagement without harming learning outcomes.",
+      "Direct evidence about university academic writing independent ability is missing."
+    ],
+    "what_cannot_be_claimed": [
+      "AI writing assistants improve (or even preserve) university students' long-term independent writing ability.",
+      "Any semester-long academic writing outcome based on a 6-hour intervention.",
+      "That writing/assignment score gains reflect genuine independent writing skill rather than AI-supported task performance.",
+      "Any claim about academic-integrity outcomes, which none of the three studies directly measured."
+    ],
+    "missing_evidence": [
+      "Randomized or matched-section study of AI writing assistants in university academic writing courses with a no-AI independent writing transfer test.",
+      "Studies varying AI usage policy (guardrailed feedback vs open generation) within a writing course.",
+      "Longitudinal data on AI dependency and academic integrity in university writing beyond one course.",
+      "Retention evidence for writing outcomes beyond a few weeks."
+    ],
+    "recommended_action": "pilot",
+    "decision_rationale": "Writing-context evidence is positive but short and uncontrolled; strong general evidence warns that unguarded AI harms independent performance; and no university writing study measures independent ability. A bounded, guardrailed, 4-phase pilot with an independent no-AI writing transfer test is the evidence-consistent action.",
+    "exceeds_evidence_boundary": [
+      "'AI 写作助手能提高大学生的独立写作能力' — exceeds: no university writing study measures independent no-AI writing ability.",
+      "'AI 写作助手对学术诚信无风险' — exceeds: no reviewed study measured academic-integrity outcomes.",
+      "'AI 辅助写作的分数提升等于写作能力提升' — exceeds: task performance and independent ability are demonstrably distinct (E-003, E-005)."
+    ],
+    "confidence_score": 0.602,
+    "confidence_policy_version": "2026-08-12.v1",
+    "independent_studies": 3,
+    "independent_samples": 3,
+    "raw_model_confidence": "Moderate",
+    "raw_model_confidence_breakdown": {
+      "score": 0.665,
+      "evidence_quality": 0.738,
+      "consistency": 0.875,
+      "directness": 0.625,
+      "evidence_count": 8,
+      "count_term": 1.0,
+      "conflict_penalty": 0.15,
+      "unsupported_penalty": 0.0
+    }
+  },
+  "outcomes": [
+    {
+      "outcome_type": "knowledge_gain",
+      "support_count": 2,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-001",
+        "E-008"
+      ]
+    },
+    {
+      "outcome_type": "independent_problem_solving",
+      "support_count": 1,
+      "contradict_count": 1,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-003",
+        "E-004"
+      ]
+    },
+    {
+      "outcome_type": "assignment_score",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-005"
+      ]
+    },
+    {
+      "outcome_type": "engagement",
+      "support_count": 2,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-002",
+        "E-007"
+      ]
+    },
+    {
+      "outcome_type": "ai_dependency",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-006"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim": "Using ChatGPT as a formative feedback tool significantly improved university ESL students' academic writing skills across pre/post/delayed tests.",
+      "outcome_type": "knowledge_gain",
+      "evidence_ids": [
+        "E-001"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Students reported positive perceptions of ChatGPT as a feedback tool, using it to improve assignment quality and writing efficiency.",
+      "outcome_type": "engagement",
+      "evidence_ids": [
+        "E-002"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Unguarded generative AI access (GPT Base) improved practice performance (+48%) but lowered independent exam performance by 17% relative to control — contradicting the claim that AI access reliably improves independent performance.",
+      "outcome_type": "independent_problem_solving",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Teacher-designed guardrails (GPT Tutor: hints instead of answers) largely eliminated the negative effect of AI on independent exam performance.",
+      "outcome_type": "independent_problem_solving",
+      "evidence_ids": [
+        "E-004"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Task performance during practice improves sharply with AI access (+48% GPT Base, +127% GPT Tutor), yet these gains do not transfer to independent exam performance — assignment/writing scores must not be equated with independent ability.",
+      "outcome_type": "assignment_score",
+      "evidence_ids": [
+        "E-005"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Students treated unguarded GPT Base as a crutch during practice, and this reliance was associated with worse independent performance — a documented AI dependency mechanism.",
+      "outcome_type": "ai_dependency",
+      "evidence_ids": [
+        "E-006"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "GPT-4 interactive homework produced higher student satisfaction and stronger intention to continue using it than traditional homework.",
+      "outcome_type": "engagement",
+      "evidence_ids": [
+        "E-007"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Replacing traditional homework with GPT-4 interactive homework did not harm learning outcomes, and one group achieved significantly better learning gains.",
+      "outcome_type": "knowledge_gain",
+      "evidence_ids": [
+        "E-008"
+      ],
+      "status": "SUPPORTED"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "S-2024-marzuki",
+      "title": "Impact of ChatGPT on ESL students' academic writing skills",
+      "year": 2024,
+      "canonical_url": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9"
+    },
+    {
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "canonical_url": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122"
+    },
+    {
+      "source_id": "S-2025-lee",
+      "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
+      "year": 2025,
+      "canonical_url": "https://aclanthology.org/2025.acl-long.1502",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://aclanthology.org/2025.acl-long.1502"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E-001",
+      "source_id": "S-2024-marzuki",
+      "title": "Impact of ChatGPT on ESL students' academic writing skills",
+      "year": 2024,
+      "study_type": "mixed_methods",
+      "education_level": "undergraduate",
+      "subject": "academic_writing_esl",
+      "population": "first-year science/engineering ESL students at an elite private university in India (78 experimental + 56 control initially; 35 EG + 37 CG in final analysis)",
+      "sample_size": 72,
+      "intervention": "chatgpt_as_formative_feedback_tool_during_writing_instruction",
+      "comparison": "traditional_writing_instruction_without_chatgpt",
+      "outcome_type": "knowledge_gain",
+      "outcome_measure": "pre/post/delayed academic writing tests scored by rubric",
+      "claim": "Using ChatGPT as a formative feedback tool significantly improved university ESL students' academic writing skills across pre/post/delayed tests.",
+      "direction": "support",
+      "effect": "significant_positive_impact_on_writing_skills",
+      "duration": "6_hours_intervention",
+      "method": "mixed methods intervention study: pre/post/delayed writing tests plus questionnaires and focus groups",
+      "strengths": [
+        "delayed_post_test_included",
+        "mixed_methods_triangulation_survey_and_focus_groups",
+        "direct_subject_match_academic_writing"
+      ],
+      "limitations": [
+        "no_random_assignment",
+        "self_selection_risk_consent_based_participation",
+        "single_institution_elite_private_university",
+        "short_6_hour_intervention",
+        "no_independent_no_ai_transfer_test"
+      ],
+      "confounders": [
+        "self_selection",
+        "novelty_effect",
+        "instructor_effect"
+      ],
+      "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 2
+      },
+      "quality_score": 8.0,
+      "evidence_level": "moderate",
+      "applicability": {
+        "learner_match": "yes_university_undergraduate",
+        "subject_match": "yes_academic_writing",
+        "tool_match": "yes_chatgpt",
+        "usage_match": "formative_feedback_role",
+        "scope": "short_term_writing_skill_gain"
+      },
+      "confidence": 0.65,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-002",
+      "source_id": "S-2024-marzuki",
+      "title": "Impact of ChatGPT on ESL students' academic writing skills",
+      "year": 2024,
+      "study_type": "mixed_methods",
+      "education_level": "undergraduate",
+      "subject": "academic_writing_esl",
+      "population": "first-year science/engineering ESL students at an elite private university in India (78 experimental + 56 control initially; 35 EG + 37 CG in final analysis)",
+      "sample_size": 72,
+      "intervention": "chatgpt_as_formative_feedback_tool",
+      "comparison": "traditional_instruction_without_chatgpt",
+      "outcome_type": "engagement",
+      "outcome_measure": "questionnaire and focus group perceptions of ChatGPT feedback",
+      "claim": "Students reported positive perceptions of ChatGPT as a feedback tool, using it to improve assignment quality and writing efficiency.",
+      "direction": "support",
+      "effect": "positive_student_perceptions_and_reported_usage",
+      "duration": "6_hours_intervention",
+      "method": "mixed methods: questionnaire survey and focus groups",
+      "strengths": [
+        "qualitative_depth_on_usage_behaviour"
+      ],
+      "limitations": [
+        "self_reported_engagement",
+        "no_independent_behavioral_engagement_measure"
+      ],
+      "confounders": [
+        "novelty_effect",
+        "social_desirability"
+      ],
+      "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 1,
+        "D4_temporal_strength": 1,
+        "D5_directness": 2
+      },
+      "quality_score": 6.0,
+      "evidence_level": "moderate",
+      "applicability": {
+        "learner_match": "yes",
+        "subject_match": "yes_academic_writing",
+        "tool_match": "yes_chatgpt",
+        "usage_match": "formative_feedback",
+        "scope": "perceived_engagement_and_usefulness"
+      },
+      "confidence": 0.55,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-003",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand high school mathematics students in Turkey",
+      "sample_size": 1000,
+      "intervention": "gpt_base_unguarded_general_chat_access_during_practice",
+      "comparison": "no_generative_ai_control",
+      "outcome_type": "independent_problem_solving",
+      "outcome_measure": "independent exam without AI access after practice phase",
+      "claim": "Unguarded generative AI access (GPT Base) improved practice performance (+48%) but lowered independent exam performance by 17% relative to control — contradicting the claim that AI access reliably improves independent performance.",
+      "direction": "contradict",
+      "effect": "negative_17_percent_independent_exam_relative_to_control",
+      "duration": "in_class_study_sessions",
+      "method": "large-scale randomized controlled trial, practice phase followed by closed-book independent exam",
+      "strengths": [
+        "large_scale_rct_nearly_1000_students",
+        "independent_exam_without_ai_access",
+        "within_study_task_vs_learning_comparison"
+      ],
+      "limitations": [
+        "subject_mismatch_mathematics_not_writing",
+        "high_school_not_university",
+        "no_long_term_retention_test"
+      ],
+      "confounders": [
+        "tool_design_unguarded_chat"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_high_school_not_university",
+        "subject_match": "low_mathematics_vs_writing",
+        "tool_match": "yes_chatgpt_class_models",
+        "usage_match": "unguarded_general_chat",
+        "scope": "risk_warning_principle_transferable_across_subjects"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-004",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand high school mathematics students in Turkey",
+      "sample_size": 1000,
+      "intervention": "gpt_tutor_with_teacher_designed_guardrails_hints_not_answers",
+      "comparison": "no_generative_ai_control",
+      "outcome_type": "independent_problem_solving",
+      "outcome_measure": "independent exam without AI access after practice phase",
+      "claim": "Teacher-designed guardrails (GPT Tutor: hints instead of answers) largely eliminated the negative effect of AI on independent exam performance.",
+      "direction": "support",
+      "effect": "negative_effect_essentially_eliminated_no_positive_gain",
+      "duration": "in_class_study_sessions",
+      "method": "three-arm large-scale randomized controlled trial",
+      "strengths": [
+        "direct_manipulation_of_ai_usage_design",
+        "large_sample"
+      ],
+      "limitations": [
+        "no_positive_learning_gain_even_with_guardrails",
+        "subject_mismatch_mathematics"
+      ],
+      "confounders": [
+        "prompt_design_effort"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "low_mathematics",
+        "tool_match": "yes_guardrailed_tutor",
+        "usage_match": "guardrail_design_principle_transferable_to_writing_feedback",
+        "scope": "guardrail_effect_on_independent_performance"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-005",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand high school mathematics students in Turkey",
+      "sample_size": 1000,
+      "intervention": "gpt_base_or_gpt_tutor_access_during_practice",
+      "comparison": "no_generative_ai_control",
+      "outcome_type": "assignment_score",
+      "outcome_measure": "practice problem performance during study sessions",
+      "claim": "Task performance during practice improves sharply with AI access (+48% GPT Base, +127% GPT Tutor), yet these gains do not transfer to independent exam performance — assignment/writing scores must not be equated with independent ability.",
+      "direction": "support",
+      "effect": "positive_48_to_127_percent_on_practice_but_no_transfer",
+      "duration": "in_class_study_sessions",
+      "method": "randomized controlled trial comparing practice performance to closed-book independent exam",
+      "strengths": [
+        "within_study_demonstration_of_task_learning_dissociation",
+        "large_sample"
+      ],
+      "limitations": [
+        "subject_mismatch_mathematics"
+      ],
+      "confounders": [
+        "task_familiarity"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "low",
+        "tool_match": "yes_gpt",
+        "usage_match": "practice_with_ai",
+        "scope": "task_performance_vs_independent_performance_separation"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-006",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand high school mathematics students in Turkey",
+      "sample_size": 1000,
+      "intervention": "gpt_base_unguarded_chat_access",
+      "comparison": "gpt_tutor_guardrailed_and_no_ai_control",
+      "outcome_type": "ai_dependency",
+      "outcome_measure": "usage behavior and arm-wise independent exam performance patterns",
+      "claim": "Students treated unguarded GPT Base as a crutch during practice, and this reliance was associated with worse independent performance — a documented AI dependency mechanism.",
+      "direction": "support",
+      "effect": "crutch_behaviour_documented_associated_with_lower_exam_performance",
+      "duration": "in_class_study_sessions",
+      "method": "large-scale randomized controlled trial with arm-wise usage analysis",
+      "strengths": [
+        "arm_wise_contrast_isolates_reliance_mechanism"
+      ],
+      "limitations": [
+        "indirect_measure_of_dependency",
+        "subject_mismatch"
+      ],
+      "confounders": [
+        "tool_design_confounded_with_reliance"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 1,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 7.0,
+      "evidence_level": "moderate",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "low",
+        "tool_match": "yes",
+        "usage_match": "unguarded_chat",
+        "scope": "risk_mechanism_transferable_to_any_subject"
+      },
+      "confidence": 0.6,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-007",
+      "source_id": "S-2025-lee",
+      "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "esl_english",
+      "population": "four classes of high school ESL students",
+      "sample_size": null,
+      "intervention": "gpt4_interactive_homework_tutor_replacing_traditional_homework",
+      "comparison": "traditional_homework",
+      "outcome_type": "engagement",
+      "outcome_measure": "student satisfaction and continued-use intention surveys",
+      "claim": "GPT-4 interactive homework produced higher student satisfaction and stronger intention to continue using it than traditional homework.",
+      "direction": "support",
+      "effect": "higher_satisfaction_and_continued_use_intention",
+      "duration": "homework_assignments_over_an_academic_term",
+      "method": "randomized controlled trial across four high school ESL classes",
+      "strengths": [
+        "randomized_design",
+        "real_classroom_homework_context",
+        "direct_engagement_measures"
+      ],
+      "limitations": [
+        "high_school_not_university",
+        "homework_only_not_full_writing_process",
+        "no_retention_or_transfer_test"
+      ],
+      "confounders": [
+        "novelty_effect",
+        "instructor_effect_across_four_classes"
+      ],
+      "source_location": "https://aclanthology.org/2025.acl-long.1502",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 7.0,
+      "evidence_level": "moderate",
+      "applicability": {
+        "learner_match": "partial_high_school_not_university",
+        "subject_match": "partial_esl_related_to_academic_writing",
+        "tool_match": "yes_gpt4",
+        "usage_match": "interactive_feedback_and_support",
+        "scope": "engagement_in_homework_tasks"
+      },
+      "confidence": 0.65,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-008",
+      "source_id": "S-2025-lee",
+      "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
+      "year": 2025,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "esl_english",
+      "population": "four classes of high school ESL students",
+      "sample_size": null,
+      "intervention": "gpt4_interactive_homework_tutor",
+      "comparison": "traditional_homework",
+      "outcome_type": "knowledge_gain",
+      "outcome_measure": "ESL learning outcome assessments",
+      "claim": "Replacing traditional homework with GPT-4 interactive homework did not harm learning outcomes, and one group achieved significantly better learning gains.",
+      "direction": "support",
+      "effect": "non_inferior_learning_with_significant_gain_in_one_group",
+      "duration": "homework_assignments_over_an_academic_term",
+      "method": "randomized controlled trial across four ESL classes with learning outcome measurement",
+      "strengths": [
+        "randomized_design",
+        "learning_outcomes_measured_not_only_task_performance"
+      ],
+      "limitations": [
+        "high_school_not_university",
+        "homework_only_no_classroom_writing_process",
+        "no_independent_retention_or_transfer_test"
+      ],
+      "confounders": [
+        "homework_platform_variation",
+        "instructor_effect"
+      ],
+      "source_location": "https://aclanthology.org/2025.acl-long.1502",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 7.0,
+      "evidence_level": "moderate",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "partial_esl",
+        "tool_match": "yes_gpt4",
+        "usage_match": "interactive_homework_tutoring",
+        "scope": "short_term_learning_outcomes"
+      },
+      "confidence": 0.65,
+      "status": "SUPPORTED"
+    }
+  ],
+  "methodology_reviews": [
+    {
+      "target": "overall",
+      "study_audits": [
+        {
+          "target": "S-2024-marzuki",
+          "study_design": "mixed methods intervention study: pre/post/delayed writing tests plus questionnaires and focus groups",
+          "audit_items": {
+            "control_group": {
+              "status": "met",
+              "note": "Comparison group of 56 students received traditional writing instruction without ChatGPT."
+            },
+            "randomization": {
+              "status": "missing",
+              "note": "No random assignment; group allocation raises self-selection risk."
+            },
+            "pre_test": {
+              "status": "met",
+              "note": "Pre-test administered before the 6-hour intervention."
+            },
+            "post_test": {
+              "status": "met",
+              "note": "Post-test after the intervention."
+            },
+            "retention_test": {
+              "status": "met",
+              "note": "Delayed post-test included."
+            },
+            "transfer_test": {
+              "status": "missing",
+              "note": "No independent no-AI writing transfer test; all outcomes measured while ChatGPT usage was part of the condition."
+            },
+            "sample_bias": {
+              "status": "partial",
+              "note": "Final analysis 35 EG + 37 CG (72) from 78 + 56 initial enrolments."
+            },
+            "self_selection": {
+              "status": "partial",
+              "note": "Consent-based participation; students may self-select into the experimental group."
+            },
+            "measurement_validity": {
+              "status": "met",
+              "note": "Rubric-scored writing tests with pre/post/delayed structure, triangulated by questionnaires and focus groups."
+            },
+            "confounders": {
+              "status": "partial",
+              "note": "Novelty effect and single-institution context not controlled."
+            },
+            "instructor_effect": {
+              "status": "partial",
+              "note": "Single institution; instructor assignment across groups not detailed."
+            },
+            "novelty_effect": {
+              "status": "partial",
+              "note": "6-hour intervention is very short; novelty likely inflates perceived benefit."
+            },
+            "tool_version_effect": {
+              "status": "partial",
+              "note": "ChatGPT version used not specified."
+            },
+            "ai_usage_policy": {
+              "status": "partial",
+              "note": "ChatGPT deployed as a formative feedback tool, but precise usage boundaries are not fully specified."
+            },
+            "dropout": {
+              "status": "partial",
+              "note": "Attrition from 78/56 to 35/37 final analysed; reasons not detailed."
+            }
+          },
+          "task_vs_learning_guard": {
+            "measured_construct": "rubric-scored writing test performance in a formative-feedback condition",
+            "equates_task_with_learning": false,
+            "note": "Improved writing scores may partly reflect AI-supported task performance rather than independent writing ability; without a no-AI independent writing assessment, writing score gain cannot be equated with independent writing skill gain."
+          },
+          "verdict": "CONCERN",
+          "limitations": [
+            "No randomization; self-selection risk",
+            "Single institution (elite private university)",
+            "6-hour short intervention",
+            "No independent no-AI writing transfer test",
+            "Attrition between initial and final samples not fully explained"
+          ],
+          "suggestions": [
+            "Add randomization or matched-section design",
+            "Extend intervention duration to a full term",
+            "Add an independent no-AI writing transfer assessment",
+            "Report dropout reasons and usage-fidelity data"
+          ]
+        },
+        {
+          "target": "S-2025-bastani",
+          "study_design": "large-scale three-arm randomized controlled trial (no AI / GPT Base unguarded / GPT Tutor guardrailed)",
+          "audit_items": {
+            "control_group": {
+              "status": "met",
+              "note": "No-generative-AI control group present."
+            },
+            "randomization": {
+              "status": "met",
+              "note": "Large-scale randomized controlled trial."
+            },
+            "pre_test": {
+              "status": "met",
+              "note": "Baseline covariates measured."
+            },
+            "post_test": {
+              "status": "met",
+              "note": "Practice performance and independent exam measured."
+            },
+            "retention_test": {
+              "status": "missing",
+              "note": "No delayed/retention test."
+            },
+            "transfer_test": {
+              "status": "partial",
+              "note": "Independent closed-book exam functions as a transfer check from practice, but no longer-term transfer measure."
+            },
+            "sample_bias": {
+              "status": "met",
+              "note": "Nearly 1000 students; large and well-powered."
+            },
+            "self_selection": {
+              "status": "met",
+              "note": "Random assignment removes self-selection."
+            },
+            "measurement_validity": {
+              "status": "met",
+              "note": "Independent exam without AI access cleanly separates task performance from learning."
+            },
+            "confounders": {
+              "status": "met",
+              "note": "Three-arm design isolates the effect of tool design."
+            },
+            "instructor_effect": {
+              "status": "not_applicable",
+              "note": "Standardized study sessions; instructor effects minimized."
+            },
+            "novelty_effect": {
+              "status": "partial",
+              "note": "Short in-class sessions; novelty not explicitly controlled."
+            },
+            "tool_version_effect": {
+              "status": "not_applicable",
+              "note": "Single GPT version studied."
+            },
+            "ai_usage_policy": {
+              "status": "met",
+              "note": "Explicit contrast between unguarded (GPT Base) and guardrailed (GPT Tutor) usage."
+            },
+            "dropout": {
+              "status": "not_applicable",
+              "note": "Not reported in the reviewed summary."
+            }
+          },
+          "task_vs_learning_guard": {
+            "measured_construct": "practice problem performance vs independent closed-book exam performance",
+            "equates_task_with_learning": false,
+            "note": "The study itself demonstrates the dissociation: +48%/+127% practice performance coexisted with -17% independent exam performance in the unguarded arm."
+          },
+          "verdict": "PASS",
+          "limitations": [
+            "Subject mismatch: high school mathematics, not university academic writing",
+            "No positive learning gain even with guardrails (they eliminate harm, do not produce gain)",
+            "No long-term retention test"
+          ],
+          "suggestions": [
+            "Replicate the guardrail design in a writing context",
+            "Extend to a university population",
+            "Add a delayed independent test"
+          ]
+        },
+        {
+          "target": "S-2025-lee",
+          "study_design": "randomized controlled trial across four high school ESL classes comparing GPT-4 interactive homework with traditional homework",
+          "audit_items": {
+            "control_group": {
+              "status": "met",
+              "note": "Traditional-homework comparison group present."
+            },
+            "randomization": {
+              "status": "met",
+              "note": "Randomized controlled trial at class level."
+            },
+            "pre_test": {
+              "status": "partial",
+              "note": "Baseline learning levels measured; detail limited in the reviewed summary."
+            },
+            "post_test": {
+              "status": "met",
+              "note": "Learning outcome assessments and engagement measures collected."
+            },
+            "retention_test": {
+              "status": "missing",
+              "note": "No delayed test."
+            },
+            "transfer_test": {
+              "status": "missing",
+              "note": "No independent no-AI transfer task."
+            },
+            "sample_bias": {
+              "status": "partial",
+              "note": "Four classes only; modest sample, clustering at class level."
+            },
+            "self_selection": {
+              "status": "met",
+              "note": "Randomized assignment."
+            },
+            "measurement_validity": {
+              "status": "met",
+              "note": "Learning outcomes measured in addition to engagement, not only task performance."
+            },
+            "confounders": {
+              "status": "partial",
+              "note": "Class-level clustering and possible platform differences between homework modes."
+            },
+            "instructor_effect": {
+              "status": "partial",
+              "note": "Four classes; instructor differences across classes not fully controlled."
+            },
+            "novelty_effect": {
+              "status": "partial",
+              "note": "Novel interactive platform may inflate engagement."
+            },
+            "tool_version_effect": {
+              "status": "not_applicable",
+              "note": "Single GPT-4 version studied."
+            },
+            "ai_usage_policy": {
+              "status": "partial",
+              "note": "Interactive homework tutor design defined, but guardrail details limited in the reviewed summary."
+            },
+            "dropout": {
+              "status": "not_applicable",
+              "note": "Not reported in the reviewed summary."
+            }
+          },
+          "task_vs_learning_guard": {
+            "measured_construct": "homework task completion/engagement vs ESL learning outcome assessments",
+            "equates_task_with_learning": false,
+            "note": "Learning outcomes are measured separately from engagement, which is a strength; but no independent no-AI writing transfer test exists."
+          },
+          "verdict": "PASS",
+          "limitations": [
+            "High school ESL context, not university academic writing",
+            "Homework-only setting does not cover the classroom writing process",
+            "No retention or transfer test",
+            "Small number of classes (four)"
+          ],
+          "suggestions": [
+            "Extend to university academic writing with classroom writing tasks",
+            "Add retention and no-AI transfer assessments",
+            "Increase the number of classes/sections"
+          ]
+        }
+      ],
+      "audit_items": {
+        "control_group": {
+          "status": "met",
+          "note": "All three studies include a no-AI or traditional-instruction comparison."
+        },
+        "randomization": {
+          "status": "partial",
+          "note": "Bastani 2025 and Lee 2025 randomized; Marzuki 2024 did not."
+        },
+        "pre_test": {
+          "status": "met",
+          "note": "Marzuki has pre/post/delayed tests; Bastani and Lee measure baselines."
+        },
+        "post_test": {
+          "status": "met",
+          "note": "Immediate outcome measures present in all studies."
+        },
+        "retention_test": {
+          "status": "partial",
+          "note": "Only Marzuki 2024 includes a delayed test; Bastani and Lee have none."
+        },
+        "transfer_test": {
+          "status": "missing",
+          "note": "No study tests independent no-AI writing in a university context; Bastani's independent exam is the closest analogue but in mathematics."
+        },
+        "sample_bias": {
+          "status": "partial",
+          "note": "Bastani is large; Lee is four classes; Marzuki is a single elite private university."
+        },
+        "self_selection": {
+          "status": "partial",
+          "note": "Marzuki consent-based; Bastani and Lee randomized."
+        },
+        "measurement_validity": {
+          "status": "partial",
+          "note": "Task performance is separated from independent performance only in Bastani 2025."
+        },
+        "confounders": {
+          "status": "partial",
+          "note": "Novelty effects, tool versions and instructor effects not fully controlled across the set."
+        },
+        "instructor_effect": {
+          "status": "partial",
+          "note": "Marzuki single institution; Lee across four classes; Bastani standardized sessions."
+        },
+        "novelty_effect": {
+          "status": "partial",
+          "note": "Short interventions in all three studies likely inflate engagement."
+        },
+        "tool_version_effect": {
+          "status": "partial",
+          "note": "ChatGPT/GPT-4 versions differ across studies and continue to evolve."
+        },
+        "ai_usage_policy": {
+          "status": "partial",
+          "note": "Only Bastani explicitly contrasts unguarded vs guardrailed usage policies."
+        },
+        "dropout": {
+          "status": "partial",
+          "note": "Only Marzuki reports attrition."
+        }
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "writing/assignment scores vs independent writing ability",
+        "equates_task_with_learning": false,
+        "note": "Writing scores or assignment scores must NOT be equated with independent writing ability. Bastani 2025 shows +48-127% task performance coexisting with -17% independent exam performance; Marzuki's improved writing scores under a ChatGPT-feedback condition carry the same risk of reflecting AI-supported task performance rather than independent writing skill."
+      },
+      "verdict": "CONCERN",
+      "limitations": [
+        "No university-level academic writing RCT measuring independent no-AI writing ability.",
+        "Bastani 2025 is methodologically strong but in high school mathematics; subject directness to university academic writing is low.",
+        "Lee 2025 is a high school ESL RCT with no retention or transfer test.",
+        "Marzuki 2024 is the only writing-context study but lacks randomization, is single-institution, and has no transfer assessment."
+      ],
+      "suggestions": [
+        "Design a randomized or matched-section pilot in university academic writing with an independent no-AI writing transfer test.",
+        "Adopt guardrail principles from Bastani's GPT Tutor (feedback/hints instead of answers) for the writing context.",
+        "Measure process (AI usage logs, reflections) alongside learning and risk outcomes.",
+        "Separate task/assignment performance metrics from independent learning metrics in all analyses."
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "reason_for_disagreement": "Disagreement comes from outcome separation (task/assignment scores vs independent ability), tool design (guarded feedback vs unguarded generation), and population (high school vs university). Writing-context evidence (Marzuki) is positive but short and uncontrolled; the strongest evidence (Bastani) shows unguarded AI harms independent performance but in a different subject and level."
+    }
+  ],
+  "applicability": {
+    "suitable_for": "bounded pilot in a university academic writing course with a guardrailed AI usage policy and independent no-AI writing assessment",
+    "not_suitable_for": "unrestricted student AI use without a usage policy or integrity safeguards",
+    "required_conditions": [
+      "guardrailed formative-feedback usage policy",
+      "independent no-AI writing transfer test",
+      "reflection requirement and usage logging",
+      "academic integrity policy covering AI-assisted writing"
+    ]
+  },
+  "intervention": {
+    "decision": "pilot",
+    "target_learners": "university undergraduate students in an academic writing course (1-2 sections, ~30-60 students, including ESL learners)",
+    "learning_goals": [
+      "independently plan, draft and revise academic writing without AI",
+      "use AI writing assistants critically as formative feedback and error-explanation tools, not as text generators",
+      "develop reflection skills: explain every AI-assisted change in their own words"
+    ],
+    "pilot_duration": "8_weeks",
+    "phase_1": {
+      "name": "Phase 1 — Independent Drafting (No AI)",
+      "activities": [
+        "baseline writing assessment",
+        "weeks 1-2: students draft essays with no AI access whatsoever"
+      ],
+      "ai_usage_rule": "all AI usage forbidden; drafts must be entirely student-written",
+      "outcome_check": "baseline independent writing quality and no-AI baseline score"
+    },
+    "phase_2": {
+      "name": "Phase 2 — AI Feedback and Error Explanation Only",
+      "activities": [
+        "weeks 3-4: AI allowed to give feedback on student drafts and explain grammar/style errors; it must not generate new text"
+      ],
+      "ai_usage_rule": "AI may give formative feedback and explain errors only; no generation or rewriting of passages",
+      "outcome_check": "mid-pilot in-class writing sample without AI; student reflection on which feedback was applied"
+    },
+    "phase_3": {
+      "name": "Phase 3 — AI-Assisted Revision with Explanation",
+      "activities": [
+        "weeks 5-7: AI may suggest revisions; students must accept/reject each suggestion and justify their choices in a revision memo"
+      ],
+      "ai_usage_rule": "AI-assisted revision allowed only with a mandatory revision memo explaining every AI-suggested change that was kept",
+      "outcome_check": "weekly draft quality rubric plus revision-memo completeness"
+    },
+    "phase_4": {
+      "name": "Phase 4 — Independent Writing Transfer Test (No AI)",
+      "activities": [
+        "week 8: a new academic writing task on an unseen topic completed in a strictly no-AI environment"
+      ],
+      "ai_usage_rule": "no AI access during the transfer assessment",
+      "outcome_check": "independent writing score and transfer-task rubric"
+    },
+    "ai_usage_policy": "AI usage is restricted to three explicitly graded modes: no-AI drafting (phase 1), feedback/error-explanation only (phase 2), AI-assisted revision with mandatory explanation (phase 3). Copying AI-generated text into a submission without explanation is an academic integrity violation. A no-AI transfer assessment closes the pilot (phase 4).",
+    "teacher_role": "design guardrailed feedback prompts and rubrics; review AI usage logs and revision memos weekly; hold short reflection debriefs",
+    "student_role": "draft independently in phase 1; use AI only for feedback in phase 2; revise with AI while documenting every change in phase 3; complete the independent no-AI transfer task in phase 4",
+    "reflection_requirement": "students must explain every AI-assisted change in their own words (revision memo); one written reflection per phase on when AI helped versus when it masked understanding",
+    "assessment": "no-AI baseline writing assessment, mid-pilot in-class writing sample, draft quality rubric, independent no-AI writing transfer task, revision memos, AI usage self-report",
+    "risk_control": [
+      "guardrailed usage policy modeled on Bastani 2025 GPT Tutor (feedback/hints instead of answers)",
+      "independent no-AI writing transfer test prevents score inflation from AI-supported task performance",
+      "revision memos and usage logs reviewed weekly to detect AI dependency",
+      "academic integrity policy explicitly covers AI-generated text and unexamined copying",
+      "false-confidence check: predicted grade vs actual grade on no-AI assessments"
+    ],
+    "stop_conditions": [
+      "independent writing transfer-test scores drop significantly below baseline/cohort expectations",
+      "revision memos show widespread unexamined AI copying (integrity violations in >20% of submissions)",
+      "AI dependency signals (usage without understanding, explanation quality) exceed threshold for two consecutive weeks",
+      "teacher workload for reviewing memos/logs becomes unsustainable"
+    ],
+    "evidence_alignment": [
+      "E-001",
+      "E-002",
+      "E-003",
+      "E-004",
+      "E-005",
+      "E-006",
+      "E-007",
+      "E-008"
+    ]
+  },
+  "evaluation": {
+    "research_question": "In a university academic writing course, does a guardrailed AI writing assistant (feedback-only → AI-assisted revision with explanation) improve independent writing ability without increasing AI dependency, academic-integrity risk, or false confidence, compared to traditional no-AI writing instruction?",
+    "groups": {
+      "treatment": "one section using the 4-phase guardrailed AI writing-assistant policy",
+      "comparison": "one matched section without AI access (same instructor, materials and rubrics)"
+    },
+    "baseline": "week-1 independent writing assessment in a strictly no-AI environment (writing quality rubric, fluency, grammar/accuracy)",
+    "post_test": "week-8 independent writing assessment in a no-AI environment (same rubric as baseline)",
+    "retention_test": "delayed writing task 4-6 weeks after the pilot ends, in a no-AI environment",
+    "transfer_test": "week-8 novel academic writing task on an unseen topic in a strictly no-AI environment",
+    "process_metrics": [
+      "AI usage logs: prompts submitted, feedback requested, accepted vs rejected suggestions",
+      "revision memo completeness and explanation quality",
+      "help-seeking behaviour: self-generated revision vs AI-suggested revision ratio",
+      "draft revision counts and writing fluency measures"
+    ],
+    "learning_metrics": [
+      "independent writing score on no-AI assessments (baseline / post / retention / transfer)",
+      "writing quality rubric (structure, argument, grammar, vocabulary)",
+      "knowledge_gain from baseline to post-test",
+      "retention on the delayed no-AI writing task"
+    ],
+    "risk_metrics": [
+      "ai_dependency: usage-without-understanding index from revision-memo quality and ratio of unexplained AI edits",
+      "academic_integrity_risk: detected copying of AI-generated text without attribution/explanation; integrity violations per submission",
+      "false_confidence: predicted grade vs actual grade gap on no-AI assessments; self-reported confidence vs independent performance"
+    ],
+    "analysis_plan": "Pre-registered comparison of treatment vs comparison sections on baseline-adjusted learning metrics (ANCOVA); learning metrics (no-AI independent writing) analysed separately from process/task metrics; subgroup analysis by initial writing proficiency; risk metrics monitored weekly with stop-condition checks at weeks 3, 5, 7 and at the transfer test.",
+    "success_threshold": "treatment shows non-inferior independent writing (delta within 5%) AND equal or better retention AND AI dependency index and integrity violations below thresholds; if independent writing declines >10% on the transfer test, the pilot is judged unsuccessful regardless of in-class score gains.",
+    "stop_conditions": [
+      "independent writing transfer-test decline >10% vs comparison",
+      "integrity violations (unexplained AI copying) in >20% of submissions",
+      "ai_dependency index exceeding the pre-set threshold for two consecutive weeks",
+      "false-confidence gap widening beyond the pre-set bound across two consecutive assessments"
+    ]
+  },
+  "benchmark": {},
+  "provenance": {
+    "search_provider": "n/a",
+    "fetched_at": "2026-08-12T09:32:36.867450+00:00"
+  }
+}

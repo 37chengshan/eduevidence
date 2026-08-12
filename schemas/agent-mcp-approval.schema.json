@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/agent-mcp-approval.schema.json",
+  "title": "AgentMcpApproval",
+  "description": "User approval record for the Agent MCP role -> CLI -> model mapping (Phase 8 Approval Gate). Only an explicit, hash-verified record permits spawning via safe_spawn(). Any change to the mapping (new CLI / replaced model / new role / modified mapping / raised budget / new provider) invalidates the record and requires re-confirmation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["approved", "approved_at", "allowed_clis", "role_mapping_hash", "roles"],
+  "properties": {
+    "approved": {
+      "type": "boolean",
+      "const": true,
+      "description": "Explicit user confirmation. A mere agent-mcp installation is NOT approval."
+    },
+    "approved_at": { "type": "string", "format": "date-time" },
+    "allowed_clis": {
+      "type": "array",
+      "description": "CLI set the user allowed for dispatch (scan scope + gate check).",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "role_mapping_hash": {
+      "type": "string",
+      "description": "SHA-256 of the canonical 'roles' object; integrity check against tampering.",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "roles": {
+      "type": "object",
+      "description": "role -> {cli, model} mapping the user explicitly approved; enforced verbatim by safe_spawn().",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["cli", "model"],
+        "properties": {
+          "cli": { "type": "string" },
+          "model": { "type": "string" }
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "description": "Approved cost/budget envelope (per-run or per-task); raising it requires re-confirmation.",
+      "additionalProperties": true
+    },
+    "provider": {
+      "type": ["string", "null"],
+      "description": "Approved provider endpoint; a new provider requires re-confirmation."
+    },
+    "schema_version": { "type": "integer", "const": 1 },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
+  }
+}
