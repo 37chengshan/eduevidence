@@ -23,3 +23,6 @@ benchmarks/results/*
 # Local runtime
 *.log
 .env
+
+# Local briefs (not for distribution)
+docs/competition-brief.md

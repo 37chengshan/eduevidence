@@ -70,7 +70,38 @@ target: teaching_decision # evidence_review | teaching_decision | pilot_design |
 7. Applicability  适用性分析（For whom / which course / which outcome / what conditions）
 8. Intervene      Teaching Intervention 设计（最小可验证试点，禁止直接全面部署）
 9. Evaluate       Evaluation Plan 设计（任何 PILOT/ADOPT 建议必须附评价方案）
+10. Present       结果呈现（渲染单文件双语 HTML 报告 + 信息图 + 学术图，见下方"结果呈现"）
 ```
+
+**每步必须过对应 Schema 校验门，才能进入下一步**：
+
+```text
+Frame        → education-frame.schema.json
+Retrieve     → source.schema.json / fetch-result.schema.json
+Extract      → evidence.schema.json
+Challenge    → cross-model-review.schema.json（反证记录）
+Audit        → methodology.schema.json
+Adjudicate   → verdict.schema.json
+Intervene    → intervention.schema.json
+Evaluate     → evaluation.schema.json
+Present      → report-result.schema.json（整体契约校验）
+```
+
+## 结果呈现（第 10 步）
+
+研究产出 `result.json` 后，通过确定性适配器渲染为用户可读的展示层（`visualization/eduevidence-report/`）：
+
+```text
+result.json + result.zh.json（中文平行数据，AI 直接产出双语）
+  ├─ build_charts.py       → ECharts 规格（结果概览 / 主张追溯 / 基准）
+  ├─ build_infographics.py → 4 张信息图 SVG（EvidenceFlow / 裁决 / 干预 / 评价）
+  ├─ build_figures.py      → 出版级学术图（SVG/PNG/PDF）
+  └─ build_report.py       → EduEvidence_Report.html（单文件离线双语报告）
+```
+
+- 报告默认中文，一键切换 EN；含执行摘要（问题→结论→依据→行动）、12 个 Section、五主题。
+- **展示层只改变呈现方式，绝不修改数据**：图表数字必须与 result.json 逐项一致，不一致则 `REPORT_INVALID` 禁止发布。
+- 渲染命令：`python3 visualization/eduevidence-report/scripts/build_report.py --result <result.json> --out REPORT.html`
 
 **复杂度分级门（先判级，再决定拓扑）：**
 

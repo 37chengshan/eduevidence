@@ -193,25 +193,37 @@ result.json + result.zh.json (Chinese parallel data)
 
 ## Architecture
 
-See [`docs/architecture.md`](docs/architecture.md):
+The repository is a complete **Skill package**: `SKILL.md` is the entry point; everything else is layered as *skill core → quality assurance → demos*. See [`docs/architecture.md`](docs/architecture.md):
 
+```text
+EduEvidence/  (= one Skill package)
+│
+├─ SKILL.md                  ← Skill entry: When to Use / Inputs / 10-step Workflow / Output Contract
+│
+├─ Skill core (required to run)
+│  ├─ skill/agents/          8 role protocols (Planner / Retriever / Analyst / Skeptic /
+│  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer)
+│  ├─ references/            9 education methodology documents (evidence quality / skeptic /
+│  │                         tribunal policy / intervention design…)
+│  ├─ schemas/               12 JSON Schema data contracts (validation gates per step)
+│  ├─ scripts/               12 deterministic logic scripts (scoring / matrix / audit / render)
+│  ├─ retrieval/             Search & fetch layer (fetch / validate / dedupe / failures)
+│  ├─ integrations/          Agent MCP enhancement layer + Smart Web Fetch integration
+│  └─ visualization/         Presentation layer (ECharts / infographics / academic figures / bilingual HTML composer)
+│
+├─ Quality assurance
+│  ├─ tests/                 pytest test matrix (50 cases)
+│  └─ benchmarks/            30 questions + 10 gold annotations + B0–B4 evaluation framework
+│
+└─ Demos & distribution
+   ├─ examples/              3 complete Research & Decision Packs (incl. bilingual HTML reports)
+   ├─ docs/                  architecture / methodology / benchmark / demo / reproducibility
+   ├─ install.sh             one-click install + self-check
+   ├─ pyproject.toml         packaging metadata (core has zero third-party deps)
+   └─ README(.en).md         bilingual docs
 ```
-EduEvidence/
-├── SKILL.md                 # Core skill (short, self-contained)
-├── install.sh               # One-click install + self-check
-├── references/              # 9 education methodology documents
-├── schemas/                 # 12 JSON Schema data contracts
-├── scripts/                 # 12 deterministic logic scripts
-├── visualization/
-│   └── eduevidence-report/  # Visualization adapters (ECharts / AntV SVG / academic figures / bilingual HTML composer)
-│       ├── SKILL.md         # HTML result-layer rendering skill
-│       ├── scripts/         # build_charts / build_infographics / build_figures / build_report / zh_labels
-│       └── themes/          # Five theme CSS files
-├── benchmarks/              # 30 questions + 10 gold annotations + evaluation framework
-├── examples/                # 3 complete Research & Decision Packs (incl. bilingual HTML reports)
-├── docs/                    # architecture / methodology / benchmark / demo / reproducibility
-└── tests/                   # pytest test matrix (50 cases)
-```
+
+> Skill-package principle: the **minimal runtime set is `SKILL.md + skill/ + references/ + schemas/ + scripts/`**; `retrieval/`, `integrations/`, `visualization/` are the execution/presentation layers that make the Skill actually runnable; `tests/`, `benchmarks/`, `examples/`, `docs/` provide credibility and onboarding — none of them affect the Skill body itself.
 
 ### SCP / Platform Native Mode
 

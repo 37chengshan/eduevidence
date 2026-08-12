@@ -193,25 +193,36 @@ result.json + result.zh.json（中文平行数据）
 
 ## Architecture
 
-详见 [`docs/architecture.md`](docs/architecture.md)：
+仓库是一个完整的 **Skill 包**：`SKILL.md` 是入口，其余目录按"Skill 运行必需 → 质量保障 → 演示"分层。详见 [`docs/architecture.md`](docs/architecture.md)：
 
+```text
+EduEvidence/  （= 一个 Skill 包）
+│
+├─ SKILL.md                  ← Skill 入口：When to Use / Inputs / 10 步 Workflow / 输出契约
+│
+├─ Skill 本体（运行必需）
+│  ├─ skill/agents/          8 个角色协议（Planner / Retriever / Analyst / Skeptic /
+│  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer）
+│  ├─ references/            9 个教育方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计…）
+│  ├─ schemas/               12 个 JSON Schema 数据契约（每步输出的校验门）
+│  ├─ scripts/               12 个确定性逻辑脚本（评分 / 矩阵 / 审计 / 渲染）
+│  ├─ retrieval/             检索与抓取层（fetch / validate / dedupe / failures）
+│  ├─ integrations/          Agent MCP 增强层 + Smart Web Fetch 集成
+│  └─ visualization/         结果呈现层（ECharts / 信息图 / 学术图 / 双语 HTML Composer）
+│
+├─ 质量保障
+│  ├─ tests/                 pytest 测试矩阵（50 个用例）
+│  └─ benchmarks/            30 题 + 10 题金标注 + B0–B4 评测框架
+│
+└─ 演示与分发
+   ├─ examples/              3 个完整 Research & Decision Pack（含双语 HTML 报告）
+   ├─ docs/                  架构 / 方法论 / Benchmark / Demo / 复现指南
+   ├─ install.sh             一键安装 + 自检
+   ├─ pyproject.toml         打包元数据（核心零第三方依赖）
+   └─ README(.en).md         双语说明
 ```
-EduEvidence/
-├── SKILL.md                 # 核心 Skill（短，自包含）
-├── install.sh               # 一键安装 + 自检
-├── references/              # 9 个教育方法论文档
-├── schemas/                 # 12 个 JSON Schema 数据契约
-├── scripts/                 # 12 个确定性逻辑脚本
-├── visualization/
-│   └── eduevidence-report/  # 可视化适配器（ECharts / AntV SVG / 学术图 / 双语 HTML Composer）
-│       ├── SKILL.md         # HTML 结果层渲染 Skill
-│       ├── scripts/         # build_charts / build_infographics / build_figures / build_report / zh_labels
-│       └── themes/          # 五主题 CSS
-├── benchmarks/              # 30 题 + 10 题金标注 + 评测框架
-├── examples/                # 3 个完整 Research & Decision Pack（含双语 HTML 报告）
-├── docs/                    # architecture / methodology / benchmark / demo / reproducibility
-└── tests/                   # pytest 测试矩阵（50 个用例）
-```
+
+> Skill 包设计原则：**运行所需的最小集是 `SKILL.md + skill/ + references/ + schemas/ + scripts/`**；`retrieval/`、`integrations/`、`visualization/` 是让 Skill 真正"可运行、可呈现"的执行层；`tests/`、`benchmarks/`、`examples/`、`docs/` 是可信度与上手保障，不影响 Skill 本体。
 
 ### SCP / Platform Native Mode
 
