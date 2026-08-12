@@ -166,6 +166,29 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 
 另外两个示例：AI 写作助手（`examples/ai-writing-assistant/`）、高数 AI Tutor（`examples/ai-tutor/`）——证明 Skill 不是为一个问题写死。
 
+## Visualization: Bilingual HTML Report + Infographics + Academic Figures
+
+研究完成后，`result.json` 通过确定性适配器渲染为三套可视化产物（全部零第三方依赖，单文件离线可打开）：
+
+```text
+result.json + result.zh.json（中文平行数据）
+  ├─ build_charts.py        → chart_specs.json（ECharts 规格：结果概览/主张追溯/基准）
+  ├─ build_infographics.py  → infographics.json（4 张 AntV 风格 SVG：EvidenceFlow/裁决/干预/评价）
+  ├─ build_figures.py       → figures/（出版级学术图：figure_data.json + SVG/PNG/PDF）
+  └─ build_report.py        → EduEvidence_Report.html（单文件双语报告 + report_spec.json）
+```
+
+**EduEvidence_Report.html（主产物）**：
+
+- **双语切换**：默认中文，顶部一键切换 EN；中文模式下证据、主张、方法学审计、干预与评价全部为中文，数据同构（`result.zh.json` 与 `result.json` 键/数字/ID/URL 一致，由 AI 直接产出双语数据而非机器翻译）。
+- **执行摘要叙事**：第一屏"一句话结论"——问题 → 依据（支持/反驳证据）→ 行动（决策+置信度+理由）；每个 Section 顶部有"本节回答：…"导读行。
+- **12 个 Section**：执行决策 / 结果证据概览 / 证据矩阵（可筛选搜索）/ 证据裁决 / 方法学审计 / 冲突分析 / 主张-证据追溯 / 适用性 / 教学干预 / 评价方案 / 基准测试 / 来源与溯源。
+- **五主题切换**（claude / academic / editorial / datalab / presentation）+ localStorage 持久化。
+- **静态优先**：无 JS 也可读（决策/矩阵/裁决/干预/来源）；ECharts 可用时增强交互；表格横向滚动防溢出。
+- **完整性门**：图表数字与 result.json 逐项核对，`REPORT_INVALID` 时禁止发布。
+
+> 示例产物直接打开：`examples/ai-coding-assistant/EduEvidence_Report.html`
+
 ## Architecture
 
 详见 [`docs/architecture.md`](docs/architecture.md)：
@@ -173,13 +196,19 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 ```
 EduEvidence/
 ├── SKILL.md                 # 核心 Skill（短，自包含）
+├── install.sh               # 一键安装 + 自检
 ├── references/              # 9 个教育方法论文档
-├── schemas/                 # 6 个 JSON Schema 数据契约
-├── scripts/                 # 6 个确定性逻辑脚本
+├── schemas/                 # 12 个 JSON Schema 数据契约
+├── scripts/                 # 12 个确定性逻辑脚本
+├── visualization/
+│   └── eduevidence-report/  # 可视化适配器（ECharts / AntV SVG / 学术图 / 双语 HTML Composer）
+│       ├── SKILL.md         # HTML 结果层渲染 Skill
+│       ├── scripts/         # build_charts / build_infographics / build_figures / build_report / zh_labels
+│       └── themes/          # 五主题 CSS
 ├── benchmarks/              # 30 题 + 10 题金标注 + 评测框架
-├── examples/                # 3 个完整 Research & Decision Pack
+├── examples/                # 3 个完整 Research & Decision Pack（含双语 HTML 报告）
 ├── docs/                    # architecture / methodology / benchmark / demo / reproducibility
-└── tests/                   # pytest 测试矩阵（43 个用例）
+└── tests/                   # pytest 测试矩阵（50 个用例）
 ```
 
 ### SCP / Platform Native Mode
@@ -207,9 +236,17 @@ Agent MCP 是**性能与可靠性增强层，不是 EduEvidence 成立的前提*
 ```bash
 git clone https://github.com/37chengshan/eduevidence.git
 cd eduevidence
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e '.[dev]'
+bash install.sh              # 一键安装（创建 venv + 依赖 + 自检 + 测试）
 ```
+
+或手动：
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e '.[dev]'      # 核心零第三方依赖；dev 额外装 pytest
+```
+
+> 学术图 PNG/PDF 导出为可选：`pip install matplotlib`（不装也能输出 SVG）。
 
 ## Usage
 
@@ -227,7 +264,7 @@ python3 scripts/evidence_matrix.py examples/ai-coding-assistant/evidence.jsonl
 # 4. 运行 Citation Audit（Claim-证据追溯）
 python3 scripts/claim_audit.py --claims claims.jsonl --evidence evidence.jsonl
 
-# 5. 渲染 Research & Decision Pack
+# 5. 渲染 Research & Decision Pack（Markdown）
 python3 scripts/render_report.py \
     --frame examples/ai-coding-assistant/frame.json \
     --evidence examples/ai-coding-assistant/evidence.jsonl \
@@ -237,14 +274,19 @@ python3 scripts/render_report.py \
     --evaluation examples/ai-coding-assistant/evaluation.json \
     --out REPORT.md
 
-# 6. 校验 Benchmark 题目集
+# 6. 渲染单文件双语 HTML 报告（主产物）
+python3 visualization/eduevidence-report/scripts/build_report.py \
+    --result examples/ai-coding-assistant/result.json \
+    --out examples/ai-coding-assistant/EduEvidence_Report.html
+
+# 7. 校验 Benchmark 题目集
 python3 scripts/benchmark.py --questions benchmarks/questions.jsonl
 
-# 7. 运行测试
+# 8. 运行测试
 pytest
 ```
 
-> 真实使用中，Skill 由 Agent 读取 SKILL.md 执行 9 步工作流；`scripts/` 保证结构化数据的确定性校验，`examples/` 是完整运行示例。
+> 真实使用中，Skill 由 Agent 读取 SKILL.md 执行 9 步工作流；`scripts/` 保证结构化数据的确定性校验，`visualization/` 保证展示层的确定性渲染，`examples/` 是完整运行示例。
 
 ## Methodology
 
@@ -268,9 +310,9 @@ pytest
 - [x] Phase 3 Challenge & Tribunal（Skeptic / Conflict / Tribunal）
 - [x] Phase 4 Evidence-to-Action（Applicability / Decision / Intervention / Evaluation）
 - [x] Phase 5 Benchmark v1（30 题 + 10 题金标注 + B0–B3 框架）
-- [ ] Phase 6 Agent MCP（Complexity Gate / Conditional Spawn / Memory）
-- [ ] Phase 7 Benchmark v2（B4 / Ablation / 成本对比）
-- [ ] Phase 8 Product UI（5 页核心体验）
+- [x] Phase 6 Agent MCP（Complexity Gate / Conditional Spawn / Memory）
+- [x] Phase 7 Benchmark v2（B4 / Ablation / 成本对比）
+- [x] Phase 8 Product UI（单文件双语 HTML 报告 / 五主题 / ECharts / 信息图 / 学术图）
 - [ ] Phase 9 Submission（Demo 视频 / 复现指南）
 
 ## License
