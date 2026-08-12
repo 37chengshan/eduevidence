@@ -77,16 +77,15 @@ In the interactive menu: pick `all` to install to every agent, `custom` to type 
 Your agent is not in the list? Paste the following prompt **verbatim** into any AI that supports skills / custom instructions:
 
 ```text
-Please install EduEvidence from https://github.com/37chengshan/eduevidence as a skill:
-1. Copy SKILL.md, skill/, references/, schemas/, scripts/, retrieval/, integrations/,
-   visualization/ from the repo root into your skill directory
-   (e.g. ~/.claude/skills/eduevidence/, ~/.omp/agent/skills/eduevidence/,
-   ~/.agents/skills/eduevidence/), or import it via your skill loading mechanism;
-2. After install, confirm you can read SKILL.md and run the deterministic scripts under scripts/;
-3. Tell me the result.
+Follow the install guide at https://github.com/37chengshan/eduevidence/blob/main/docs/install-guide.md
+to install EduEvidence as a skill for me: read the doc first, then per Section 2's
+landing table copy SKILL.md, skill/, references/, schemas/, scripts/, retrieval/,
+integrations/, visualization/ into my skill directory (or import via my loading
+mechanism), then complete the Section 3 verification (SKILL.md readable + scripts
+runnable + sample report renderable).
 ```
 
-The script also prints this universal prompt after a `--skill` install completes.
+Post-install wrap-up (including the optional star question) is in the [install guide](docs/install-guide.md) Section 4.
 
 ## What Problem We Solve
 
