@@ -74,7 +74,7 @@
 - 图表数字 == result.json 数字（Scientific Integrity Gate，v5 §27）；
 - 组件层禁止新增结论、禁止隐藏 contradiction、禁止捏造统计（v5 §60）。
 
-## 四、验收
+## 四、自检清单
 
 - [ ] 同一 report_spec 渲染五种主题，数据完全一致（v5 §49）
 - [ ] 无 JS 时 Decision / Evidence summary / Matrix / Tribunal / Intervention / Sources 仍可读（v5 §28）

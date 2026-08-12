@@ -1,5 +1,5 @@
 /* Theme 05 — Presentation Dark (v5 方案 §8).
-   比赛大屏/答辩演示：深色背景、高对比数字、大字号、更少文字、更强视觉焦点。
+   演讲大屏/答辩演示：深色背景、高对比数字、大字号、更少文字、更强视觉焦点。
    只用于 Presentation Mode；同一数据，禁止因为 Dark Mode 改变图表语义。 */
 :root[data-theme="presentation"] {
   --bg: #14161A;

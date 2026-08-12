@@ -12,7 +12,7 @@ description: EduEvidence HTML 结果层渲染 Skill。把校验过的 result.jso
 - 一次 EduEvidence Research 完成后，需要把 `result.json` 渲染为可交互、可追溯、可离线展示的 HTML Evidence Report
 - 需要五种 HTML 主题（claude / academic / editorial / datalab / presentation）之一
 - 需要导出 Academic Figures（SVG/PDF/PNG）或 AntV Infographic（SVG）
-- 比赛提交 / 教师阅读 / 论文附录 / 答辩演示
+- 教师阅读 / 论文附录 / 答辩演示 / 公开分享
 
 ## 核心约束（v5 方案 §7）
 

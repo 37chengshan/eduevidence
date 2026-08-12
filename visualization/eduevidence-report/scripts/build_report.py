@@ -127,7 +127,7 @@ UI_ZH = {
     "header_sources": "来源",
     "header_mode": "模式",
     "header_generated": "生成时间",
-    "footer": "EduEvidence 证据报告 · 由 eduevidence-report Skill 确定性渲染 · 数据源：result.json · 完整性门：通过 · 单文件离线可打开",
+    "footer": "EduEvidence 证据报告 · 数据一致性校验：通过 · 单文件离线可打开 · 数据源：result.json",
     "raw_tag_title": "原始标识",
 }
 
@@ -212,7 +212,7 @@ UI_EN = {
     "header_sources": "sources",
     "header_mode": "mode",
     "header_generated": "generated at",
-    "footer": "EduEvidence Evidence Report · deterministically rendered by eduevidence-report Skill · source: result.json · integrity gate: PASS · single-file offline",
+    "footer": "EduEvidence Evidence Report · data consistency check: PASS · single-file offline · source: result.json",
     "raw_tag_title": "raw id",
 }
 

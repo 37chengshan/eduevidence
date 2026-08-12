@@ -172,7 +172,7 @@ build_memory_recall_call("previous verdict on AI coding assistant", kind="resear
 | 独立审核者结果与主分析冲突 | Judge 裁定，必要时 `followup_task` 返工 |
 | 会话失联 | `list_agents`（include_other_sessions=true）找回；确认失联再重派 |
 
-## 9. 验收
+## 9. 自检清单
 
 - [ ] `python3 integrations/agent_mcp.py` 可正确报告 available / mode
 - [ ] 未安装时（`available: false`）核心流程 100% 可用，无报错

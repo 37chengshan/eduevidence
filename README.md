@@ -1,5 +1,7 @@
 # EduEvidence
 
+> **🌐 [English](README.en.md) | 中文**
+
 ## Evidence-Based AI Teaching Decision & Intervention Skill
 
 > **From Education Questions to Evidence-Based Decisions.**
@@ -213,7 +215,7 @@ EduEvidence/
 
 ### SCP / Platform Native Mode
 
-EduEvidence 可完全脱离 Agent MCP 独立运行（比赛验收主路径）：
+EduEvidence 可完全脱离 Agent MCP 独立运行（无需任何外部服务）：
 
 - 不依赖本地 daemon
 - 不依赖某一个 CLI
@@ -301,19 +303,6 @@ pytest
 - Benchmark 基于真实文献的可检索证据；模型实际运行结果需按 `docs/benchmark.md` 的 B0–B4 基线采集。
 - 搜索与抽取依赖可用检索资源；`TOOL_FAILURE` 时不编造来源。
 - EduEvidence 是教学决策辅助，**不代替教师或学校最终决策**；涉及高风险评价、学生处分、个体心理判断、学生重大教育机会时不自动决策。
-
-## Roadmap
-
-- [x] Phase 0 Domain Freeze（场景 + Taxonomy + 决策态 + Schema）
-- [x] Phase 1 Single-Agent Core（Frame → Retrieve → Extract → Matrix → Verdict）
-- [x] Phase 2 Education Methodology（Outcome Separation / Quality / Audit / Scope）
-- [x] Phase 3 Challenge & Tribunal（Skeptic / Conflict / Tribunal）
-- [x] Phase 4 Evidence-to-Action（Applicability / Decision / Intervention / Evaluation）
-- [x] Phase 5 Benchmark v1（30 题 + 10 题金标注 + B0–B3 框架）
-- [x] Phase 6 Agent MCP（Complexity Gate / Conditional Spawn / Memory）
-- [x] Phase 7 Benchmark v2（B4 / Ablation / 成本对比）
-- [x] Phase 8 Product UI（单文件双语 HTML 报告 / 五主题 / ECharts / 信息图 / 学术图）
-- [ ] Phase 9 Submission（Demo 视频 / 复现指南）
 
 ## License
 
