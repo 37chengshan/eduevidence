@@ -12,8 +12,9 @@ set -euo pipefail
 
 REPO_URL="https://github.com/37chengshan/eduevidence"
 SKILL_NAME="eduevidence"
-# Skill 本体（对应仓库根目录结构：SKILL.md + skill/agents/ + references/ + schemas/ + scripts/）
-SKILL_PAYLOAD=(SKILL.md skill references schemas scripts)
+# Skill 本体（对应仓库根目录结构：SKILL.md + skill/agents/ + references/ + schemas/
+# + scripts/ + visualization/（HTML 渲染器与 5 主题，install 自检与最终报告都依赖它））
+SKILL_PAYLOAD=(SKILL.md skill references schemas scripts visualization)
 
 # ---------- 参数解析 ----------
 INSTALL_DEV=""
