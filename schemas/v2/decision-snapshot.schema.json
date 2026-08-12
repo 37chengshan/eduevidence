@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/decision-snapshot.schema.json",
+  "title": "DecisionSnapshot",
+  "description": "A revision-bound adjudication. Snapshots are immutable: changing the graph later never mutates an old snapshot file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_snapshot_id", "decision", "confidence_label",
+    "confidence_score_internal", "claim_assessments", "key_evidence_links",
+    "key_risks", "applicability_boundary", "missing_evidence",
+    "graph_revision", "policy_versions", "created_at", "extensions"
+  ],
+  "properties": {
+    "decision_snapshot_id": { "type": "string", "pattern": "^DEC-" },
+    "decision": {
+      "type": "string",
+      "enum": ["ADOPT", "PILOT", "REJECT", "INSUFFICIENT_EVIDENCE"]
+    },
+    "confidence_label": {
+      "type": "string",
+      "enum": ["High", "Moderate", "Low", "Insufficient"]
+    },
+    "confidence_score_internal": { "type": "number", "minimum": 0, "maximum": 1 },
+    "claim_assessments": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "key_evidence_links": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "key_risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "applicability_boundary": { "type": "string", "minLength": 1 },
+    "missing_evidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "graph_revision": { "type": "integer", "minimum": 1 },
+    "policy_versions": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object" }
+  }
+}

@@ -188,3 +188,135 @@ def test_synthesize_project_returns_all_claims(tmp_path):
         audits=[_audit("AUD-A", "STU-A")])
     syns = synthesize_project(store)
     assert [s.claim_id for s in syns] == ["CLM-1", "CLM-2"]
+
+
+# ---- Tribunal / DecisionSnapshot (Task 15) --------------------------------
+
+def _tribunal_setup(tmp_path, *, sources, studies, findings, links, audits):
+    from engine.tribunal import adjudicate, save_decision_snapshot
+    from engine.graph_store import GraphMutation
+    ws = ProjectWorkspace.create(tmp_path, question="tribunal?", title="t",
+                                 research_mode="evidence_review")
+    store = GraphStore.create(ws)
+    run = start_run(ws, purpose="t", capabilities=[],
+                    execution_backend="sequential_main_agent")
+    store.commit(run_id=run["run_id"], reason="bundle",
+                 mutation=GraphMutation(
+                     upserts={"sources": sources, "studies": studies,
+                              "findings": findings, "outcomes": [_outcome()],
+                              "claims": [_claim()], "evidence_links": links,
+                              "audits": audits}, retire_ids={}))
+    return ws, store, adjudicate, save_decision_snapshot
+
+
+def test_snapshot_has_required_fields(tmp_path):
+    ws, store, adjudicate, _ = _tribunal_setup(
+        tmp_path,
+        sources=[_src("SRC-STU-A")],
+        studies=[_study("STU-A", "key-A")],
+        findings=[_finding("FND-A1", "STU-A", "positive")],
+        links=[_link("LNK-A1", "FND-A1")],
+        audits=[_audit("AUD-A", "STU-A")])
+    snap = adjudicate(store, project=ws)
+    for key in ("decision", "confidence_label", "confidence_score_internal",
+                "claim_assessments", "key_evidence_links", "key_risks",
+                "applicability_boundary", "missing_evidence",
+                "graph_revision", "policy_versions", "created_at"):
+        assert key in snap
+    assert snap["graph_revision"] == store.active_revision() == 1
+    assert snap["decision"] in ("ADOPT", "PILOT", "REJECT", "INSUFFICIENT_EVIDENCE")
+    assert snap["confidence_label"] in ("High", "Moderate", "Low", "Insufficient")
+
+
+def test_snapshot_immutable_after_graph_change(tmp_path):
+    ws, store, adjudicate, save = _tribunal_setup(
+        tmp_path,
+        sources=[_src("SRC-STU-A")],
+        studies=[_study("STU-A", "key-A")],
+        findings=[_finding("FND-A1", "STU-A", "positive")],
+        links=[_link("LNK-A1", "FND-A1")],
+        audits=[_audit("AUD-A", "STU-A")])
+    snap1 = adjudicate(store, project=ws)
+    p1 = save(ws, snap1)
+    # graph advances to revision 2
+    store.commit(run_id=start_run(ws, purpose="more", capabilities=[],
+                                  execution_backend="sequential_main_agent")["run_id"],
+                 reason="extra", mutation=GraphMutation(
+                     upserts={"outcomes": [{"outcome_id": "OUT-2", "name": "x",
+                                            "outcome_type": "learning",
+                                            "extensions": {}}]}, retire_ids={}))
+    snap2 = adjudicate(store, project=ws)
+    assert snap2["graph_revision"] == 2
+    # old snapshot file unchanged
+    old = __import__("json").loads(p1.read_text())
+    assert old["graph_revision"] == 1
+    assert old["decision"] == snap1["decision"]
+
+
+def _weak_audit(aid, study):
+    return {"audit_id": aid, "study_id": study, "policy_version": "2026-08-12.v2",
+            "design_quality": 0, "sample_quality": 0, "measurement_validity": 0,
+            "temporal_strength": 0, "bias_checks": [], "confounders": [],
+            "limitations": [], "overall_status": "concern",
+            "audited_at": "2026-08-12T00:00:00+00:00", "extensions": {}}
+
+
+def test_low_confidence_cannot_adopt(tmp_path):
+    ws, store, adjudicate, _ = _tribunal_setup(
+        tmp_path,
+        sources=[_src("SRC-STU-A")],
+        studies=[_study("STU-A", "key-A")],
+        findings=[_finding("FND-A1", "STU-A", "positive")],
+        links=[_link("LNK-A1", "FND-A1", directness=0)],
+        audits=[_weak_audit("AUD-A", "STU-A")])
+    snap = adjudicate(store, project=ws)
+    assert snap["decision"] != "ADOPT"
+    assert snap["confidence_label"] in ("Low", "Insufficient")
+
+
+def test_strong_support_yields_adopt(tmp_path):
+    ws, store, adjudicate, _ = _tribunal_setup(
+        tmp_path,
+        sources=[_src("SRC-STU-A"), _src("SRC-STU-B"), _src("SRC-STU-C"),
+                 _src("SRC-STU-D")],
+        studies=[_study("STU-A", "kA"), _study("STU-B", "kB"),
+                 _study("STU-C", "kC"), _study("STU-D", "kD")],
+        findings=[_finding("FND-A1", "STU-A"), _finding("FND-B1", "STU-B"),
+                  _finding("FND-C1", "STU-C"), _finding("FND-D1", "STU-D")],
+        links=[_link("LNK-A1", "FND-A1"), _link("LNK-B1", "FND-B1"),
+               _link("LNK-C1", "FND-C1"), _link("LNK-D1", "FND-D1")],
+        audits=[_audit("AUD-A", "STU-A"), _audit("AUD-B", "STU-B"),
+                _audit("AUD-C", "STU-C"), _audit("AUD-D", "STU-D")])
+    snap = adjudicate(store, project=ws)
+    assert snap["decision"] == "ADOPT"
+    assert snap["confidence_label"] in ("High", "Moderate")
+    assert snap["confidence_score_internal"] > 0
+
+
+def test_conflict_penalty_applied_only_for_independent_opposition(tmp_path):
+    ws, store, adjudicate, _ = _tribunal_setup(
+        tmp_path,
+        sources=[_src("SRC-STU-A"), _src("SRC-STU-B")],
+        studies=[_study("STU-A", "kA"), _study("STU-B", "kB")],
+        findings=[_finding("FND-A1", "STU-A", "positive"),
+                  _finding("FND-B1", "STU-B", "negative")],
+        links=[_link("LNK-A1", "FND-A1", "support", "support_adoption"),
+               _link("LNK-B1", "FND-B1", "contradict", "oppose_adoption")],
+        audits=[_audit("AUD-A", "STU-A"), _audit("AUD-B", "STU-B")])
+    snap = adjudicate(store, project=ws)
+    # both directions present -> contested/negative evidence -> REJECT
+    assert snap["decision"] == "REJECT"
+    components = snap["extensions"]["confidence_components"]
+    assert components["decisive_studies"] == 2
+
+
+def test_negative_only_is_reject(tmp_path):
+    ws, store, adjudicate, _ = _tribunal_setup(
+        tmp_path,
+        sources=[_src("SRC-STU-A")],
+        studies=[_study("STU-A", "kA")],
+        findings=[_finding("FND-A1", "STU-A", "negative")],
+        links=[_link("LNK-A1", "FND-A1", "contradict", "oppose_adoption")],
+        audits=[_audit("AUD-A", "STU-A")])
+    snap = adjudicate(store, project=ws)
+    assert snap["decision"] == "REJECT"
