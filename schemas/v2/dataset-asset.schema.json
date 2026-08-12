@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/dataset-asset.schema.json",
+  "title": "DatasetAsset",
+  "description": "Immutable project dataset asset. Raw bytes are copied once into datasets/raw/ and hashed; raw user data is never inserted into the Shared Research Library. Project datasets are Project-private by default.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "dataset_id", "project_id", "design_id", "source_type",
+    "path", "content_hash", "schema_summary", "row_count", "column_count",
+    "variable_dictionary", "privacy_classification", "consent_metadata",
+    "deidentification_status", "created_at", "extensions"
+  ],
+  "properties": {
+    "dataset_id": { "type": "string", "pattern": "^DAT-" },
+    "project_id": { "type": "string", "pattern": "^PRJ-" },
+    "design_id": { "type": "string", "pattern": "^DSN-" },
+    "source_type": { "type": "string", "minLength": 1 },
+    "path": { "type": "string", "minLength": 1 },
+    "content_hash": { "type": "string", "minLength": 1 },
+    "schema_summary": { "type": "object" },
+    "row_count": { "type": ["integer", "null"], "minimum": 0 },
+    "column_count": { "type": ["integer", "null"], "minimum": 0 },
+    "variable_dictionary": {
+      "type": ["object", "null"],
+      "additionalProperties": { "type": "string" }
+    },
+    "privacy_classification": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "restricted"]
+    },
+    "consent_metadata": { "type": ["object", "null"] },
+    "deidentification_status": {
+      "type": "string",
+      "enum": ["not_done", "in_progress", "done", "not_required"]
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object" }
+  }
+}
