@@ -32,6 +32,7 @@ from pathlib import Path
 from typing import Any
 
 from zh_labels import zh_outcome
+from build_charts import effect_outcomes
 
 OKABE_ITO = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"]
 NATURE = ["#1F4E5F", "#5B8C9E", "#9E4B3A", "#7A8B5C", "#C2A24A", "#4E4E4E"]
@@ -162,16 +163,16 @@ def _scatter_chart(title: str, points: list[tuple[float, float]], labels: list[s
 
 def build_figure_data(result: dict) -> dict[str, Any]:
     """figure_data.json — publication-ready adapter output (v5 §52)."""
-    outcomes = result.get("outcomes", [])
+    outcomes = effect_outcomes(result)
     benchmark = result.get("benchmark", {})
     decision = result.get("decision", {})
     return {
         "source": "result.json",
         "outcomes": [
             {"outcome_type": o.get("outcome_type"),
-             "support_count": o.get("support_count", 0),
-             "contradict_count": o.get("contradict_count", 0),
-             "neutral_count": o.get("neutral_count", 0)}
+             "positive_count": o.get("positive_count", 0),
+             "negative_count": o.get("negative_count", 0),
+             "null_count": o.get("null_count", 0)}
             for o in outcomes
         ],
         "benchmark_baselines": benchmark.get("baselines", {}),
@@ -187,33 +188,33 @@ def build_figure_data(result: dict) -> dict[str, Any]:
 
 
 FIGURE_TITLES = {
-    "zh": {"fig1": "各结果类型的方向证据分布", "fig2": "各基线引用支持精度",
+    "zh": {"fig1": "各结果类型的效应方向分布", "fig2": "各基线引用支持精度",
            "fig3": "质量 vs 成本"},
-    "en": {"fig1": "Direction of evidence by outcome type", "fig2": "Citation support by baseline",
+    "en": {"fig1": "Effect direction by outcome type", "fig2": "Citation support by baseline",
            "fig3": "Quality vs Cost"},
 }
 
 FIGURE_CAPTIONS = {
     "zh": {
-        "fig1": "图 1. 各结果类型的支持 / 反驳 / 中性证据条数（分组柱，出版级学术图，不随主题变化）。来源：EduEvidence result.json。",
+        "fig1": "图 1. 各结果类型的正向 / 负向 / 零效应证据条数（基于 effect_direction；出版级学术图，不随主题变化）。来源：EduEvidence result.json。",
         "fig2": "图 2. B0-B4 各基线的引用支持精度。来源：EduEvidence Benchmark v2。",
         "fig3": "图 3. 各基线的引用支持率与单题成本的对比。",
     },
     "en": {
-        "fig1": "Fig. 1. Counts of supporting / contradicting / neutral evidence per outcome type "
-                "(grouped bars; publication figure, theme-independent). Source: EduEvidence result.json.",
+        "fig1": "Fig. 1. Counts of positive / negative / null effects per outcome type "
+                "(based on effect_direction; publication figure, theme-independent). Source: EduEvidence result.json.",
         "fig2": "Fig. 2. Citation support precision per baseline B0-B4. Source: EduEvidence Benchmark v2.",
         "fig3": "Fig. 3. Citation support rate vs cost per question across baselines.",
     },
 }
 
 DIR_SERIES = {
-    "zh": [{"name": "支持", "data": "support_count"},
-           {"name": "反驳", "data": "contradict_count"},
-           {"name": "中性", "data": "neutral_count"}],
-    "en": [{"name": "Support", "data": "support_count"},
-           {"name": "Contradict", "data": "contradict_count"},
-           {"name": "Neutral", "data": "neutral_count"}],
+    "zh": [{"name": "正向效应", "data": "positive_count"},
+           {"name": "负向效应", "data": "negative_count"},
+           {"name": "零效应", "data": "null_count"}],
+    "en": [{"name": "Positive effect", "data": "positive_count"},
+           {"name": "Negative effect", "data": "negative_count"},
+           {"name": "Null effect", "data": "null_count"}],
 }
 
 
@@ -222,8 +223,8 @@ def render_figures(figure_data: dict, theme: str = "okabe_ito", lang: str = "zh"
     palette = {"okabe_ito": OKABE_ITO, "nature": NATURE, "conservative": CONSERVATIVE}[theme]
     figures: dict[str, str] = {}
 
-    # Figure 1: Outcome × Direction (support / contradict / neutral 三色分组，
-    # 不再只画 support_count；计数轴整数刻度，避免伪精度)
+    # Figure 1: Outcome × effect_direction (positive / negative / null 三色分组；
+    # 绝不把 relation_to_claim 的 support/contradict 当作 outcome 好坏；计数轴整数刻度。)
     outcomes = figure_data.get("outcomes", [])
     if outcomes:
         names = [zh_outcome(o["outcome_type"]) if lang == "zh"

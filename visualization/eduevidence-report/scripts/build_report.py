@@ -34,7 +34,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 from typing import Any
 
-from build_charts import build_all as build_chart_specs
+from build_charts import build_all as build_chart_specs, effect_outcomes
 from build_figures import build_figure_data, render_figures
 from build_infographics import build_all as build_infographics
 from zh_labels import label
@@ -49,9 +49,42 @@ THEME_DISPLAY = {
     "presentation": "Presentation / Judge",
 }
 
+# Full report is intentionally NOT a fixed 12-chapter template. The template exposes
+# semantic modules; an upstream AI may group them into any 5–7 chapter outline by writing
+# `report_outline.chapters`. If it does not, a six-chapter fallback keeps the report usable.
+FULL_REPORT_MODULES = (
+    "decision", "scope", "retrieval", "outcomes", "evidence", "quality", "conflicts",
+    "trace", "applicability", "intervention", "evaluation", "sources",
+)
+DEFAULT_FULL_REPORT_PLAN = (
+    {"key": "decision", "title_zh": "结论、裁决与研究边界", "title_en": "Decision, Adjudication & Research Boundary",
+     "modules": ("decision", "scope")},
+    {"key": "evidence", "title_zh": "关键证据与结果分离", "title_en": "Key Evidence & Outcome Separation",
+     "modules": ("retrieval", "outcomes", "evidence")},
+    {"key": "quality", "title_zh": "证据可信度、反证与方法审计", "title_en": "Evidence Quality, Counterevidence & Method Audit",
+     "modules": ("quality", "conflicts", "trace")},
+    {"key": "action", "title_zh": "适用范围与教学行动", "title_en": "Applicability & Teaching Action",
+     "modules": ("applicability", "intervention")},
+    {"key": "evaluation", "title_zh": "试点设计、评估与停止条件", "title_en": "Pilot, Evaluation & Stop Conditions",
+     "modules": ("evaluation",)},
+    {"key": "sources", "title_zh": "来源、溯源与附录", "title_en": "Sources, Traceability & Appendix",
+     "modules": ("sources",)},
+)
+
+METHODOLOGY_LABELS_ZH = {
+    "control_group": "对照组", "randomization": "随机分配", "pre_test": "前测",
+    "post_test": "后测", "retention_test": "保持测试", "transfer_test": "迁移测试",
+    "sample_bias": "样本偏差", "self_selection": "自我选择偏差",
+    "measurement_validity": "测量效度", "confounders": "混杂因素",
+    "instructor_effect": "教师效应", "novelty_effect": "新奇效应",
+    "tool_version_effect": "工具版本效应", "ai_usage_policy": "AI 使用规则",
+    "dropout": "样本流失",
+}
+
 DIR_LABEL = {"support": "支持", "contradict": "反驳", "neutral": "中性"}
 DIR_CLASS = {"support": "pos", "contradict": "neg", "neutral": "neu"}
 DIR_COLOR = {"support": "#5E8A6A", "contradict": "#A85B53", "neutral": "#C99A4A"}
+EFFECT_CLASS = {"positive": "pos", "negative": "neg", "null": "neu", "neutral": "neu"}
 
 # ---------------------------------------------------------------------------
 # 双语 UI 文案
@@ -62,6 +95,19 @@ UI_ZH = {
     "lang_label": "语言",
     "zh": "中文",
     "en": "EN",
+    "visual_brief": "可视化摘要",
+    "full_report": "完整报告",
+    "contents": "目录",
+    "collapse_contents": "收起目录",
+    "expand_contents": "展开目录",
+    "expand_evidence": "查看完整证据",
+    "expand_methodology": "查看审计依据",
+    "expand_source": "查看来源与溯源",
+    "expand_details": "展开完整说明",
+    "what_this_means": "这意味着什么",
+    "original_title": "原文标题",
+    "original_text": "原文",
+    "full_report_intro": "完整报告保留全部可追溯证据与方法细节，并在关键论证位置穿插有意义的可视化。",
     "section_titles": {
         "01": "01 执行决策", "02": "02 结果证据概览", "03": "03 证据矩阵",
         "04": "04 证据裁决", "05": "05 方法学审计", "06": "06 冲突分析",
@@ -87,14 +133,14 @@ UI_ZH = {
     "summary_question": "问题",
     "summary_evidence": "依据",
     "summary_action": "行动",
-    "outcome_table": ["结果类型", "支持", "反驳", "中性", "证据"],
-    "figure1_caption": "图 1. 各结果类型的支持 / 反驳 / 中性证据数量（分组柱，出版级学术图，不随主题变化）。",
+    "outcome_table": ["结果类型", "正向效应", "负向效应", "零效应", "证据"],
+    "figure1_caption": "图 1. 各结果类型的正向 / 负向 / 零效应证据数量（基于 effect_direction，不等同于 Claim 是否被支持）。",
     "matrix_filter": "筛选 / 搜索",
     "matrix_search_ph": "搜索证据…",
-    "matrix_all_dir": "全部方向",
+    "matrix_all_dir": "全部效应",
     "matrix_all_outcome": "全部结果",
-    "matrix_heads": ["ID", "结果", "方向", "质量", "主张", "来源"],
-    "matrix_details": "研究细节",
+    "matrix_heads": ["ID", "结果", "效应", "质量", "主张", "来源"],
+    "matrix_details": "查看完整证据",
     "matrix_detail_labels": ["研究标题", "研究设计", "人群", "干预", "直接性"],
     "matrix_source_missing": "无可验证来源",
     "hero_action": "建议决策",
@@ -104,7 +150,10 @@ UI_ZH = {
     "hero_risk": "主要风险",
     "hero_next": "下一步",
     "hero_provenance": "证据 / 来源",
-    "outcome_separation_title": "Outcome Separation · 任务表现 ≠ 学习效果",
+    "outcome_separation_title": "结果分离 · 任务表现 ≠ 学习效果",
+    "effect_positive": "正向效应",
+    "effect_negative": "负向效应",
+    "effect_null": "零效应",
     "outcome_group_task": "任务 / 近端表现",
     "outcome_group_learning": "学习 / 保持 / 迁移",
     "outcome_group_risk": "风险 / 依赖",
@@ -178,6 +227,19 @@ UI_EN = {
     "lang_label": "Language",
     "zh": "中文",
     "en": "EN",
+    "visual_brief": "Visual Brief",
+    "full_report": "Full Report",
+    "contents": "Contents",
+    "collapse_contents": "Collapse contents",
+    "expand_contents": "Expand contents",
+    "expand_evidence": "View full evidence",
+    "expand_methodology": "View audit rationale",
+    "expand_source": "View source & provenance",
+    "expand_details": "Expand full explanation",
+    "what_this_means": "What this means",
+    "original_title": "Original title",
+    "original_text": "Original text",
+    "full_report_intro": "The full report preserves traceable evidence and methodology detail and inserts only meaningful visuals at key points in the argument.",
     "section_titles": {
         "01": "01 Executive Decision", "02": "02 Outcome Evidence Overview",
         "03": "03 Evidence Matrix", "04": "04 Evidence Tribunal",
@@ -205,14 +267,14 @@ UI_EN = {
     "summary_question": "Question",
     "summary_evidence": "Evidence",
     "summary_action": "Action",
-    "outcome_table": ["Outcome", "Support", "Contradict", "Neutral", "Evidence"],
-    "figure1_caption": "Fig. 1. Counts of supporting / contradicting / neutral evidence per outcome type (grouped bars; publication figure, theme-independent).",
+    "outcome_table": ["Outcome", "Positive effect", "Negative effect", "Null effect", "Evidence"],
+    "figure1_caption": "Fig. 1. Positive / negative / null effect counts per outcome (based on effect_direction, not claim support).",
     "matrix_filter": "Filter / Search",
     "matrix_search_ph": "Search evidence…",
-    "matrix_all_dir": "All directions",
+    "matrix_all_dir": "All effects",
     "matrix_all_outcome": "All outcomes",
-    "matrix_heads": ["ID", "Outcome", "Direction", "Quality", "Claim", "Source"],
-    "matrix_details": "Study details",
+    "matrix_heads": ["ID", "Outcome", "Effect", "Quality", "Claim", "Source"],
+    "matrix_details": "View full evidence",
     "matrix_detail_labels": ["Study title", "Design", "Population", "Intervention", "Directness"],
     "matrix_source_missing": "No verifiable source",
     "hero_action": "Recommended decision",
@@ -223,6 +285,9 @@ UI_EN = {
     "hero_next": "Next action",
     "hero_provenance": "Evidence / sources",
     "outcome_separation_title": "Outcome Separation · Task performance ≠ learning",
+    "effect_positive": "Positive effect",
+    "effect_negative": "Negative effect",
+    "effect_null": "Null effect",
     "outcome_group_task": "Task / proximal performance",
     "outcome_group_learning": "Learning / retention / transfer",
     "outcome_group_risk": "Risk / dependency",
@@ -331,20 +396,54 @@ def safe_http_url(value: Any) -> str:
     return text if parsed.scheme in ("http", "https") and parsed.netloc else ""
 
 
+def excerpt_text(value: Any, max_chars: int = 260) -> tuple[str, bool]:
+    """Return an exact prefix excerpt without rewriting research prose."""
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
+    if len(text) <= max_chars:
+        return text, False
+    window = text[:max_chars]
+    candidates = [window.rfind(mark) for mark in ("。", "！", "？", ". ", "; ", "；")]
+    cut = max(candidates)
+    if cut < max_chars // 2:
+        cut = max_chars
+    else:
+        cut += 1
+    return text[:cut].rstrip(), True
+
+
+def expandable_text(value: Any, summary_label: str, max_chars: int = 260,
+                    css_class: str = "expandable-text") -> str:
+    """Progressive disclosure that preserves the full source text verbatim."""
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    short, truncated = excerpt_text(text, max_chars)
+    if not truncated:
+        return f'<p class="{esc(css_class)}">{esc(short)}</p>'
+    return (f'<div class="{esc(css_class)}"><p>{esc(short)}…</p>'
+            f'<details class="detail-expander"><summary>{esc(summary_label)}</summary>'
+            f'<div class="detail-body"><p>{esc(text)}</p></div></details></div>')
+
+
 def visualization_decisions(result: dict, charts: dict) -> dict[str, dict[str, Any]]:
-    """Meaningful Visualization Gate: prefer no chart over decorative encoding."""
-    outcomes = result.get("outcomes", []) or []
+    """Meaningful Visualization Gate: prefer no chart over decorative encoding.
+
+    Outcome charts use effect_direction rather than relation_to_claim/direction. A study can
+    support a claim that an intervention is harmful; treating `support` as a positive outcome
+    would invert the meaning of the report.
+    """
+    outcomes = effect_outcomes(result)
     cells = [int(o.get(k, 0) or 0) for o in outcomes
-             for k in ("support_count", "contradict_count", "neutral_count")]
+             for k in ("positive_count", "negative_count", "null_count")]
     total = sum(cells)
     nonzero = sum(1 for value in cells if value > 0)
     active_outcomes = sum(1 for o in outcomes
                           if sum(int(o.get(k, 0) or 0)
-                                 for k in ("support_count", "contradict_count", "neutral_count")) > 0)
+                                 for k in ("positive_count", "negative_count", "null_count")) > 0)
     max_cell = max(cells or [0])
     evidence_balance = (total >= 8 and active_outcomes >= 3 and nonzero >= 5 and max_cell >= 2)
-    balance_reason = ("sufficient evidence density" if evidence_balance else
-                      f"suppressed: sparse counts (total={total}, active={active_outcomes}, "
+    balance_reason = ("sufficient effect-direction density" if evidence_balance else
+                      f"suppressed: sparse effect counts (total={total}, active={active_outcomes}, "
                       f"nonzero_cells={nonzero}, max_cell={max_cell})")
 
     claims = result.get("claims", []) or []
@@ -430,30 +529,32 @@ def check_numbers(result: dict, charts: dict) -> list[str]:
                 problems.append(
                     f"outcome {outcome.get('outcome_type')!r}: {field}={outcome.get(field)} "
                     f"but evidence-derived {key}={derived.get(key, 0)}")
+    effect_summary = effect_outcomes(result)
     for chart in charts.get("charts", []):
         if chart.get("chart_id") != "outcome-evidence-overview":
             continue
         series = {s["name"]: s["data"] for s in chart.get("option", {}).get("series", [])}
-        key = {"支持": "support", "反驳": "contradict", "中性": "neutral",
-               "Support": "support", "Contradict": "contradict", "Neutral": "neutral"}
-        names = [o.get("outcome_type") for o in result.get("outcomes", [])]
-        for outcome in result.get("outcomes", []):
+        key = {"正向效应": "positive", "负向效应": "negative", "零效应": "null",
+               "Positive effect": "positive", "Negative effect": "negative", "Null effect": "null"}
+        names = [o.get("outcome_type") for o in effect_summary]
+        for outcome in effect_summary:
             idx = names.index(outcome["outcome_type"]) if outcome["outcome_type"] in names else -1
             if idx < 0:
                 continue
-            for zh_name, en in key.items():
-                data = series.get(zh_name, [])
+            for series_name, effect in key.items():
+                data = series.get(series_name, [])
                 if idx >= len(data):
                     continue
                 value = data[idx]
-                if abs(value) != outcome[f"{en}_count"]:
+                expected = outcome[f"{effect}_count"]
+                if abs(value) != expected:
                     problems.append(
                         f"chart {chart.get('chart_id')}: {outcome['outcome_type']} "
-                        f"{en}_count={outcome[f'{en}_count']} but series={value}")
-                if en == "contradict" and value > 0:
-                    problems.append(f"contradict series must be ≤ 0, got {value}")
-                if en in ("support", "neutral") and value < 0:
-                    problems.append(f"{en} series must be ≥ 0, got {value}")
+                        f"{effect}_count={expected} but series={value}")
+                if effect == "negative" and value > 0:
+                    problems.append(f"negative-effect series must be ≤ 0, got {value}")
+                if effect in ("positive", "null") and value < 0:
+                    problems.append(f"{effect}-effect series must be ≥ 0, got {value}")
     return problems
 
 
@@ -883,21 +984,25 @@ def first_screen(result: dict, lang: str, ui: dict) -> str:
     ranked = sorted(outcomes, key=lambda o: _outcome_support_score(evidence, o), reverse=True)
     best_type = next((o.get("outcome_type") for o in ranked if o.get("support_count", 0) > 0), None)
     supported_claims = decision.get("supported_claims") or []
+    can_claim = decision.get("what_can_be_claimed") or []
     uncertain_claims = decision.get("uncertain_claims") or []
     contradicted_claims = decision.get("contradicted_claims") or []
     action = decision.get("recommended_action", "insufficient_evidence")
     cls = {"adopt": "adopt", "pilot": "pilot", "reject": "reject"}.get(action, "")
-    strongest = supported_claims[0] if supported_claims else (
-        label(lang, "outcome", best_type) if best_type else "—")
-    uncertainty = (contradicted_claims[0] if contradicted_claims else
-                   uncertain_claims[0] if uncertain_claims else
+    strongest = (can_claim[0] if can_claim else supported_claims[0] if supported_claims else
+                 label(lang, "outcome", best_type) if best_type else "—")
+    uncertainty = (uncertain_claims[0] if uncertain_claims else
+                   contradicted_claims[0] if contradicted_claims else
                    decision.get("reason_for_disagreement") or "—")
     risk = (decision.get("main_risk") or decision.get("risk_effect") or
+            (uncertain_claims[0] if uncertain_claims else None) or
             decision.get("reason_for_disagreement") or "—")
     app = decision.get("applicability") or result.get("applicability") or {}
-    next_action = (app.get("suitable_for") or decision.get("decision_rationale") or
-                   result.get("intervention", {}).get("pilot_duration") or "—")
+    next_action = (app.get("suitable_for") or result.get("intervention", {}).get("ai_usage_policy") or
+                   decision.get("decision_rationale") or "—")
     rationale = decision.get("decision_rationale") or ""
+    rationale_html = expandable_text(rationale, ui["expand_details"], 380, "hero-rationale")
+    insight = lambda value, limit=220: expandable_text(value, ui["expand_details"], limit, "hero-insight-text")
     return f"""
 <div class="decision-hero {cls}" data-visual="decision-hero">
   <div class="hero-decision">
@@ -905,12 +1010,12 @@ def first_screen(result: dict, lang: str, ui: dict) -> str:
     <strong class="decision-value">{esc(label(lang, 'action', action))}</strong>
     <span class="confidence-badge">{esc(ui['hero_confidence'])} · {esc(label(lang, 'confidence', decision.get('confidence') or 'Insufficient'))}</span>
   </div>
-  <p class="hero-rationale">{esc(rationale)}</p>
+  {rationale_html}
   <div class="hero-insights">
-    <article class="hero-insight support"><span>{esc(ui['hero_supported'])}</span><p>{esc(strongest)}</p></article>
-    <article class="hero-insight uncertain"><span>{esc(ui['hero_uncertain'])}</span><p>{esc(uncertainty)}</p></article>
-    <article class="hero-insight risk"><span>{esc(ui['hero_risk'])}</span><p>{esc(risk)}</p></article>
-    <article class="hero-insight next"><span>{esc(ui['hero_next'])}</span><p>{esc(next_action)}</p></article>
+    <article class="hero-insight support"><span>{esc(ui['hero_supported'])}</span>{insight(strongest)}</article>
+    <article class="hero-insight uncertain"><span>{esc(ui['hero_uncertain'])}</span>{insight(uncertainty)}</article>
+    <article class="hero-insight risk"><span>{esc(ui['hero_risk'])}</span>{insight(risk)}</article>
+    <article class="hero-insight next"><span>{esc(ui['hero_next'])}</span>{insight(next_action)}</article>
   </div>
   <p class="hero-provenance"><span>{esc(ui['hero_provenance'])}</span> · {len(evidence)} / {len(result.get('sources', []))}</p>
 </div>"""
@@ -926,7 +1031,7 @@ OUTCOME_GROUPS = {
 
 
 def render_outcome_separation(result: dict, lang: str, ui: dict) -> str:
-    outcomes = result.get("outcomes", []) or []
+    outcomes = effect_outcomes(result)
     if len(outcomes) < 2:
         return ""
     buckets: dict[str, list[dict]] = {"task": [], "learning": [], "risk": [], "other": []}
@@ -944,29 +1049,32 @@ def render_outcome_separation(result: dict, lang: str, ui: dict) -> str:
             continue
         rows = []
         for o in buckets[group]:
-            s = int(o.get("support_count", 0) or 0)
-            c = int(o.get("contradict_count", 0) or 0)
-            n = int(o.get("neutral_count", 0) or 0)
+            positive = int(o.get("positive_count", 0) or 0)
+            negative = int(o.get("negative_count", 0) or 0)
+            null = int(o.get("null_count", 0) or 0)
             states = []
-            if s:
-                states.append(f'<span class="dir pos">{esc(label(lang, "dir", "support"))} {s}</span>')
-            if c:
-                states.append(f'<span class="dir neg">{esc(label(lang, "dir", "contradict"))} {c}</span>')
-            if n:
-                states.append(f'<span class="dir neu">{esc(label(lang, "dir", "neutral"))} {n}</span>')
+            if positive:
+                states.append(f'<span class="dir pos">{esc(ui["effect_positive"])} {positive}</span>')
+            if negative:
+                states.append(f'<span class="dir neg">{esc(ui["effect_negative"])} {negative}</span>')
+            if null:
+                states.append(f'<span class="dir neu">{esc(ui["effect_null"])} {null}</span>')
             rows.append(f'<li><strong>{esc(label(lang, "outcome", o.get("outcome_type") or ""))}</strong>'
                         f'<span class="outcome-states">{"".join(states)}</span></li>')
         cards.append(f'<article class="outcome-group outcome-{group}"><h3>{esc(group_labels[group])}</h3>'
                      f'<ul>{"".join(rows)}</ul></article>')
+    semantic_note = ("效应方向来自 evidence.effect_direction；“支持某个主张”不等于“结果是正向”。"
+                     if lang == "zh" else
+                     "Effect direction comes from evidence.effect_direction; supporting a claim does not imply a positive outcome.")
     return (f'<div class="outcome-separation" data-visual="outcome-separation">'
             f'<div class="visual-heading"><h3>{esc(ui["outcome_separation_title"])}</h3>'
-            f'<p>{esc(ui["outcome_sep_note"])}</p></div>'
+            f'<p>{esc(ui["outcome_sep_note"])}</p><p class="semantic-note">{esc(semantic_note)}</p></div>'
             f'<div class="outcome-groups">{"".join(cards)}</div></div>')
 
 
 def render_outcomes(result: dict, chart: dict | None, figure_svg: str, lang: str, ui: dict,
                     viz: dict) -> str:
-    outcomes = result.get("outcomes", [])
+    outcomes = effect_outcomes(result)
     if not outcomes:
         return f"<p>{esc(ui['no_data'])}</p>"
     heads = ui["outcome_table"]
@@ -976,9 +1084,9 @@ def render_outcomes(result: dict, chart: dict | None, figure_svg: str, lang: str
         rows.append(
             f"<tr><td><strong>{esc(label(lang, 'outcome', o.get('outcome_type')))}</strong>"
             f"<span class='raw-tag' title='{esc(ui['raw_tag_title'])}'>{esc(o.get('outcome_type'))}</span></td>"
-            f"<td class='num'>{o.get('support_count', 0)}</td>"
-            f"<td class='num'>{o.get('contradict_count', 0)}</td>"
-            f"<td class='num'>{o.get('neutral_count', 0)}</td><td>{eids}</td></tr>")
+            f"<td class='num'>{o.get('positive_count', 0)}</td>"
+            f"<td class='num'>{o.get('negative_count', 0)}</td>"
+            f"<td class='num'>{o.get('null_count', 0)}</td><td>{eids}</td></tr>")
     table = ("<div class='table-wrap outcome-table'><table class='data-table'><thead><tr>"
              + "".join(f"<th>{esc(h)}</th>" for h in heads)
              + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
@@ -986,7 +1094,9 @@ def render_outcomes(result: dict, chart: dict | None, figure_svg: str, lang: str
     if not viz["outcome_evidence_balance"]["render"]:
         return separation + table
     static = (f'<div class="visual-surface" data-visual="outcome-evidence-balance">'
-              f'{diverging_bar_svg(chart.get("option", {}))}</div>') if chart else ""
+              f'{diverging_bar_svg(chart.get("option", {}))}'
+              f'<p class="chart-interpretation"><strong>{esc(ui["what_this_means"])}{esc(ui["colon"])}</strong>'
+              f'{esc(chart.get("summary_text") or "")}</p></div>') if chart else ""
     figure = (f'<figure class="academic-figure" data-visual="outcome-evidence-balance">{figure_svg}'
               f'<figcaption>{esc(ui["figure1_caption"])}</figcaption></figure>') if figure_svg else ""
     return separation + table + static + figure
@@ -1033,65 +1143,164 @@ def render_matrix(result: dict, lang: str, ui: dict) -> str:
             + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
 
 
-def render_matrix_visual(result: dict, lang: str, ui: dict) -> str:
+def effect_label(lang: str, value: Any) -> str:
+    effect = str(value or "null").lower()
+    if lang == "zh":
+        return {"positive": "正向效应", "negative": "负向效应", "null": "零效应",
+                "neutral": "零效应"}.get(effect, effect)
+    return {"positive": "Positive effect", "negative": "Negative effect", "null": "Null effect",
+            "neutral": "Null effect"}.get(effect, effect)
+
+
+def render_evidence_detail(ev: dict, source: dict, lang: str, ui: dict) -> str:
+    """Render complete traceable evidence detail without inventing missing fields."""
+    labels = ({
+        "study_id": "研究 ID", "sample_id": "样本 ID", "title": "研究标题",
+        "year": "年份", "study_type": "研究设计", "education_level": "教育阶段",
+        "population": "研究人群", "sample_size": "样本量", "intervention": "干预",
+        "comparison": "对照 / 比较条件", "outcome_measure": "结果测量", "claim": "完整主张",
+        "effect": "效应 / 结果", "effect_direction": "效应方向", "relation_to_claim": "与主张关系",
+        "duration": "干预时长", "method": "方法", "strengths": "优势",
+        "limitations": "局限", "confounders": "混杂因素", "quality_dimensions": "质量维度",
+        "quality_score": "质量分", "evidence_level": "证据等级", "directness": "直接性",
+        "applicability": "适用性", "confidence": "置信度", "status": "证据状态",
+        "source_location": "来源位置", "source_title": "来源标题", "source_url": "可验证链接",
+        "claim_id": "Claim ID",
+    } if lang == "zh" else {
+        "study_id": "Study ID", "sample_id": "Sample ID", "title": "Study title",
+        "year": "Year", "study_type": "Study design", "education_level": "Education level",
+        "population": "Population", "sample_size": "Sample size", "intervention": "Intervention",
+        "comparison": "Comparison", "outcome_measure": "Outcome measure", "claim": "Full claim",
+        "effect": "Effect / result", "effect_direction": "Effect direction", "relation_to_claim": "Relation to claim",
+        "duration": "Duration", "method": "Method", "strengths": "Strengths",
+        "limitations": "Limitations", "confounders": "Confounders", "quality_dimensions": "Quality dimensions",
+        "quality_score": "Quality score", "evidence_level": "Evidence level", "directness": "Directness",
+        "applicability": "Applicability", "confidence": "Confidence", "status": "Evidence status",
+        "source_location": "Source location", "source_title": "Source title", "source_url": "Verifiable link",
+        "claim_id": "Claim ID",
+    })
+
+    values: list[tuple[str, Any]] = []
+    source_title = source.get("title") or ev.get("title")
+    source_year = source.get("year") or ev.get("year")
+    ext = ev.get("extensions") or {}
+    ordered = [
+        ("study_id", ev.get("study_id")), ("sample_id", ev.get("sample_id")),
+        ("title", ev.get("title")), ("source_title", source_title), ("year", source_year),
+        ("study_type", label(lang, "study", ev.get("study_type") or "")),
+        ("education_level", ev.get("education_level")), ("population", ev.get("population")),
+        ("sample_size", ev.get("sample_size")), ("intervention", ev.get("intervention")),
+        ("comparison", ev.get("comparison")), ("outcome_measure", ev.get("outcome_measure")),
+        ("effect", ev.get("effect")), ("effect_direction", effect_label(lang, ev.get("effect_direction"))),
+        ("relation_to_claim", label(lang, "dir", ev.get("relation_to_claim") or ev.get("direction") or "neutral")),
+        ("duration", ev.get("duration")), ("method", ev.get("method")),
+        ("strengths", ev.get("strengths")), ("limitations", ev.get("limitations")),
+        ("confounders", ev.get("confounders")), ("quality_dimensions", ev.get("quality_dimensions")),
+        ("quality_score", ev.get("quality_score")), ("evidence_level", ev.get("evidence_level")),
+        ("directness", ev.get("directness")), ("applicability", ev.get("applicability")),
+        ("confidence", ev.get("confidence")), ("status", label(lang, "status", ev.get("status") or "")),
+        ("claim_id", ext.get("claim_id")), ("claim", ev.get("claim")),
+        ("source_location", ev.get("source_location") or source.get("source_location")),
+    ]
+    for key, value in ordered:
+        if value not in (None, "", [], {}):
+            values.append((key, value))
+
+    parts = []
+    for key, value in values:
+        if isinstance(value, dict):
+            rendered = " · ".join(f"{esc(k)}={esc(v)}" for k, v in value.items())
+        elif isinstance(value, list):
+            rendered = "；".join(esc(v) for v in value)
+        else:
+            rendered = esc(value)
+        parts.append(f'<div class="evidence-detail-row"><dt>{esc(labels.get(key, key))}</dt><dd>{rendered}</dd></div>')
+
+    raw_url = source.get("canonical_url") or source.get("source_location") or ""
+    url = safe_http_url(raw_url)
+    if url:
+        parts.append(f'<div class="evidence-detail-row"><dt>{esc(labels["source_url"])}</dt>'
+                     f'<dd><a href="{esc(url)}">{esc(url)}</a></dd></div>')
+    return f'<dl class="evidence-detail-grid">{"".join(parts)}</dl>'
+
+
+def render_matrix_visual(result: dict, lang: str, ui: dict, instance: str = "brief") -> str:
     evidence = result.get("evidence", []) or []
     if not evidence:
         return f"<p>{esc(ui['no_data'])}</p>"
     sources = {s.get("source_id"): s for s in result.get("sources", [])}
     rows = []
     for ev in evidence:
-        direction = ev.get("direction", "neutral")
+        effect = str(ev.get("effect_direction") or "null").lower()
+        relation = ev.get("relation_to_claim") or ev.get("direction") or "neutral"
         source = sources.get(ev.get("source_id")) or {}
         source_id = ev.get("source_id") or ""
         url = safe_http_url(source.get("canonical_url") or source.get("source_location"))
-        source_cell = (f'<a class="source-link" href="{esc(url)}"><code>{esc(source_id)}</code></a>'
-                       if url else f'<code>{esc(source_id)}</code>')
+        source_cell = (f'<a class="source-link" href="{esc(url)}" title="{esc(source.get("title") or source_id)}">'
+                       f'<code>{esc(source_id)}</code></a>' if url else f'<code>{esc(source_id)}</code>')
         try:
             quality = max(0.0, min(10.0, float(ev.get("quality_score") or 0)))
         except (TypeError, ValueError):
             quality = 0.0
-        details = [
-            (ui["matrix_detail_labels"][0], ev.get("title") or ""),
-            (ui["matrix_detail_labels"][1], label(lang, "study", ev.get("study_type") or "")),
-            (ui["matrix_detail_labels"][2], ev.get("population") or ""),
-            (ui["matrix_detail_labels"][3], ev.get("intervention") or ""),
-            (ui["matrix_detail_labels"][4], label(lang, "verdict", str(ev.get("directness") or ""))),
-        ]
-        detail_html = "".join(f'<p><strong>{esc(k)}:</strong> {esc(v)}</p>' for k, v in details if v)
         search_text = " ".join(str(ev.get(k) or "") for k in
-                               ("evidence_id", "title", "claim", "population", "intervention", "source_id"))
+                               ("evidence_id", "study_id", "sample_id", "title", "claim", "population",
+                                "intervention", "comparison", "effect_direction", "source_id"))
+        claim_short, claim_cut = excerpt_text(ev.get("claim") or "", 210)
+        relation_note = (f'<span class="relation-note">{esc("与主张关系" if lang == "zh" else "Claim relation")}: '
+                         f'{esc(label(lang, "dir", relation))}</span>')
+        detail_html = render_evidence_detail(ev, source, lang, ui)
         rows.append(
-            f'<tr data-direction="{esc(direction)}" data-outcome="{esc(ev.get("outcome_type") or "")}" '
-            f'data-search="{esc(search_text.lower())}">'
+            f'<tr data-effect="{esc(effect)}" data-direction="{esc(effect)}" '
+            f'data-outcome="{esc(ev.get("outcome_type") or "")}" data-search="{esc(search_text.lower())}">'
             f'<td><code>{esc(ev.get("evidence_id"))}</code></td>'
             f'<td><strong>{esc(label(lang, "outcome", ev.get("outcome_type") or ""))}</strong></td>'
-            f'<td><span class="dir {DIR_CLASS.get(direction, "neu")}">{esc(label(lang, "dir", direction))}</span></td>'
+            f'<td><span class="dir {EFFECT_CLASS.get(effect, "neu")}">{esc(effect_label(lang, effect))}</span>'
+            f'{relation_note}</td>'
             f'<td><div class="quality-cell"><span class="num">{quality:g}</span>'
             f'<span class="quality-meter" aria-hidden="true"><i style="width:{quality * 10:.0f}%"></i></span></div></td>'
-            f'<td class="claim-cell"><p>{esc(ev.get("claim") or "")}</p>'
+            f'<td class="claim-cell"><p>{esc(claim_short)}{"…" if claim_cut else ""}</p>'
             f'<details class="matrix-row-detail"><summary>{esc(ui["matrix_details"])}</summary>{detail_html}</details></td>'
             f'<td>{source_cell}</td></tr>')
     outcomes = sorted({e.get("outcome_type", "") for e in evidence})
-    controls = ("<div class='matrix-controls'><div class='matrix-tools'><input id='matrix-search-" + lang
+    suffix = f"{instance}-{lang}"
+    controls = ("<div class='matrix-controls'><div class='matrix-tools'><input id='matrix-search-" + suffix
                 + "' type='search' placeholder='" + esc(ui["matrix_search_ph"]) + "' aria-label='"
-                + esc(ui["matrix_search_ph"]) + "'><select id='matrix-direction-" + lang
+                + esc(ui["matrix_search_ph"]) + "'><select id='matrix-direction-" + suffix
                 + "' aria-label='" + esc(ui["matrix_all_dir"]) + "'><option value=''>"
-                + esc(ui["matrix_all_dir"]) + "</option><option value='support'>"
-                + esc(label(lang, "dir", "support")) + "</option><option value='contradict'>"
-                + esc(label(lang, "dir", "contradict")) + "</option><option value='neutral'>"
-                + esc(label(lang, "dir", "neutral")) + "</option></select><select id='matrix-outcome-" + lang
+                + esc(ui["matrix_all_dir"]) + "</option><option value='positive'>"
+                + esc(ui["effect_positive"]) + "</option><option value='negative'>"
+                + esc(ui["effect_negative"]) + "</option><option value='null'>"
+                + esc(ui["effect_null"]) + "</option></select><select id='matrix-outcome-" + suffix
                 + "' aria-label='" + esc(ui["matrix_all_outcome"]) + "'><option value=''>"
                 + esc(ui["matrix_all_outcome"]) + "</option>"
                 + "".join(f"<option value='{esc(o)}'>{esc(label(lang, 'outcome', o))}</option>" for o in outcomes)
                 + "</select></div></div>")
-    table = ("<div class='table-wrap matrix-wrap'><table id='evidence-matrix-" + lang
+    table = ("<div class='table-wrap matrix-wrap'><table id='evidence-matrix-" + suffix
              + "' class='data-table evidence-matrix'><thead><tr>"
              + "".join(f"<th>{esc(h)}</th>" for h in ui["matrix_heads"])
              + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
     return controls + table
 
 
-def render_tribunal_visual(result: dict, workflow_svg: str, tribunal_svg: str, lang: str, ui: dict) -> str:
+def _evidence_ids_from_text(text: Any) -> list[str]:
+    return list(dict.fromkeys(re.findall(r"\bE-[A-Za-z0-9-]+\b", str(text or ""))))
+
+
+def _tribunal_item_html(item: Any, lang: str, ui: dict, compact: bool) -> str:
+    text = str(item or "")
+    ids = _evidence_ids_from_text(text)
+    refs = (f'<div class="tribunal-evidence-refs">{"".join(f"<code>{esc(eid)}</code>" for eid in ids)}</div>'
+            if ids else "")
+    if not compact:
+        return f'<li><p>{esc(text)}</p>{refs}</li>'
+    short, cut = excerpt_text(text, 220)
+    detail = (f'<details class="detail-expander"><summary>{esc(ui["expand_details"])}</summary>'
+              f'<div class="detail-body"><p>{esc(text)}</p></div></details>' if cut else "")
+    return f'<li><p>{esc(short)}{"…" if cut else ""}</p>{refs}{detail}</li>'
+
+
+def render_tribunal_visual(result: dict, workflow_svg: str, tribunal_svg: str, lang: str, ui: dict,
+                           compact: bool = True) -> str:
     decision = result.get("decision", {})
     groups = [
         ("supported_claims", ui["tribunal_can"], "supported", "✓"),
@@ -1102,9 +1311,20 @@ def render_tribunal_visual(result: dict, workflow_svg: str, tribunal_svg: str, l
     cards = []
     for key, title, cls, symbol in groups:
         items = decision.get(key) or []
-        lis = "".join(f"<li>{esc(item)}</li>" for item in items) if items else f"<li>{esc(ui['no_data'])}</li>"
+        visible_items = items[:3] if compact else items
+        lis = "".join(_tribunal_item_html(item, lang, ui, compact) for item in visible_items)
+        if not lis:
+            lis = f"<li>{esc(ui['no_data'])}</li>"
+        remainder = ""
+        if compact and len(items) > len(visible_items):
+            more_label = (f"查看其余 {len(items) - len(visible_items)} 条" if lang == "zh"
+                          else f"View {len(items) - len(visible_items)} more")
+            remainder = (f'<details class="tribunal-more"><summary>{esc(more_label)}</summary><ul>'
+                         f'{"".join(_tribunal_item_html(item, lang, ui, True) for item in items[len(visible_items):])}'
+                         f'</ul></details>')
         cards.append(f'<article class="tribunal-card {cls}"><header><span aria-hidden="true">{symbol}</span>'
-                     f'<h3>{esc(title)}</h3></header><ul>{lis}</ul></article>')
+                     f'<h3>{esc(title)}</h3><span class="tribunal-count">{len(items)}</span></header>'
+                     f'<ul>{lis}</ul>{remainder}</article>')
     action = decision.get("recommended_action", "insufficient_evidence")
     summary = (f'<p class="tribunal-summary"><strong>{esc(ui["tribunal_decision"])}{esc(ui["colon"])}</strong>'
                f'{esc(label(lang, "action", action))} · <strong>{esc(ui["tribunal_confidence"])}{esc(ui["colon"])}</strong>'
@@ -1168,7 +1388,8 @@ def render_evidence_to_action(result: dict, lang: str, ui: dict) -> str:
     for index, (kind, title, text) in enumerate(stages):
         if index:
             nodes.append('<span class="flow-arrow" aria-hidden="true">→</span>')
-        nodes.append(f'<article class="action-node action-{kind.lower()}"><span>{esc(title)}</span><p>{esc(text)}</p></article>')
+        node_text = expandable_text(text, ui["expand_details"], 150, "action-node-text")
+        nodes.append(f'<article class="action-node action-{kind.lower()}"><span>{esc(title)}</span>{node_text}</article>')
     return f'<div class="evidence-to-action" data-visual="evidence-to-action">{"".join(nodes)}</div>'
 
 
@@ -1198,49 +1419,68 @@ def render_tribunal(result: dict, workflow_svg: str, tribunal_svg: str, lang: st
     return "\n".join(lines)
 
 
+def methodology_item_label(lang: str, item: Any) -> str:
+    key = str(item or "")
+    if lang == "zh":
+        return METHODOLOGY_LABELS_ZH.get(key, key.replace("_", " "))
+    return key.replace("_", " ").strip().title()
+
+
 def render_methodology(result: dict, lang: str, ui: dict) -> str:
     reviews = result.get("methodology_reviews", [])
     if not reviews:
         return f"<p>{esc(ui['no_data'])}</p>"
-    heads = ui["method_audit_heads"]
-    lines = []
+    groups = []
     for r in reviews:
         verdict = r.get("verdict", "")
-        lines.append(f"<h3>{esc(ui['method_target'])}{esc(ui['colon'])}{esc(r.get('target'))} "
-                     f"<span class='method-verdict'>{esc(label(lang, 'verdict', verdict))}</span></h3>")
-        audit = r.get("audit_items", {})
-        if audit:
-            rows = ["<div class='table-wrap'><table class='data-table'><thead><tr>"
-                    + "".join(f"<th>{esc(h)}</th>" for h in heads)
-                    + "</tr></thead><tbody>"]
-            for item, info in audit.items():
-                if isinstance(info, dict):
-                    rows.append(f"<tr><td><code>{esc(item)}</code></td>"
-                                f"<td>{esc(label(lang, 'verdict', info.get('status')))}</td>"
-                                f"<td class='cell-main'>{esc(info.get('note'))}</td></tr>")
-            rows.append("</tbody></table></div>")
-            lines.append("\n".join(rows))
-        guard = r.get("task_vs_learning_guard", {})
-        if guard:
-            lines.append(f"<p><strong>{esc(ui['method_guard'])}{esc(ui['colon'])}</strong>{esc(guard.get('note'))}</p>")
-    return "\n".join(lines)
+        items = []
+        for item, info in (r.get("audit_items", {}) or {}).items():
+            if not isinstance(info, dict):
+                continue
+            status = str(info.get("status") or "")
+            note = str(info.get("note") or "")
+            short, cut = excerpt_text(note, 145)
+            detail = (f'<details class="method-detail detail-expander"><summary>{esc(ui["expand_methodology"])}</summary>'
+                      f'<div class="detail-body"><p>{esc(note)}</p></div></details>' if cut else "")
+            status_class = re.sub(r"[^a-z0-9_-]+", "-", status.lower())
+            items.append(
+                f'<article class="method-audit-item method-{esc(status_class)}">'
+                f'<div class="method-audit-head"><strong>{esc(methodology_item_label(lang, item))}</strong>'
+                f'<span class="method-status">{esc(label(lang, "verdict", status))}</span></div>'
+                f'<p>{esc(short)}{"…" if cut else ""}</p>{detail}</article>')
+        guard = r.get("task_vs_learning_guard", {}) or {}
+        guard_html = expandable_text(guard.get("note"), ui["expand_methodology"], 220, "method-guard") if guard else ""
+        guard_block = (f'<div class="method-guard-wrap"><strong>{esc(ui["method_guard"])}{esc(ui["colon"])}</strong>'
+                       f'{guard_html}</div>' if guard_html else "")
+        groups.append(
+            f'<section class="method-review-group"><header class="method-review-title">'
+            f'<h3>{esc(ui["method_target"])}{esc(ui["colon"])}{esc(r.get("target") or "")}</h3>'
+            f'<span class="method-verdict">{esc(label(lang, "verdict", verdict))}</span></header>'
+            f'<div class="method-audit-grid">{"".join(items)}</div>{guard_block}'
+            f'</section>')
+    return "".join(groups)
 
 
 def render_conflicts(result: dict, lang: str, ui: dict) -> str:
     conflicts = result.get("conflicts", [])
     decision = result.get("decision", {})
-    if not conflicts and not decision.get("reason_for_disagreement"):
-        return f"<p>{esc(ui['no_data'])}</p>"
-    cards = []
+    texts = []
     for c in conflicts:
-        for k in ("reason_for_disagreement", "explanation", "note"):
-            if c.get(k):
-                cards.append(f"<div class='conflict-card'><p>{esc(c[k])}</p></div>")
+        for key in ("reason_for_disagreement", "explanation", "note"):
+            if c.get(key):
+                texts.append(str(c[key]).strip())
                 break
     if decision.get("reason_for_disagreement"):
-        cards.append(f"<div class='conflict-card'><p><strong>{esc(ui['conflict_verdict'])}{esc(ui['colon'])}</strong>"
-                     f"{esc(decision['reason_for_disagreement'])}</p></div>")
-    return "\n".join(cards) if cards else f"<p>{esc(ui['no_data'])}</p>"
+        texts.append(str(decision["reason_for_disagreement"]).strip())
+    unique = list(dict.fromkeys(text for text in texts if text))
+    if not unique:
+        return f"<p>{esc(ui['no_data'])}</p>"
+    cards = []
+    for index, text in enumerate(unique):
+        title = ui["conflict_verdict"] if index == 0 else ("补充冲突依据" if lang == "zh" else "Additional conflict rationale")
+        cards.append(f'<article class="conflict-card"><strong>{esc(title)}{esc(ui["colon"])}</strong>'
+                     f'{expandable_text(text, ui["expand_details"], 300, "conflict-text")}</article>')
+    return "".join(cards)
 
 
 def render_applicability(result: dict, lang: str, ui: dict) -> str:
@@ -1330,7 +1570,31 @@ def render_benchmark(charts: dict, lang: str, ui: dict) -> str:
     return static + f"<p class='chart-summary'>{esc(panel.get('summary_text', ''))}</p>"
 
 
-def render_sources(result: dict, lang: str, ui: dict) -> str:
+def render_source_detail(source: dict, lang: str, ui: dict) -> str:
+    raw_url = source.get("canonical_url") or source.get("source_location") or ""
+    url = safe_http_url(raw_url)
+    fetch = source.get("fetch") or {}
+    rows = [
+        (("原文标题" if lang == "zh" else "Original title"), source.get("title")),
+        (("年份" if lang == "zh" else "Year"), source.get("year")),
+        (("权威级别" if lang == "zh" else "Authority"), label(lang, "authority", source.get("authority_level") or "")),
+        (("来源位置" if lang == "zh" else "Source location"), source.get("source_location")),
+        (("获取方式" if lang == "zh" else "Fetch provider"), fetch.get("fetch_provider")),
+        (("获取状态" if lang == "zh" else "Fetch status"), fetch.get("fetch_status")),
+        (("降级路径" if lang == "zh" else "Fallback used"), fetch.get("fallback_used")),
+        (("获取时间" if lang == "zh" else "Fetched at"), fetch.get("fetched_at")),
+    ]
+    body = []
+    for key, value in rows:
+        if value not in (None, "", [], {}):
+            body.append(f'<div class="source-detail-row"><dt>{esc(key)}</dt><dd>{esc(value)}</dd></div>')
+    if url:
+        body.append(f'<div class="source-detail-row"><dt>{esc("可验证链接" if lang == "zh" else "Verifiable link")}</dt>'
+                    f'<dd><a href="{esc(url)}">{esc(url)}</a></dd></div>')
+    return f'<dl class="source-detail-grid">{"".join(body)}</dl>'
+
+
+def render_sources(result: dict, lang: str, ui: dict, expandable: bool = False) -> str:
     sources = result.get("sources", [])
     if not sources:
         return f"<p>{esc(ui['no_data'])}</p>"
@@ -1340,41 +1604,253 @@ def render_sources(result: dict, lang: str, ui: dict) -> str:
         raw_url = s.get("canonical_url") or s.get("source_location") or ""
         url = safe_http_url(raw_url)
         location = (f"<a href='{esc(url)}'>{esc(url)}</a>" if url else esc(raw_url))
+        title = esc(s.get("title"))
+        if expandable:
+            title += (f'<details class="source-expander detail-expander"><summary>{esc(ui["expand_source"])}</summary>'
+                      f'{render_source_detail(s, lang, ui)}</details>')
         rows.append(
             f"<tr><td><code>{esc(s.get('source_id'))}</code></td>"
-            f"<td class='cell-main'>{esc(s.get('title'))}</td><td>{esc(s.get('year'))}</td>"
+            f"<td class='cell-main source-title-cell'>{title}</td><td>{esc(s.get('year'))}</td>"
             f"<td>{esc(label(lang, 'authority', s.get('authority_level')))}</td>"
             f"<td class='cell-main'>{location}</td></tr>")
     return ("<h3>" + esc(ui["sources_title"]) + "</h3>"
-            "<div class='table-wrap'><table class='data-table'><thead><tr>"
+            "<div class='table-wrap'><table class='data-table source-table'><thead><tr>"
             + "".join(f"<th>{esc(h)}</th>" for h in heads)
             + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
 
 
 def render_provenance(result: dict, lang: str, ui: dict) -> str:
     sources = result.get("sources", [])
-    provenance = result.get("provenance", {})
+    provenance = result.get("provenance", {}) or {}
     heads = ui["provenance_heads"]
     rows = []
     for s in sources:
         fetch = s.get("fetch") or {}
+        meaningful = any(fetch.get(k) not in (None, "", False) for k in
+                         ("fetch_provider", "fetch_status", "fallback_used", "fetched_at"))
+        if not meaningful:
+            continue
         rows.append(f"<tr><td><code>{esc(s.get('source_id'))}</code></td>"
                     f"<td>{esc(fetch.get('fetch_provider'))}</td>"
                     f"<td>{esc(fetch.get('fetch_status'))}</td>"
                     f"<td>{esc(fetch.get('fallback_used'))}</td>"
                     f"<td>{esc(fetch.get('fetched_at'))}</td></tr>")
-    head = (f"<p>{esc(ui['provenance_search'])}{esc(ui['colon'])}{esc(provenance.get('search_provider', 'n/a'))} · "
-            f"{esc(ui['provenance_time'])}{esc(ui['colon'])}{esc(provenance.get('fetched_at', 'n/a'))}</p>")
+    provider = provenance.get("search_provider")
+    fetched_at = provenance.get("fetched_at")
+    head_parts = []
+    if provider:
+        head_parts.append(f"{esc(ui['provenance_search'])}{esc(ui['colon'])}{esc(provider)}")
+    if fetched_at:
+        head_parts.append(f"{esc(ui['provenance_time'])}{esc(ui['colon'])}{esc(fetched_at)}")
+    head = f'<p class="provenance-summary">{" · ".join(head_parts)}</p>' if head_parts else ""
     if not rows:
-        return head + f"<p>{esc(ui['provenance_empty'])}</p>"
+        return head + f"<p class='provenance-empty'>{esc(ui['provenance_empty'])}</p>"
     return (head + "<div class='table-wrap'><table class='data-table'><thead><tr>"
             + "".join(f"<th>{esc(h)}</th>" for h in heads)
             + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
 
 
 # ---------------------------------------------------------------------------
-# 6. HTML assembly（双语双 body）
+# 6. HTML assembly（双语双层报告）
 # ---------------------------------------------------------------------------
+
+def resolve_full_report_plan(result: dict) -> list[dict[str, Any]]:
+    """Return a 5–7 chapter plan, preferring an AI-written outline when it is complete.
+
+    Expected optional shape:
+      report_outline.chapters = [
+        {"key": "...", "title_zh": "...", "title_en": "...",
+         "lead_zh": "...", "lead_en": "...", "modules": ["decision", "scope", ...]}
+      ]
+
+    Every semantic module must appear exactly once. Incomplete/unsafe outlines fall back to
+    the six-chapter default rather than silently dropping evidence.
+    """
+    raw = result.get("report_outline") or result.get("report_structure") or {}
+    chapters = raw.get("chapters") if isinstance(raw, dict) else raw if isinstance(raw, list) else None
+    if not isinstance(chapters, list) or not 5 <= len(chapters) <= 7:
+        return [dict(chapter) for chapter in DEFAULT_FULL_REPORT_PLAN]
+
+    normalized: list[dict[str, Any]] = []
+    seen_modules: list[str] = []
+    for index, chapter in enumerate(chapters, 1):
+        if not isinstance(chapter, dict):
+            return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+        modules = [m for m in (chapter.get("modules") or []) if m in FULL_REPORT_MODULES]
+        if not modules or any(m in seen_modules for m in modules):
+            return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+        seen_modules.extend(modules)
+        key = re.sub(r"[^a-z0-9-]+", "-", str(chapter.get("key") or f"chapter-{index}").lower()).strip("-")
+        normalized.append({
+            "key": key or f"chapter-{index}",
+            "title_zh": str(chapter.get("title_zh") or chapter.get("title") or f"第 {index} 章"),
+            "title_en": str(chapter.get("title_en") or chapter.get("title") or f"Chapter {index}"),
+            "lead_zh": str(chapter.get("lead_zh") or ""),
+            "lead_en": str(chapter.get("lead_en") or ""),
+            "modules": tuple(modules),
+        })
+    if set(seen_modules) != set(FULL_REPORT_MODULES):
+        return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+    return normalized
+
+
+def full_chapter_title(chapter: dict[str, Any], lang: str, index: int) -> str:
+    title = chapter.get("title_zh" if lang == "zh" else "title_en") or chapter.get("key") or ""
+    return f"{index:02d} {title}"
+
+
+def chapter_dom_id(lang: str, chapter_key: str, index: int) -> str:
+    base = f"full-{index:02d}-{chapter_key}"
+    return base if lang == "zh" else f"{base}-en"
+
+
+def render_full_chapter(chapter_id: str, title: str, content: str, lead: str = "") -> str:
+    lead_html = f'<p class="full-chapter-lead">{esc(lead)}</p>' if lead else ""
+    return (f'<section id="{esc(chapter_id)}" class="full-chapter" data-full-chapter>'
+            f'<header class="full-chapter-header"><h2>{esc(title)}</h2>{lead_html}</header>'
+            f'<div class="full-chapter-body">{content}</div></section>')
+
+
+def render_research_scope(result: dict, lang: str, ui: dict) -> str:
+    frame = result.get("research_frame", {}) or {}
+    learner = frame.get("learner", {}) or {}
+    course = frame.get("course", {}) or {}
+    intervention = frame.get("intervention", {}) or {}
+    scope = frame.get("scope", {}) or {}
+    labels = ({
+        "question": "研究问题", "learner": "目标学习者", "course": "课程情境", "intervention": "AI 干预",
+        "comparison": "比较条件", "outcomes": "结果构念", "scope": "研究范围", "success": "决策成功条件",
+    } if lang == "zh" else {
+        "question": "Research question", "learner": "Target learners", "course": "Course context", "intervention": "AI intervention",
+        "comparison": "Comparison", "outcomes": "Outcome constructs", "scope": "Research scope", "success": "Decision success condition",
+    })
+    learner_text = "；".join(str(v) for v in learner.values() if v)
+    course_text = "；".join(str(v) for v in course.values() if v)
+    intervention_text = "；".join(str(v) for v in intervention.values() if v)
+    outcome_map = frame.get("outcomes", {}) or {}
+    outcome_parts = []
+    for group, values in outcome_map.items():
+        if isinstance(values, list):
+            rendered = "、".join(label(lang, "outcome", v) for v in values)
+            outcome_parts.append(f"{group}: {rendered}")
+    scope_text = "；".join(f"{k}: {v}" for k, v in scope.items() if v)
+    cards = [
+        (labels["question"], frame.get("question") or result.get("meta", {}).get("question")),
+        (labels["learner"], learner_text), (labels["course"], course_text),
+        (labels["intervention"], intervention_text), (labels["comparison"], frame.get("comparison")),
+        (labels["outcomes"], "；".join(outcome_parts)), (labels["scope"], scope_text),
+        (labels["success"], frame.get("success_condition")),
+    ]
+    return '<div class="scope-grid">' + "".join(
+        f'<article class="scope-card"><h3>{esc(title)}</h3>{expandable_text(text, ui["expand_details"], 260, "scope-text")}</article>'
+        for title, text in cards if text) + '</div>'
+
+
+def render_retrieval_context(result: dict, lang: str, ui: dict) -> str:
+    frame = result.get("research_frame", {}) or {}
+    inclusion = frame.get("inclusion_criteria") or []
+    exclusion = frame.get("exclusion_criteria") or []
+    provenance = result.get("provenance", {}) or {}
+    sources = result.get("sources", []) or []
+    source_ids = " ".join(f'<code>{esc(s.get("source_id"))}</code>' for s in sources)
+    in_title = "纳入标准" if lang == "zh" else "Inclusion criteria"
+    ex_title = "排除标准" if lang == "zh" else "Exclusion criteria"
+    coverage_title = "证据来源覆盖" if lang == "zh" else "Source coverage"
+    caution = ("当前报告只展示 result 中真实存在的检索与来源信息；没有流程计数时不伪造 PRISMA / funnel 数字。"
+               if lang == "zh" else
+               "This report shows only retrieval metadata present in result; it does not fabricate PRISMA/funnel counts when none exist.")
+    return (f'<div class="retrieval-grid"><article><h3>{esc(in_title)}</h3><ul>'
+            f'{"".join(f"<li>{esc(v)}</li>" for v in inclusion)}</ul></article>'
+            f'<article><h3>{esc(ex_title)}</h3><ul>{"".join(f"<li>{esc(v)}</li>" for v in exclusion)}</ul></article></div>'
+            f'<div class="retrieval-coverage"><h3>{esc(coverage_title)}</h3><p>{source_ids}</p>'
+            f'{expandable_text(provenance.get("search_strategy") or provenance.get("search_query") or caution, ui["expand_details"], 300, "retrieval-note")}</div>')
+
+
+def render_applicability_boundary(result: dict, lang: str, ui: dict) -> str:
+    base = render_applicability(result, lang, ui)
+    limits = result.get("decision", {}).get("exceeds_evidence_boundary") or []
+    if not limits:
+        return base
+    title = "不可外推的结论" if lang == "zh" else "Claims beyond the evidence boundary"
+    return (base + f'<div class="boundary-block"><h3>{esc(title)}</h3><ul>'
+            + "".join(f'<li>{esc(item)}</li>' for item in limits) + '</ul></div>')
+
+
+def render_full_report(result: dict, lang: str, ui: dict, charts: dict, infographics: dict,
+                       figures: dict, viz: dict) -> str:
+    svg = {}
+    for key in ("workflow", "tribunal", "intervention", "evaluation"):
+        value = infographics.get(key, "")
+        value = value.replace("url(#arr)", f"url(#arr-{lang}-full-{key})")
+        value = value.replace('id="arr"', f'id="arr-{lang}-full-{key}"')
+        svg[key] = value
+    figure_svg = figures.get("outcome-comparison.svg", "")
+    outcome_chart = next((c for c in charts.get("charts", [])
+                          if c.get("chart_id") == "outcome-evidence-overview"), None)
+
+    trace_content = trace_chain_html(result, lang, ui)
+    if viz.get("claim_trace", {}).get("render"):
+        trace_content += (f'<p class="chart-interpretation"><strong>{esc(ui["what_this_means"])}{esc(ui["colon"])}</strong>'
+                          f'{esc("每个重要主张都必须能追到 Evidence ID 和原始来源。" if lang == "zh" else "Every important claim must resolve to Evidence IDs and original sources.")}</p>')
+    intervention_content = (render_evidence_to_action(result, lang, ui)
+                            + render_intervention(result, svg.get("intervention", ""), lang, ui))
+    evaluation_content = render_evaluation(result, svg.get("evaluation", ""), lang, ui)
+    if viz.get("benchmark", {}).get("render"):
+        evaluation_content += render_benchmark(charts, lang, ui)
+    else:
+        evaluation_content += (f'<div class="visual-suppressed"><strong>{esc("基准图已抑制" if lang == "zh" else "Benchmark visual suppressed")}</strong>'
+                               f'<p>{esc(ui["benchmark_note"])}</p></div>')
+
+    module_content = {
+        "decision": first_screen(result, lang, ui),
+        "scope": render_research_scope(result, lang, ui),
+        "retrieval": render_retrieval_context(result, lang, ui),
+        "outcomes": render_outcomes(result, outcome_chart, figure_svg, lang, ui, viz),
+        "evidence": render_matrix_visual(result, lang, ui, instance="full"),
+        "quality": render_methodology(result, lang, ui),
+        "conflicts": render_conflicts(result, lang, ui),
+        "trace": (render_tribunal_visual(result, svg.get("workflow", ""), svg.get("tribunal", ""),
+                                         lang, ui, compact=False) + trace_content),
+        "applicability": render_applicability_boundary(result, lang, ui),
+        "intervention": intervention_content,
+        "evaluation": evaluation_content,
+        "sources": (render_sources(result, lang, ui, expandable=True)
+                    + f'<h3>{esc(ui["provenance_title"])}</h3>' + render_provenance(result, lang, ui)),
+    }
+
+    default_leads = {
+        "decision": ("先明确最终裁决与研究边界，再解释为什么。" if lang == "zh" else "State the final adjudication and research boundary before explaining why."),
+        "evidence": ("把任务表现、真实学习、保持与风险放在同一证据地图中，但不混为一谈。" if lang == "zh" else "Place task performance, actual learning, retention and risk on one evidence map without conflating them."),
+        "quality": ("检查证据为什么可信、哪里冲突，以及哪些结论必须降级。" if lang == "zh" else "Examine why evidence is credible, where it conflicts, and which conclusions require downgrading."),
+        "action": ("把可外推范围、护栏和教学动作连接到具体证据。" if lang == "zh" else "Connect applicability, guardrails and teaching actions to specific evidence."),
+        "evaluation": ("用独立学习结果验证试点，并预先写清停止条件。" if lang == "zh" else "Validate the pilot with independent learning outcomes and pre-specified stop conditions."),
+        "sources": ("保留原始来源、URL、证据 ID 和获取信息，确保可回查。" if lang == "zh" else "Preserve original sources, URLs, evidence IDs and retrieval metadata for auditability."),
+    }
+
+    plan = resolve_full_report_plan(result)
+    rendered = []
+    for index, chapter in enumerate(plan, 1):
+        content = "".join(module_content.get(module, "") for module in chapter.get("modules", ()))
+        lead = chapter.get("lead_zh" if lang == "zh" else "lead_en") or default_leads.get(chapter.get("key"), "")
+        rendered.append(render_full_chapter(
+            chapter_dom_id(lang, str(chapter.get("key") or f"chapter-{index}"), index),
+            full_chapter_title(chapter, lang, index), content, str(lead or "")))
+    return "".join(rendered)
+
+
+def render_full_toc(result: dict, lang: str, ui: dict) -> str:
+    plan = resolve_full_report_plan(result)
+    links = "".join(
+        f'<a href="#{esc(chapter_dom_id(lang, str(chapter.get("key") or f"chapter-{index}"), index))}" '
+        f'data-toc-target="{esc(chapter_dom_id(lang, str(chapter.get("key") or f"chapter-{index}"), index))}" '
+        f'data-chapter-key="{esc(chapter.get("key") or "")}">{esc(full_chapter_title(chapter, lang, index))}</a>'
+        for index, chapter in enumerate(plan, 1))
+    return (f'<aside class="full-report-toc" aria-label="{esc(ui["contents"])}">'
+            f'<div class="toc-head"><strong>{esc(ui["contents"])}</strong>'
+            f'<button type="button" class="toc-collapse" aria-expanded="true" '
+            f'data-label-collapse="{esc(ui["collapse_contents"])}" data-label-expand="{esc(ui["expand_contents"])}">'
+            f'{esc(ui["collapse_contents"])}</button></div><nav>{links}</nav></aside>')
+
 
 def _theme_css() -> str:
     blocks = []
@@ -1522,67 +1998,95 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
 """
 
 
+def render_brief_block(title: str, lead: str, content: str, css_class: str = "") -> str:
+    return (f'<section class="brief-block {esc(css_class)}">'
+            f'<header class="brief-block-header"><h2>{esc(title)}</h2><p>{esc(lead)}</p></header>'
+            f'<div class="brief-block-body">{content}</div></section>')
+
+
+def render_outcomes_brief(result: dict, chart: dict | None, lang: str, ui: dict, viz: dict) -> str:
+    separation = render_outcome_separation(result, lang, ui) if viz.get("outcome_separation", {}).get("render") else ""
+    if not viz.get("outcome_evidence_balance", {}).get("render") or not chart:
+        return separation
+    visual = (f'<div class="visual-surface brief-chart" data-visual="outcome-evidence-balance">'
+              f'{diverging_bar_svg(chart.get("option", {}))}'
+              f'<p class="chart-interpretation"><strong>{esc(ui["what_this_means"])}{esc(ui["colon"])}</strong>'
+              f'{esc(chart.get("summary_text") or "")}</p></div>')
+    return separation + visual
+
+
+def render_brief_sources(result: dict, lang: str, ui: dict, limit: int = 4) -> str:
+    sources = result.get("sources", []) or []
+    if not sources:
+        return f'<p>{esc(ui["no_data"])}</p>'
+    cards = []
+    for source in sources[:limit]:
+        url = safe_http_url(source.get("canonical_url") or source.get("source_location"))
+        title = source.get("title") or source.get("source_id") or ""
+        linked = f'<a href="{esc(url)}">{esc(title)}</a>' if url else esc(title)
+        cards.append(f'<article class="brief-source"><code>{esc(source.get("source_id"))}</code>'
+                     f'<h3>{linked}</h3><p>{esc(label(lang, "authority", source.get("authority_level") or ""))}'
+                     f' · {esc(source.get("year"))}</p></article>')
+    remaining = len(sources) - len(cards)
+    more = (f'<p class="brief-source-more">完整报告中还有 {remaining} 个来源可展开追溯。</p>' if lang == "zh" and remaining > 0
+            else f'<p class="brief-source-more">{remaining} more sources are traceable in the full report.</p>' if remaining > 0
+            else "")
+    return f'<div class="brief-source-grid">{"".join(cards)}</div>{more}'
+
+
 def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: dict,
                 figures: dict, viz: dict) -> str:
     decision = result.get("decision", {})
     meta = result.get("meta", {})
     question = meta.get("question") or decision.get("decision_question") or "EduEvidence Report"
-    infographic_order = ["workflow", "tribunal", "intervention", "evaluation"]
-    # 每张信息图的 marker id 按 语言+图名 唯一化，url 引用同步
-    svg = {}
-    for k in infographic_order:
-        s = infographics.get(k, "")
-        s = s.replace("url(#arr)", f"url(#arr-{lang}-{k})")
-        s = s.replace('id="arr"', f'id="arr-{lang}-{k}"')
-        svg[k] = s
-    figure_svg = figures.get("outcome-comparison.svg", "")
     outcome_chart = next((c for c in charts.get("charts", [])
                           if c.get("chart_id") == "outcome-evidence-overview"), None)
 
-    outcome_dynamic = (f'<div id="chart-outcome-{lang}" class="chart-mount" role="img" '
-                       f'aria-label="interactive outcome evidence balance"></div>'
-                       if viz["outcome_evidence_balance"]["render"] else "")
-    trace_dynamic = (f'<div id="chart-trace-{lang}" class="chart-mount" role="img" '
-                     f'aria-label="interactive claim evidence trace"></div>'
-                     if viz["claim_trace"]["render"] else "")
-    benchmark_dynamic = (f'<div id="chart-benchmark-{lang}" class="chart-mount" role="img" '
-                         f'aria-label="interactive empirical benchmark"></div>'
-                         if viz["benchmark"]["render"] else "")
-    benchmark_content = (render_benchmark(charts, lang, ui) + benchmark_dynamic
-                         if viz["benchmark"]["render"] else f"<p>{esc(ui['benchmark_note'])}</p>")
+    if lang == "zh":
+        brief_titles = {
+            "decision": ("先看结论", "先回答该不该做、置信度多高，以及最关键的证据边界。"),
+            "outcomes": ("任务表现 ≠ 学习效果", "只展示真正有解释力的结果分离；正向、负向与零效应按 effect_direction 编码。"),
+            "tribunal": ("证据裁决", "把已支持、不确定、被反驳和缺失证据分开，不把长段落平铺在同一层。"),
+            "action": ("从证据到行动", "把适用性、护栏、停止条件和评价连接成一条可执行路径。"),
+            "sources": ("关键来源", "摘要页只列最关键来源；完整证据、研究设计与 provenance 在完整报告中展开。"),
+        }
+    else:
+        brief_titles = {
+            "decision": ("Decision first", "Answer what to do, how confident the decision is, and the most important evidence boundary."),
+            "outcomes": ("Task performance ≠ learning", "Show only informative outcome separation; positive, negative and null effects use effect_direction."),
+            "tribunal": ("Evidence tribunal", "Separate supported, uncertain, contradicted and missing evidence instead of flattening long prose."),
+            "action": ("Evidence to action", "Connect applicability, guardrails, stop conditions and evaluation into an executable path."),
+            "sources": ("Key sources", "Keep only key sources in the brief; full evidence, study design and provenance expand in the full report."),
+        }
 
-    body = "\n".join([
-        section("01-executive-decision", "01", first_screen(result, lang, ui), lang, ui),
-        section("02-outcome-overview", "02",
-                render_outcomes(result, outcome_chart, figure_svg, lang, ui, viz) + outcome_dynamic,
-                lang, ui),
-        section("03-evidence-matrix", "03", render_matrix_visual(result, lang, ui), lang, ui),
-        section("04-evidence-tribunal", "04",
-                render_tribunal_visual(result, svg.get("workflow", ""), svg.get("tribunal", ""), lang, ui), lang, ui),
-        section("05-methodology-audit", "05", render_methodology(result, lang, ui), lang, ui),
-        section("06-conflict-analysis", "06", render_conflicts(result, lang, ui), lang, ui),
-        section("07-claim-trace", "07", trace_chain_html(result, lang, ui) + trace_dynamic, lang, ui),
-        section("08-applicability", "08", render_applicability(result, lang, ui), lang, ui),
-        section("09-intervention", "09",
-                render_evidence_to_action(result, lang, ui)
-                + render_intervention(result, svg.get("intervention", ""), lang, ui), lang, ui),
-        section("10-evaluation", "10",
-                render_evaluation(result, svg.get("evaluation", ""), lang, ui), lang, ui),
-        section("11-benchmark", "11", benchmark_content, lang, ui),
-        section("12-sources", "12",
-                render_sources(result, lang, ui) + f"<h3>{esc(ui['provenance_title'])}</h3>"
-                + render_provenance(result, lang, ui), lang, ui),
+    brief = "".join([
+        render_brief_block(*brief_titles["decision"], first_screen(result, lang, ui), "brief-decision"),
+        render_brief_block(*brief_titles["outcomes"], render_outcomes_brief(result, outcome_chart, lang, ui, viz), "brief-outcomes"),
+        render_brief_block(*brief_titles["tribunal"], render_tribunal_visual(result, "", "", lang, ui, compact=True), "brief-tribunal"),
+        render_brief_block(*brief_titles["action"], render_evidence_to_action(result, lang, ui), "brief-action"),
+        render_brief_block(*brief_titles["sources"], render_brief_sources(result, lang, ui), "brief-sources"),
     ])
+    full_report = render_full_report(result, lang, ui, charts, infographics, figures, viz)
+    toc = render_full_toc(result, lang, ui)
 
     footer = ui['footer'].format(schema=ui['footer_schema'], claims=ui['footer_claims'],
                                  numbers=ui['footer_numbers'], bilingual=ui['footer_bilingual'])
     return f"""<div class="report-shell" data-lang-body="{lang}">
 <header class="report-header">
+<div class="report-brand-row"><span class="report-brand">EduEvidence</span><span class="generated-theme-chip">{esc(ui['theme_label'])}</span></div>
 <h1>{esc(question)}</h1>
-<p class="meta">EduEvidence · {esc(ui['header_mode'])}={esc(label(lang, "mode", meta.get("mode") or ""))} · {esc(ui['header_generated'])}={esc(meta.get('generated_at'))} · {esc(ui['header_evidence'])} {len(result.get('evidence', []))}{esc(ui['header_evidence_suffix'])} · {esc(ui['header_sources'])} {len(result.get('sources', []))}{esc(ui['header_sources_suffix'])}</p>
+<p class="meta">{esc(ui['header_mode'])}={esc(label(lang, "mode", meta.get("mode") or ""))} · {esc(ui['header_generated'])}={esc(meta.get('generated_at'))} · {esc(ui['header_evidence'])} {len(result.get('evidence', []))}{esc(ui['header_evidence_suffix'])} · {esc(ui['header_sources'])} {len(result.get('sources', []))}{esc(ui['header_sources_suffix'])}</p>
+<nav class="report-view-switcher" aria-label="report view">
+<button type="button" class="report-view-btn active" data-report-view="brief" aria-pressed="true">{esc(ui['visual_brief'])}</button>
+<button type="button" class="report-view-btn" data-report-view="full" aria-pressed="false">{esc(ui['full_report'])}</button>
+</nav>
 </header>
-{body}
-<footer class="report-section"><p>{esc(footer)}</p></footer>
+<div class="report-page report-page-brief" data-report-page="brief">{brief}</div>
+<div class="report-page report-page-full" data-report-page="full" hidden>
+<div class="full-report-intro"><h2>{esc(ui['full_report'])}</h2><p>{esc(ui['full_report_intro'])}</p></div>
+<div class="full-report-layout">{toc}<main class="full-report-content">{full_report}</main></div>
+</div>
+<footer class="report-footer"><p>{esc(footer)}</p></footer>
 </div>"""
 
 
@@ -1757,6 +2261,73 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .evidence-to-action {{ display:flex; gap:10px; align-items:stretch; overflow-x:auto; padding:6px 0 20px; margin-bottom:22px; }}
 .action-node {{ flex:1 0 165px; padding:14px 15px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface2); }}
 .action-node p {{ margin:7px 0 0; font-size:.84rem; }} .flow-arrow {{ align-self:center; color:var(--insufficient); }}
+.relation-note {{ display:block; margin-top:5px; font-size:.68rem; color:var(--insufficient); line-height:1.35; }}
+.semantic-note, .chart-interpretation {{ margin:9px 0 0; color:var(--insufficient); font-size:.82rem; }}
+.detail-expander {{ margin-top:7px; }} .detail-expander>summary {{ cursor:pointer; color:var(--primary); font-size:.78rem; }}
+.detail-body {{ margin-top:8px; padding:10px 12px; border-left:2px solid var(--border); background:var(--surface2); }}
+.detail-body p {{ margin:0; white-space:normal; }}
+.evidence-detail-grid, .source-detail-grid {{ margin:10px 0 0; display:grid; grid-template-columns:minmax(120px,170px) 1fr; gap:0; }}
+.evidence-detail-row, .source-detail-row {{ display:contents; }}
+.evidence-detail-grid dt, .evidence-detail-grid dd, .source-detail-grid dt, .source-detail-grid dd {{ margin:0; padding:7px 8px; border-top:1px solid var(--border); }}
+.evidence-detail-grid dt, .source-detail-grid dt {{ color:var(--insufficient); font-size:.75rem; }}
+.evidence-detail-grid dd, .source-detail-grid dd {{ font-size:.8rem; overflow-wrap:anywhere; }}
+.tribunal-count {{ margin-left:auto; min-width:24px; height:24px; display:inline-grid; place-items:center; border-radius:999px; background:var(--surface); color:var(--insufficient); font-size:.72rem; }}
+.tribunal-evidence-refs {{ display:flex; gap:5px; flex-wrap:wrap; margin-top:5px; }}
+.tribunal-more>summary {{ margin-top:10px; cursor:pointer; color:var(--primary); font-size:.8rem; }}
+.method-review-group {{ margin:0 0 26px; }}
+.method-review-title {{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:12px; }}
+.method-review-title h3 {{ margin:0; }}
+.method-audit-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; }}
+.method-audit-item {{ border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface2); padding:12px; }}
+.method-audit-head {{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }}
+.method-audit-item p {{ margin:7px 0 0; font-size:.82rem; }} .method-status {{ font-size:.7rem; color:var(--insufficient); white-space:nowrap; }}
+.method-guard-wrap {{ margin-top:12px; padding:12px 14px; border-left:3px solid var(--primary); background:var(--surface2); }}
+.scope-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }}
+.scope-card, .retrieval-grid>article, .retrieval-coverage, .boundary-block, .visual-suppressed {{ border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface2); padding:15px 16px; }}
+.scope-card h3, .retrieval-grid h3, .retrieval-coverage h3, .boundary-block h3 {{ margin:0 0 8px; }}
+.retrieval-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:12px; }}
+.retrieval-coverage code {{ margin-right:5px; }}
+
+/* Two-layer report shell: the content contract is shared by all five themes. */
+.report-brand-row {{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }}
+.report-brand {{ font-weight:750; letter-spacing:.02em; }}
+.generated-theme-chip {{ font-size:.7rem; color:var(--insufficient); border:1px solid var(--border); border-radius:999px; padding:2px 8px; }}
+.report-view-switcher {{ display:flex; gap:8px; margin-top:18px; }}
+.report-view-btn {{ border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:999px; padding:7px 14px; cursor:pointer; font-size:.82rem; }}
+.report-view-btn.active {{ background:var(--primary); border-color:var(--primary); color:#fff; }}
+.report-page[hidden] {{ display:none !important; }}
+.report-page {{ animation:reportPageIn .24s ease both; }}
+@keyframes reportPageIn {{ from {{ opacity:0; transform:translateY(4px); }} to {{ opacity:1; transform:none; }} }}
+.brief-block {{ max-width:1040px; margin:0 auto clamp(42px,6vw,76px); }}
+.brief-block-header {{ max-width:760px; margin-bottom:22px; }}
+.brief-block-header h2 {{ margin:0 0 7px; font-family:var(--font-head); font-size:1.45rem; }}
+.brief-block-header p {{ margin:0; color:var(--insufficient); }}
+.brief-source-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }}
+.brief-source {{ border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface2); padding:14px 15px; }}
+.brief-source h3 {{ margin:7px 0 4px; font-size:.9rem; }} .brief-source p, .brief-source-more {{ color:var(--insufficient); font-size:.78rem; }}
+.full-report-intro {{ max-width:900px; margin:0 auto 30px; }}
+.full-report-intro h2 {{ font-family:var(--font-head); margin:0 0 7px; font-size:1.8rem; }}
+.full-report-intro p {{ margin:0; color:var(--insufficient); }}
+.full-report-layout {{ display:grid; grid-template-columns:240px minmax(0,1fr); gap:42px; align-items:start; }}
+.full-report-toc {{ position:sticky; top:18px; max-height:calc(100vh - 36px); overflow:auto; border-right:1px solid var(--border); padding-right:18px; }}
+.toc-head {{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }}
+.toc-head strong {{ font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--insufficient); }}
+.toc-collapse {{ border:0; background:transparent; color:var(--primary); cursor:pointer; font-size:.72rem; padding:2px; }}
+.full-report-toc nav {{ display:grid; gap:4px; }}
+.full-report-toc a {{ display:block; color:var(--insufficient); text-decoration:none; padding:7px 8px; border-left:2px solid transparent; font-size:.8rem; line-height:1.4; }}
+.full-report-toc a.active {{ color:var(--text); border-left-color:var(--primary); background:var(--surface2); }}
+.full-report-layout.toc-collapsed {{ grid-template-columns:48px minmax(0,1fr); gap:24px; }}
+.full-report-layout.toc-collapsed .full-report-toc nav, .full-report-layout.toc-collapsed .toc-head strong {{ display:none; }}
+.full-report-layout.toc-collapsed .full-report-toc {{ padding-right:0; border-right:0; overflow:visible; }}
+.full-report-layout.toc-collapsed .toc-collapse {{ writing-mode:vertical-rl; border:1px solid var(--border); border-radius:999px; padding:9px 5px; background:var(--surface); }}
+.full-report-content {{ min-width:0; max-width:960px; }}
+.full-chapter {{ scroll-margin-top:24px; padding:0 0 54px; margin:0 0 54px; border-bottom:1px solid var(--border); }}
+.full-chapter:last-child {{ border-bottom:0; }}
+.full-chapter-header {{ max-width:760px; margin-bottom:24px; }}
+.full-chapter-header h2 {{ margin:0 0 8px; font-family:var(--font-head); font-size:1.55rem; line-height:1.25; }}
+.full-chapter-lead {{ margin:0; color:var(--insufficient); }}
+.full-chapter-body>*+* {{ margin-top:20px; }}
+.report-footer {{ margin-top:64px; padding-top:18px; border-top:1px solid var(--border); color:var(--insufficient); font-size:.76rem; }}
 
 /* Motion system — progressive enhancement only; static HTML remains fully readable without JS. */
 .motion-ready [data-animate] {{

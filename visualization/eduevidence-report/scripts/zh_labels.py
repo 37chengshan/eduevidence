@@ -50,6 +50,7 @@ STUDY_ZH = {
 }
 
 AUTHORITY_ZH = {
+    "tier1_paper_doi": "T1 DOI 可验证论文",
     "tier1_peer_reviewed_journal": "T1 同行评议期刊",
     "tier2_peer_reviewed_conference": "T2 同行评议会议",
     "tier3_professional_institution": "T3 专业机构",
@@ -133,6 +134,7 @@ STUDY_EN = {
     "correlational": "Correlational",
 }
 AUTHORITY_EN = {
+    "tier1_paper_doi": "Tier 1 DOI-verified paper",
     "tier1_peer_reviewed_journal": "Tier 1 peer-reviewed journal",
     "tier2_peer_reviewed_conference": "Tier 2 peer-reviewed conference",
     "tier3_professional_institution": "Tier 3 professional institution",

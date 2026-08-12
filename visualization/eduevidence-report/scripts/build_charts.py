@@ -43,13 +43,13 @@ TITLES = {
 
 SUMMARIES = {
     "zh": {
-        "overview": "各 Outcome 的支持/反驳/中性证据条数对比（正=支持，负=反驳；中性为独立细条道）。",
+        "overview": "各 Outcome 的正向 / 负向 / 零效应证据条数对比。这里展示的是 effect_direction，不是“这条证据是否支持某个主张”。",
         "benchmark": "B0-B4 基线在引用支持/无支撑率/反方发现上的对比及质量-成本散点。",
         "trace": "决策→结论→证据→来源 的可追溯图谱；点击节点可追踪支持/反驳路径。",
     },
     "en": {
-        "overview": "Supporting / contradicting / neutral evidence counts per outcome "
-                    "(positive = support, negative = contradict; neutral in its own thin lane).",
+        "overview": "Positive / negative / null effect-direction evidence counts per outcome. "
+                    "This visual encodes effect_direction, not whether evidence supports a claim.",
         "benchmark": "B0-B4 baselines compared on citation support, unsupported rate and "
                      "contradiction discovery, plus the quality-cost scatter.",
         "trace": "Traceable graph Decision → Claim → Evidence → Source; click nodes to follow "
@@ -58,30 +58,59 @@ SUMMARIES = {
 }
 
 
-def outcome_overview(outcomes: list[dict], lang: str = "zh") -> dict[str, Any]:
-    """Diverging evidence bar: per outcome, support (+) from center right,
-    contradict (-) from center left, neutral (?) in a separate thin lane.
+def effect_outcomes(result: dict[str, Any]) -> list[dict[str, Any]]:
+    """Aggregate evidence by outcome using effect_direction, not relation_to_claim.
 
-    Two ECharts grids: grid 0 = diverging main lane, grid 1 = neutral thin
-    bars.  Counts therefore never overlap (P0-10) and the count axis uses
-    integer ticks via minInterval=1 (P0-11).
+    `direction` / `relation_to_claim` answers whether evidence supports a claim. It does
+    not say whether the measured outcome improved or worsened. Outcome visuals must use
+    `effect_direction` to avoid turning evidence for a harmful effect into a green bar.
     """
+    ordered = [o.get("outcome_type", "") for o in result.get("outcomes", []) if o.get("outcome_type")]
+    seen = set(ordered)
+    for ev in result.get("evidence", []) or []:
+        outcome = ev.get("outcome_type") or ""
+        if outcome and outcome not in seen:
+            ordered.append(outcome)
+            seen.add(outcome)
+
+    buckets = {name: {"positive_count": 0, "negative_count": 0, "null_count": 0,
+                      "evidence_ids": []} for name in ordered}
+    for ev in result.get("evidence", []) or []:
+        outcome = ev.get("outcome_type") or ""
+        if not outcome:
+            continue
+        bucket = buckets.setdefault(outcome, {"positive_count": 0, "negative_count": 0,
+                                              "null_count": 0, "evidence_ids": []})
+        effect = str(ev.get("effect_direction") or "null").lower()
+        field = {"positive": "positive_count", "negative": "negative_count",
+                 "null": "null_count", "neutral": "null_count"}.get(effect, "null_count")
+        bucket[field] += 1
+        if ev.get("evidence_id"):
+            bucket["evidence_ids"].append(ev["evidence_id"])
+
+    return [{"outcome_type": name, **buckets[name]} for name in ordered if name in buckets]
+
+
+def outcome_overview(result: dict[str, Any], lang: str = "zh") -> dict[str, Any]:
+    """Diverging effect-direction bar: positive right, negative left, null thin lane."""
+    outcomes = effect_outcomes(result)
     names = [label(lang, "outcome", o.get("outcome_type", "")) for o in outcomes]
-    support = [o.get("support_count", 0) for o in outcomes]
-    contradict = [-o.get("contradict_count", 0) for o in outcomes]
-    neutral = [o.get("neutral_count", 0) for o in outcomes]
-    vmax = max([1] + [abs(v) for v in support + contradict + neutral])
+    positive = [o.get("positive_count", 0) for o in outcomes]
+    negative = [-o.get("negative_count", 0) for o in outcomes]
+    null = [o.get("null_count", 0) for o in outcomes]
+    vmax = max([1] + [abs(v) for v in positive + negative + null])
+    series_names = (["正向效应", "负向效应", "零效应"] if lang == "zh"
+                    else ["Positive effect", "Negative effect", "Null effect"])
     return {
         "chart_id": "outcome-evidence-overview",
         "purpose": "interactive_analysis",
         "engine": "echarts",
         "chart_type": "diverging_bar",
+        "semantic_basis": "effect_direction",
         "title": TITLES[lang]["overview"],
         "option": {
             "tooltip": {"trigger": "axis"},
-            "legend": {"data": [label(lang, "dir", "support"),
-                                label(lang, "dir", "contradict"),
-                                label(lang, "dir", "neutral")]},
+            "legend": {"data": series_names},
             "grid": [
                 {"left": 150, "right": 40, "top": 30, "height": "52%"},
                 {"left": 150, "right": 40, "top": "70%", "height": "18%"},
@@ -95,19 +124,18 @@ def outcome_overview(outcomes: list[dict], lang: str = "zh") -> dict[str, Any]:
                 {"type": "category", "data": names, "inverse": True, "gridIndex": 1, "show": False},
             ],
             "series": [
-                {"name": label(lang, "dir", "support"), "type": "bar", "data": support,
+                {"name": series_names[0], "type": "bar", "data": positive,
                  "itemStyle": {"color": "#5E8A6A"}, "xAxisIndex": 0, "yAxisIndex": 0,
                  "lane": "main"},
-                {"name": label(lang, "dir", "contradict"), "type": "bar", "data": contradict,
+                {"name": series_names[1], "type": "bar", "data": negative,
                  "itemStyle": {"color": "#A85B53"}, "xAxisIndex": 0, "yAxisIndex": 0,
                  "lane": "main"},
-                {"name": label(lang, "dir", "neutral"), "type": "bar", "data": neutral,
+                {"name": series_names[2], "type": "bar", "data": null,
                  "itemStyle": {"color": "#C99A4A"}, "xAxisIndex": 1, "yAxisIndex": 1,
                  "barWidth": 6, "lane": "neutral"},
             ],
         },
         "summary_text": SUMMARIES[lang]["overview"],
-        # 占位：报告级 integrity 检查（build_report.compute_integrity）会覆写为真实状态
         "integrity": {"numbers_match_result": "NOT_CHECKED", "no_axis_distortion": "NOT_CHECKED",
                       "no_false_precision": "NOT_CHECKED", "colorblind_safe": "NOT_CHECKED"},
     }
@@ -229,7 +257,7 @@ def claim_trace(result: dict[str, Any], lang: str = "zh") -> dict[str, Any]:
 def build_all(result: dict[str, Any], lang: str = "zh") -> dict[str, Any]:
     return {
         "charts": [
-            outcome_overview(result.get("outcomes", []), lang),
+            outcome_overview(result, lang),
             claim_trace(result, lang),
         ],
         "benchmark": benchmark_panel(result.get("benchmark", {}), lang),

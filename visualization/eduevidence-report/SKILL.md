@@ -82,6 +82,27 @@ process_or_story         -> AntV Infographic
 simple_structure         -> HTML/CSS/SVG
 ```
 
+## Meaningful Visualization Gate（重构 v2）
+
+稀疏/无意义数据**不强行画图**，改为静态表格 + 抑制说明：
+
+- `outcome_evidence_balance`：总证据数过少 / 非零格过少 / 单格最大 1 时抑制（如 `total<10, nonzero_cells<8, max_cell<=1` → 不画）
+- `benchmark`：无基准数据 / 模拟数据 / 基线 <2 个时抑制
+- `claim_trace`：无 claim-evidence-source 关系时抑制
+- `outcome_separation`：多 outcome 构造存在时渲染
+
+每个可视化决策写入 `report_spec.json` 的 `visualization_decisions`：`{render: true/false, reason: "..."}`。
+
+## Decision Hero（重构 v2）
+
+首屏改为决策导向信息结构（非数据堆砌）：
+
+```text
+建议决策（ADOPT/PILOT/REJECT/INSUFFICIENT）· 置信度
+→ 证据不允许/支持什么（直接引用 E-xxx 与关键数字）
+→ 行动（护栏试点 / 无 AI 独立评测 / 止损点）
+```
+
 ## 输出（§64）
 
 ```text
