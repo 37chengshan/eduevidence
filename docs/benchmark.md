@@ -25,7 +25,18 @@ Benchmark 回答两个问题：**方法论有没有用**（EduEvidence 是否优
 
 ### 1.3 题目格式（questions.jsonl）
 
-每题包含：`id`、`complexity`（S/M/L）、`domain`、`question`（原始教育问题）、`expected_decision`（adopt/pilot/reject/insufficient_evidence）、`reference`（人工参考答案）与 `evaluation_focus`（本题重点考察的指标）。
+每题包含（与 `scripts/benchmark.py validate_questions()` 严格一致）：
+
+| 字段 | 说明 |
+|------|------|
+| `id` | 唯一编号，如 `Q01` |
+| `level` | 复杂度 S / M / L（S×10、M×10、L×10） |
+| `domain` | `ai_higher_education` / `teaching_methods` / `learning_psychology` / `assessment_edtech` |
+| `question` | 原始教育问题（中文） |
+| `expected_outcomes` | 期望考察的 Outcome 枚举（须在 20 类 Outcome Taxonomy 内） |
+| `notes` | 难度与考察点说明 |
+
+期望决策与已知反方证据等人工金标注放在 `benchmarks/annotations/gold-<id>.json`（字段：`key_claims` / `key_supporting_sources` / `known_contradictions` / `correct_outcome_types` / `allowed_scope` / `known_methodological_limitations` / `expected_decision_range`）。
 
 ## 二、基线与关键对比（B0–B4）
 

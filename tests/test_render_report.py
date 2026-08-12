@@ -27,8 +27,10 @@ def test_render_pack_contains_all_sections():
     md = render_pack(frame, evidence, methodology, verdict, intervention, evaluation)
     for section in ("01 Executive Decision", "02 Education Research Frame",
                     "03 Evidence Summary", "04 Evidence Matrix",
-                    "05 Methodology Audit", "09 Teaching Intervention",
-                    "10 Evaluation Plan"):
+                    "05 Methodology Audit", "06 Conflict Analysis",
+                    "07 Evidence Tribunal", "08 Applicability",
+                    "09 Teaching Intervention", "10 Evaluation Plan",
+                    "11 Claim-Evidence Trace", "12 Sources"):
         assert section in md
     assert "PILOT" in md or "pilot" in md
 
@@ -49,5 +51,8 @@ def test_render_frame_shows_question():
 
 def test_empty_pack_graceful():
     md = render_pack(None, [], None, None, None, None)
-    assert "01 Executive Decision" in md
+    for section in ("01 Executive Decision", "02 Education Research Frame",
+                    "04 Evidence Matrix", "11 Claim-Evidence Trace",
+                    "12 Sources"):
+        assert section in md
     assert "_no verdict provided_" in md

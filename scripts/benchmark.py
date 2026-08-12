@@ -101,12 +101,20 @@ def metric_unsupported_claim_rate(result: dict) -> float:
 
 
 def metric_contradiction_discovery(result: dict, annotation: dict) -> float:
-    """Fraction of known contradictions (from gold annotation) discovered by the system."""
+    """Fraction of known contradictions (from gold annotation) discovered by the system.
+
+    Semantics: if the gold annotation lists no known contradictions, the metric
+    scores 1.0 only when the system also reported none (nothing to find); if the
+    system reported contradictions where none are known, that counts as failure.
+    Membership test is restricted to string entries (model-generated results may
+    contain non-string objects).
+    """
     known = annotation.get("known_contradictions", [])
-    if not known:
-        return 1.0
     found = result.get("discovered_contradictions", [])
-    hits = sum(1 for k in known if any(k in f for f in found))
+    found_strings = [f for f in found if isinstance(f, str)]
+    if not known:
+        return 1.0 if not found else 0.0
+    hits = sum(1 for k in known if any(k in f for f in found_strings))
     return hits / len(known)
 
 

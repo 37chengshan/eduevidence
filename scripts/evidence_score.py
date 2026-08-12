@@ -6,7 +6,8 @@ Two rule-based engines:
 1. Quality score (five dimensions, each 0-2, total 0-10):
    D1 Study Design, D2 Sample Quality, D3 Measurement Validity,
    D4 Temporal Strength, D5 Directness.
-   Level mapping: 8-10 strong, 5-7 moderate, 3-4 weak, 0-2 very_weak.
+   Level mapping (references/evidence-quality.md): 8-10 strong, 5-7 moderate,
+   2-4 weak, 0-1 very_weak.
 
 2. Confidence (rule-based, NOT model-generated):
    Evidence Quality + Consistency + Directness + Evidence Count
@@ -33,12 +34,12 @@ def quality_score(dimensions: dict[str, int]) -> float:
 
 
 def quality_level(score: float) -> str:
-    """Map a 0-10 quality score to a level."""
+    """Map a 0-10 quality score to a level (references/evidence-quality.md)."""
     if score >= 8:
         return "strong"
     if score >= 5:
         return "moderate"
-    if score >= 3:
+    if score >= 2:
         return "weak"
     return "very_weak"
 
@@ -63,10 +64,16 @@ def directness_score(evidence_list: list[dict[str, Any]]) -> float:
 def confidence(evidence_list: list[dict[str, Any]], *, target_outcome: str | None = None) -> dict[str, Any]:
     """Rule-based confidence computation per plan section 13.
 
-    Confidence = Evidence Quality + Consistency + Directness + Evidence Count
-                 - Conflict Penalty - Unsupported Penalty
+    Normalized implementation (weights sum to 1.0 so the score stays in [0, 1]):
 
-    Returns breakdown dict plus final label.
+        score = 0.30*Evidence Quality + 0.25*Consistency + 0.20*Directness
+                + 0.25*Evidence Count - Conflict Penalty - Unsupported Penalty
+
+    where Conflict Penalty = 0.15 if any contradicting evidence exists, and
+    Unsupported Penalty = min(0.20, 0.05 * n_unsupported). The raw quality /
+    consistency / directness terms are scaled to [0, 1] first.
+
+    Returns breakdown dict plus final label (High | Moderate | Low | Insufficient).
     """
     if not evidence_list:
         return {"confidence": "Insufficient", "confidence_breakdown": {"evidence_count": 0}}
@@ -87,14 +94,15 @@ def confidence(evidence_list: list[dict[str, Any]], *, target_outcome: str | Non
     # 4. Evidence count (log-scaled, capped at 1)
     count_term = min(1.0, len(evidence_list) / 8.0)
 
-    # 5. Conflict penalty (0.35 when contradiction exists)
-    conflict_penalty = 0.35 if "contradict" in directions else 0.0
+    # 5. Conflict penalty (0.15 when contradiction exists)
+    conflict_penalty = 0.15 if "contradict" in directions else 0.0
 
-    # 6. Unsupported penalty
+    # 6. Unsupported penalty (capped at 0.20)
     unsupported = [e for e in evidence_list if e.get("status") in ("UNSUPPORTED", "DOWNGRADE_CONFIDENCE")]
-    unsupported_penalty = min(1.0, len(unsupported) * 0.25)
+    unsupported_penalty = min(0.20, len(unsupported) * 0.05)
 
-    score = quality_term + consistency + directness + count_term - conflict_penalty - unsupported_penalty
+    score = (0.30 * quality_term + 0.25 * consistency + 0.20 * directness
+             + 0.25 * count_term - conflict_penalty - unsupported_penalty)
     score = max(0.0, min(1.0, score))
 
     if target_outcome:

@@ -47,6 +47,20 @@ def test_scope_calibration():
     assert metric_scope_calibration(result) == pytest.approx(0.5)
 
 
+def test_contradiction_discovery_empty_known():
+    # Nothing known to find: perfect only if the system also reported nothing.
+    assert metric_contradiction_discovery(
+        {"discovered_contradictions": []}, {"known_contradictions": []}) == 1.0
+    assert metric_contradiction_discovery(
+        {"discovered_contradictions": ["spurious"]}, {"known_contradictions": []}) == 0.0
+
+
+def test_contradiction_discovery_ignores_non_strings():
+    result = {"discovered_contradictions": [{"obj": "not a string"}, "novelty effect"]}
+    annotation = {"known_contradictions": ["novelty effect", "other"]}
+    assert metric_contradiction_discovery(result, annotation) == pytest.approx(0.5)
+
+
 def test_evaluate_with_annotation():
     result = {
         "citations": [{"supports_claim": True}],

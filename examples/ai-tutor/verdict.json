@@ -31,16 +31,21 @@
   "applicability": {
     "suitable_for": "大学高数课堂的护栏式 AI Tutor 试点",
     "not_suitable_for": "无护栏的通用 AI 直接进入课堂",
-    "required_conditions": ["只给提示不给答案的护栏策略", "无 AI 独立考试与迁移测试", "TA/教师监控与反思要求"]
+    "required_conditions": [
+      "只给提示不给答案的护栏策略",
+      "无 AI 独立考试与迁移测试",
+      "TA/教师监控与反思要求"
+    ]
   },
   "confidence": "Moderate",
   "confidence_breakdown": {
-    "score": 0.6,
-    "evidence_quality": 0.85,
-    "consistency": 0.7,
-    "directness": 0.3,
+    "score": 0.568,
+    "evidence_quality": 0.767,
+    "consistency": 0.8,
+    "directness": 0.5,
     "evidence_count": 6,
-    "conflict_penalty": 0.25,
+    "count_term": 0.75,
+    "conflict_penalty": 0.15,
     "unsupported_penalty": 0.0
   },
   "what_can_be_claimed": [

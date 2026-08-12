@@ -62,7 +62,7 @@ python scripts/validate_schema.py \
 python scripts/benchmark.py --questions benchmarks/questions.jsonl
 ```
 
-- `--questions`：第一版 30 题（S×10 / M×10 / L×10），字段包含 id、complexity、domain、question、expected_decision 与 reference；
+- `--questions`：第一版 30 题（S×10 / M×10 / L×10），每题字段为 `id`、`level`（S/M/L）、`domain`、`question`、`expected_outcomes`、`notes`（与 `validate_questions()` 校验一致）；人工金标注位于 `benchmarks/annotations/gold-<id>.json`；
 - 运行产物：每题一个 JSON，写入 `benchmarks/results/`；
 - 核心指标（Citation Support Precision、Unsupported Claim Rate、Contradiction Discovery Rate、Outcome Separation Accuracy、Scope Calibration、Intervention Evidence Alignment）由 `benchmarks/evaluator/` 对照 `benchmarks/annotations/` 计算；
 - 可选参数（如 `--ablation` 跑 A1–A7、`--repeat 5` 测稳定性）以 `python scripts/benchmark.py --help` 为准。

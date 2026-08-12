@@ -70,11 +70,15 @@ def validate(value, schema: dict, path: str = "$") -> None:
                 if field not in value:
                     raise SchemaError(f"{path}: missing required field {field!r}")
         props = schema.get("properties", {})
+        additional = schema.get("additionalProperties")
         for key, val in value.items():
             if key in props:
                 validate(val, props[key], f"{path}.{key}")
-            elif schema.get("additionalProperties") is False:
+            elif additional is False:
                 raise SchemaError(f"{path}: unexpected property {key!r}")
+            elif isinstance(additional, dict):
+                # schema-valued additionalProperties: validate unknown keys
+                validate(val, additional, f"{path}.{key}")
 
     if isinstance(value, list):
         items = schema.get("items")

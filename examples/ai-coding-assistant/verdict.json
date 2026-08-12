@@ -35,12 +35,13 @@
   },
   "confidence": "Moderate",
   "confidence_breakdown": {
-    "score": 0.58,
-    "evidence_quality": 0.78,
-    "consistency": 0.75,
-    "directness": 0.25,
+    "score": 0.577,
+    "evidence_quality": 0.743,
+    "consistency": 0.8,
+    "directness": 0.429,
     "evidence_count": 7,
-    "conflict_penalty": 0.35,
+    "count_term": 0.875,
+    "conflict_penalty": 0.15,
     "unsupported_penalty": 0.0
   },
   "what_can_be_claimed": [

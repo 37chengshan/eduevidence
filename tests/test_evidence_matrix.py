@@ -63,6 +63,17 @@ def test_render_markdown_has_header():
     assert "|--" in md
 
 
+def test_matrix_keeps_neutral_evidence_as_context():
+    evs = [
+        _ev("AI improves speed", "completion_time", "support", eid="E-1"),
+        _ev("AI improves speed", "completion_time", "neutral", eid="E-2"),
+    ]
+    matrix = evidence_matrix(evs)
+    row = next(r for r in matrix if r["outcome"] == "completion_time")
+    assert row["support"] == "E-1"
+    assert "E-2" in row["contradiction"]  # neutral kept as context, not dropped
+
+
 def test_example_pack_builds_matrix():
     evs = [json.loads(line) for line in
            (ROOT / "examples/ai-coding-assistant/evidence.jsonl").read_text(encoding="utf-8").splitlines()

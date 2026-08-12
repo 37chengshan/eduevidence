@@ -141,6 +141,82 @@ def render_evaluation(evaluation: dict) -> str:
     return "\n".join(lines)
 
 
+def render_conflict_analysis(verdict: dict) -> str:
+    """Section 06 — why different studies reach different conclusions."""
+    if not verdict:
+        return "_no verdict provided_"
+    lines = []
+    if verdict.get("reason_for_disagreement"):
+        lines.append(f"**冲突来源**: {verdict['reason_for_disagreement']}")
+    if verdict.get("outcome_specific_findings"):
+        lines.append("\n**按 Outcome 的发现**:")
+        for outcome, finding in verdict["outcome_specific_findings"].items():
+            lines.append(f"- {outcome}: {finding}")
+    if verdict.get("exceeds_evidence_boundary"):
+        lines.append("\n**越过证据边界的结论**:")
+        lines.extend(f"- {e}" for e in verdict["exceeds_evidence_boundary"])
+    return "\n".join(lines) if lines else "_no conflict analysis data_"
+
+
+def render_tribunal(verdict: dict) -> str:
+    """Section 07 — Evidence Tribunal: what the evidence supports and cannot support."""
+    if not verdict:
+        return "_no verdict provided_"
+    lines = [f"**决策**: {verdict.get('recommended_action', '').upper()}",
+             f"**置信度**: {verdict.get('confidence', '')}"]
+    for key, label in (("supported_claims", "支持的结论"), ("uncertain_claims", "不确定的结论"),
+                       ("contradicted_claims", "被反驳的结论")):
+        if verdict.get(key):
+            lines.append(f"\n**{label}**:")
+            lines.extend(f"- {c}" for c in verdict[key])
+    return "\n".join(lines)
+
+
+def render_applicability(verdict: dict) -> str:
+    """Section 08 — Applicability: for whom, for which course, under what conditions."""
+    if not verdict:
+        return "_no verdict provided_"
+    app = verdict.get("applicability", {})
+    if not app:
+        return "_no applicability data_"
+    lines = []
+    for key, label in (("suitable_for", "适合"), ("not_suitable_for", "不适合"),
+                       ("required_conditions", "必要条件")):
+        value = app.get(key)
+        if isinstance(value, list):
+            lines.append(f"**{label}**: " + "; ".join(value))
+        elif value:
+            lines.append(f"**{label}**: {value}")
+    return "\n".join(lines)
+
+
+def render_trace(evidence: list[dict]) -> str:
+    """Section 11 — Claim-Evidence Trace: every conclusion traceable to a source."""
+    if not evidence:
+        return "_no evidence provided_"
+    lines = []
+    for ev in evidence:
+        lines.append(f"- `{ev.get('evidence_id', '?')}` {ev.get('claim', '')} "
+                     f"→ `{ev.get('source_id', '?')}` [{ev.get('source_location', '?')}]")
+    return "\n".join(lines)
+
+
+def render_sources(evidence: list[dict]) -> str:
+    """Section 12 — deduplicated source list with verifiable locations."""
+    seen: dict[str, dict] = {}
+    for ev in evidence:
+        sid = ev.get("source_id", "?")
+        if sid not in seen:
+            seen[sid] = ev
+    lines = []
+    for sid, ev in sorted(seen.items()):
+        title = ev.get("title", "")
+        loc = ev.get("source_location", "")
+        year = ev.get("year", "")
+        lines.append(f"- **{sid}** ({year}): {title} — {loc}")
+    return "\n".join(lines) if lines else "_no sources_"
+
+
 def render_pack(frame, evidence, methodology, verdict, intervention, evaluation) -> str:
     matrix = evidence_matrix(evidence)
     matrix_md = render_markdown(matrix)
@@ -154,8 +230,13 @@ def render_pack(frame, evidence, methodology, verdict, intervention, evaluation)
         section("05 Methodology Audit",
                 f"```json\n{json.dumps(methodology, ensure_ascii=False, indent=2)}\n```"
                 if methodology else "_no methodology audit provided_"),
+        section("06 Conflict Analysis", render_conflict_analysis(verdict)),
+        section("07 Evidence Tribunal", render_tribunal(verdict)),
+        section("08 Applicability", render_applicability(verdict)),
         section("09 Teaching Intervention", render_intervention(intervention)),
         section("10 Evaluation Plan", render_evaluation(evaluation)),
+        section("11 Claim-Evidence Trace", render_trace(evidence)),
+        section("12 Sources", render_sources(evidence)),
     ]
     return "\n".join(parts) + "\n"
 

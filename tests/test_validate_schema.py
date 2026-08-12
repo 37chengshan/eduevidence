@@ -87,6 +87,22 @@ def test_verdict_enum_action():
         validate(verdict, schema)
 
 
+def test_methodology_additional_properties_schema_enforced():
+    """schema-valued additionalProperties (methodology audit_items) must be validated."""
+    schema = load_schema("methodology.schema.json")
+    bad_audit = {"target": "S-1", "verdict": "PASS",
+                 "audit_items": {"control_group": {"status": "approved"}}}  # invalid status
+    with pytest.raises(SchemaError, match="enum"):
+        validate(bad_audit, schema)
+
+
+def test_methodology_valid_audit_passes():
+    schema = load_schema("methodology.schema.json")
+    good = {"target": "S-1", "verdict": "PASS",
+            "audit_items": {"control_group": {"status": "met", "note": "ok"}}}
+    validate(good, schema)  # should not raise
+
+
 def test_repo_schemas_are_valid_json():
     for schema_file in sorted((ROOT / "schemas").glob("*.schema.json")):
         json.loads(schema_file.read_text(encoding="utf-8"))

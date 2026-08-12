@@ -43,13 +43,10 @@ def evidence_matrix(evidence_list: list[dict]) -> list[dict[str, str]]:
                                     "support": [], "contradiction": [],
                                     "quality": [], "directness": []})
         direction = ev.get("direction", "neutral")
-        bucket = "support" if direction == "support" else (
-            "contradiction" if direction == "contradict" else "contradiction")
-        if direction == "neutral":
-            # neutral evidence is listed under contradiction column as context
-            pass
-        else:
-            row[bucket].append(ev.get("evidence_id", "?"))
+        # Support vs contradiction columns; neutral evidence is appended as
+        # context to the contradiction column so it is never silently dropped.
+        bucket = "support" if direction == "support" else "contradiction"
+        row[bucket].append(ev.get("evidence_id", "?"))
 
         dims = ev.get("quality_dimensions", {})
         if ev.get("quality_score") is None and dims:

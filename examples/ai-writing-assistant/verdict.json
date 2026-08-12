@@ -41,13 +41,14 @@
   },
   "confidence": "Moderate",
   "confidence_breakdown": {
-    "score": 0.55,
-    "evidence_quality": 0.72,
-    "consistency": 0.6,
-    "directness": 0.45,
+    "score": 0.665,
+    "evidence_quality": 0.738,
+    "consistency": 0.875,
+    "directness": 0.625,
     "evidence_count": 8,
-    "conflict_penalty": 0.3,
-    "unsupported_penalty": 0.1
+    "count_term": 1.0,
+    "conflict_penalty": 0.15,
+    "unsupported_penalty": 0.0
   },
   "what_can_be_claimed": [
     "AI writing assistants used as formative feedback tools can improve short-term academic writing scores and are positively perceived by students.",
