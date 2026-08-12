@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/fetch-result.schema.json",
+  "title": "FetchResult",
+  "description": "Result of one fetch attempt through the Smart Web Fetch degradation chain (v3 方案 §6-8). Only FETCH_VALID (or rule-confirmed FETCH_PARTIAL) may enter Evidence Extraction; FETCH_FAILED must not let the model guess content from search snippets.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["original_url", "fetch_status"],
+  "properties": {
+    "original_url": { "type": "string", "format": "uri" },
+    "resolved_url": { "type": "string", "format": "uri" },
+    "fetch_method": { "type": "string", "enum": ["native", "smart_web_fetch"] },
+    "fetch_provider": { "type": "string", "enum": ["builtin", "jina_reader", "markdown_new", "defuddle", "raw_html", "pdf_parser"] },
+    "fetch_status": { "type": "string", "enum": ["FETCH_VALID", "FETCH_PARTIAL", "FETCH_FAILED"] },
+    "fetched_at": { "type": "string", "format": "date-time" },
+    "content_hash": { "type": "string" },
+    "content_length": { "type": "integer", "minimum": 0 },
+    "raw_size": { "type": "integer", "minimum": 0 },
+    "clean_size": { "type": "integer", "minimum": 0 },
+    "compression_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "fallback_used": { "type": "boolean", "default": false },
+    "fallback_chain": { "type": "array", "items": { "type": "string" } },
+    "content": { "type": "string", "description": "清洗后的正文（Markdown/文本），仅 FETCH_VALID/PARTIAL 时携带" },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "http_success": { "type": "boolean" },
+        "body_length_ok": { "type": "boolean" },
+        "title_matches": { "type": ["boolean", "null"] },
+        "url_matches": { "type": ["boolean", "null"] },
+        "is_login_page": { "type": "boolean" },
+        "is_error_page": { "type": "boolean" },
+        "is_captcha_page": { "type": "boolean" },
+        "navigation_only": { "type": "boolean" },
+        "date_identifiable": { "type": ["boolean", "null"] },
+        "checks": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

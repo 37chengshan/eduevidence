@@ -1,0 +1,36 @@
+/* Theme 01 — Claude Warm Research (v5 方案 §4) — DEFAULT.
+   参考 Claude 产品界面的温暖/安静/高留白/编辑感；
+   只借鉴视觉语言，不使用 Anthropic / Claude Logo 或官方品牌资产。 */
+:root[data-theme="claude"] {
+  --bg: #F7F4ED;
+  --surface: #FFFFFF;
+  --surface2: #FCFAF6;
+  --text: #3A3833;
+  --text-muted: #8A867E;
+  --primary: #B8694A;
+  --primary-soft: #F3E4DC;
+  --support: #5E8A6A;
+  --support-soft: #E4EDE5;
+  --contradict: #A85B53;
+  --contradict-soft: #F0E0DE;
+  --uncertain: #C99A4A;
+  --uncertain-soft: #F4EADA;
+  --insufficient: #8A867E;
+  --border: #E5DFD3;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(60, 56, 48, 0.08);
+  --font-head: 'Georgia', 'Songti SC', 'STSong', serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+  --density: 1;
+  --spacing: 20px;
+}
+
+:root[data-theme="claude"] .report-section {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* 大留白、弱阴影、低对比边框、圆角适中、Editorial Serif Headline */
+:root[data-theme="claude"] .report-shell { max-width: 1200px; }

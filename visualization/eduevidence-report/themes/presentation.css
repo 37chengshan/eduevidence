@@ -1,0 +1,52 @@
+/* Theme 05 — Presentation Dark (v5 方案 §8).
+   比赛大屏/答辩演示：深色背景、高对比数字、大字号、更少文字、更强视觉焦点。
+   只用于 Presentation Mode；同一数据，禁止因为 Dark Mode 改变图表语义。 */
+:root[data-theme="presentation"] {
+  --bg: #14161A;
+  --surface: #1D2026;
+  --surface2: #262A32;
+  --text: #F2F3F5;
+  --text-muted: #9AA0AA;
+  --primary: #E8A87C;
+  --primary-soft: #3A322B;
+  --support: #7BC48F;
+  --support-soft: #22332A;
+  --contradict: #E28B7E;
+  --contradict-soft: #3A2623;
+  --uncertain: #E4C07A;
+  --uncertain-soft: #38301F;
+  --insufficient: #8A8F98;
+  --border: #343A44;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --font-head: 'Helvetica Neue', 'Arial Black', 'PingFang SC', sans-serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+  --density: 0.9;
+  --spacing: 32px;
+}
+
+/* 大字号、高对比数字、更少文字 */
+:root[data-theme="presentation"] .report-shell { max-width: 1000px; }
+:root[data-theme="presentation"] .report-header h1 { font-size: 2.6rem; }
+:root[data-theme="presentation"] .report-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+:root[data-theme="presentation"] .report-section h2 { font-size: 1.6rem; }
+:root[data-theme="presentation"] .decision-value { font-size: 2.2rem; }
+:root[data-theme="presentation"] .key-number,
+:root[data-theme="presentation"] .num {
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+:root[data-theme="presentation"] .data-table { font-size: 1rem; }
+:root[data-theme="presentation"] .theme-btn {
+  background: var(--surface); color: var(--text); border-color: var(--border);
+}
+:root[data-theme="presentation"] .theme-btn.active {
+  background: var(--primary); color: #14161A; border-color: var(--primary);
+}

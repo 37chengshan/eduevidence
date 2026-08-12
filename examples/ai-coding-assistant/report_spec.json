@@ -1,0 +1,88 @@
+{
+  "generated_by": "build_report.py",
+  "source": "result.json",
+  "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
+  "theme_default": "claude",
+  "theme_switchable": [
+    "claude",
+    "academic",
+    "editorial",
+    "datalab",
+    "presentation"
+  ],
+  "charts": [
+    {
+      "chart_id": "outcome-evidence-overview",
+      "purpose": "interactive_analysis",
+      "engine": "echarts",
+      "data_ref": null,
+      "title": "Outcome Evidence Overview",
+      "integrity": {
+        "numbers_match_result": true,
+        "no_axis_distortion": true,
+        "no_false_precision": true,
+        "colorblind_safe": true
+      }
+    },
+    {
+      "chart_id": "claim-evidence-trace",
+      "purpose": "interactive_analysis",
+      "engine": "echarts",
+      "data_ref": null,
+      "title": "Claim-Evidence Trace",
+      "integrity": {
+        "numbers_match_result": true,
+        "no_axis_distortion": true,
+        "no_false_precision": true,
+        "colorblind_safe": true
+      }
+    }
+  ],
+  "infographics": [
+    {
+      "chart_id": "workflow",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    },
+    {
+      "chart_id": "tribunal",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    },
+    {
+      "chart_id": "intervention",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    },
+    {
+      "chart_id": "evaluation",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    }
+  ],
+  "academic_figures": [
+    {
+      "chart_id": "outcome-comparison",
+      "purpose": "statistical_publication",
+      "engine": "academic_figure",
+      "caption": "Figure 1. Number of supporting evidence items per outcome type. Source: EduEvidence result.json."
+    }
+  ],
+  "integrity_gate": {
+    "status": "PASS",
+    "contract_valid": true,
+    "claims_bound": 7,
+    "evidence_bound": 7,
+    "sources_resolved": 3,
+    "numbers_match_result": true,
+    "no_axis_distortion": true,
+    "no_false_precision": true,
+    "colorblind_safe": true,
+    "generated_by": "build_report.py",
+    "source": "examples/ai-coding-assistant/result.json"
+  }
+}

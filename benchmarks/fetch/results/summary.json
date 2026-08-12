@@ -1,0 +1,504 @@
+{
+  "total_urls": 30,
+  "fetch_success_rate": 0.5,
+  "partial_rate": 0.4,
+  "failure_rate": 0.1,
+  "useful_content_recall": 1.0,
+  "avg_noise_ratio": 0.903,
+  "avg_latency_s": 0.495,
+  "fallback_rate": 0.367,
+  "mode": "dry_run",
+  "results": [
+    {
+      "url": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.69,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F01",
+      "category": "paper_landing",
+      "expect_title": "Studying the effect of AI Code Generators"
+    },
+    {
+      "url": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.29,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F02",
+      "category": "paper_landing",
+      "expect_title": "Generative AI without guardrails"
+    },
+    {
+      "url": "https://aclanthology.org/2025.acl-long.1502/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.79,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F03",
+      "category": "paper_landing",
+      "expect_title": "GPT-4 as a Homework Tutor"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.24,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F04",
+      "category": "journal_article",
+      "expect_title": "Impact of ChatGPT on ESL students"
+    },
+    {
+      "url": "https://www.cmu.edu/teaching/technology/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.39,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 90000,
+      "clean_size": 10000,
+      "compression_ratio": 0.8888888888888888,
+      "id": "F05",
+      "category": "university_site",
+      "expect_title": "Teaching Technology"
+    },
+    {
+      "url": "https://ctl.columbia.edu/resources-and-technology/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.64,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 90000,
+      "clean_size": 10000,
+      "compression_ratio": 0.8888888888888888,
+      "id": "F06",
+      "category": "university_site",
+      "expect_title": "Resources and Technology"
+    },
+    {
+      "url": "https://www.ies.ed.gov/ncee/wwc/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.59,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F07",
+      "category": "government_org",
+      "expect_title": "What Works Clearinghouse"
+    },
+    {
+      "url": "https://www.oecd.org/education/",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "jina_reader",
+      "latency_s": 0.52,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "jina_reader:ok"
+      ],
+      "raw_size": 120000,
+      "clean_size": 4000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F08",
+      "category": "international_org",
+      "expect_title": "Education at OECD"
+    },
+    {
+      "url": "https://www.moe.gov.cn/jyb_xwfb/",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "markdown_new",
+      "latency_s": 0.86,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "markdown_new:ok"
+      ],
+      "raw_size": 90000,
+      "clean_size": 3000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F09",
+      "category": "chinese_web",
+      "expect_title": "中华人民共和国教育部"
+    },
+    {
+      "url": "https://news.tsinghua.edu.cn/",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "markdown_new",
+      "latency_s": 0.86,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "markdown_new:ok"
+      ],
+      "raw_size": 90000,
+      "clean_size": 3000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F10",
+      "category": "chinese_web",
+      "expect_title": "清华新闻网"
+    },
+    {
+      "url": "https://www.chronicle.com/",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "jina_reader",
+      "latency_s": 0.61,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "jina_reader:ok"
+      ],
+      "raw_size": 120000,
+      "clean_size": 4000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F11",
+      "category": "professional_institution",
+      "expect_title": "The Chronicle of Higher Education"
+    },
+    {
+      "url": "https://er.educause.edu/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.69,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F12",
+      "category": "professional_institution",
+      "expect_title": "Educause Review"
+    },
+    {
+      "url": "https://educationhub.blog.gov.uk/higher-education/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.28,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F13",
+      "category": "long_page",
+      "expect_title": "Higher Education"
+    },
+    {
+      "url": "https://www.unesco.org/en/digital-education",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "jina_reader",
+      "latency_s": 0.71,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "jina_reader:ok"
+      ],
+      "raw_size": 120000,
+      "clean_size": 4000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F14",
+      "category": "report",
+      "expect_title": "Digital Learning and Education"
+    },
+    {
+      "url": "https://osf.io/preprints/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.4,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F15",
+      "category": "dataset_page",
+      "expect_title": "OSF Preprints"
+    },
+    {
+      "url": "https://aiblog.research.google/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.52,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 90000,
+      "clean_size": 10000,
+      "compression_ratio": 0.8888888888888888,
+      "id": "F16",
+      "category": "blog",
+      "expect_title": "Google AI Blog"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Educational_technology",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "jina_reader",
+      "latency_s": 0.33,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "jina_reader:ok"
+      ],
+      "raw_size": 120000,
+      "clean_size": 4000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F17",
+      "category": "wiki",
+      "expect_title": "Educational technology"
+    },
+    {
+      "url": "https://arxiv.org/pdf/2306.11770",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.46,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 90000,
+      "clean_size": 10000,
+      "compression_ratio": 0.8888888888888888,
+      "id": "F18",
+      "category": "pdf",
+      "expect_title": "Generative AI in education"
+    },
+    {
+      "url": "https://www.insidehighered.com/news/tech",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "markdown_new",
+      "latency_s": 0.44,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "markdown_new:ok"
+      ],
+      "raw_size": 90000,
+      "clean_size": 3000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F19",
+      "category": "news_secondary",
+      "expect_title": "Tech in Higher Ed"
+    },
+    {
+      "url": "https://www.technologyreview.com/",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "markdown_new",
+      "latency_s": 0.58,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "markdown_new:ok"
+      ],
+      "raw_size": 90000,
+      "clean_size": 3000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F20",
+      "category": "news_secondary",
+      "expect_title": "MIT Technology Review"
+    },
+    {
+      "url": "https://example.invalid/paper/404",
+      "fetch_status": "FETCH_FAILED",
+      "fetch_provider": "builtin",
+      "latency_s": 0.05,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin:error"
+      ],
+      "raw_size": 0,
+      "clean_size": 0,
+      "compression_ratio": 0.0,
+      "id": "F21",
+      "category": "service_failure_sim",
+      "expect_title": ""
+    },
+    {
+      "url": "https://www.moe.gov.cn/this-page-does-not-exist-404",
+      "fetch_status": "FETCH_FAILED",
+      "fetch_provider": "builtin",
+      "latency_s": 0.05,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin:error"
+      ],
+      "raw_size": 0,
+      "clean_size": 0,
+      "compression_ratio": 0.0,
+      "id": "F22",
+      "category": "service_failure_sim",
+      "expect_title": ""
+    },
+    {
+      "url": "https://example.com",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "builtin",
+      "latency_s": 0.1,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 1200,
+      "clean_size": 120,
+      "compression_ratio": 0.9,
+      "id": "F23",
+      "category": "short_page",
+      "expect_title": ""
+    },
+    {
+      "url": "https://www.coursera.org/",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "jina_reader",
+      "latency_s": 0.67,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "jina_reader:ok"
+      ],
+      "raw_size": 80000,
+      "clean_size": 6000,
+      "compression_ratio": 0.9,
+      "id": "F24",
+      "category": "complex_nav",
+      "expect_title": ""
+    },
+    {
+      "url": "https://chat.openai.com/",
+      "fetch_status": "FETCH_FAILED",
+      "fetch_provider": "builtin",
+      "latency_s": 0.46,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin:error"
+      ],
+      "raw_size": 80000,
+      "clean_size": 0,
+      "compression_ratio": 0.0,
+      "id": "F25",
+      "category": "dynamic_page",
+      "expect_title": ""
+    },
+    {
+      "url": "https://www.nature.com/articles/s41562-023-01534-w",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "jina_reader",
+      "latency_s": 0.49,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "jina_reader:ok"
+      ],
+      "raw_size": 120000,
+      "clean_size": 4000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F26",
+      "category": "institution_org",
+      "expect_title": ""
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.74,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F27",
+      "category": "institution_org",
+      "expect_title": "PubMed"
+    },
+    {
+      "url": "https://eric.ed.gov/",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.78,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F28",
+      "category": "institution_org",
+      "expect_title": "ERIC"
+    },
+    {
+      "url": "https://www.cnki.net/",
+      "fetch_status": "FETCH_PARTIAL",
+      "fetch_provider": "markdown_new",
+      "latency_s": 0.4,
+      "fallback_used": true,
+      "fallback_chain": [
+        "builtin:error",
+        "markdown_new:ok"
+      ],
+      "raw_size": 90000,
+      "clean_size": 3000,
+      "compression_ratio": 0.9666666666666667,
+      "id": "F29",
+      "category": "chinese_web",
+      "expect_title": ""
+    },
+    {
+      "url": "https://doi.org/10.1145/3544548.3580919",
+      "fetch_status": "FETCH_VALID",
+      "fetch_provider": "builtin",
+      "latency_s": 0.21,
+      "fallback_used": false,
+      "fallback_chain": [
+        "builtin"
+      ],
+      "raw_size": 120000,
+      "clean_size": 18000,
+      "compression_ratio": 0.85,
+      "id": "F30",
+      "category": "paper_landing",
+      "expect_title": "Studying the effect of AI Code Generators"
+    }
+  ]
+}

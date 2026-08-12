@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/report-result.schema.json",
+  "title": "ReportResult",
+  "description": "Validated result.json contract (总体实施计划 §27). Produced by the EduEvidence research core, consumed by the visualization layer. The report layer may choose HOW to present but must never change this data.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["meta", "research_frame", "decision", "evidence"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "skill": { "type": "string", "const": "eduevidence" },
+        "version": { "type": "string" },
+        "generated_at": { "type": "string" },
+        "mode": { "type": "string", "enum": ["platform_native", "agent_mcp_enhanced"] },
+        "question": { "type": "string" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "description": "How this result was produced: complexity grade, agent topology, token/cost usage.",
+      "properties": {
+        "complexity": { "type": "string", "enum": ["S", "M", "L"] },
+        "mode": { "type": "string", "enum": ["platform_native", "agent_mcp_enhanced"] },
+        "agents": { "type": "array", "items": { "type": "string" } },
+        "usage": {
+          "type": "object",
+          "properties": {
+            "input_tokens": { "type": "integer" },
+            "output_tokens": { "type": "integer" },
+            "cost_usd": { "type": "number" },
+            "latency_s": { "type": "number" }
+          }
+        }
+      }
+    },
+    "research_frame": { "type": "object", "description": "EducationResearchFrame (see education-frame.schema.json)." },
+    "decision": { "type": "object", "description": "EducationVerdict (see verdict.schema.json)." },
+    "outcomes": {
+      "type": "array",
+      "description": "Outcome-level aggregation: per outcome type, direction counts and evidence ids.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "outcome_type": { "type": "string" },
+          "support_count": { "type": "integer" },
+          "contradict_count": { "type": "integer" },
+          "neutral_count": { "type": "integer" },
+          "evidence_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "description": "Claim-level rows bound to evidence (Claim-Evidence Contract).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim": { "type": "string" },
+          "outcome_type": { "type": "string" },
+          "evidence_ids": { "type": "array", "items": { "type": "string" } },
+          "status": { "type": "string", "enum": ["SUPPORTED", "UNSUPPORTED", "DOWNGRADE_CONFIDENCE"] }
+        }
+      }
+    },
+    "sources": { "type": "array", "description": "Source Objects (see source.schema.json)." },
+    "evidence": { "type": "array", "description": "Evidence Objects (see evidence.schema.json)." },
+    "methodology_reviews": { "type": "array", "description": "MethodologyAudit objects (see methodology.schema.json)." },
+    "conflicts": {
+      "type": "array",
+      "description": "Conflict analysis entries (why studies disagree).",
+      "items": { "type": "object" }
+    },
+    "applicability": { "type": "object" },
+    "intervention": { "type": "object", "description": "TeachingIntervention (see intervention.schema.json)." },
+    "evaluation": { "type": "object", "description": "EvaluationPlan (see evaluation.schema.json)." },
+    "benchmark": { "type": "object", "description": "Benchmark metrics for this result (optional)." },
+    "provenance": {
+      "type": "object",
+      "description": "Fetch/search provenance (Smart Web Fetch v3 §6): sources must carry fetch provenance.",
+      "properties": {
+        "search_provider": { "type": "string" },
+        "fetched_at": { "type": "string" },
+        "fetch_summary": { "type": "object" }
+      }
+    }
+  }
+}

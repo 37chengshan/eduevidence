@@ -1,0 +1,55 @@
+/* Theme 02 — Academic Paper (v5 方案 §5).
+   最接近正式论文/学术报告：纯白背景、高文本密度、低装饰、小圆角或无圆角、
+   细边框、论文式编号（Figure/Table 编号）。优先使用 Academic Figures。 */
+:root[data-theme="academic"] {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface2: #F7F7F5;
+  --text: #1A1A1A;
+  --text-muted: #555555;
+  --primary: #1F4E5F;
+  --primary-soft: #E8EFF2;
+  --support: #2F6B3A;
+  --support-soft: #EAF2EB;
+  --contradict: #8A3A2F;
+  --contradict-soft: #F4E9E7;
+  --uncertain: #8A6D2F;
+  --uncertain-soft: #F3EFE3;
+  --insufficient: #666666;
+  --border: #CCCCCC;
+  --radius: 0px;
+  --radius-sm: 0px;
+  --shadow: none;
+  --font-head: 'Times New Roman', 'Songti SC', serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'Courier New', Consolas, monospace;
+  --density: 1.15;
+  --spacing: 16px;
+}
+
+/* 论文式编号：Figure/Table caption 斜体、细边框表格 */
+:root[data-theme="academic"] .report-section h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+:root[data-theme="academic"] .data-table th,
+:root[data-theme="academic"] .data-table td {
+  border: 0.5px solid #BBBBBB;
+  font-size: 0.82rem;
+}
+:root[data-theme="academic"] figcaption,
+:root[data-theme="academic"] .figure-caption {
+  font-style: italic;
+  font-size: 0.82rem;
+  color: #333333;
+}
+:root[data-theme="academic"] .report-section {
+  box-shadow: none;
+  border: none;
+  padding: 12px 0;
+  margin-bottom: 8px;
+}
+:root[data-theme="academic"] .report-section h2 {
+  border-bottom: 1px solid #999999;
+}

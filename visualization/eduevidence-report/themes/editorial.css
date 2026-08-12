@@ -1,0 +1,56 @@
+/* Theme 03 — Editorial Journal (v5 方案 §6).
+   高质量长篇研究文章/数字杂志：强 Typography、章节节奏、宽边距、大标题、
+   Pull Quote、重点数字、信息图穿插（AntV Infographic 使用比例最高）。 */
+:root[data-theme="editorial"] {
+  --bg: #FBFAF6;
+  --surface: #FFFFFF;
+  --surface2: #F6F4EC;
+  --text: #26241F;
+  --text-muted: #6F6A5E;
+  --primary: #9A5B33;
+  --primary-soft: #F1E6DC;
+  --support: #4F7A55;
+  --support-soft: #E6EFE6;
+  --contradict: #9C4A42;
+  --contradict-soft: #F2E3E1;
+  --uncertain: #B08A2E;
+  --uncertain-soft: #F4EDD8;
+  --insufficient: #7C776C;
+  --border: #E4DECF;
+  --radius: 4px;
+  --radius-sm: 3px;
+  --shadow: none;
+  --font-head: 'Iowan Old Style', 'Georgia', 'Songti SC', serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'SF Mono', Menlo, monospace;
+  --density: 1.05;
+  --spacing: 28px;
+}
+
+/* 宽边距、大标题、Pull Quote、重点数字 */
+:root[data-theme="editorial"] .report-shell { max-width: 860px; }
+:root[data-theme="editorial"] .report-header h1 { font-size: 2.4rem; line-height: 1.15; }
+:root[data-theme="editorial"] .report-section h2 { font-size: 1.5rem; border-bottom: 2px solid var(--primary); }
+:root[data-theme="editorial"] .pull-quote {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--primary);
+  border-left: 4px solid var(--primary);
+  padding-left: 16px;
+  margin: 20px 0;
+}
+:root[data-theme="editorial"] .key-number {
+  font-family: var(--font-head);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-theme="editorial"] .report-section {
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+  border-radius: 0;
+}

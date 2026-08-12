@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/source.schema.json",
+  "title": "SourceObject",
+  "description": "Unified source registry entry (总体实施计划 §11 / v3 方案 §14). Evidence Objects reference only source_id. Fetch provider is a reading path, never the citation target.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["source_id", "title", "canonical_url", "authority_level"],
+  "properties": {
+    "source_id": { "type": "string", "examples": ["S-2023-kazemitabaar"] },
+    "title": { "type": "string" },
+    "authors": { "type": "array", "items": { "type": "string" } },
+    "year": { "type": ["integer", "null"] },
+    "doi": { "type": "string", "examples": ["10.1145/3544548.3580919"] },
+    "canonical_url": { "type": "string", "format": "uri" },
+    "source_type": {
+      "type": "string",
+      "enum": ["paper", "journal_article", "conference_paper", "report", "institution_page",
+               "dataset", "thesis", "news", "web_page", "pdf", "other"]
+    },
+    "authority_level": {
+      "type": "string",
+      "enum": ["tier1_paper_doi", "tier2_academic_database", "tier3_professional_institution",
+               "tier4_news_secondary", "tier5_general_web"],
+      "description": "学术来源优先级（v3 方案 §9）：Tier 1-5。fetch provider 不能提升此值。"
+    },
+    "discovered_by": { "type": "string", "examples": ["scholar_search", "web_search"] },
+    "discovery_provider": { "type": "string", "examples": ["SCP", "Scholar-KG", "bing"] },
+    "fetch": { "$ref": "#/definitions/fetchProvenance" },
+    "content_hash": { "type": "string" },
+    "dedupe_keys": {
+      "type": "object",
+      "description": "去重键（v3 方案 §13）：canonical_url / doi / title fingerprint / content_hash",
+      "properties": {
+        "canonical_url": { "type": "string" },
+        "doi": { "type": "string" },
+        "title_fingerprint": { "type": "string" },
+        "content_hash": { "type": "string" }
+      }
+    },
+    "status": { "type": "string", "enum": ["DISCOVERED", "FETCHED", "VALID", "PARTIAL", "FAILED", "DUPLICATE", "INVALID"] }
+  },
+  "definitions": {
+    "fetchProvenance": {
+      "type": "object",
+      "description": "Fetch Provenance（v3 方案 §6）：清洗服务只是读取路径，真正的证据来源仍是原始 URL/论文。",
+      "properties": {
+        "original_url": { "type": "string" },
+        "resolved_url": { "type": "string" },
+        "fetch_method": { "type": "string", "enum": ["native", "smart_web_fetch"] },
+        "fetch_provider": { "type": "string", "enum": ["builtin", "jina_reader", "markdown_new", "defuddle", "raw_html", "pdf_parser"] },
+        "fetch_status": { "type": "string", "enum": ["FETCH_VALID", "FETCH_PARTIAL", "FETCH_FAILED"] },
+        "fetched_at": { "type": "string" },
+        "content_hash": { "type": "string" },
+        "content_length": { "type": "integer", "minimum": 0 },
+        "raw_size": { "type": "integer", "minimum": 0 },
+        "clean_size": { "type": "integer", "minimum": 0 },
+        "compression_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fallback_used": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}

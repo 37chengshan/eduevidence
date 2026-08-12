@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="claude">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？</title>
+<style>
+/* Theme 01 — Claude Warm Research (v5 方案 §4) — DEFAULT.
+   参考 Claude 产品界面的温暖/安静/高留白/编辑感；
+   只借鉴视觉语言，不使用 Anthropic / Claude Logo 或官方品牌资产。 */
+:root[data-theme="claude"] {
+  --bg: #F7F4ED;
+  --surface: #FFFFFF;
+  --surface2: #FCFAF6;
+  --text: #3A3833;
+  --text-muted: #8A867E;
+  --primary: #B8694A;
+  --primary-soft: #F3E4DC;
+  --support: #5E8A6A;
+  --support-soft: #E4EDE5;
+  --contradict: #A85B53;
+  --contradict-soft: #F0E0DE;
+  --uncertain: #C99A4A;
+  --uncertain-soft: #F4EADA;
+  --insufficient: #8A867E;
+  --border: #E5DFD3;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(60, 56, 48, 0.08);
+  --font-head: 'Georgia', 'Songti SC', 'STSong', serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+  --density: 1;
+  --spacing: 20px;
+}
+
+:root[data-theme="claude"] .report-section {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* 大留白、弱阴影、低对比边框、圆角适中、Editorial Serif Headline */
+:root[data-theme="claude"] .report-shell { max-width: 1200px; }
+
+/* Theme 02 — Academic Paper (v5 方案 §5).
+   最接近正式论文/学术报告：纯白背景、高文本密度、低装饰、小圆角或无圆角、
+   细边框、论文式编号（Figure/Table 编号）。优先使用 Academic Figures。 */
+:root[data-theme="academic"] {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface2: #F7F7F5;
+  --text: #1A1A1A;
+  --text-muted: #555555;
+  --primary: #1F4E5F;
+  --primary-soft: #E8EFF2;
+  --support: #2F6B3A;
+  --support-soft: #EAF2EB;
+  --contradict: #8A3A2F;
+  --contradict-soft: #F4E9E7;
+  --uncertain: #8A6D2F;
+  --uncertain-soft: #F3EFE3;
+  --insufficient: #666666;
+  --border: #CCCCCC;
+  --radius: 0px;
+  --radius-sm: 0px;
+  --shadow: none;
+  --font-head: 'Times New Roman', 'Songti SC', serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'Courier New', Consolas, monospace;
+  --density: 1.15;
+  --spacing: 16px;
+}
+
+/* 论文式编号：Figure/Table caption 斜体、细边框表格 */
+:root[data-theme="academic"] .report-section h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+:root[data-theme="academic"] .data-table th,
+:root[data-theme="academic"] .data-table td {
+  border: 0.5px solid #BBBBBB;
+  font-size: 0.82rem;
+}
+:root[data-theme="academic"] figcaption,
+:root[data-theme="academic"] .figure-caption {
+  font-style: italic;
+  font-size: 0.82rem;
+  color: #333333;
+}
+:root[data-theme="academic"] .report-section {
+  box-shadow: none;
+  border: none;
+  padding: 12px 0;
+  margin-bottom: 8px;
+}
+:root[data-theme="academic"] .report-section h2 {
+  border-bottom: 1px solid #999999;
+}
+
+/* Theme 03 — Editorial Journal (v5 方案 §6).
+   高质量长篇研究文章/数字杂志：强 Typography、章节节奏、宽边距、大标题、
+   Pull Quote、重点数字、信息图穿插（AntV Infographic 使用比例最高）。 */
+:root[data-theme="editorial"] {
+  --bg: #FBFAF6;
+  --surface: #FFFFFF;
+  --surface2: #F6F4EC;
+  --text: #26241F;
+  --text-muted: #6F6A5E;
+  --primary: #9A5B33;
+  --primary-soft: #F1E6DC;
+  --support: #4F7A55;
+  --support-soft: #E6EFE6;
+  --contradict: #9C4A42;
+  --contradict-soft: #F2E3E1;
+  --uncertain: #B08A2E;
+  --uncertain-soft: #F4EDD8;
+  --insufficient: #7C776C;
+  --border: #E4DECF;
+  --radius: 4px;
+  --radius-sm: 3px;
+  --shadow: none;
+  --font-head: 'Iowan Old Style', 'Georgia', 'Songti SC', serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'SF Mono', Menlo, monospace;
+  --density: 1.05;
+  --spacing: 28px;
+}
+
+/* 宽边距、大标题、Pull Quote、重点数字 */
+:root[data-theme="editorial"] .report-shell { max-width: 860px; }
+:root[data-theme="editorial"] .report-header h1 { font-size: 2.4rem; line-height: 1.15; }
+:root[data-theme="editorial"] .report-section h2 { font-size: 1.5rem; border-bottom: 2px solid var(--primary); }
+:root[data-theme="editorial"] .pull-quote {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--primary);
+  border-left: 4px solid var(--primary);
+  padding-left: 16px;
+  margin: 20px 0;
+}
+:root[data-theme="editorial"] .key-number {
+  font-family: var(--font-head);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-theme="editorial"] .report-section {
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+  border-radius: 0;
+}
+
+/* Theme 04 — Data Lab (v5 方案 §7).
+   偏数据研究工作台：高信息密度、轻量 Grid、紧凑 Table、Filter 强、交互优先、
+   Chart 优先。不使用视觉背景网格，只在布局系统内部保持严格数据对齐。 */
+:root[data-theme="datalab"] {
+  --bg: #F4F5F7;
+  --surface: #FFFFFF;
+  --surface2: #EEF0F3;
+  --text: #1F2329;
+  --text-muted: #6B7280;
+  --primary: #2563EB;
+  --primary-soft: #E8EEFC;
+  --support: #059669;
+  --support-soft: #E5F5EF;
+  --contradict: #DC2626;
+  --contradict-soft: #FCEBEB;
+  --uncertain: #D97706;
+  --uncertain-soft: #FCF0E1;
+  --insufficient: #9CA3AF;
+  --border: #D8DCE2;
+  --radius: 4px;
+  --radius-sm: 3px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --font-head: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+  --density: 1.3;
+  --spacing: 12px;
+}
+
+/* 紧凑表格、严格数据对齐、Filter 控件 */
+:root[data-theme="datalab"] .report-shell { max-width: 1400px; }
+:root[data-theme="datalab"] .report-section { padding: 12px 14px; margin-bottom: 10px; }
+:root[data-theme="datalab"] .report-section h2 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+:root[data-theme="datalab"] .data-table { font-size: 0.78rem; }
+:root[data-theme="datalab"] .data-table th, :root[data-theme="datalab"] .data-table td {
+  padding: 4px 8px;
+}
+:root[data-theme="datalab"] .num { font-variant-numeric: tabular-nums; }
+:root[data-theme="datalab"] .filter-bar {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
+}
+:root[data-theme="datalab"] .filter-input {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 3px 8px; font-size: 0.8rem; background: var(--surface);
+}
+
+/* Theme 05 — Presentation Dark (v5 方案 §8).
+   比赛大屏/答辩演示：深色背景、高对比数字、大字号、更少文字、更强视觉焦点。
+   只用于 Presentation Mode；同一数据，禁止因为 Dark Mode 改变图表语义。 */
+:root[data-theme="presentation"] {
+  --bg: #14161A;
+  --surface: #1D2026;
+  --surface2: #262A32;
+  --text: #F2F3F5;
+  --text-muted: #9AA0AA;
+  --primary: #E8A87C;
+  --primary-soft: #3A322B;
+  --support: #7BC48F;
+  --support-soft: #22332A;
+  --contradict: #E28B7E;
+  --contradict-soft: #3A2623;
+  --uncertain: #E4C07A;
+  --uncertain-soft: #38301F;
+  --insufficient: #8A8F98;
+  --border: #343A44;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --font-head: 'Helvetica Neue', 'Arial Black', 'PingFang SC', sans-serif;
+  --font-ui: 'Helvetica Neue', Arial, 'PingFang SC', sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+  --density: 0.9;
+  --spacing: 32px;
+}
+
+/* 大字号、高对比数字、更少文字 */
+:root[data-theme="presentation"] .report-shell { max-width: 1000px; }
+:root[data-theme="presentation"] .report-header h1 { font-size: 2.6rem; }
+:root[data-theme="presentation"] .report-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+:root[data-theme="presentation"] .report-section h2 { font-size: 1.6rem; }
+:root[data-theme="presentation"] .decision-value { font-size: 2.2rem; }
+:root[data-theme="presentation"] .key-number,
+:root[data-theme="presentation"] .num {
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+:root[data-theme="presentation"] .data-table { font-size: 1rem; }
+:root[data-theme="presentation"] .theme-btn {
+  background: var(--surface); color: var(--text); border-color: var(--border);
+}
+:root[data-theme="presentation"] .theme-btn.active {
+  background: var(--primary); color: #14161A; border-color: var(--primary);
+}
+
+:root {
+  --bg:#F7F4ED; --surface:#FFFFFF; --surface2:#FCFAF6;
+  --text:#3A3833; --primary:#B8694A; --support:#5E8A6A;
+  --contradict:#A85B53; --uncertain:#C99A4A; --insufficient:#8A867E;
+  --border:#E5DFD3; --radius:10px; --shadow:0 1px 3px rgba(60,56,48,.08);
+  --font-head:'Georgia','Songti SC',serif; --font-ui:'Helvetica Neue',Arial,sans-serif;
+}
+body { margin:0; background:var(--bg); color:var(--text);
+       font-family:var(--font-ui); line-height:1.65; }
+.report-shell { max-width:1200px; margin:0 auto; padding:24px 32px 80px; }
+.report-header { border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; }
+.report-header h1 { font-family:var(--font-head); font-size:1.9rem; margin:0 0 8px; color:var(--text); }
+.report-header .meta { color:var(--insufficient); font-size:.85rem; }
+.theme-switcher { margin:12px 0 4px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.theme-btn { background:var(--surface); border:1px solid var(--border); border-radius:999px;
+             padding:4px 12px; font-size:.8rem; cursor:pointer; color:var(--text); }
+.theme-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+.report-section { background:var(--surface); border:1px solid var(--border);
+                  border-radius:var(--radius); box-shadow:var(--shadow);
+                  padding:20px 24px; margin-bottom:20px; }
+.report-section h2 { font-family:var(--font-head); font-size:1.25rem; margin:0 0 12px;
+                     border-bottom:1px solid var(--border); padding-bottom:8px; }
+.report-section h3 { font-size:.95rem; margin:14px 0 6px; }
+.decision-card { display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:8px;
+                 border-left:6px solid var(--insufficient); background:var(--surface2); }
+.decision-card.adopt { border-left-color:var(--support); }
+.decision-card.pilot { border-left-color:var(--uncertain); }
+.decision-card.reject { border-left-color:var(--contradict); }
+.decision-value { font-family:var(--font-head); font-size:1.5rem; font-weight:700; }
+.confidence-badge { background:var(--uncertain); color:#fff; border-radius:999px; padding:2px 10px; font-size:.8rem; }
+.rationale { color:var(--text); font-size:.92rem; }
+.data-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+.data-table th, .data-table td { border:1px solid var(--border); padding:6px 10px; text-align:left;
+                                  vertical-align:top; }
+.data-table th { background:var(--surface2); }
+.num { text-align:right; font-variant-numeric:tabular-nums; }
+.dir { display:inline-block; border-radius:999px; padding:1px 8px; font-size:.78rem; }
+.dir.pos { background:var(--support); color:#fff; }
+.dir.neg { background:var(--contradict); color:#fff; }
+.dir.neu { background:var(--uncertain); color:#fff; }
+.method-verdict { font-weight:700; }
+.phase { border-left:3px solid var(--primary); padding-left:12px; margin:10px 0; }
+code { font-family:'SF Mono',Menlo,monospace; font-size:.82em; background:var(--surface2);
+       padding:1px 4px; border-radius:4px; }
+a { color:var(--primary); word-break:break-all; }
+@media print { body { background:#fff; } .report-section { box-shadow:none; border:none; } }
+@media (max-width:720px) { .report-shell { padding:12px; } .data-table { font-size:.78rem; } }
+</style>
+</head>
+<body>
+<div class="report-shell">
+<header class="report-header">
+<div class="theme-switcher" role="group" aria-label="主题切换"><span>主题</span><button type="button" data-theme-target="claude" class="theme-btn active">Claude</button><button type="button" data-theme-target="academic" class="theme-btn">Academic</button><button type="button" data-theme-target="editorial" class="theme-btn">Editorial</button><button type="button" data-theme-target="datalab" class="theme-btn">Data Lab</button><button type="button" data-theme-target="presentation" class="theme-btn">Presentation</button></div>
+<h1>我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？</h1>
+<p class="meta">EduEvidence · platform_native · 2026-08-12T06:41:04.660833+00:00</p>
+</header>
+<section id="01-executive-decision" class="report-section">
+<h2>01 Executive Decision</h2>
+<div class="decision-card pilot">
+<span class="decision-label">决策</span>
+<span class="decision-value">PILOT</span>
+<span class="confidence-badge">Moderate</span>
+</div>
+<p class="rationale">Positive task-performance evidence plus documented unguarded-access risk and missing university-level learning evidence → bounded, guardrailed pilot with evaluation, not full adoption.</p>
+<h3>可以主张 (Can Claim)</h3><ul><li>AI coding assistants raise task performance for novices during training.</li><li>Unguarded access carries a real risk of hurting independent problem solving.</li><li>Guardrail design can mitigate that risk.</li><li>Direct evidence for university C programming learning is missing.</li></ul>
+<h3>不能主张 (Cannot Claim)</h3><ul><li>AI coding assistants improve (or even preserve) university students&#x27; programming learning.</li><li>Any long-term or retention benefit.</li><li>Any claim about which students benefit, based on university samples.</li></ul>
+<h3>缺失证据</h3><ul><li>RCT of AI coding assistants in university programming courses with retention and no-AI transfer tests.</li><li>Studies varying AI usage policy within the same course.</li><li>Longitudinal data on AI dependency beyond one course.</li></ul>
+<h3>超出证据边界</h3><ul><li>&#x27;AI 编程助手提高学习效果&#x27; — exceeds: direct learning-effect evidence is missing.</li><li>&#x27;AI 对所有人有效&#x27; — exceeds: population and subject mismatch.</li></ul>
+</section>
+
+<section id="02-outcome-overview" class="report-section">
+<h2>02 Outcome Evidence Overview</h2>
+<table class='data-table'><thead><tr><th>Outcome</th><th>支持</th><th>反驳</th><th>中性</th></tr></thead><tbody>
+<tr><td>knowledge_gain</td><td class='num'>1</td><td class='num'>0</td><td class='num'>0</td></tr>
+<tr><td>retention</td><td class='num'>0</td><td class='num'>0</td><td class='num'>1</td></tr>
+<tr><td>independent_problem_solving</td><td class='num'>1</td><td class='num'>1</td><td class='num'>1</td></tr>
+<tr><td>completion_time</td><td class='num'>1</td><td class='num'>0</td><td class='num'>0</td></tr>
+<tr><td>assignment_score</td><td class='num'>1</td><td class='num'>0</td><td class='num'>0</td></tr>
+</tbody></table>
+</section>
+
+<section id="03-evidence-matrix" class="report-section">
+<h2>03 Evidence Matrix</h2>
+<table class='data-table matrix'><thead><tr><th>ID</th><th>Outcome</th><th>方向</th><th>Claim</th><th>来源</th><th>质量</th></tr></thead><tbody>
+<tr><td><code>E-001</code></td><td>completion_time</td><td><span class='dir pos'>支持</span></td><td>AI coding assistants significantly increase task completion speed and completion rate during training.</td><td><code>S-2023-kazemitabaar</code></td><td class='num'>8.0</td></tr>
+<tr><td><code>E-002</code></td><td>independent_problem_solving</td><td><span class='dir neu'>中性</span></td><td>Access to AI code generation did not decrease performance on manual code-modification tasks.</td><td><code>S-2023-kazemitabaar</code></td><td class='num'>6.0</td></tr>
+<tr><td><code>E-003</code></td><td>retention</td><td><span class='dir neu'>中性</span></td><td>One week after training, retention differences between Codex and baseline groups did not reach statistical significance.</td><td><code>S-2023-kazemitabaar</code></td><td class='num'>8.0</td></tr>
+<tr><td><code>E-004</code></td><td>independent_problem_solving</td><td><span class='dir neg'>反驳</span></td><td>Students with unguarded GPT-4 access performed 17% worse on the independent exam than the control group, despite higher practice performance.</td><td><code>S-2026-bastani</code></td><td class='num'>8.0</td></tr>
+<tr><td><code>E-005</code></td><td>independent_problem_solving</td><td><span class='dir pos'>支持</span></td><td>Guardrail design of the AI tutor (hints instead of answers, teacher-informed prompts) largely eliminated the negative learning effect.</td><td><code>S-2026-bastani</code></td><td class='num'>8.0</td></tr>
+<tr><td><code>E-006</code></td><td>assignment_score</td><td><span class='dir pos'>支持</span></td><td>Access to GPT-4 during practice improves task performance (48% for GPT Base, 127% for GPT Tutor) — but this task performance does not transfer to independent exam performance.</td><td><code>S-2026-bastani</code></td><td class='num'>8.0</td></tr>
+<tr><td><code>E-007</code></td><td>knowledge_gain</td><td><span class='dir pos'>支持</span></td><td>ChatGPT as a formative feedback tool produced a significant positive impact on students&#x27; academic writing skills with positive student perceptions.</td><td><code>S-2024-marzuki</code></td><td class='num'>6.0</td></tr>
+</tbody></table>
+</section>
+
+<section id="04-evidence-tribunal" class="report-section">
+<h2>04 Evidence Tribunal</h2>
+<p><strong>决策：</strong>PILOT · <strong>置信度：</strong>Moderate</p>
+<h3>支持的结论</h3><ul><li>AI coding assistants reliably increase task performance during training (completion speed, correctness) — E-001, E-006.</li><li>Unguarded generative AI access can harm independent problem solving when access is removed — E-004.</li><li>Guardrail design (hints instead of answers) substantially mitigates the negative learning effect — E-005.</li><li>Task performance gains do not automatically imply learning gains — E-004 vs E-006 (within-study contrast).</li></ul>
+<h3>不确定的结论</h3><ul><li>Whether AI coding assistants improve or preserve actual programming learning in university novices — no direct university-level study in reviewed set.</li><li>Whether one-week neutral retention (Kazemitabaar 2023) extends to a semester — E-003.</li></ul>
+<h3>被反驳的结论</h3><ul><li>The claim &#x27;AI tools always improve learning&#x27; is contradicted by E-004 (unguarded access, -17% independent exam).</li></ul>
+<p><strong>冲突来源：</strong>Disagreement comes from outcome separation (task vs learning), tool design (guarded vs unguarded), and population (K-12 vs university). Studies measuring task performance show positive effects; the only study measuring independent learning after removal of AI shows harm without guardrails.</p>
+</section>
+
+<section id="05-methodology-audit" class="report-section">
+<h2>05 Methodology Audit</h2>
+<h3>审查目标：overall <span class='method-verdict'>CONCERN</span></h3>
+<table class='data-table'><thead><tr><th>检查项</th><th>状态</th><th>说明</th></tr></thead><tbody>
+<tr><td>control_group</td><td>met</td><td>All three studies include a no-AI control group.</td></tr>
+<tr><td>randomization</td><td>met</td><td>Kazemitabaar 2023 and Bastani 2026 use randomized assignment.</td></tr>
+<tr><td>pre_test</td><td>met</td><td>Kazemitabaar 2023 has a pre-study evaluation; Bastani 2026 measures baseline covariates.</td></tr>
+<tr><td>post_test</td><td>met</td><td>Immediate post-tests present in all studies.</td></tr>
+<tr><td>retention_test</td><td>partial</td><td>Kazemitabaar 2023 has 1-week retention; Bastani 2026 has no delayed test; Marzuki 2024 has delayed test.</td></tr>
+<tr><td>transfer_test</td><td>partial</td><td>Kazemitabaar 2023 code-modification task is transfer-adjacent; no full no-AI transfer task.</td></tr>
+<tr><td>sample_bias</td><td>met</td><td>Bastani 2026 nearly 1000 students; Kazemitabaar 2023 small (69) young sample.</td></tr>
+<tr><td>self_selection</td><td>partial</td><td>Marzuki 2024 consent-based participation risks self-selection.</td></tr>
+<tr><td>measurement_validity</td><td>partial</td><td>Practice/task performance is not equated to learning; independent exams present in Bastani 2026 only.</td></tr>
+<tr><td>confounders</td><td>partial</td><td>Prior programming competency interacts with AI benefit in Kazemitabaar 2023.</td></tr>
+<tr><td>instructor_effect</td><td>not_applicable</td><td>Kazemitabaar 2023 is self-paced; classroom studies may carry instructor effects.</td></tr>
+<tr><td>novelty_effect</td><td>partial</td><td>Short interventions likely inflate engagement; none of the studies controlled for novelty.</td></tr>
+<tr><td>tool_version_effect</td><td>not_applicable</td><td>Single tool versions studied; rapid tool change limits durability.</td></tr>
+<tr><td>ai_usage_policy</td><td>partial</td><td>Bastani 2026 explicitly contrasts unguarded vs guardrailed usage policies.</td></tr>
+<tr><td>dropout</td><td>partial</td><td>Marzuki 2024 reports attrition; others not detailed.</td></tr>
+</tbody></table>
+<p><strong>任务 vs 学习护栏：</strong>Bastani 2026 demonstrates the danger of equating the two: +48-127% practice performance coexisted with -17% independent exam performance.</p>
+</section>
+
+<section id="06-conflict-analysis" class="report-section">
+<h2>06 Conflict Analysis</h2>
+<p>Disagreement comes from outcome separation (task vs learning), tool design (guarded vs unguarded), and population (K-12 vs university). Studies measuring task performance show positive effects; the only study measuring independent learning after removal of AI shows harm without guardrails.</p>
+</section>
+
+<section id="07-claim-trace" class="report-section">
+<h2>07 Claim-Evidence Trace</h2>
+<p>交互式 Claim→Evidence→Source 图将在 JS 增强层启用；静态表格见 Evidence Matrix 与 Sources。</p>
+</section>
+
+<section id="08-applicability" class="report-section">
+<h2>08 Applicability</h2>
+<pre>{
+  &quot;suitable_for&quot;: &quot;pilot in first-year C course with guardrailed usage policy&quot;,
+  &quot;not_suitable_for&quot;: &quot;unrestricted AI adoption without usage policy&quot;,
+  &quot;required_conditions&quot;: [
+    &quot;guardrailed AI usage policy&quot;,
+    &quot;no-AI transfer assessment&quot;,
+    &quot;TA support&quot;
+  ]
+}</pre>
+</section>
+
+<section id="09-intervention" class="report-section">
+<h2>09 Teaching Intervention</h2>
+<p><strong>目标学习者：</strong>university first-year C programming students (60-student lecture-lab class) · <strong>试点时长：</strong>8_weeks</p>
+<p><strong>AI 使用规则：</strong>AI usage is allowed in three explicitly graded modes (explain / collaborate / no-AI-transfer). Copying unexamined AI output is an academic integrity violation and is assessed via the reasoning-trace requirement.</p>
+<div class='phase'><h3>Phase 1 — Independent Foundation</h3><p><strong>AI 规则：</strong>full code generation forbidden; AI allowed only for conceptual explanations</p></div>
+<div class='phase'><h3>Phase 2 — Explain, Don&#x27;t Solve</h3><p><strong>AI 规则：</strong>AI may explain but must not produce full solutions</p></div>
+<div class='phase'><h3>Phase 3 — Structured Collaboration</h3><p><strong>AI 规则：</strong>partial code generation allowed; mandatory written explanation of key logic; submission requires reasoning trace</p></div>
+<div class='phase'><h3>Phase 4 — Transfer Check</h3><p><strong>AI 规则：</strong>no AI access during transfer assessment</p></div>
+<h3>停止条件</h3><ul><li>transfer-test scores drop significantly below baseline cohort expectations</li><li>widespread integrity violations in reasoning traces</li><li>AI dependency signals exceed threshold in risk metrics</li><li>TA/teacher workload becomes unsustainable</li></ul>
+</section>
+
+<section id="10-evaluation" class="report-section">
+<h2>10 Evaluation Plan</h2>
+<p><strong>研究问题：</strong>In a first-year C programming course, does a guardrailed AI coding assistant (explain-only → structured collaboration) improve independent problem solving without increasing AI dependency, compared to no-AI instruction?</p>
+<p><strong>基线：</strong>week-1 no-AI programming quiz (independent problem solving, completion time)</p>
+<p><strong>后测：</strong>week-8 no-AI programming quiz (independent problem solving, code quality)</p>
+<p><strong>保持测试：</strong>final exam (week 16) — delayed measure 8 weeks after pilot</p>
+<p><strong>迁移测试：</strong>week-8 novel programming task in a strictly no-AI environment</p>
+<h3>过程指标</h3><ul><li>weekly lab completion rate</li><li>AI usage logs: prompts submitted, copied blocks, reasoning traces</li><li>help-seeking behavior counts</li></ul>
+<h3>学习指标</h3><ul><li>independent problem solving (no-AI quizzes)</li><li>code quality rubric</li><li>retention on final exam</li><li>transfer task score</li></ul>
+<h3>风险指标</h3><ul><li>AI dependency index (usage without understanding, from reasoning-trace quality)</li><li>academic integrity violations</li><li>self-reported over-reliance</li><li>false confidence (post-quiz confidence vs actual score)</li></ul>
+<p><strong>成功阈值：</strong>treatment group shows non-inferior independent problem solving (delta within 5%) AND superior or equal retention AND AI dependency index below threshold; if independent problem solving declines &gt;10%, the pilot is judged unsuccessful regardless of task-performance gains.</p>
+</section>
+
+<section id="11-benchmark" class="report-section">
+<h2>11 Benchmark</h2>
+<p>Benchmark 数据见独立 Benchmark 报告（benchmarks/results/v2-report.md）。</p>
+</section>
+
+<section id="12-sources" class="report-section">
+<h2>12 Sources &amp; Provenance</h2>
+<table class='data-table'><thead><tr><th>ID</th><th>标题</th><th>年份</th><th>权威级别</th><th>位置</th></tr></thead><tbody>
+<tr><td><code>S-2023-kazemitabaar</code></td><td>Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming</td><td>2023</td><td>tier3_professional_institution</td><td><a href='https://dl.acm.org/doi/10.1145/3544548.3580919'>https://dl.acm.org/doi/10.1145/3544548.3580919</a></td></tr>
+<tr><td><code>S-2026-bastani</code></td><td>Generative AI without guardrails can harm learning: Evidence from high school mathematics</td><td>2026</td><td>tier3_professional_institution</td><td><a href='https://www.pnas.org/doi/10.1073/pnas.2422633122'>https://www.pnas.org/doi/10.1073/pnas.2422633122</a></td></tr>
+<tr><td><code>S-2024-marzuki</code></td><td>Impact of ChatGPT on ESL students&#x27; academic writing skills</td><td>2024</td><td>tier3_professional_institution</td><td><a href='https://link.springer.com/article/10.1186/s40561-024-00295-9'>https://link.springer.com/article/10.1186/s40561-024-00295-9</a></td></tr>
+</tbody></table><h3>Fetch Provenance</h3><table class='data-table'><thead><tr><th>来源</th><th>Fetch 方式</th><th>状态</th><th>降级</th><th>时间</th></tr></thead><tbody>
+<tr><td><code>S-2023-kazemitabaar</code></td><td></td><td></td><td></td><td></td></tr>
+<tr><td><code>S-2026-bastani</code></td><td></td><td></td><td></td><td></td></tr>
+<tr><td><code>S-2024-marzuki</code></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table>
+</section>
+
+<footer class="report-section"><p>EduEvidence Evidence Report · 由 eduevidence-report Skill 确定性渲染 · 数据源：result.json</p></footer>
+</div>
+<script>
+/* Theme switcher (JS enhancement; the static report is fully readable without it). */
+(function () {
+  var root = document.documentElement;
+  var saved = localStorage.getItem('eduevidence-theme');
+  if (saved) root.setAttribute('data-theme', saved);
+  document.querySelectorAll('.theme-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      root.setAttribute('data-theme', btn.dataset.themeTarget);
+      localStorage.setItem('eduevidence-theme', btn.dataset.themeTarget);
+      document.querySelectorAll('.theme-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    });
+  });
+})();
+</script>
+</body>
+</html>

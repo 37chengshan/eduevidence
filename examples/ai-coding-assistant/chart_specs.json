@@ -1,0 +1,436 @@
+{
+  "charts": [
+    {
+      "chart_id": "outcome-evidence-overview",
+      "purpose": "interactive_analysis",
+      "engine": "echarts",
+      "chart_type": "diverging_bar",
+      "title": "Outcome Evidence Overview",
+      "option": {
+        "tooltip": {
+          "trigger": "axis"
+        },
+        "legend": {
+          "data": [
+            "支持",
+            "反驳",
+            "中性"
+          ]
+        },
+        "grid": {
+          "left": 140,
+          "right": 40
+        },
+        "xAxis": {
+          "type": "value"
+        },
+        "yAxis": {
+          "type": "category",
+          "data": [
+            "knowledge_gain",
+            "retention",
+            "independent_problem_solving",
+            "completion_time",
+            "assignment_score"
+          ],
+          "inverse": true
+        },
+        "series": [
+          {
+            "name": "支持",
+            "type": "bar",
+            "data": [
+              1,
+              0,
+              1,
+              1,
+              1
+            ],
+            "itemStyle": {
+              "color": "#5E8A6A"
+            }
+          },
+          {
+            "name": "反驳",
+            "type": "bar",
+            "data": [
+              0,
+              0,
+              -1,
+              0,
+              0
+            ],
+            "itemStyle": {
+              "color": "#A85B53"
+            }
+          },
+          {
+            "name": "中性",
+            "type": "bar",
+            "data": [
+              0,
+              1,
+              1,
+              0,
+              0
+            ],
+            "itemStyle": {
+              "color": "#C99A4A"
+            }
+          }
+        ]
+      },
+      "summary_text": "各 Outcome 的支持/反驳/中性证据条数对比（正=支持，负=反驳）。",
+      "integrity": {
+        "numbers_match_result": true,
+        "no_axis_distortion": true,
+        "no_false_precision": true,
+        "colorblind_safe": true
+      }
+    },
+    {
+      "chart_id": "claim-evidence-trace",
+      "purpose": "interactive_analysis",
+      "engine": "echarts",
+      "chart_type": "graph",
+      "title": "Claim-Evidence Trace",
+      "option": {
+        "tooltip": {
+          "trigger": "item"
+        },
+        "legend": {
+          "data": [
+            "Decision",
+            "Claim",
+            "Evidence",
+            "Source"
+          ]
+        },
+        "series": [
+          {
+            "type": "graph",
+            "layout": "force",
+            "roam": true,
+            "draggable": true,
+            "categories": [
+              {
+                "name": "Decision"
+              },
+              {
+                "name": "Claim"
+              },
+              {
+                "name": "Evidence"
+              },
+              {
+                "name": "Source"
+              }
+            ],
+            "data": [
+              {
+                "id": "decision",
+                "name": "PILOT",
+                "category": 0
+              },
+              {
+                "id": "claim-0",
+                "name": "AI coding assistants significantly incre",
+                "category": 1
+              },
+              {
+                "id": "E-001",
+                "name": "E-001",
+                "category": 2
+              },
+              {
+                "id": "S-2023-kazemitabaar",
+                "name": "S-2023-kazemitabaar",
+                "category": 3
+              },
+              {
+                "id": "claim-1",
+                "name": "Access to AI code generation did not dec",
+                "category": 1
+              },
+              {
+                "id": "E-002",
+                "name": "E-002",
+                "category": 2
+              },
+              {
+                "id": "claim-2",
+                "name": "One week after training, retention diffe",
+                "category": 1
+              },
+              {
+                "id": "E-003",
+                "name": "E-003",
+                "category": 2
+              },
+              {
+                "id": "claim-3",
+                "name": "Students with unguarded GPT-4 access per",
+                "category": 1
+              },
+              {
+                "id": "E-004",
+                "name": "E-004",
+                "category": 2
+              },
+              {
+                "id": "S-2026-bastani",
+                "name": "S-2026-bastani",
+                "category": 3
+              },
+              {
+                "id": "claim-4",
+                "name": "Guardrail design of the AI tutor (hints ",
+                "category": 1
+              },
+              {
+                "id": "E-005",
+                "name": "E-005",
+                "category": 2
+              },
+              {
+                "id": "claim-5",
+                "name": "Access to GPT-4 during practice improves",
+                "category": 1
+              },
+              {
+                "id": "E-006",
+                "name": "E-006",
+                "category": 2
+              },
+              {
+                "id": "claim-6",
+                "name": "ChatGPT as a formative feedback tool pro",
+                "category": 1
+              },
+              {
+                "id": "E-007",
+                "name": "E-007",
+                "category": 2
+              },
+              {
+                "id": "S-2024-marzuki",
+                "name": "S-2024-marzuki",
+                "category": 3
+              }
+            ],
+            "links": [
+              {
+                "source": "decision",
+                "target": "claim-0"
+              },
+              {
+                "source": "claim-0",
+                "target": "E-001",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-001",
+                "target": "S-2023-kazemitabaar"
+              },
+              {
+                "source": "decision",
+                "target": "claim-1"
+              },
+              {
+                "source": "claim-1",
+                "target": "E-002",
+                "label": "neutral",
+                "lineStyle": {
+                  "color": "#C99A4A"
+                }
+              },
+              {
+                "source": "E-002",
+                "target": "S-2023-kazemitabaar"
+              },
+              {
+                "source": "decision",
+                "target": "claim-2"
+              },
+              {
+                "source": "claim-2",
+                "target": "E-003",
+                "label": "neutral",
+                "lineStyle": {
+                  "color": "#C99A4A"
+                }
+              },
+              {
+                "source": "E-003",
+                "target": "S-2023-kazemitabaar"
+              },
+              {
+                "source": "decision",
+                "target": "claim-3"
+              },
+              {
+                "source": "claim-3",
+                "target": "E-004",
+                "label": "contradict",
+                "lineStyle": {
+                  "color": "#A85B53"
+                }
+              },
+              {
+                "source": "E-004",
+                "target": "S-2026-bastani"
+              },
+              {
+                "source": "decision",
+                "target": "claim-4"
+              },
+              {
+                "source": "claim-4",
+                "target": "E-005",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-005",
+                "target": "S-2026-bastani"
+              },
+              {
+                "source": "decision",
+                "target": "claim-5"
+              },
+              {
+                "source": "claim-5",
+                "target": "E-006",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-006",
+                "target": "S-2026-bastani"
+              },
+              {
+                "source": "decision",
+                "target": "claim-6"
+              },
+              {
+                "source": "claim-6",
+                "target": "E-007",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-007",
+                "target": "S-2024-marzuki"
+              }
+            ],
+            "label": {
+              "show": true,
+              "position": "right",
+              "fontSize": 9
+            },
+            "lineStyle": {
+              "curveness": 0.15
+            }
+          }
+        ]
+      },
+      "summary_text": "决策→结论→证据→来源 的可追溯图谱；点击节点可追踪支持/反驳路径。",
+      "integrity": {
+        "numbers_match_result": true,
+        "no_axis_distortion": true,
+        "no_false_precision": true,
+        "colorblind_safe": true
+      }
+    }
+  ],
+  "benchmark": {
+    "chart_id": "benchmark-panel",
+    "purpose": "interactive_analysis",
+    "engine": "echarts",
+    "chart_type": "composite",
+    "title": "Benchmark: B0-B4",
+    "option": {
+      "tooltip": {
+        "trigger": "axis"
+      },
+      "legend": {
+        "data": [
+          "Citation Support",
+          "Unsupported Rate",
+          "Contradiction"
+        ]
+      },
+      "grid": {
+        "left": 60,
+        "right": 40
+      },
+      "xAxis": {
+        "type": "category",
+        "data": []
+      },
+      "yAxis": {
+        "type": "value",
+        "max": 1
+      },
+      "series": [
+        {
+          "name": "Citation Support",
+          "type": "bar",
+          "data": []
+        },
+        {
+          "name": "Unsupported Rate",
+          "type": "bar",
+          "data": []
+        },
+        {
+          "name": "Contradiction",
+          "type": "bar",
+          "data": []
+        }
+      ]
+    },
+    "cost_vs_quality": {
+      "chart_id": "benchmark-quality-cost",
+      "purpose": "interactive_analysis",
+      "engine": "echarts",
+      "chart_type": "scatter",
+      "title": "Quality vs Cost",
+      "option": {
+        "tooltip": {
+          "trigger": "item"
+        },
+        "xAxis": {
+          "type": "value",
+          "name": "cost (USD)"
+        },
+        "yAxis": {
+          "type": "value",
+          "name": "citation support"
+        },
+        "series": [
+          {
+            "type": "scatter",
+            "data": []
+          }
+        ]
+      }
+    },
+    "summary_text": "B0-B4 基线在引用支持/无支撑率/反方发现上的对比及质量-成本散点。",
+    "integrity": {
+      "numbers_match_result": true,
+      "no_axis_distortion": true,
+      "no_false_precision": true,
+      "colorblind_safe": true
+    }
+  }
+}

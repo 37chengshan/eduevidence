@@ -1,0 +1,838 @@
+{
+  "meta": {
+    "skill": "eduevidence",
+    "version": "1.0.0",
+    "generated_at": "2026-08-12T06:41:04.660833+00:00",
+    "mode": "platform_native",
+    "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？"
+  },
+  "execution": {
+    "complexity": "M",
+    "mode": "platform_native",
+    "agents": [],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "latency_s": 0.0
+    }
+  },
+  "research_frame": {
+    "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
+    "decision_target": "teaching_decision",
+    "learner": {
+      "education_level": "undergraduate_year_1",
+      "major": "computer_science",
+      "prior_knowledge": "first_programming_course_no_prior_text_based_programming",
+      "special_characteristics": "mixed_ability_large_class_60_students"
+    },
+    "course": {
+      "subject": "C_programming",
+      "course_type": "lecture_lab",
+      "duration": "16_weeks_one_semester"
+    },
+    "intervention": {
+      "teaching_method": "lecture_with_lab_exercises",
+      "ai_tool": "generative_ai_coding_assistant",
+      "allowed_usage": "under_design_pending_evidence_review",
+      "frequency": "weekly_lab_sessions",
+      "duration": "one_semester"
+    },
+    "comparison": "no_ai_coding_assistant_control",
+    "outcomes": {
+      "primary": [
+        "independent_problem_solving",
+        "code_quality"
+      ],
+      "secondary": [
+        "completion_time",
+        "retention",
+        "knowledge_gain"
+      ],
+      "risk": [
+        "ai_dependency",
+        "over_reliance",
+        "reduced_transfer"
+      ]
+    },
+    "context": {
+      "teacher_support": "TA_supported_two_TAs",
+      "class_size": "60_students",
+      "online_or_offline": "offline"
+    },
+    "scope": {
+      "time_range": "2021-2026",
+      "geography": "worldwide",
+      "study_types": [
+        "rct",
+        "quasi_experimental",
+        "observational"
+      ]
+    },
+    "inclusion_criteria": [
+      "studies_of_generative_AI_coding_tools_in_learning_to_program",
+      "outcomes_measuring_learning_not_only_task_speed",
+      "university_or_novice_programming_populations"
+    ],
+    "exclusion_criteria": [
+      "practitioner_anecdotes_without_data",
+      "industry_professional_populations_only"
+    ],
+    "success_condition": "independent problem solving and code quality improve (or do not decline) while AI dependency risk stays controlled; evidence base supports a bounded pilot."
+  },
+  "decision": {
+    "decision_question": "大一 C 语言课程是否应该允许学生使用生成式 AI 编程助手？",
+    "target_population": "university first-year computer science students learning C programming for the first time",
+    "target_context": "16-week lecture-lab course, 60 students, TA support, offline",
+    "supported_claims": [
+      "AI coding assistants reliably increase task performance during training (completion speed, correctness) — E-001, E-006.",
+      "Unguarded generative AI access can harm independent problem solving when access is removed — E-004.",
+      "Guardrail design (hints instead of answers) substantially mitigates the negative learning effect — E-005.",
+      "Task performance gains do not automatically imply learning gains — E-004 vs E-006 (within-study contrast)."
+    ],
+    "uncertain_claims": [
+      "Whether AI coding assistants improve or preserve actual programming learning in university novices — no direct university-level study in reviewed set.",
+      "Whether one-week neutral retention (Kazemitabaar 2023) extends to a semester — E-003."
+    ],
+    "contradicted_claims": [
+      "The claim 'AI tools always improve learning' is contradicted by E-004 (unguarded access, -17% independent exam)."
+    ],
+    "reason_for_disagreement": "Disagreement comes from outcome separation (task vs learning), tool design (guarded vs unguarded), and population (K-12 vs university). Studies measuring task performance show positive effects; the only study measuring independent learning after removal of AI shows harm without guardrails.",
+    "methodology_summary": "Two RCTs (one small K-12, one large high-school math) plus one mixed-methods undergraduate writing study. No direct RCT in university programming courses. All strong on internal validity; directness to the target context is weak.",
+    "outcome_specific_findings": {
+      "completion_time": "positive (E-001)",
+      "independent_problem_solving": "neutral-to-negative without guardrails (E-002, E-004)",
+      "retention": "neutral over 1 week (E-003)",
+      "assignment_score": "positive during practice, negative on closed-book exam (E-004, E-006)",
+      "ai_dependency": "documented crutch behavior with unguarded tool (E-004, E-005)"
+    },
+    "short_term_effect": "Task performance reliably increases; learning effect null-to-negative without guardrails.",
+    "long_term_effect": "No evidence beyond one week; long-term learning effect unknown.",
+    "transfer_effect": "No full transfer evidence; manual code-modification not harmed in one small study (E-002).",
+    "risk_effect": "AI dependency and over-reliance risk is real and documented for unguarded usage (E-004).",
+    "applicability": {
+      "suitable_for": "pilot in first-year C course with guardrailed usage policy",
+      "not_suitable_for": "unrestricted AI adoption without usage policy",
+      "required_conditions": [
+        "guardrailed AI usage policy",
+        "no-AI transfer assessment",
+        "TA support"
+      ]
+    },
+    "confidence": "Moderate",
+    "confidence_breakdown": {
+      "score": 0.577,
+      "evidence_quality": 0.743,
+      "consistency": 0.8,
+      "directness": 0.429,
+      "evidence_count": 7,
+      "count_term": 0.875,
+      "conflict_penalty": 0.15,
+      "unsupported_penalty": 0.0
+    },
+    "what_can_be_claimed": [
+      "AI coding assistants raise task performance for novices during training.",
+      "Unguarded access carries a real risk of hurting independent problem solving.",
+      "Guardrail design can mitigate that risk.",
+      "Direct evidence for university C programming learning is missing."
+    ],
+    "what_cannot_be_claimed": [
+      "AI coding assistants improve (or even preserve) university students' programming learning.",
+      "Any long-term or retention benefit.",
+      "Any claim about which students benefit, based on university samples."
+    ],
+    "missing_evidence": [
+      "RCT of AI coding assistants in university programming courses with retention and no-AI transfer tests.",
+      "Studies varying AI usage policy within the same course.",
+      "Longitudinal data on AI dependency beyond one course."
+    ],
+    "recommended_action": "pilot",
+    "decision_rationale": "Positive task-performance evidence plus documented unguarded-access risk and missing university-level learning evidence → bounded, guardrailed pilot with evaluation, not full adoption.",
+    "exceeds_evidence_boundary": [
+      "'AI 编程助手提高学习效果' — exceeds: direct learning-effect evidence is missing.",
+      "'AI 对所有人有效' — exceeds: population and subject mismatch."
+    ]
+  },
+  "outcomes": [
+    {
+      "outcome_type": "knowledge_gain",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-007"
+      ]
+    },
+    {
+      "outcome_type": "retention",
+      "support_count": 0,
+      "contradict_count": 0,
+      "neutral_count": 1,
+      "evidence_ids": [
+        "E-003"
+      ]
+    },
+    {
+      "outcome_type": "independent_problem_solving",
+      "support_count": 1,
+      "contradict_count": 1,
+      "neutral_count": 1,
+      "evidence_ids": [
+        "E-002",
+        "E-004",
+        "E-005"
+      ]
+    },
+    {
+      "outcome_type": "completion_time",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-001"
+      ]
+    },
+    {
+      "outcome_type": "assignment_score",
+      "support_count": 1,
+      "contradict_count": 0,
+      "neutral_count": 0,
+      "evidence_ids": [
+        "E-006"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim": "AI coding assistants significantly increase task completion speed and completion rate during training.",
+      "outcome_type": "completion_time",
+      "evidence_ids": [
+        "E-001"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Access to AI code generation did not decrease performance on manual code-modification tasks.",
+      "outcome_type": "independent_problem_solving",
+      "evidence_ids": [
+        "E-002"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "One week after training, retention differences between Codex and baseline groups did not reach statistical significance.",
+      "outcome_type": "retention",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Students with unguarded GPT-4 access performed 17% worse on the independent exam than the control group, despite higher practice performance.",
+      "outcome_type": "independent_problem_solving",
+      "evidence_ids": [
+        "E-004"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Guardrail design of the AI tutor (hints instead of answers, teacher-informed prompts) largely eliminated the negative learning effect.",
+      "outcome_type": "independent_problem_solving",
+      "evidence_ids": [
+        "E-005"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "Access to GPT-4 during practice improves task performance (48% for GPT Base, 127% for GPT Tutor) — but this task performance does not transfer to independent exam performance.",
+      "outcome_type": "assignment_score",
+      "evidence_ids": [
+        "E-006"
+      ],
+      "status": "SUPPORTED"
+    },
+    {
+      "claim": "ChatGPT as a formative feedback tool produced a significant positive impact on students' academic writing skills with positive student perceptions.",
+      "outcome_type": "knowledge_gain",
+      "evidence_ids": [
+        "E-007"
+      ],
+      "status": "SUPPORTED"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "canonical_url": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919"
+    },
+    {
+      "source_id": "S-2026-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2026,
+      "canonical_url": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122"
+    },
+    {
+      "source_id": "S-2024-marzuki",
+      "title": "Impact of ChatGPT on ESL students' academic writing skills",
+      "year": 2024,
+      "canonical_url": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
+      "authority_level": "tier3_professional_institution",
+      "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E-001",
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "study_type": "rct",
+      "education_level": "k12_ages_10_17",
+      "subject": "introductory_python",
+      "population": "69 novices ages 10-17 with no prior text-based programming experience",
+      "sample_size": 69,
+      "intervention": "access_to_openai_codex_ai_coding_assistant_during_training",
+      "comparison": "baseline_group_without_ai_coding_assistant",
+      "outcome_type": "completion_time",
+      "outcome_measure": "code_authoring_task_progress_and_time",
+      "claim": "AI coding assistants significantly increase task completion speed and completion rate during training.",
+      "direction": "support",
+      "effect": "1.15x completion rate, 0.57x time, 1.8x correctness",
+      "duration": "3_weeks_training",
+      "method": "controlled experiment with random assignment, immediate post-test and 1-week retention test",
+      "strengths": [
+        "randomized_controlled_design",
+        "immediate_post_test_and_retention_test",
+        "code_modification_task_guard"
+      ],
+      "limitations": [
+        "non_university_population_ages_10_17",
+        "small_sample_69",
+        "self-paced environment differs from classroom"
+      ],
+      "confounders": [
+        "prior_programming_competency_interaction"
+      ],
+      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_novice_programmers_but_younger",
+        "subject_match": "introductory_programming",
+        "tool_match": "codex_like_generative_ai",
+        "scope": "task_performance_during_training"
+      },
+      "confidence": 0.7,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-002",
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "study_type": "rct",
+      "education_level": "k12_ages_10_17",
+      "subject": "introductory_python",
+      "population": "69 novices ages 10-17 with no prior text-based programming experience",
+      "sample_size": 69,
+      "intervention": "access_to_openai_codex_ai_coding_assistant_during_training",
+      "comparison": "baseline_group_without_ai_coding_assistant",
+      "outcome_type": "independent_problem_solving",
+      "outcome_measure": "manual code-modification tasks during training",
+      "claim": "Access to AI code generation did not decrease performance on manual code-modification tasks.",
+      "direction": "neutral",
+      "effect": "no significant difference between groups",
+      "duration": "3_weeks_training",
+      "method": "controlled experiment, code-modification task followed each code-authoring task",
+      "strengths": [
+        "direct_test_of_transfer-adjacent_skill",
+        "same_session_measurement"
+      ],
+      "limitations": [
+        "code modification is not full independent problem solving",
+        "non_university population"
+      ],
+      "confounders": [
+        "practice_effect"
+      ],
+      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 1,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 6.0,
+      "evidence_level": "moderate",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "introductory_programming",
+        "tool_match": "codex",
+        "scope": "short-term manual code modification"
+      },
+      "confidence": 0.5,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-003",
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "study_type": "rct",
+      "education_level": "k12_ages_10_17",
+      "subject": "introductory_python",
+      "population": "69 novices ages 10-17 with no prior text-based programming experience",
+      "sample_size": 69,
+      "intervention": "access_to_openai_codex_ai_coding_assistant_during_training",
+      "comparison": "baseline_group_without_ai_coding_assistant",
+      "outcome_type": "retention",
+      "outcome_measure": "retention post-test one week after training",
+      "claim": "One week after training, retention differences between Codex and baseline groups did not reach statistical significance.",
+      "direction": "neutral",
+      "effect": "slightly better for Codex group but not significant",
+      "duration": "3_weeks_training_plus_1_week_retention",
+      "method": "controlled experiment with delayed retention test",
+      "strengths": [
+        "delayed_test_included"
+      ],
+      "limitations": [
+        "1-week retention window is short",
+        "small sample",
+        "non-university population"
+      ],
+      "confounders": [
+        "prior_competency"
+      ],
+      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "introductory_programming",
+        "tool_match": "codex",
+        "scope": "retention over one week"
+      },
+      "confidence": 0.5,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-004",
+      "source_id": "S-2026-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2026,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand high school math students in Turkey",
+      "sample_size": 950,
+      "intervention": "gpt4_based_tutor_gpt_base_unguarded",
+      "comparison": "no_generative_ai_control",
+      "outcome_type": "independent_problem_solving",
+      "outcome_measure": "exam without access to AI resources after practice phase",
+      "claim": "Students with unguarded GPT-4 access performed 17% worse on the independent exam than the control group, despite higher practice performance.",
+      "direction": "contradict",
+      "effect": "negative_17_percent_on_independent_exam",
+      "duration": "in_class_study_sessions",
+      "method": "large-scale randomized controlled trial, practice phase then closed-book exam",
+      "strengths": [
+        "large_scale_rct",
+        "independent_exam_without_ai",
+        "arm_wise_design"
+      ],
+      "limitations": [
+        "high_school_mathematics_not_university_programming",
+        "single_country"
+      ],
+      "confounders": [
+        "tool_design_difference"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial_same_age_band_different_subject",
+        "subject_match": "no_mathematics_vs_programming",
+        "tool_match": "gpt4_chat_interface",
+        "scope": "unguarded_general_chat_interface"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-005",
+      "source_id": "S-2026-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2026,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand high school math students in Turkey",
+      "sample_size": 950,
+      "intervention": "gpt4_tutor_with_teacher_designed_guardrails",
+      "comparison": "no_generative_ai_control",
+      "outcome_type": "independent_problem_solving",
+      "outcome_measure": "exam without access to AI resources after practice phase",
+      "claim": "Guardrail design of the AI tutor (hints instead of answers, teacher-informed prompts) largely eliminated the negative learning effect.",
+      "direction": "support",
+      "effect": "negative effect essentially eradicated, no positive effect observed",
+      "duration": "in_class_study_sessions",
+      "method": "large-scale randomized controlled trial, three arms",
+      "strengths": [
+        "direct_manipulation_of_tool_design",
+        "large_sample"
+      ],
+      "limitations": [
+        "no_positive_learning_gain_even_with_guardrails",
+        "subject_mismatch"
+      ],
+      "confounders": [
+        "prompt_engineering_effort"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "no",
+        "tool_match": "guardrailed_tutor_design",
+        "scope": "guardrail_design_principle_transferable"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-006",
+      "source_id": "S-2026-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2026,
+      "study_type": "rct",
+      "education_level": "high_school",
+      "subject": "mathematics",
+      "population": "nearly a thousand high school math students in Turkey",
+      "sample_size": 950,
+      "intervention": "gpt4_tutor_access_during_practice",
+      "comparison": "no_generative_ai_control",
+      "outcome_type": "assignment_score",
+      "outcome_measure": "practice problem performance during study sessions",
+      "claim": "Access to GPT-4 during practice improves task performance (48% for GPT Base, 127% for GPT Tutor) — but this task performance does not transfer to independent exam performance.",
+      "direction": "support",
+      "effect": "48-127 percent improvement on practice problems",
+      "duration": "in_class_study_sessions",
+      "method": "randomized controlled trial with practice and closed-book exam phases",
+      "strengths": [
+        "same_study_compares_task_and_learning",
+        "large_sample"
+      ],
+      "limitations": [
+        "subject_mismatch_mathematics"
+      ],
+      "confounders": [
+        "task_familiarity"
+      ],
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
+      "evidence_level": "strong",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "no",
+        "tool_match": "gpt4",
+        "scope": "task_performance_vs_learning_separation"
+      },
+      "confidence": 0.75,
+      "status": "SUPPORTED"
+    },
+    {
+      "evidence_id": "E-007",
+      "source_id": "S-2024-marzuki",
+      "title": "Impact of ChatGPT on ESL students' academic writing skills",
+      "year": 2024,
+      "study_type": "mixed_methods",
+      "education_level": "undergraduate",
+      "subject": "academic_writing_esl",
+      "population": "undergraduate ESL students at an Indian university",
+      "sample_size": 72,
+      "intervention": "chatgpt_as_formative_feedback_tool",
+      "comparison": "traditional_instruction_control",
+      "outcome_type": "knowledge_gain",
+      "outcome_measure": "writing tests with pre-post-delayed design",
+      "claim": "ChatGPT as a formative feedback tool produced a significant positive impact on students' academic writing skills with positive student perceptions.",
+      "direction": "support",
+      "effect": "significant positive impact on writing skills",
+      "duration": "6_hours_intervention",
+      "method": "mixed methods intervention study, pre/post/delayed tests and focus groups",
+      "strengths": [
+        "delayed_post_test",
+        "mixed_methods_triangulation"
+      ],
+      "limitations": [
+        "short_intervention_6_hours",
+        "single_institution",
+        "elite_private_university"
+      ],
+      "confounders": [
+        "self_selection_consent"
+      ],
+      "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 0
+      },
+      "quality_score": 6.0,
+      "evidence_level": "moderate",
+      "applicability": {
+        "learner_match": "yes_undergraduate",
+        "subject_match": "no_writing_not_programming",
+        "tool_match": "chatgpt",
+        "scope": "formative_feedback_writing"
+      },
+      "confidence": 0.55,
+      "status": "SUPPORTED"
+    }
+  ],
+  "methodology_reviews": [
+    {
+      "target": "overall",
+      "audit_items": {
+        "control_group": {
+          "status": "met",
+          "note": "All three studies include a no-AI control group."
+        },
+        "randomization": {
+          "status": "met",
+          "note": "Kazemitabaar 2023 and Bastani 2026 use randomized assignment."
+        },
+        "pre_test": {
+          "status": "met",
+          "note": "Kazemitabaar 2023 has a pre-study evaluation; Bastani 2026 measures baseline covariates."
+        },
+        "post_test": {
+          "status": "met",
+          "note": "Immediate post-tests present in all studies."
+        },
+        "retention_test": {
+          "status": "partial",
+          "note": "Kazemitabaar 2023 has 1-week retention; Bastani 2026 has no delayed test; Marzuki 2024 has delayed test."
+        },
+        "transfer_test": {
+          "status": "partial",
+          "note": "Kazemitabaar 2023 code-modification task is transfer-adjacent; no full no-AI transfer task."
+        },
+        "sample_bias": {
+          "status": "met",
+          "note": "Bastani 2026 nearly 1000 students; Kazemitabaar 2023 small (69) young sample."
+        },
+        "self_selection": {
+          "status": "partial",
+          "note": "Marzuki 2024 consent-based participation risks self-selection."
+        },
+        "measurement_validity": {
+          "status": "partial",
+          "note": "Practice/task performance is not equated to learning; independent exams present in Bastani 2026 only."
+        },
+        "confounders": {
+          "status": "partial",
+          "note": "Prior programming competency interacts with AI benefit in Kazemitabaar 2023."
+        },
+        "instructor_effect": {
+          "status": "not_applicable",
+          "note": "Kazemitabaar 2023 is self-paced; classroom studies may carry instructor effects."
+        },
+        "novelty_effect": {
+          "status": "partial",
+          "note": "Short interventions likely inflate engagement; none of the studies controlled for novelty."
+        },
+        "tool_version_effect": {
+          "status": "not_applicable",
+          "note": "Single tool versions studied; rapid tool change limits durability."
+        },
+        "ai_usage_policy": {
+          "status": "partial",
+          "note": "Bastani 2026 explicitly contrasts unguarded vs guardrailed usage policies."
+        },
+        "dropout": {
+          "status": "partial",
+          "note": "Marzuki 2024 reports attrition; others not detailed."
+        }
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "practice/task performance vs independent exam",
+        "equates_task_with_learning": false,
+        "note": "Bastani 2026 demonstrates the danger of equating the two: +48-127% practice performance coexisted with -17% independent exam performance."
+      },
+      "verdict": "CONCERN",
+      "limitations": [
+        "No randomized study of AI coding assistants in university C programming courses was found in the reviewed set.",
+        "Task performance gains are consistently large, learning-effect estimates are null-to-negative and subject-mismatched.",
+        "Retention evidence exists for only one week (Kazemitabaar 2023)."
+      ],
+      "suggestions": [
+        "Treat all learning-effect conclusions as requiring direct university-level studies.",
+        "Design the pilot with guardrails modeled on Bastani 2026's GPT Tutor (hints, not answers).",
+        "Include a no-AI transfer task in the evaluation plan."
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "reason_for_disagreement": "Disagreement comes from outcome separation (task vs learning), tool design (guarded vs unguarded), and population (K-12 vs university). Studies measuring task performance show positive effects; the only study measuring independent learning after removal of AI shows harm without guardrails."
+    }
+  ],
+  "applicability": {
+    "suitable_for": "pilot in first-year C course with guardrailed usage policy",
+    "not_suitable_for": "unrestricted AI adoption without usage policy",
+    "required_conditions": [
+      "guardrailed AI usage policy",
+      "no-AI transfer assessment",
+      "TA support"
+    ]
+  },
+  "intervention": {
+    "decision": "pilot",
+    "target_learners": "university first-year C programming students (60-student lecture-lab class)",
+    "learning_goals": [
+      "independently write and debug small C programs without AI",
+      "understand core concepts: variables, conditionals, loops, arrays, pointers",
+      "use AI tools critically as explanation and debugging aids, not answer machines"
+    ],
+    "pilot_duration": "8_weeks",
+    "phase_1": {
+      "name": "Phase 1 — Independent Foundation",
+      "activities": [
+        "baseline assessment",
+        "first 2 weeks of assignments completed without any AI code generation"
+      ],
+      "ai_usage_rule": "full code generation forbidden; AI allowed only for conceptual explanations",
+      "outcome_check": "baseline task-performance and independent-problem-solving measures"
+    },
+    "phase_2": {
+      "name": "Phase 2 — Explain, Don't Solve",
+      "activities": [
+        "weeks 3-4: AI allowed to explain errors, concepts and debugging approaches"
+      ],
+      "ai_usage_rule": "AI may explain but must not produce full solutions",
+      "outcome_check": "mid-pilot quiz without AI"
+    },
+    "phase_3": {
+      "name": "Phase 3 — Structured Collaboration",
+      "activities": [
+        "weeks 5-7: AI allowed to generate partial code; students must explain every AI-generated block in their own words"
+      ],
+      "ai_usage_rule": "partial code generation allowed; mandatory written explanation of key logic; submission requires reasoning trace",
+      "outcome_check": "weekly lab completion and code-quality rubric"
+    },
+    "phase_4": {
+      "name": "Phase 4 — Transfer Check",
+      "activities": [
+        "week 8: new programming task completed in a no-AI environment"
+      ],
+      "ai_usage_rule": "no AI access during transfer assessment",
+      "outcome_check": "transfer test score, independent problem solving"
+    },
+    "ai_usage_policy": "AI usage is allowed in three explicitly graded modes (explain / collaborate / no-AI-transfer). Copying unexamined AI output is an academic integrity violation and is assessed via the reasoning-trace requirement.",
+    "teacher_role": "design guardrailed prompts and rubrics; monitor usage logs; hold weekly reflection debriefs",
+    "student_role": "complete assignments in the allowed mode; submit reasoning traces; reflect on when AI helped vs. when it masked understanding",
+    "reflection_requirement": "students must explain key AI-generated logic in their own words; one written reflection per phase",
+    "assessment": "no-AI baseline quiz, mid-pilot quiz, no-AI transfer task, code-quality rubric, AI-usage self-report",
+    "risk_control": [
+      "guardrailed usage policy modeled on Bastani 2026 GPT Tutor (hints, not answers)",
+      "no-AI transfer assessment prevents grade inflation from task-performance gains",
+      "usage logs reviewed weekly to detect crutch behavior"
+    ],
+    "stop_conditions": [
+      "transfer-test scores drop significantly below baseline cohort expectations",
+      "widespread integrity violations in reasoning traces",
+      "AI dependency signals exceed threshold in risk metrics",
+      "TA/teacher workload becomes unsustainable"
+    ],
+    "evidence_alignment": [
+      "E-004",
+      "E-005",
+      "E-006"
+    ]
+  },
+  "evaluation": {
+    "research_question": "In a first-year C programming course, does a guardrailed AI coding assistant (explain-only → structured collaboration) improve independent problem solving without increasing AI dependency, compared to no-AI instruction?",
+    "groups": {
+      "treatment": "two lab sections using the 4-phase guardrailed AI policy",
+      "comparison": "two matched lab sections without AI access (same instructor and materials)"
+    },
+    "baseline": "week-1 no-AI programming quiz (independent problem solving, completion time)",
+    "post_test": "week-8 no-AI programming quiz (independent problem solving, code quality)",
+    "retention_test": "final exam (week 16) — delayed measure 8 weeks after pilot",
+    "transfer_test": "week-8 novel programming task in a strictly no-AI environment",
+    "process_metrics": [
+      "weekly lab completion rate",
+      "AI usage logs: prompts submitted, copied blocks, reasoning traces",
+      "help-seeking behavior counts"
+    ],
+    "learning_metrics": [
+      "independent problem solving (no-AI quizzes)",
+      "code quality rubric",
+      "retention on final exam",
+      "transfer task score"
+    ],
+    "risk_metrics": [
+      "AI dependency index (usage without understanding, from reasoning-trace quality)",
+      "academic integrity violations",
+      "self-reported over-reliance",
+      "false confidence (post-quiz confidence vs actual score)"
+    ],
+    "analysis_plan": "pre-registered comparison of treatment vs comparison sections on baseline-adjusted learning metrics (ANCOVA); task-performance metrics reported separately from learning metrics; subgroup analysis by prior programming competency; stop-condition monitoring at weeks 3, 5, 7.",
+    "success_threshold": "treatment group shows non-inferior independent problem solving (delta within 5%) AND superior or equal retention AND AI dependency index below threshold; if independent problem solving declines >10%, the pilot is judged unsuccessful regardless of task-performance gains.",
+    "stop_conditions": [
+      "transfer-test decline >10% vs comparison",
+      "integrity violations in >20% of submissions",
+      "AI dependency index exceeding pre-set threshold for two consecutive weeks"
+    ]
+  },
+  "benchmark": {},
+  "provenance": {
+    "search_provider": "n/a",
+    "fetched_at": "2026-08-12T06:41:04.661533+00:00"
+  }
+}

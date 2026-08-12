@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/cross-model-review.schema.json",
+  "title": "CrossModelReview",
+  "description": "Output contract of the independent-model cross review (总体实施计划 §25). An independent model (different model/CLI than the primary analysis) verifies a Draft Verdict before the Final Judge rules.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["agreement", "final_recommendation"],
+  "properties": {
+    "agreement": {
+      "type": "string",
+      "description": "To what degree the reviewer agrees with the draft verdict (e.g. 'high/partial/low agreement on the four-state decision')."
+    },
+    "disagreements": { "type": "array", "items": { "type": "string" } },
+    "unsupported_claims": { "type": "array", "items": { "type": "string" } },
+    "missed_counterevidence": { "type": "array", "items": { "type": "string" } },
+    "scope_violations": { "type": "array", "items": { "type": "string" } },
+    "methodology_issues": { "type": "array", "items": { "type": "string" } },
+    "confidence_adjustment": { "type": "string", "enum": ["upgrade", "downgrade", "no_change"] },
+    "required_revision": { "type": "boolean", "default": false },
+    "final_recommendation": { "type": "string" }
+  }
+}

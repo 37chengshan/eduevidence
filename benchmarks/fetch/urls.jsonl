@@ -1,0 +1,30 @@
+{"id": "F01", "category": "paper_landing", "url": "https://dl.acm.org/doi/10.1145/3544548.3580919", "expect_title": "Studying the effect of AI Code Generators", "notes": "论文 landing page（ACM）"}
+{"id": "F02", "category": "paper_landing", "url": "https://www.pnas.org/doi/10.1073/pnas.2422633122", "expect_title": "Generative AI without guardrails", "notes": "论文 landing page（PNAS）"}
+{"id": "F03", "category": "paper_landing", "url": "https://aclanthology.org/2025.acl-long.1502/", "expect_title": "GPT-4 as a Homework Tutor", "notes": "论文 landing page（ACL）"}
+{"id": "F04", "category": "journal_article", "url": "https://link.springer.com/article/10.1186/s40561-024-00295-9", "expect_title": "Impact of ChatGPT on ESL students", "notes": "期刊文章（Springer）"}
+{"id": "F05", "category": "university_site", "url": "https://www.cmu.edu/teaching/technology/", "expect_title": "Teaching Technology", "notes": "大学教学网站"}
+{"id": "F06", "category": "university_site", "url": "https://ctl.columbia.edu/resources-and-technology/", "expect_title": "Resources and Technology", "notes": "大学教学中心"}
+{"id": "F07", "category": "government_org", "url": "https://www.ies.ed.gov/ncee/wwc/", "expect_title": "What Works Clearinghouse", "notes": "政府教育证据机构"}
+{"id": "F08", "category": "international_org", "url": "https://www.oecd.org/education/", "expect_title": "Education at OECD", "notes": "国际组织教育页"}
+{"id": "F09", "category": "chinese_web", "url": "https://www.moe.gov.cn/jyb_xwfb/", "expect_title": "中华人民共和国教育部", "notes": "中文政府网站"}
+{"id": "F10", "category": "chinese_web", "url": "https://news.tsinghua.edu.cn/", "expect_title": "清华新闻网", "notes": "中文大学网站"}
+{"id": "F11", "category": "professional_institution", "url": "https://www.chronicle.com/", "expect_title": "The Chronicle of Higher Education", "notes": "专业机构新闻站（可能付费墙）"}
+{"id": "F12", "category": "professional_institution", "url": "https://er.educause.edu/", "expect_title": "Educause Review", "notes": "教育技术专业机构"}
+{"id": "F13", "category": "long_page", "url": "https://educationhub.blog.gov.uk/higher-education/", "expect_title": "Higher Education", "notes": "长页面博客"}
+{"id": "F14", "category": "report", "url": "https://www.unesco.org/en/digital-education", "expect_title": "Digital Learning and Education", "notes": "国际组织报告页"}
+{"id": "F15", "category": "dataset_page", "url": "https://osf.io/preprints/", "expect_title": "OSF Preprints", "notes": "预印本平台"}
+{"id": "F16", "category": "blog", "url": "https://aiblog.research.google/", "expect_title": "Google AI Blog", "notes": "技术博客（JS 渲染风险）"}
+{"id": "F17", "category": "wiki", "url": "https://en.wikipedia.org/wiki/Educational_technology", "expect_title": "Educational technology", "notes": "百科长文"}
+{"id": "F18", "category": "pdf", "url": "https://arxiv.org/pdf/2306.11770", "expect_title": "Generative AI in education", "notes": "PDF 论文（专用解析路径）"}
+{"id": "F19", "category": "news_secondary", "url": "https://www.insidehighered.com/news/tech", "expect_title": "Tech in Higher Ed", "notes": "二次解读新闻"}
+{"id": "F20", "category": "news_secondary", "url": "https://www.technologyreview.com/", "expect_title": "MIT Technology Review", "notes": "新闻站"}
+{"id": "F21", "category": "service_failure_sim", "url": "https://example.invalid/paper/404", "expect_title": "", "notes": "模拟服务失败（无效域名）"}
+{"id": "F22", "category": "service_failure_sim", "url": "https://www.moe.gov.cn/this-page-does-not-exist-404", "expect_title": "", "notes": "模拟 404"}
+{"id": "F23", "category": "short_page", "url": "https://example.com", "expect_title": "", "notes": "极短页面（正文过短）"}
+{"id": "F24", "category": "complex_nav", "url": "https://www.coursera.org/", "expect_title": "", "notes": "复杂导航动态站"}
+{"id": "F25", "category": "dynamic_page", "url": "https://chat.openai.com/", "expect_title": "", "notes": "登录墙动态页"}
+{"id": "F26", "category": "institution_org", "url": "https://www.nature.com/articles/s41562-023-01534-w", "expect_title": "", "notes": "期刊 landing（Nature，付费墙风险）"}
+{"id": "F27", "category": "institution_org", "url": "https://pubmed.ncbi.nlm.nih.gov/", "expect_title": "PubMed", "notes": "学术数据库"}
+{"id": "F28", "category": "institution_org", "url": "https://eric.ed.gov/", "expect_title": "ERIC", "notes": "教育文献数据库"}
+{"id": "F29", "category": "chinese_web", "url": "https://www.cnki.net/", "expect_title": "", "notes": "中文学术库（登录墙风险）"}
+{"id": "F30", "category": "paper_landing", "url": "https://doi.org/10.1145/3544548.3580919", "expect_title": "Studying the effect of AI Code Generators", "notes": "DOI 重定向到论文（与 F01 同文镜像）"}
