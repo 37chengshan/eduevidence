@@ -191,7 +191,7 @@ def build_v1_compat_result(project: ProjectWorkspace, *,
     proj = build_report_projection(project, graph_revision=graph_revision,
                                    decision_snapshot_id=decision_snapshot_id)
     return {
-        "meta": {"engine_version": "2.0.0-dev", "project_id": proj["project_id"]},
+        "meta": {"engine_version": "2.0.0", "project_id": proj["project_id"]},
         "execution": {"graph_revision": proj["graph_revision"]},
         "research_frame": proj["research_frame"],
         "decision": {

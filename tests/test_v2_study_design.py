@@ -129,7 +129,7 @@ def test_save_study_design_and_analysis_plan(tmp_path):
     with pytest.raises(FileExistsError):
         save_study_design(ws, _design())
     plan = {
-        "analysis_plan_id": "APL-1", "design_id": "DSN-1",
+        "analysis_plan_id": "APL-1", "design_id": "DSN-1", "dataset_ids": [],
         "primary_analysis": "pre/post descriptive comparison",
         "secondary_analyses": [], "assumption_checks": [],
         "preregistered": True, "created_at": "2026-08-12T00:00:00+00:00",

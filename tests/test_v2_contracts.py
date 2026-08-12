@@ -11,7 +11,7 @@ def _project(**over):
         "decision_target": "teaching_decision",
         "created_at": "2026-08-12T00:00:00+00:00",
         "updated_at": "2026-08-12T00:00:00+00:00",
-        "engine_version": "2.0.0-dev",
+        "engine_version": "2.0.0",
         "schema_version": "2.0",
         "graph_revision": 0,
         "status": "active",

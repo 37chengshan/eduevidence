@@ -6,13 +6,18 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "analysis_plan_id", "design_id", "primary_analysis",
+    "analysis_plan_id", "design_id", "dataset_ids", "primary_analysis",
     "secondary_analyses", "assumption_checks", "preregistered",
     "created_at", "extensions"
   ],
   "properties": {
     "analysis_plan_id": { "type": "string", "pattern": "^APL-" },
     "design_id": { "type": "string", "pattern": "^DSN-" },
+    "dataset_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^DAT-" },
+      "uniqueItems": true
+    },
     "primary_analysis": { "type": "string", "minLength": 1 },
     "secondary_analyses": { "type": "array", "items": { "type": "string" } },
     "assumption_checks": { "type": "array", "items": { "type": "string" } },
