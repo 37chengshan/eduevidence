@@ -13,6 +13,11 @@ Two rule-based engines:
    Evidence Quality + Consistency + Directness + Evidence Count
    - Conflict Penalty - Unsupported Penalty
    -> High | Moderate | Low | Insufficient
+   v2 policy (2026-08-12.v2, D-1/D-2): consistency is computed over
+   decision_relation (support_adoption/oppose_adoption/conditional/neutral)
+   instead of relation_to_claim, and the evidence count term is
+   min(1.0, independent_studies / 4) — independent_samples is reported
+   separately instead of being added to the count term.
 
 The authoritative pipeline entry for final verdicts is
 scripts/compute_confidence.py (independent-studies/samples-weighted formula
@@ -26,11 +31,13 @@ from __future__ import annotations
 
 from typing import Any
 
+from evidence_semantics import claim_relation, decision_relation
+
 DIMENSIONS = ["D1_study_design", "D2_sample_quality", "D3_measurement_validity",
               "D4_temporal_strength", "D5_directness"]
 
 #: Version of the deterministic confidence policy (bump on any formula change).
-CONFIDENCE_POLICY_VERSION = "2026-08-12.v1"
+CONFIDENCE_POLICY_VERSION = "2026-08-12.v2"
 
 
 def quality_score(dimensions: dict[str, int]) -> float:
@@ -56,16 +63,14 @@ def quality_level(score: float) -> str:
 
 
 def direction_of(evidence: dict[str, Any]) -> str:
-    """Direction of one evidence object.
+    """Legacy wrapper for the claim relation of one evidence object.
 
-    Prefers the new contract field ``relation_to_claim`` (support | contradict |
-    neutral) and falls back to the legacy ``direction`` field, kept for backward
-    compatibility. Returns 'neutral' when neither is present/valid.
+    Delegates to ``evidence_semantics.claim_relation`` so the interpretation
+    of ``relation_to_claim`` / legacy ``direction`` stays centralized (A-1).
+    Kept for backward-compatible callers; new code should use
+    ``evidence_semantics.claim_relation`` directly.
     """
-    relation = evidence.get("relation_to_claim")
-    if relation in ("support", "contradict", "neutral"):
-        return relation
-    return evidence.get("direction", "neutral")
+    return claim_relation(evidence)
 
 
 def independent_studies(evidence_list: list[dict[str, Any]]) -> int:
@@ -98,6 +103,22 @@ def consistency_score(directions: list[str]) -> float:
     return majority / len(non_neutral)
 
 
+def decision_consistency_score(relations: list[str]) -> float:
+    """Decision-level consistency in [0,1] (D-2).
+
+    Computed over ``decision_relation`` values instead of ``relation_to_claim``:
+    claim-level evidence is usually extracted precisely because it supports its
+    claim, so relation-level consistency overstates agreement about the final
+    teaching decision. Decisive relations are support_adoption (for) and
+    oppose_adoption (against); conditional and neutral are non-committal.
+    """
+    decisive = [r for r in relations if r in ("support_adoption", "oppose_adoption")]
+    if not decisive:
+        return 0.0
+    majority = max(decisive.count("support_adoption"), decisive.count("oppose_adoption"))
+    return majority / len(decisive)
+
+
 def directness_score(evidence_list: list[dict[str, Any]]) -> float:
     """Average D5 Directness (0-2) across evidence; 0 if empty."""
     if not evidence_list:
@@ -114,7 +135,9 @@ def confidence(evidence_list: list[dict[str, Any]], *, target_outcome: str | Non
         score = 0.30*Evidence Quality + 0.25*Consistency + 0.20*Directness
                 + 0.25*Evidence Count - Conflict Penalty - Unsupported Penalty
 
-    where Conflict Penalty = 0.15 if any contradicting evidence exists, and
+    where Evidence Count = min(1.0, independent_studies / 4) (D-1),
+    Conflict Penalty = 0.15 if any evidence opposes adoption
+    (decision_relation == oppose_adoption, D-2), and
     Unsupported Penalty = min(0.20, 0.05 * n_unsupported). The raw quality /
     consistency / directness terms are scaled to [0, 1] first.
 
@@ -131,21 +154,25 @@ def confidence(evidence_list: list[dict[str, Any]], *, target_outcome: str | Non
     avg_quality = sum(numeric) / len(numeric) if numeric else 0.0
     quality_term = avg_quality / 10.0  # 0-1
 
-    # 2. Consistency (relation_to_claim preferred, legacy direction fallback)
-    directions = [direction_of(e) for e in evidence_list]
-    consistency = consistency_score(directions)
+    # 2. Consistency (decision_relation based, D-2): claim-level evidence is
+    #    usually extracted to support its claim, so relation_to_claim would
+    #    overstate agreement about the final teaching decision.
+    decisions = [decision_relation(e) for e in evidence_list]
+    consistency = decision_consistency_score(decisions)
 
     # 3. Directness (0-2 -> 0-1)
     directness = directness_score(evidence_list) / 2.0
 
-    # 4. Evidence count (capped at 1) — 独立研究 + 独立样本双计权，防止同一研究的
-    #    多个 Evidence Object 重复放大信心（审查 P0-03）；公式与 compute_confidence.py 一致
+    # 4. Evidence count (capped at 1) — 独立研究计权（D-1）：count term 只用
+    #    independent_studies，不再与 independent_samples 相加（一个普通研究
+    #    通常 1 study + 1 sample，相加会让同一研究贡献两次）。independent_samples
+    #    单独展示在 Provenance / Evidence Summary。
     n_studies = independent_studies(evidence_list)
     n_samples = independent_samples(evidence_list)
-    count_term = min(1.0, (n_studies + n_samples) / 8.0)
+    count_term = min(1.0, n_studies / 4.0)
 
-    # 5. Conflict penalty (0.15 when contradiction exists)
-    conflict_penalty = 0.15 if "contradict" in directions else 0.0
+    # 5. Conflict penalty (0.15 when any evidence opposes adoption)
+    conflict_penalty = 0.15 if "oppose_adoption" in decisions else 0.0
 
     # 6. Unsupported penalty (capped at 0.20)
     unsupported = [e for e in evidence_list if e.get("status") in ("UNSUPPORTED", "DOWNGRADE_CONFIDENCE")]

@@ -16,6 +16,20 @@ SKILL_NAME="eduevidence"
 # retrieval/ 与 integrations/ 会被 scripts/ 直接 import；visualization/ 负责最终 HTML 渲染。
 SKILL_PAYLOAD=(SKILL.md skill references schemas scripts retrieval integrations visualization)
 
+# ---------- curl 远程执行支持 ----------
+# 用法: bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
+# 脚本不在仓库内运行时（无 SKILL.md），自动 clone 仓库到 ./eduevidence 并进入。
+if [ ! -f "SKILL.md" ]; then
+    echo "==> 未在 EduEvidence 仓库内，自动克隆仓库…"
+    if command -v git >/dev/null 2>&1; then
+        git clone --depth 1 "$REPO_URL" eduevidence
+        cd eduevidence
+    else
+        echo "ERROR: 未找到 git，请先安装 git 或手动 clone 仓库" >&2
+        exit 1
+    fi
+fi
+
 # ---------- 参数解析 ----------
 INSTALL_DEV=""
 HAS_DEV_FLAG=0
@@ -96,7 +110,7 @@ UNIVERSAL_PROMPT="请把 https://github.com/37chengshan/eduevidence 仓库中的
    （如 ~/.claude/skills/eduevidence/、~/.omp/agent/skills/eduevidence/、~/.agents/skills/eduevidence/ 等），
    或按你的 skill 装载机制导入；
 2. 安装完成后确认能读取 SKILL.md，并能运行 scripts/ 下的确定性脚本；
-3. 告诉我安装结果，并提醒我为项目点 star（${REPO_URL}）。"
+3. 告诉我安装结果。"
 
 print_universal_prompt() {
     echo ""
@@ -110,26 +124,10 @@ print_universal_prompt() {
     echo "============================================================"
 }
 
-# ---------- 安装完成后的 star 环节 ----------
+# ---------- 安装完成后的提示（仅提示，不自动执行任何 star 操作） ----------
 star_prompt() {
     echo ""
-    echo "==> 如果觉得 EduEvidence 有用，欢迎为项目点个 star ⭐"
-    if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-        if [ "$DRY_RUN" -eq 1 ]; then
-            echo "    [dry-run] 检测到 GitHub CLI 已登录，将执行: gh repo star 37chengshan/eduevidence"
-            return 0
-        fi
-        echo "    检测到 GitHub CLI 已登录，正在为项目点 star ..."
-        if gh repo star 37chengshan/eduevidence 2>/dev/null; then
-            echo "    ✅ 已为 37chengshan/eduevidence 点亮 star，感谢支持！"
-        else
-            echo "    点 star 未成功（可能已经点过），忽略。"
-        fi
-    else
-        echo "    未检测到已登录的 GitHub CLI，请打开浏览器点 star："
-        echo "    $REPO_URL"
-        echo "    （或执行: open ${REPO_URL}）"
-    fi
+    echo "==> If EduEvidence helps, consider starring ⭐ ${REPO_URL}（仅提示，不会自动点 star）"
 }
 
 # ---------- 本地安装：Python 检查 + venv + 依赖 + 自检（--dev 时含 pytest） ----------

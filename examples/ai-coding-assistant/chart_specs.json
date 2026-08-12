@@ -5,6 +5,7 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "chart_type": "diverging_bar",
+      "semantic_basis": "effect_direction",
       "title": "结果证据概览",
       "option": {
         "tooltip": {
@@ -12,9 +13,9 @@
         },
         "legend": {
           "data": [
-            "支持",
-            "反驳",
-            "中性"
+            "正向效应",
+            "负向效应",
+            "零效应"
           ]
         },
         "grid": [
@@ -41,7 +42,7 @@
             "type": "value",
             "gridIndex": 1,
             "min": 0,
-            "max": 1,
+            "max": 3,
             "minInterval": 1
           }
         ],
@@ -49,11 +50,14 @@
           {
             "type": "category",
             "data": [
+              "作业成绩",
+              "独立问题解决",
               "知识获得",
               "记忆保持",
-              "独立问题解决",
-              "完成时间",
-              "作业成绩"
+              "参与度",
+              "AI 依赖",
+              "代码质量",
+              "完成时间"
             ],
             "inverse": true,
             "gridIndex": 0
@@ -61,11 +65,14 @@
           {
             "type": "category",
             "data": [
+              "作业成绩",
+              "独立问题解决",
               "知识获得",
               "记忆保持",
-              "独立问题解决",
-              "完成时间",
-              "作业成绩"
+              "参与度",
+              "AI 依赖",
+              "代码质量",
+              "完成时间"
             ],
             "inverse": true,
             "gridIndex": 1,
@@ -74,13 +81,16 @@
         ],
         "series": [
           {
-            "name": "支持",
+            "name": "正向效应",
             "type": "bar",
             "data": [
+              3,
+              0,
               1,
               0,
               1,
-              1,
+              0,
+              0,
               1
             ],
             "itemStyle": {
@@ -91,12 +101,15 @@
             "lane": "main"
           },
           {
-            "name": "反驳",
+            "name": "负向效应",
             "type": "bar",
             "data": [
               0,
-              0,
               -1,
+              -1,
+              0,
+              0,
+              -3,
               0,
               0
             ],
@@ -108,13 +121,16 @@
             "lane": "main"
           },
           {
-            "name": "中性",
+            "name": "零效应",
             "type": "bar",
             "data": [
               0,
-              1,
+              0,
+              0,
               1,
               0,
+              0,
+              1,
               0
             ],
             "itemStyle": {
@@ -127,7 +143,7 @@
           }
         ]
       },
-      "summary_text": "各 Outcome 的支持/反驳/中性证据条数对比（正=支持，负=反驳；中性为独立细条道）。",
+      "summary_text": "各 Outcome 的正向 / 负向 / 零效应证据条数对比。这里展示的是 effect_direction，不是“这条证据是否支持某个主张”。",
       "integrity": {
         "numbers_match_result": "NOT_CHECKED",
         "no_axis_distortion": "NOT_CHECKED",
@@ -181,7 +197,7 @@
               },
               {
                 "id": "claim-0",
-                "name": "AI coding assistants significantly incre",
+                "name": "In practice sessions, the unguardrailed ",
                 "category": 1
               },
               {
@@ -190,13 +206,13 @@
                 "category": 2
               },
               {
-                "id": "S-2023-kazemitabaar",
-                "name": "S-2023-kazemitabaar",
+                "id": "S-2025-Bastani",
+                "name": "S-2025-Bastani",
                 "category": 3
               },
               {
                 "id": "claim-1",
-                "name": "Access to AI code generation did not dec",
+                "name": "On the unaided independent exam after AI",
                 "category": 1
               },
               {
@@ -206,7 +222,7 @@
               },
               {
                 "id": "claim-2",
-                "name": "One week after training, retention diffe",
+                "name": "The guardrailed GPT Tutor (teacher-desig",
                 "category": 1
               },
               {
@@ -216,7 +232,7 @@
               },
               {
                 "id": "claim-3",
-                "name": "Students with unguarded GPT-4 access per",
+                "name": "Novices aged 10-17 who used OpenAI Codex",
                 "category": 1
               },
               {
@@ -225,13 +241,13 @@
                 "category": 2
               },
               {
-                "id": "S-2025-bastani",
-                "name": "S-2025-bastani",
+                "id": "S-2023-Kazemitabaar",
+                "name": "S-2023-Kazemitabaar",
                 "category": 3
               },
               {
                 "id": "claim-4",
-                "name": "Guardrail design of the AI tutor (hints ",
+                "name": "Learners who used Codex during training ",
                 "category": 1
               },
               {
@@ -241,7 +257,7 @@
               },
               {
                 "id": "claim-5",
-                "name": "Access to GPT-4 during practice improves",
+                "name": "In a qualitative case study, 3 EFL stude",
                 "category": 1
               },
               {
@@ -250,8 +266,13 @@
                 "category": 2
               },
               {
+                "id": "S-2024-Marzuki",
+                "name": "S-2024-Marzuki",
+                "category": 3
+              },
+              {
                 "id": "claim-6",
-                "name": "ChatGPT as a formative feedback tool pro",
+                "name": "In the same qualitative study, students ",
                 "category": 1
               },
               {
@@ -260,9 +281,79 @@
                 "category": 2
               },
               {
-                "id": "S-2024-marzuki",
-                "name": "S-2024-marzuki",
+                "id": "claim-7",
+                "name": "21 lab sessions (participant observation",
+                "category": 1
+              },
+              {
+                "id": "E-008",
+                "name": "E-008",
+                "category": 2
+              },
+              {
+                "id": "S-2024-Prather",
+                "name": "S-2024-Prather",
                 "category": 3
+              },
+              {
+                "id": "claim-8",
+                "name": "GenAI usage benefits are highly differen",
+                "category": 1
+              },
+              {
+                "id": "E-009",
+                "name": "E-009",
+                "category": 2
+              },
+              {
+                "id": "claim-9",
+                "name": "Code generation models can already gener",
+                "category": 1
+              },
+              {
+                "id": "E-010",
+                "name": "E-010",
+                "category": 2
+              },
+              {
+                "id": "S-2024-Denny",
+                "name": "S-2024-Denny",
+                "category": 3
+              },
+              {
+                "id": "claim-10",
+                "name": "10 undergraduate computer science studen",
+                "category": 1
+              },
+              {
+                "id": "E-011",
+                "name": "E-011",
+                "category": 2
+              },
+              {
+                "id": "S-2025-Shihab",
+                "name": "S-2025-Shihab",
+                "category": 3
+              },
+              {
+                "id": "claim-11",
+                "name": "With Copilot, students' solution progres",
+                "category": 1
+              },
+              {
+                "id": "E-012",
+                "name": "E-012",
+                "category": 2
+              },
+              {
+                "id": "claim-12",
+                "name": "In exit interviews, students expressed c",
+                "category": 1
+              },
+              {
+                "id": "E-013",
+                "name": "E-013",
+                "category": 2
               }
             ],
             "links": [
@@ -280,7 +371,7 @@
               },
               {
                 "source": "E-001",
-                "target": "S-2023-kazemitabaar"
+                "target": "S-2025-Bastani"
               },
               {
                 "source": "decision",
@@ -289,14 +380,14 @@
               {
                 "source": "claim-1",
                 "target": "E-002",
-                "label": "neutral",
+                "label": "support",
                 "lineStyle": {
-                  "color": "#C99A4A"
+                  "color": "#5E8A6A"
                 }
               },
               {
                 "source": "E-002",
-                "target": "S-2023-kazemitabaar"
+                "target": "S-2025-Bastani"
               },
               {
                 "source": "decision",
@@ -305,14 +396,14 @@
               {
                 "source": "claim-2",
                 "target": "E-003",
-                "label": "neutral",
+                "label": "support",
                 "lineStyle": {
-                  "color": "#C99A4A"
+                  "color": "#5E8A6A"
                 }
               },
               {
                 "source": "E-003",
-                "target": "S-2023-kazemitabaar"
+                "target": "S-2025-Bastani"
               },
               {
                 "source": "decision",
@@ -321,14 +412,14 @@
               {
                 "source": "claim-3",
                 "target": "E-004",
-                "label": "contradict",
+                "label": "support",
                 "lineStyle": {
-                  "color": "#A85B53"
+                  "color": "#5E8A6A"
                 }
               },
               {
                 "source": "E-004",
-                "target": "S-2025-bastani"
+                "target": "S-2023-Kazemitabaar"
               },
               {
                 "source": "decision",
@@ -344,7 +435,7 @@
               },
               {
                 "source": "E-005",
-                "target": "S-2025-bastani"
+                "target": "S-2023-Kazemitabaar"
               },
               {
                 "source": "decision",
@@ -360,7 +451,7 @@
               },
               {
                 "source": "E-006",
-                "target": "S-2025-bastani"
+                "target": "S-2024-Marzuki"
               },
               {
                 "source": "decision",
@@ -376,7 +467,103 @@
               },
               {
                 "source": "E-007",
-                "target": "S-2024-marzuki"
+                "target": "S-2024-Marzuki"
+              },
+              {
+                "source": "decision",
+                "target": "claim-7"
+              },
+              {
+                "source": "claim-7",
+                "target": "E-008",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-008",
+                "target": "S-2024-Prather"
+              },
+              {
+                "source": "decision",
+                "target": "claim-8"
+              },
+              {
+                "source": "claim-8",
+                "target": "E-009",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-009",
+                "target": "S-2024-Prather"
+              },
+              {
+                "source": "decision",
+                "target": "claim-9"
+              },
+              {
+                "source": "claim-9",
+                "target": "E-010",
+                "label": "neutral",
+                "lineStyle": {
+                  "color": "#C99A4A"
+                }
+              },
+              {
+                "source": "E-010",
+                "target": "S-2024-Denny"
+              },
+              {
+                "source": "decision",
+                "target": "claim-10"
+              },
+              {
+                "source": "claim-10",
+                "target": "E-011",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-011",
+                "target": "S-2025-Shihab"
+              },
+              {
+                "source": "decision",
+                "target": "claim-11"
+              },
+              {
+                "source": "claim-11",
+                "target": "E-012",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-012",
+                "target": "S-2025-Shihab"
+              },
+              {
+                "source": "decision",
+                "target": "claim-12"
+              },
+              {
+                "source": "claim-12",
+                "target": "E-013",
+                "label": "support",
+                "lineStyle": {
+                  "color": "#5E8A6A"
+                }
+              },
+              {
+                "source": "E-013",
+                "target": "S-2025-Shihab"
               }
             ],
             "label": {

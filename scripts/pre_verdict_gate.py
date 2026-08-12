@@ -58,6 +58,7 @@ for _p in (str(ROOT), str(ROOT / "scripts")):
 
 from validate_schema import SchemaError, Validator  # noqa: E402
 from evidence_score import independent_samples, independent_studies  # noqa: E402
+from evidence_semantics import claim_relation  # noqa: E402
 from run_workspace import utc_now  # noqa: E402
 
 GATE_VERSION = "2026-08-12.v1"
@@ -235,11 +236,11 @@ def check_claim_evidence(ws: Path) -> dict[str, str]:
                 if ev is None:
                     issues.append(f"{category}: evidence {eid} referenced but not found in corpus")
                     continue
-                direction = ev.get("direction", "neutral")
-                if category == "supported_claims" and direction == "contradict":
+                relation = claim_relation(ev)
+                if category == "supported_claims" and relation == "contradict":
                     warnings.append(f"supported claim cites contradicting evidence {eid} "
                                     "(may be an intentional negative finding)")
-                if category == "contradicted_claims" and direction == "support":
+                if category == "contradicted_claims" and relation == "support":
                     warnings.append(f"contradicted claim cites supporting evidence {eid} "
                                     "(may be an intentional positive finding)")
 

@@ -73,7 +73,7 @@ def test_full_demo_run_completes_all_stages(tmp_path):
 
     final = load_json(ws.path / "final_verdict.json")
     assert final["confidence"] == "Moderate"
-    assert final["confidence_score"] == pytest.approx(0.559, abs=0.01)
+    assert final["confidence_score"] == pytest.approx(0.526, abs=0.01)
     assert final["confidence_policy_version"]
     assert final["raw_model_confidence"] == "Moderate"  # preserved for audit
 

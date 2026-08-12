@@ -67,26 +67,31 @@ python scripts/benchmark.py --questions benchmarks/questions.jsonl
 - 核心指标（Citation Support Precision、Unsupported Claim Rate、Contradiction Discovery Rate、Outcome Separation Accuracy、Scope Calibration、Intervention Evidence Alignment）由 `benchmarks/evaluator/` 对照 `benchmarks/annotations/` 计算；
 - 可选参数（如 `--ablation` 跑 A1–A7、`--repeat 5` 测稳定性）以 `python scripts/benchmark.py --help` 为准。
 
-## 六、输出产物：Research & Decision Pack（12 部分）
+## 六、输出产物：Research & Decision Pack
 
-每次端到端运行（Demo 或 L 级题目）产出一份 Research & Decision Pack，共 12 部分：
+每次端到端运行（Demo 或 L 级题目）产出一份双层 Research & Decision Pack：
 
-| # | 部分 | 内容 |
-|---|------|------|
-| 01 | Executive Decision | 一页决策摘要：问题、结论（ADOPT/PILOT/REJECT/INSUFFICIENT）、置信度 |
-| 02 | Education Frame | 结构化研究问题（learner/course/intervention/comparison/outcomes/scope） |
-| 03 | Search & Retrieval Log | 检索词、来源、检索时间与 scope 范围记录 |
-| 04 | Evidence Objects | 全部 Claim 级证据对象（evidence_id、claim、direction、source_location） |
-| 05 | Evidence Matrix | 按 outcome_type×direction 汇总的证据矩阵与 quality 标注 |
-| 06 | Methodology Audit | 每篇研究的 method review（PASS/CONCERN/FAIL + task_vs_learning_guard） |
-| 07 | Skeptic Review | 反驳证据、负面结果、未发现与 confounder 清单 |
-| 08 | Verdict | 结论判定、Confidence 分解、what_can / cannot_be_claimed、missing evidence |
-| 09 | Intervention Plan | 最小可验证干预（阶段化 PILOT、Stop Conditions、Evidence Alignment） |
-| 10 | Evaluation Plan | 评估设计（pre/post、Retention、Transfer、无 AI 环境测验） |
-| 11 | Benchmark Comparison | 当前问题在 B2/B3/B4 上的指标对照 |
-| 12 | Sources | 完整来源清单（DOI/URL、年份、study_type、quality_score） |
+- **Visual Brief**：用于快速浏览 Decision、Outcome Separation、Evidence Tribunal、Evidence-to-Action 与关键来源。
+- **Full Report**：由当前研究内容规划为 **5–7 个动态章节**，而不是固定章节模板。
 
-Pack 的每一部分都可从上一部分反查：12→04 追溯来源，04→08 追溯结论，09/10 追溯决策落地。
+完整报告必须覆盖以下语义模块；这些模块可以按研究叙事合并进同一章节，但不得遗漏：
+
+| 模块 | 内容 |
+|------|------|
+| decision | 最终决策、Confidence、可说/不可说与主要风险 |
+| scope | Education Research Frame、研究边界与决策标准 |
+| retrieval | 检索策略、来源覆盖与证据选择 |
+| outcomes | Outcome Separation：任务表现、学习、保持、迁移与风险 |
+| evidence | Claim-Level Evidence 与 Evidence Matrix |
+| quality | Methodology / Evidence Quality Audit |
+| conflicts | Skeptic / Counter-Evidence / Conflict Analysis |
+| trace | Evidence Tribunal + Claim → Evidence → Source 追溯 |
+| applicability | 适用性、外推边界与必要条件 |
+| intervention | 最小可验证干预、Guardrails 与 Stop Conditions |
+| evaluation | Baseline / Post-test / Retention / Transfer 评价方案 |
+| sources | Sources、Provenance 与附录 |
+
+Pack 的证据链始终可以从 Decision / Claim 反查到 Evidence，再追溯到 Source 与 source location；章节如何合并不改变这一追溯关系。
 
 ## 七、常见问题（FAQ）
 

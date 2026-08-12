@@ -108,7 +108,7 @@ def test_build_fails_on_id_mismatch(tmp_path, monkeypatch, capsys):
 def test_build_fails_on_number_mismatch(tmp_path, monkeypatch):
     """制造 outcome 计数不一致 → 构建失败。"""
     bad_en = copy.deepcopy(_load("examples/ai-coding-assistant/result.json"))
-    bad_en["outcomes"][0]["support_count"] = 42
+    bad_en["outcomes"][0]["positive_count"] = 42
     zh = _load("examples/ai-coding-assistant/result.zh.json")
     en_path = tmp_path / "result.json"
     zh_path = tmp_path / "result.zh.json"

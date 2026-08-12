@@ -47,6 +47,67 @@ def test_consistency_score():
     assert consistency_score(["neutral", "neutral"]) == 0.0
 
 
+def test_decision_consistency_score():
+    """D-2: consistency is computed over decision_relation, not relation_to_claim."""
+    from evidence_score import decision_consistency_score
+    # claim-level support for every evidence, but adoption-level opposition
+    assert decision_consistency_score(
+        ["support_adoption", "support_adoption", "oppose_adoption"]) == 2 / 3
+    assert decision_consistency_score(
+        ["support_adoption", "oppose_adoption"]) == 0.5
+    # conditional / neutral are non-committal
+    assert decision_consistency_score(
+        ["conditional", "neutral", "support_adoption"]) == 1.0
+    assert decision_consistency_score(["conditional", "neutral"]) == 0.0
+
+
+def test_consistency_prefers_decision_relation_over_relation_to_claim():
+    """D-2 acceptance: all-support claims can still disagree at decision level."""
+    from evidence_score import confidence
+    evs = [
+        {"relation_to_claim": "support", "decision_relation": "support_adoption",
+         "quality_score": 8, "quality_dimensions": {"D5_directness": 2},
+         "outcome_type": "retention", "status": "SUPPORTED", "study_id": f"S{i}",
+         "sample_id": f"P{i}"}
+        for i in range(3)
+    ] + [{"relation_to_claim": "support", "decision_relation": "oppose_adoption",
+          "quality_score": 8, "quality_dimensions": {"D5_directness": 2},
+          "outcome_type": "retention", "status": "SUPPORTED", "study_id": "S4",
+          "sample_id": "P4"}]
+    breakdown = confidence(evs)["confidence_breakdown"]
+    # relation-level consistency would be 1.0; decision-level is 3/4
+    assert breakdown["consistency"] == pytest.approx(0.75)
+    assert breakdown["conflict_penalty"] == 0.15
+
+
+def test_count_term_uses_studies_not_samples():
+    """D-1 acceptance: count_term = min(1.0, independent_studies / 4).
+
+    Multiple samples within the same study must not inflate the count term;
+    independent_samples is reported separately.
+    """
+    from evidence_score import confidence
+    one_study_two_samples = [
+        {"direction": "support", "quality_score": 8,
+         "quality_dimensions": {"D5_directness": 2},
+         "outcome_type": "retention", "status": "SUPPORTED",
+         "study_id": "S1", "sample_id": f"P{i}"}
+        for i in range(8)  # 1 study, 8 samples
+    ]
+    breakdown = confidence(one_study_two_samples)["confidence_breakdown"]
+    assert breakdown["independent_studies"] == 1
+    assert breakdown["independent_samples"] == 8
+    assert breakdown["count_term"] == pytest.approx(0.25)  # 1 / 4, not 9/8
+    four_studies = [
+        {"direction": "support", "quality_score": 8,
+         "quality_dimensions": {"D5_directness": 2},
+         "outcome_type": "retention", "status": "SUPPORTED",
+         "study_id": f"S{i}", "sample_id": f"S{i}-P1"}
+        for i in range(4)
+    ]
+    assert confidence(four_studies)["confidence_breakdown"]["count_term"] == pytest.approx(1.0)
+
+
 def test_confidence_high_for_consistent_strong_evidence():
     evs = [
         {"direction": "support", "quality_score": 8, "quality_dimensions": {"D5_directness": 2},

@@ -41,9 +41,9 @@
   },
   "confidence": "Moderate",
   "confidence_breakdown": {
-    "score": 0.602,
+    "score": 0.55,
     "evidence_quality": 0.738,
-    "consistency": 0.875,
+    "consistency": 0.667,
     "directness": 0.625,
     "evidence_count": 8,
     "independent_studies": 3,
@@ -78,8 +78,8 @@
     "'AI 写作助手对学术诚信无风险' — exceeds: no reviewed study measured academic-integrity outcomes.",
     "'AI 辅助写作的分数提升等于写作能力提升' — exceeds: task performance and independent ability are demonstrably distinct (E-003, E-005)."
   ],
-  "confidence_score": 0.602,
-  "confidence_policy_version": "2026-08-12.v1",
+  "confidence_score": 0.55,
+  "confidence_policy_version": "2026-08-12.v2",
   "independent_studies": 3,
   "independent_samples": 3,
   "raw_model_confidence": "Moderate",

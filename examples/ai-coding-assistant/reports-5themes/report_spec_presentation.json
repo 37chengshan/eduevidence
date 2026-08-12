@@ -2,8 +2,8 @@
   "generated_by": "build_report.py",
   "source": "result.json + result.zh.json",
   "question": "We are considering allowing students to use generative AI coding assistants in the first-year C programming course. Will it actually improve learning outcomes? How should it be introduced?",
-  "theme_selected": "claude",
-  "theme_display": "Claude Research [Light]",
+  "theme_selected": "presentation",
+  "theme_display": "Presentation / Judge [Dark]",
   "theme_available": [
     "claude",
     "academic",

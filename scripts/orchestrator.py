@@ -446,7 +446,8 @@ def _run_adjudicate(ws: RunWorkspace, question: str,
 
 def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, Any]:
     """Assemble result.json from workspace artifacts (decision=final_verdict.json)."""
-    from build_result import OUTCOME_ORDER, aggregate_outcomes, build_claims
+    from build_result import (NOT_CAPTURED_USAGE, OUTCOME_ORDER,
+                              aggregate_outcomes, build_claims, derive_provenance)
 
     frame = load_json(ws.path / "frame.json")
     evidence = load_jsonl(ws.path / "evidence.jsonl")
@@ -476,8 +477,7 @@ def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, An
             "complexity": frame.get("complexity") or manifest.get("depth", "M"),
             "mode": mode,
             "agents": [],
-            "usage": {"input_tokens": 0, "output_tokens": 0,
-                      "cost_usd": 0.0, "latency_s": 0.0},
+            "usage": dict(NOT_CAPTURED_USAGE),
         },
         "research_frame": frame,
         "decision": verdict,
@@ -492,7 +492,7 @@ def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, An
         "intervention": intervention,
         "evaluation": evaluation,
         "benchmark": {},
-        "provenance": {"search_provider": "n/a", "fetched_at": _utc_now()},
+        "provenance": derive_provenance(sources),
     }
 
 

@@ -8,7 +8,12 @@ Runs before final report generation. For each claim-evidence pair:
 
 Failures are marked:
     UNSUPPORTED             evidence cannot be bound to a verifiable source
+    CONTRADICT              bound evidence contradicts the claim (relation_to_claim)
     DOWNGRADE_CONFIDENCE    claim overstates the source (scope/outcome mismatch)
+
+Citation relation is judged ONLY by relation_to_claim (via
+evidence_semantics.claim_relation) — never by effect_direction or the legacy
+direction field: a negative effect can support a negative claim.
 
 Usage:
     python scripts/claim_audit.py --claims claims.jsonl --evidence evidence.jsonl
@@ -19,6 +24,8 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
+from evidence_semantics import claim_relation
 
 SUPPORTED_OUTCOMES = {
     "knowledge_gain", "concept_understanding", "retention", "transfer",
@@ -80,11 +87,13 @@ def audit_claim(claim: dict, evidence_by_id: dict[str, dict]) -> dict:
         if not ev.get("source_location"):
             result["issues"].append(f"{ev.get('evidence_id')}: missing source_location")
 
-    # 4. Source supports claim (direction must not contradict a positive claim)
+    # 4. Source supports claim (judged ONLY by relation_to_claim; a negative
+    #    effect can support a negative claim — never use effect_direction or
+    #    the legacy direction field as a citation relation)
     for ev in bound:
-        if ev.get("direction") == "contradict":
+        if claim_relation(ev) == "contradict":
             result["issues"].append(
-                f"{ev.get('evidence_id')}: evidence contradicts claim direction")
+                f"{ev.get('evidence_id')}: evidence contradicts claim (relation_to_claim=contradict)")
 
     # 5. Outcome matches
     for ev in bound:
@@ -107,9 +116,14 @@ def audit_claim(claim: dict, evidence_by_id: dict[str, dict]) -> dict:
                     f"{ev.get('evidence_id')}: claim scope {claim_scope!r} exceeds source scope {ev_scope!r}")
 
     if result["issues"]:
-        severe = any("missing source" in i or "contradicts" in i or "not found" in i
-                     for i in result["issues"])
-        result["status"] = "UNSUPPORTED" if severe else "DOWNGRADE_CONFIDENCE"
+        if any("contradicts claim" in i for i in result["issues"]):
+            # Contradiction is the dominant signal: the claim is contradicted
+            # by its own evidence, distinct from being unverifiable.
+            result["status"] = "CONTRADICT"
+        else:
+            severe = any("missing source" in i or "not found" in i
+                         for i in result["issues"])
+            result["status"] = "UNSUPPORTED" if severe else "DOWNGRADE_CONFIDENCE"
     return result
 
 
@@ -128,7 +142,7 @@ def main() -> int:
     evidence = load_records(Path(args.evidence))
     results = audit_claims(claims, evidence)
 
-    summary = {"SUPPORTED": 0, "UNSUPPORTED": 0, "DOWNGRADE_CONFIDENCE": 0}
+    summary = {"SUPPORTED": 0, "UNSUPPORTED": 0, "DOWNGRADE_CONFIDENCE": 0, "CONTRADICT": 0}
     for r in results:
         summary[r["status"]] += 1
         if r["issues"]:

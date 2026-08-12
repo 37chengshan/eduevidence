@@ -75,7 +75,7 @@ def test_integrity_not_checked_fields_are_not_true(tmp_path, monkeypatch):
 def test_integrity_fails_when_numbers_tampered(tmp_path, monkeypatch):
     import copy
     bad = copy.deepcopy(_load("examples/ai-coding-assistant/result.json"))
-    bad["outcomes"][0]["support_count"] = 99
+    bad["outcomes"][0]["positive_count"] = 99
     bad_path = tmp_path / "result-bad.json"
     bad_path.write_text(json.dumps(bad, ensure_ascii=False), encoding="utf-8")
     code, _, _ = _build(tmp_path, result=bad_path, monkeypatch=monkeypatch)
@@ -135,15 +135,15 @@ def test_best_supported_ranks_by_quality_not_first(tmp_path, monkeypatch):
     """加权评分应让高质量证据的结果排前（构造样例：后出现但质量高 → 胜出）。"""
     result = _load("examples/ai-coding-assistant/result.json")
     evidence = list(result["evidence"])
-    # 两个结果各有 1 条支持证据：先出现的质量低，后出现的质量高
+    # 两个结果各有 1 条正向效应证据：先出现的质量低，后出现的质量高
     outcomes = [
-        {"outcome_type": "knowledge_gain", "support_count": 1, "contradict_count": 0,
-         "neutral_count": 0, "evidence_ids": ["E-007"]},
-        {"outcome_type": "completion_time", "support_count": 1, "contradict_count": 0,
-         "neutral_count": 0, "evidence_ids": ["E-001"]},
+        {"outcome_type": "completion_time", "positive_count": 1, "negative_count": 0,
+         "null_count": 0, "evidence_ids": ["E-011"]},
+        {"outcome_type": "assignment_score", "positive_count": 1, "negative_count": 0,
+         "null_count": 0, "evidence_ids": ["E-001"]},
     ]
     ranked = sorted(outcomes, key=lambda o: br._outcome_support_score(evidence, o), reverse=True)
-    assert ranked[0]["outcome_type"] == "completion_time"  # E-001 质量 9 > E-007 质量 6
+    assert ranked[0]["outcome_type"] == "assignment_score"  # E-001 质量 9 > E-011 质量 6
 
 
 def test_diverging_svg_no_overlap():
@@ -180,7 +180,8 @@ def test_applicability_labels_zh(tmp_path, monkeypatch):
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     zh = re.search(r'<div class="report-shell" data-lang-body="zh">(.*?)</div>\n'
                    r'<div class="report-shell" data-lang-body="en">', html, re.S).group(1)
-    sec = re.search(r'<section id="full-04-action".*?</section>', zh, re.S).group(0)
+    import html as html_mod
+    sec = html_mod.unescape(re.search(r'<section id="full-\d+-action".*?</section>', zh, re.S).group(0))
     assert "不适用于" in sec
     assert app.get("not_suitable_for") in sec
     assert "适用条件" in sec  # required_conditions 独立标签
@@ -195,6 +196,7 @@ def test_applicability_labels_en(tmp_path, monkeypatch):
     app = result["decision"].get("applicability") or result.get("applicability") or {}
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     en = _en_shell(html)
-    sec = re.search(r'<section id="full-04-action-en".*?</section>', en, re.S).group(0)
+    import html as html_mod
+    sec = html_mod.unescape(re.search(r'<section id="full-\d+-action-en".*?</section>', en, re.S).group(0))
     assert "Not suitable for" in sec
     assert app.get("not_suitable_for") in sec

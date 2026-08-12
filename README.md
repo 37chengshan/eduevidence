@@ -32,7 +32,7 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 ```
 
 > 需要 Python 3.10+；核心零第三方依赖。学术图 PNG/PDF 导出可选装 matplotlib。
-> 安装完成后脚本会提示为项目点 star（GitHub CLI 已登录则自动执行 `gh repo star 37chengshan/eduevidence`，否则提示打开浏览器）。
+> 安装完成后脚本会提示为项目点 star（仅提示，不会自动执行任何 GitHub 操作）。
 
 ---
 
@@ -45,6 +45,12 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 bash install.sh --skill              # 交互式选择安装到哪个 Agent
 bash install.sh --list-hosts         # 查看支持的 Agent 与 Skill 落点
 bash install.sh --skill --dry-run    # 只预览将执行的变更，不写入
+```
+
+也可以不经 clone 直接远程执行：
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
 ```
 
 安装前脚本会自动备份目标目录中已有的 skill（`cp -r` 到 `.bak-<时间戳>`）；`--dry-run` 只预览不写入。
@@ -74,11 +80,10 @@ bash install.sh --skill --dry-run    # 只预览将执行的变更，不写入
 ```text
 请把 https://github.com/37chengshan/eduevidence 仓库中的 EduEvidence 安装为 skill：
 1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/、retrieval/、integrations/、visualization/ 复制到你的 skill 目录
-   （retrieval/ 与 integrations/ 是确定性运行依赖；visualization/ 是 HTML 渲染器与 5 主题）
    （如 ~/.claude/skills/eduevidence/、~/.omp/agent/skills/eduevidence/、~/.agents/skills/eduevidence/ 等），
    或按你的 skill 装载机制导入；
 2. 安装完成后确认能读取 SKILL.md，并能运行 scripts/ 下的确定性脚本；
-3. 告诉我安装结果，并提醒我为项目点 star。
+3. 告诉我安装结果。
 ```
 
 脚本在 `--skill` 安装完成后也会打印这段通用提示词。
@@ -257,7 +262,7 @@ result.json + result.zh.json（中文平行数据）
 - **双语切换**：默认中文，顶部一键切换 EN；中文模式下证据、主张、方法学审计、干预与评价全部为中文，数据同构（`result.zh.json` 与 `result.json` 键/数字/ID/URL 一致，由 AI 直接产出双语数据而非机器翻译）。
 - **执行摘要叙事**：第一屏"一句话结论"——问题 → 依据（支持/反驳证据）→ 行动（决策+置信度+理由）；每个 Section 顶部有"本节回答：…"导读行。
 - **双层分页**：可视化摘要（Visual Brief）+ 完整报告（Full Report，AI 规划 5–7 章动态结构，非固定模板）。
-- **五主题切换**（claude / academic / editorial / datalab / presentation）+ localStorage 持久化。
+- **五种风格（生成时选择，HTML 内不提供切换）**：claude [Light] / academic [Light] / datalab [Light] / datalab-dark [Dark] / presentation [Dark]，同一数据仅呈现方式不同。
 - **静态优先**：无 JS 也可读（决策/矩阵/裁决/干预/来源）；ECharts 可用时增强交互；表格横向滚动防溢出。
 - **完整性门**：图表数字与 result.json 逐项核对，`REPORT_INVALID` 时禁止发布。
 

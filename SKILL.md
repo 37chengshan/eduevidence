@@ -121,11 +121,13 @@ target: teaching_decision # evidence_review | teaching_decision | pilot_design |
 | C. 主会话直接 | 单 Agent 串行，不派发 | 快速/简单 |
 
 ### 当前会话能力检测
-- Agent MCP：● 已连接（spawn_agent 可用）/ ○ 不可用
-- 可用 CLI + 模型（不同系列各列最新，供选择；思考等级为默认值，无需确认）：
+- Agent MCP：● 已连接（spawn_agent 可用）/ ○ 未发现
+- **当前会话可用模型（主会话直接可见，两种情况都列出）**：
+  原生子代理池：task / scout / reviewer …
+- **Agent MCP 可用时**，追加列出各 CLI + 模型（不同系列各列最新，供选择；思考等级为默认值，无需确认）：
   `omp`: gpt-5.6-sol(high) · deepseek-v4-flash(max) · glm-5.2(high) · kimi-k2.7(high) …
   `codex`: <实际扫描> …
-- （无 Agent MCP 时列出宿主原生子代理池——主会话直接可见，无需探测）
+- **Agent MCP 未发现时**：不列出 CLI/模型（那是 Agent MCP 的模型选项），只推荐安装 Agent MCP（`~/.omp/agent/mcp.json` 注册 spawn_agent 后重启会话即可增强），当前用主会话原生子代理池执行。
 
 > **模型默认思考等级（主会话内置，无需用户确认）**：deepseek 系 = `max`；gpt / claude / glm / kimi / qwen / minimax / grok 系 = `high`。派发子代理时按此设置 thinking，不逐项询问。
 >
@@ -363,21 +365,26 @@ Evidence Quality + Consistency + Directness + Evidence Count
 
 ## 13 Output Contract
 
-最终输出是一个 **Research & Decision Pack**（12 部分），不是一篇文章：
+最终输出是一个 **Research & Decision Pack**，包含结构化数据产物与双层展示报告：
 
 ```text
-01 Executive Decision      最终决策卡片（四态 + Confidence + 理由）
-02 Education Research Frame 问题框架（教育问题如何被结构化理解）
-03 Evidence Summary         证据摘要（按 Outcome 分组）
-04 Evidence Matrix          证据矩阵（Claim/Outcome/Support/Contradiction/Quality/Directness/Verdict）
-05 Methodology Audit        方法学审查（15 项清单 + 任务vs学习护栏）
-06 Conflict Analysis        冲突分析（为何不同研究结论不同）
-07 Evidence Tribunal        证据裁决（Can Claim / Cannot Claim / 证据边界）
-08 Applicability            适用性（适合谁/不适合谁/必要条件/风险）
-09 Teaching Intervention    教学干预（最小可验证试点 + AI 使用规则 + 停止条件）
-10 Evaluation Plan          评价方案（基线/后测/保持测试/迁移测试/成功阈值）
-11 Claim-Evidence Trace     Claim-证据追溯链（每条结论可追溯来源）
-12 Sources                  来源清单（可验证位置）
+结构化数据产物（每步 Schema 校验）：
+  frame.json       问题框架（学习者/课程/干预/对照/Outcome/范围/纳入排除标准）
+  sources.jsonl    来源清单（可验证位置 + fetch 溯源）
+  evidence.jsonl   Claim 级证据（relation_to_claim / effect_direction / decision_relation）
+  methodology.json 方法学审计（15 项清单 + 任务vs学习护栏）
+  raw_verdict.json LLM 裁决（supported/uncertain/contradicted + 证据边界）
+  final_verdict.json 确定性置信度裁决（compute_confidence 覆盖模型值）
+  intervention.json 教学干预（最小可验证试点 + AI 使用规则 + 停止条件）
+  evaluation.json  评价方案（基线/后测/保持测试/迁移测试/成功阈值）
+  result.json      聚合结果（outcomes 按 effect_direction 聚合；claims 稳定 claim_id）
+  result.zh.json   中文平行版
+  artifact_manifest.json  产物一致性清单（result hash / renderer / git commit）
+
+展示报告（同一数据两种呈现）：
+  EduEvidence_Report.html  单文件离线双语（Visual Brief + Full Report 双分页，
+                            5-7 章动态结构，五种风格生成时选择）
+  RESEARCH.md              Markdown 版研究包
 ```
 
 每个结构化产出（Frame / Evidence / Methodology / Verdict / Intervention / Evaluation）必须通过对应 JSON Schema 校验（`schemas/*.schema.json`），可运行 `scripts/validate_schema.py` 验证。

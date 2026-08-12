@@ -64,6 +64,7 @@ CLAIM_STATUS_ZH = {
     "SUPPORTED": "已支持",
     "UNSUPPORTED": "无支撑",
     "DOWNGRADE_CONFIDENCE": "降级置信度",
+    "CONTRADICT": "被反驳",
 }
 
 VERDICT_ZH = {
@@ -149,6 +150,7 @@ STATUS_EN = {
     "SUPPORTED": "Supported",
     "UNSUPPORTED": "Unsupported",
     "DOWNGRADE_CONFIDENCE": "Confidence downgraded",
+    "CONTRADICT": "Contradicted",
 }
 VERDICT_EN = {
     "met": "Met", "partial": "Partial", "not_applicable": "N/A",

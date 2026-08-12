@@ -2,7 +2,7 @@
   "meta": {
     "skill": "eduevidence",
     "version": "1.0.0",
-    "generated_at": "2026-08-12T09:32:36.867114+00:00",
+    "generated_at": "2026-08-12T12:36:07.854129+00:00",
     "mode": "platform_native",
     "question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？应当如何引入？"
   },
@@ -11,10 +11,11 @@
     "mode": "platform_native",
     "agents": [],
     "usage": {
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cost_usd": 0.0,
-      "latency_s": 0.0
+      "measurement_status": "NOT_CAPTURED",
+      "input_tokens": null,
+      "output_tokens": null,
+      "cost_usd": null,
+      "latency_s": null
     }
   },
   "research_frame": {
@@ -124,9 +125,9 @@
     },
     "confidence": "Moderate",
     "confidence_breakdown": {
-      "score": 0.602,
+      "score": 0.55,
       "evidence_quality": 0.738,
-      "consistency": 0.875,
+      "consistency": 0.667,
       "directness": 0.625,
       "evidence_count": 8,
       "independent_studies": 3,
@@ -161,8 +162,8 @@
       "'AI 写作助手对学术诚信无风险' — exceeds: no reviewed study measured academic-integrity outcomes.",
       "'AI 辅助写作的分数提升等于写作能力提升' — exceeds: task performance and independent ability are demonstrably distinct (E-003, E-005)."
     ],
-    "confidence_score": 0.602,
-    "confidence_policy_version": "2026-08-12.v1",
+    "confidence_score": 0.55,
+    "confidence_policy_version": "2026-08-12.v2",
     "independent_studies": 3,
     "independent_samples": 3,
     "raw_model_confidence": "Moderate",
@@ -180,9 +181,9 @@
   "outcomes": [
     {
       "outcome_type": "knowledge_gain",
-      "support_count": 2,
-      "contradict_count": 0,
-      "neutral_count": 0,
+      "positive_count": 2,
+      "negative_count": 0,
+      "null_count": 0,
       "evidence_ids": [
         "E-001",
         "E-008"
@@ -190,9 +191,9 @@
     },
     {
       "outcome_type": "independent_problem_solving",
-      "support_count": 1,
-      "contradict_count": 1,
-      "neutral_count": 0,
+      "positive_count": 0,
+      "negative_count": 1,
+      "null_count": 1,
       "evidence_ids": [
         "E-003",
         "E-004"
@@ -200,18 +201,18 @@
     },
     {
       "outcome_type": "assignment_score",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0,
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0,
       "evidence_ids": [
         "E-005"
       ]
     },
     {
       "outcome_type": "engagement",
-      "support_count": 2,
-      "contradict_count": 0,
-      "neutral_count": 0,
+      "positive_count": 2,
+      "negative_count": 0,
+      "null_count": 0,
       "evidence_ids": [
         "E-002",
         "E-007"
@@ -219,9 +220,9 @@
     },
     {
       "outcome_type": "ai_dependency",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0,
+      "positive_count": 0,
+      "negative_count": 1,
+      "null_count": 0,
       "evidence_ids": [
         "E-006"
       ]
@@ -231,6 +232,7 @@
     {
       "claim": "Using ChatGPT as a formative feedback tool significantly improved university ESL students' academic writing skills across pre/post/delayed tests.",
       "outcome_type": "knowledge_gain",
+      "claim_id": "C-001",
       "evidence_ids": [
         "E-001"
       ],
@@ -239,6 +241,7 @@
     {
       "claim": "Students reported positive perceptions of ChatGPT as a feedback tool, using it to improve assignment quality and writing efficiency.",
       "outcome_type": "engagement",
+      "claim_id": "C-002",
       "evidence_ids": [
         "E-002"
       ],
@@ -247,6 +250,7 @@
     {
       "claim": "Unguarded generative AI access (GPT Base) improved practice performance (+48%) but lowered independent exam performance by 17% relative to control — contradicting the claim that AI access reliably improves independent performance.",
       "outcome_type": "independent_problem_solving",
+      "claim_id": "C-003",
       "evidence_ids": [
         "E-003"
       ],
@@ -255,6 +259,7 @@
     {
       "claim": "Teacher-designed guardrails (GPT Tutor: hints instead of answers) largely eliminated the negative effect of AI on independent exam performance.",
       "outcome_type": "independent_problem_solving",
+      "claim_id": "C-004",
       "evidence_ids": [
         "E-004"
       ],
@@ -263,6 +268,7 @@
     {
       "claim": "Task performance during practice improves sharply with AI access (+48% GPT Base, +127% GPT Tutor), yet these gains do not transfer to independent exam performance — assignment/writing scores must not be equated with independent ability.",
       "outcome_type": "assignment_score",
+      "claim_id": "C-005",
       "evidence_ids": [
         "E-005"
       ],
@@ -271,6 +277,7 @@
     {
       "claim": "Students treated unguarded GPT Base as a crutch during practice, and this reliance was associated with worse independent performance — a documented AI dependency mechanism.",
       "outcome_type": "ai_dependency",
+      "claim_id": "C-006",
       "evidence_ids": [
         "E-006"
       ],
@@ -279,6 +286,7 @@
     {
       "claim": "GPT-4 interactive homework produced higher student satisfaction and stronger intention to continue using it than traditional homework.",
       "outcome_type": "engagement",
+      "claim_id": "C-007",
       "evidence_ids": [
         "E-007"
       ],
@@ -287,6 +295,7 @@
     {
       "claim": "Replacing traditional homework with GPT-4 interactive homework did not harm learning outcomes, and one group achieved significantly better learning gains.",
       "outcome_type": "knowledge_gain",
+      "claim_id": "C-008",
       "evidence_ids": [
         "E-008"
       ],
@@ -374,7 +383,13 @@
         "scope": "short_term_writing_skill_gain"
       },
       "confidence": 0.65,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-MARZUKI-2024",
+      "sample_id": "SMPL-MARZUKI-2024-N72",
+      "decision_relation": "support_adoption",
+      "claim_id": "C-001"
     },
     {
       "evidence_id": "E-002",
@@ -424,7 +439,13 @@
         "scope": "perceived_engagement_and_usefulness"
       },
       "confidence": 0.55,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-MARZUKI-2024",
+      "sample_id": "SMPL-MARZUKI-2024-N72",
+      "decision_relation": "support_adoption",
+      "claim_id": "C-002"
     },
     {
       "evidence_id": "E-003",
@@ -476,7 +497,13 @@
         "scope": "risk_warning_principle_transferable_across_subjects"
       },
       "confidence": 0.75,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "contradict",
+      "effect_direction": "negative",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
+      "decision_relation": "oppose_adoption",
+      "claim_id": "C-003"
     },
     {
       "evidence_id": "E-004",
@@ -526,7 +553,13 @@
         "scope": "guardrail_effect_on_independent_performance"
       },
       "confidence": 0.75,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "null",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
+      "decision_relation": "conditional",
+      "claim_id": "C-004"
     },
     {
       "evidence_id": "E-005",
@@ -575,7 +608,13 @@
         "scope": "task_performance_vs_independent_performance_separation"
       },
       "confidence": 0.75,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
+      "decision_relation": "conditional",
+      "claim_id": "C-005"
     },
     {
       "evidence_id": "E-006",
@@ -624,7 +663,13 @@
         "scope": "risk_mechanism_transferable_to_any_subject"
       },
       "confidence": 0.6,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "negative",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
+      "decision_relation": "oppose_adoption",
+      "claim_id": "C-006"
     },
     {
       "evidence_id": "E-007",
@@ -677,7 +722,13 @@
         "scope": "engagement_in_homework_tasks"
       },
       "confidence": 0.65,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-LEE-2025",
+      "sample_id": "SMPL-LEE-2025-4CLASSES",
+      "decision_relation": "support_adoption",
+      "claim_id": "C-007"
     },
     {
       "evidence_id": "E-008",
@@ -729,7 +780,13 @@
         "scope": "short_term_learning_outcomes"
       },
       "confidence": 0.65,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-LEE-2025",
+      "sample_id": "SMPL-LEE-2025-4CLASSES",
+      "decision_relation": "support_adoption",
+      "claim_id": "C-008"
     }
   ],
   "methodology_reviews": [
@@ -1193,7 +1250,6 @@
   },
   "benchmark": {},
   "provenance": {
-    "search_provider": "n/a",
-    "fetched_at": "2026-08-12T09:32:36.867450+00:00"
+    "search_provider": "n/a"
   }
 }

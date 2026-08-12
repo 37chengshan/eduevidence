@@ -23,6 +23,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from evidence_semantics import effect_direction
+
 OUTCOME_ORDER = [
     "knowledge_gain", "concept_understanding", "retention", "transfer",
     "independent_problem_solving", "completion_time", "accuracy",
@@ -45,40 +47,84 @@ def _load_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+NOT_CAPTURED_USAGE: dict[str, Any] = {
+    "measurement_status": "NOT_CAPTURED",
+    "input_tokens": None,
+    "output_tokens": None,
+    "cost_usd": None,
+    "latency_s": None,
+}
+
+
+def derive_provenance(sources: list[dict[str, Any]]) -> dict[str, Any]:
+    """Aggregate provenance from real Source.fetch records (P1-3).
+
+    fetched_at only appears when an actual fetch recorded it (sources[].fetch.
+    fetched_at); the result-assembly time is reported as meta.generated_at and
+    must never be passed off as a fetch time. Unknown values stay unknown.
+    """
+    fetched = [
+        s["fetch"]["fetched_at"] for s in sources
+        if isinstance(s.get("fetch"), dict) and s["fetch"].get("fetched_at")
+    ]
+    providers = sorted({
+        s["fetch"]["fetch_provider"] for s in sources
+        if isinstance(s.get("fetch"), dict) and s["fetch"].get("fetch_provider")
+    })
+    provenance: dict[str, Any] = {"search_provider": ", ".join(providers) if providers else "n/a"}
+    if fetched:
+        provenance["fetched_at"] = min(fetched)
+    return provenance
+
+
 def aggregate_outcomes(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Outcome-level aggregation keyed by effect_direction (C-1).
+
+    Outcome rows carry positive_count / negative_count / null_count (based on
+    effect_direction) — not support/contradict counts, which are claim-level
+    semantics and only belong in the claim trace (relation_to_claim).
+    """
     by_outcome: dict[str, dict[str, Any]] = {}
     for ev in evidence:
         outcome = ev.get("outcome_type", "unknown")
         row = by_outcome.setdefault(outcome, {
-            "outcome_type": outcome, "support_count": 0,
-            "contradict_count": 0, "neutral_count": 0, "evidence_ids": [],
+            "outcome_type": outcome, "positive_count": 0,
+            "negative_count": 0, "null_count": 0, "evidence_ids": [],
         })
-        direction = ev.get("direction", "neutral")
-        if direction == "support":
-            row["support_count"] += 1
-        elif direction == "contradict":
-            row["contradict_count"] += 1
+        effect = effect_direction(ev)
+        if effect == "positive":
+            row["positive_count"] += 1
+        elif effect == "negative":
+            row["negative_count"] += 1
         else:
-            row["neutral_count"] += 1
+            row["null_count"] += 1
         row["evidence_ids"].append(ev.get("evidence_id", ""))
     return [by_outcome[o] for o in OUTCOME_ORDER if o in by_outcome]
 
 
 def build_claims(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Claim-level rows bound to evidence (Claim-Evidence Contract, A-3).
+
+    claim_id comes from the evidence objects themselves (first-class field of
+    the Evidence Contract), so Claim -> Evidence -> Source never depends on
+    render-time renumbering. Legacy evidence without claim_id falls back to a
+    deterministic C-{idx:03d} sequence.
+    """
     claims: dict[str, dict[str, Any]] = {}
-    for ev in evidence:
+    for idx, ev in enumerate(evidence, 1):
         claim = ev.get("claim", "")
         outcome = ev.get("outcome_type", "")
         key = (claim, outcome)
         row = claims.setdefault(key, {
             "claim": claim, "outcome_type": outcome,
+            "claim_id": ev.get("claim_id") or f"C-{idx:03d}",
             "evidence_ids": [], "status": "SUPPORTED",
         })
         row["evidence_ids"].append(ev.get("evidence_id", ""))
-        if ev.get("status") == "UNSUPPORTED":
-            row["status"] = "UNSUPPORTED"
-        elif ev.get("status") == "DOWNGRADE_CONFIDENCE" and row["status"] != "UNSUPPORTED":
-            row["status"] = "DOWNGRADE_CONFIDENCE"
+        status = ev.get("status")
+        rank = {"CONTRADICT": 3, "UNSUPPORTED": 2, "DOWNGRADE_CONFIDENCE": 1}.get(status, 0)
+        if rank > {"CONTRADICT": 3, "UNSUPPORTED": 2, "DOWNGRADE_CONFIDENCE": 1}.get(row["status"], 0):
+            row["status"] = status
     return list(claims.values())
 
 
@@ -116,7 +162,7 @@ def build_result(pack_dir: Path, *, mode: str = "platform_native") -> dict[str, 
         "complexity": frame.get("complexity", "M"),
         "mode": mode,
         "agents": [],
-        "usage": {"input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0, "latency_s": 0.0},
+        "usage": dict(NOT_CAPTURED_USAGE),
     }
 
     result = {
@@ -141,7 +187,7 @@ def build_result(pack_dir: Path, *, mode: str = "platform_native") -> dict[str, 
         "intervention": intervention,
         "evaluation": evaluation,
         "benchmark": {},
-        "provenance": {"search_provider": "n/a", "fetched_at": datetime.now(timezone.utc).isoformat()},
+        "provenance": derive_provenance(sources),
     }
     return result
 

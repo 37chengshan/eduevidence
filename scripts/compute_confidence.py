@@ -6,15 +6,17 @@ verdict plus the evidence registry and OVERRIDES the model's confidence values
 with the deterministic rule-based computation, so the final verdict's
 confidence is reproducible and auditable rather than model-generated.
 
-Formula (identical policy to evidence_score.confidence, with the evidence
-count term weighted by independent studies AND independent samples):
+Formula (identical policy to evidence_score.confidence, v2 — D-1/D-2):
 
     score = 0.30 * Evidence Quality + 0.25 * Consistency + 0.20 * Directness
-            + 0.25 * Evidence Count (study/sample-weighted)
+            + 0.25 * Evidence Count (independent-study weighted)
             - Conflict Penalty - Unsupported Penalty
 
-where Evidence Count = min(1.0, (independent_studies + independent_samples) / 8),
-Conflict Penalty = 0.15 if any contradicting evidence exists, and
+where Evidence Count = min(1.0, independent_studies / 4) — independent_samples
+is reported separately instead of being added to the count term —,
+Consistency is computed over decision_relation (support_adoption /
+oppose_adoption / conditional / neutral) rather than relation_to_claim,
+Conflict Penalty = 0.15 if any evidence opposes adoption, and
 Unsupported Penalty = min(0.20, 0.05 * n_unsupported).
 
 IMPORTANT: confidence_score is a rule-based index in [0, 1], NOT a
@@ -38,9 +40,10 @@ import json
 import sys
 from pathlib import Path
 
-from evidence_score import (CONFIDENCE_POLICY_VERSION, consistency_score,
-                            directness_score, direction_of,
+from evidence_score import (CONFIDENCE_POLICY_VERSION,
+                            decision_consistency_score, directness_score,
                             independent_samples, independent_studies)
+from evidence_semantics import decision_relation
 
 
 def compute_confidence(evidence_list: list[dict], *, target_outcome: str | None = None) -> dict:
@@ -63,20 +66,24 @@ def compute_confidence(evidence_list: list[dict], *, target_outcome: str | None 
     avg_quality = sum(numeric) / len(numeric) if numeric else 0.0
     quality_term = avg_quality / 10.0
 
-    # 2. Consistency (relation_to_claim preferred, legacy direction fallback)
-    directions = [direction_of(e) for e in evidence_list]
-    consistency = consistency_score(directions)
+    # 2. Consistency (decision_relation based, D-2): claim-level evidence is
+    #    usually extracted to support its claim, so relation_to_claim would
+    #    overstate agreement about the final teaching decision.
+    decisions = [decision_relation(e) for e in evidence_list]
+    consistency = decision_consistency_score(decisions)
 
     # 3. Directness (0-2 -> 0-1)
     directness = directness_score(evidence_list) / 2.0
 
-    # 4. Evidence count weighted by independent studies AND independent samples
+    # 4. Evidence count weighted by independent studies only (D-1): a typical
+    #    study is 1 study + 1 sample, so adding independent_samples would count
+    #    the same study twice. independent_samples is reported separately.
     studies = independent_studies(evidence_list)
     samples = independent_samples(evidence_list)
-    count_term = min(1.0, (studies + samples) / 8.0)
+    count_term = min(1.0, studies / 4.0)
 
-    # 5. Conflict penalty (0.15 when contradiction exists)
-    conflict_penalty = 0.15 if "contradict" in directions else 0.0
+    # 5. Conflict penalty (0.15 when any evidence opposes adoption)
+    conflict_penalty = 0.15 if "oppose_adoption" in decisions else 0.0
 
     # 6. Unsupported penalty (capped at 0.20)
     unsupported = [e for e in evidence_list if e.get("status") in ("UNSUPPORTED", "DOWNGRADE_CONFIDENCE")]

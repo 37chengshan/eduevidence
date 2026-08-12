@@ -845,8 +845,8 @@ Agent MCP payload/fallback: 5+
 
 1. **静态优先方向正确**：即使没有 ECharts，核心决策 / Matrix / Tribunal / Intervention / Source 仍有 HTML / SVG fallback。
 2. **单文件离线输出适合比赛演示和研究交付**。
-3. **Claude / Academic / Editorial / Datalab / Presentation 五主题**适合不同用户场景。
-4. **12 Section 结构完整**，从 Executive Decision 到 Sources & Provenance 的阅读路径合理。
+3. **Claude Research [Light] / Academic Paper [Light] / DataLab [Light] / DataLab [Dark] / Presentation / Judge [Dark] 五主题**覆盖研究阅读、论文、分析工作台与评审展示等不同用户场景。
+4. **双层报告结构完整**：Visual Brief 负责快速理解，Full Report 由 12 个语义模块动态组织为 5–7 章，并保持 Decision → Evidence → Source 的完整追溯路径。
 5. Table 使用 `overflow-x:auto`，至少考虑了小屏溢出。
 6. Figure / Infographic / ECharts 被分成不同 adapter，展示层没有直接回写研究核心数据，架构方向正确。
 

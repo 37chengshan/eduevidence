@@ -71,14 +71,14 @@ def render_decision(decision: dict) -> str:
 def render_outcomes(outcomes: list[dict]) -> str:
     if not outcomes:
         return "<p>无 Outcome 数据。</p>"
-    rows = ["<table class='data-table'><thead><tr><th>Outcome</th><th>支持</th>"
-            "<th>反驳</th><th>中性</th></tr></thead><tbody>"]
+    rows = ["<table class='data-table'><thead><tr><th>Outcome</th><th>正向效应</th>"
+            "<th>负向效应</th><th>零效应</th></tr></thead><tbody>"]
     for o in outcomes:
         rows.append(
             f"<tr><td>{esc(o.get('outcome_type'))}</td>"
-            f"<td class='num'>{o.get('support_count', 0)}</td>"
-            f"<td class='num'>{o.get('contradict_count', 0)}</td>"
-            f"<td class='num'>{o.get('neutral_count', 0)}</td></tr>")
+            f"<td class='num'>{o.get('positive_count', 0)}</td>"
+            f"<td class='num'>{o.get('negative_count', 0)}</td>"
+            f"<td class='num'>{o.get('null_count', 0)}</td></tr>")
     rows.append("</tbody></table>")
     return "\n".join(rows)
 

@@ -30,11 +30,14 @@
         "usage": {
           "type": "object",
           "additionalProperties": false,
+          "required": ["measurement_status"],
+          "description": "Token/cost usage. Unknown values are null with measurement_status=NOT_CAPTURED; never fabricate 0 as a real measurement (P1-3).",
           "properties": {
-            "input_tokens": { "type": "integer" },
-            "output_tokens": { "type": "integer" },
-            "cost_usd": { "type": "number" },
-            "latency_s": { "type": "number" }
+            "measurement_status": { "type": "string", "enum": ["NOT_CAPTURED"], "description": "NOT_CAPTURED: usage was not measured by the pipeline." },
+            "input_tokens": { "type": ["integer", "null"] },
+            "output_tokens": { "type": ["integer", "null"] },
+            "cost_usd": { "type": ["number", "null"] },
+            "latency_s": { "type": ["number", "null"] }
           }
         }
       }
@@ -43,15 +46,15 @@
     "decision": { "type": "object", "description": "EducationVerdict (see verdict.schema.json)." },
     "outcomes": {
       "type": "array",
-      "description": "Outcome-level aggregation: per outcome type, direction counts and evidence ids.",
+      "description": "Outcome-level aggregation: per outcome type, effect_direction counts (positive/negative/null) and evidence ids.",
       "items": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "outcome_type": { "type": "string" },
-          "support_count": { "type": "integer" },
-          "contradict_count": { "type": "integer" },
-          "neutral_count": { "type": "integer" },
+          "positive_count": { "type": "integer" },
+          "negative_count": { "type": "integer" },
+          "null_count": { "type": "integer" },
           "evidence_ids": { "type": "array", "items": { "type": "string" } }
         }
       }
@@ -68,7 +71,7 @@
           "claim": { "type": "string" },
           "outcome_type": { "type": "string" },
           "evidence_ids": { "type": "array", "items": { "type": "string" } },
-          "status": { "type": "string", "enum": ["SUPPORTED", "UNSUPPORTED", "DOWNGRADE_CONFIDENCE"] }
+          "status": { "type": "string", "enum": ["SUPPORTED", "UNSUPPORTED", "DOWNGRADE_CONFIDENCE", "CONTRADICT"] }
         }
       }
     },

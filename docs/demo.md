@@ -56,6 +56,8 @@ Verdict = `PILOT`，置信度 `Moderate`（证据方向基本一致但 retention
 | 155-170s | Intervention + Evaluation | 阶段化 PILOT 规则 + 8 周评估设计（Retention/Transfer/无 AI 测验） |
 | 170-180s | Benchmark | 收尾展示 B2 vs B3 vs B4 指标对比，说明"没有方法学就不会有刚才那套结论" |
 
+> 报告主题在生成前从五种中选定：`claude`[Light] / `academic`[Light] / `datalab`[Light] / `datalab-dark`[Dark] / `presentation`[Dark]；最终 HTML 不提供主题切换，仅保留中英文切换。五种主题预览见 `examples/ai-coding-assistant/reports-5themes/`（本次演示使用默认 `claude`）。
+
 ## 四、UI 五页面设计
 
 | 页面 | 核心组件 | 交互亮点 |

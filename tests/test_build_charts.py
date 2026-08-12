@@ -86,12 +86,13 @@ def test_bilingual_specs_same_numbers():
 
 
 def test_claim_trace_binds_all_ids():
-    """trace 图的节点必须覆盖 claims/evidence/sources。"""
+    """trace 图的节点必须覆盖 claims/evidence，以及被 evidence 引用的 sources。"""
     result = _load("examples/ai-coding-assistant/result.json")
     spec = build_all(result, lang="en")
     trace = next(c for c in spec["charts"] if c["chart_id"] == "claim-evidence-trace")
     nodes = {n["id"] for n in trace["option"]["series"][0]["data"]}
     for ev in result["evidence"]:
         assert ev["evidence_id"] in nodes
-    for src in result["sources"]:
-        assert src["source_id"] in nodes
+        # evidence 引用的来源必须出现在图中
+        if ev.get("source_id"):
+            assert ev["source_id"] in nodes

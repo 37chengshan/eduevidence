@@ -14,7 +14,7 @@ EduEvidence 将完整证据流程拆成八个独立职责（Role），每个角�
 | 4 | Skeptic | 主动寻找负面结果、反驳证据、未发现与 confounder | Contradiction List、Knowledge Gap |
 | 5 | Method Reviewer | 审计每篇研究的方法学质量，检查"任务完成≠学习" | Methodology Audit（PASS/CONCERN/FAIL） |
 | 6 | Evidence Judge | 汇总证据、判定结论、输出 Verdict 与置信度 | Education Verdict + Confidence |
-| 7 | Intervention Designer | 把 Verdict 落成最小可验证干预（先 PILOT） | Teaching Intervention Plan |
+| 7 | Intervention Designer | 把 Verdict 落成最小可验证干预（默认偏向最小可验证 PILOT） | Teaching Intervention Plan |
 | 8 | Evaluation Designer | 为试点设计评估方案，分离 Task vs Learning | Evaluation Plan |
 
 ### 1.1 角色数量 ≠ Agent 数量
@@ -33,12 +33,12 @@ EduEvidence 将完整证据流程拆成八个独立职责（Role），每个角�
 
 ## 二、Complexity Gate：S/M/L 判级与执行路径
 
-先给教育问题分级，再决定投入多少证据流程深度，避免"小题大做"或"大题浅做"。
+先给教育问题分级，再决定投入多少证据流程深度，避免"小题大做"或"大题浅做"。步骤命名统一采用完整 10 步工作流（`SKILL.md` §6 与 `docs/architecture.md` §1.2）：1 Frame / 2 Retrieve / 3 Fetch / 4 Validate / 5 Extract / 6 Challenge / 7 Audit / 8 Adjudicate / 9 Design（Applicability + Intervention + Evaluation）/ 10 Present；EvidenceFlow Core = Frame → … → Adjudicate，Decision Extension = Applicability → Intervention → Evaluation。
 
 | 级别 | 判定条件（满足其一即升级） | 执行路径 |
 |------|------------------------------|----------|
-| **S（Small）** | 单门课程内的常规教学决策；现有证据充足；无高风险后果 | 快速路径：Frame → Retrieve（少量）→ Extract（≤5 条）→ Verdict；可跳过完整 Skeptic 与 Method Reviewer，用规则化置信度兜底 |
-| **M（Medium）** | 跨课程/跨专业适用；存在正反两派证据；涉及评价体系变更 | 标准路径：Frame → Retrieve → Extract → Challenge → Audit → Adjudicate，八角色全走一遍 |
+| **S（Small）** | 单门课程内的常规教学决策；现有证据充足；无高风险后果 | 快速路径：Frame → Retrieve（少量）→ Fetch/Validate（关键来源）→ Extract（≤5 条）→ Verdict；可跳过完整 Skeptic 与 Method Reviewer，用规则化置信度兜底 |
+| **M（Medium）** | 跨课程/跨专业适用；存在正反两派证据；涉及评价体系变更 | 标准路径：Frame → Retrieve → Fetch/Validate → Extract → Challenge → Audit → Adjudicate，八角色全走一遍 |
 | **L（Large）** | 全校/培养方案级决策；涉及学术诚信政策；证据高度冲突或缺失 | 深度路径：标准路径 + 系统化检索（含反向检索）+ 独立 Skeptic 与双人 Method Review + Intervention 与 Evaluation 设计强制产出 |
 
 ### 2.1 判级输入
@@ -97,6 +97,6 @@ Confidence Score = Evidence Quality
 2. **短期 ≠ 长期**：Immediate 效应必须与 Retention、Transfer 分开报告。
 3. **无对照组 ≠ 因果**：没有 control_group 或 randomization 的研究降级证据等级。
 4. **负面结果必须收录**：Skeptic 检索到的 null/negative 结果计入 Consistency 与 Conflict Penalty。
-5. **先 PILOT 后 ADOPT**：Intervention Designer 默认产出 Pilot，ADOPT 必须同时附带 Evaluation Design。
+5. **默认偏向最小可验证 PILOT**：Intervention Designer 默认产出最小可验证 Pilot；只有关键 Outcome 存在较强直接证据、风险可控且场景高度匹配时才允许 ADOPT（且必须附带 Evaluation Design）。
 
 八角色协议、Complexity Gate 与规则化置信度共同构成 EduEvidence 的方法学骨架，是 Benchmark（docs/benchmark.md）中被 A/B 验证的核心变量。

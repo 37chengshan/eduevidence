@@ -100,3 +100,26 @@ opencodex (1)
     assert "opencode-go/deepseek-v4-flash" in records
     assert "opencode-go/glm-5.2" in records
     assert "opencodex/pro/gpt-5.6-sol" in records
+
+
+def test_render_markdown_no_agent_mcp_lists_only_session_pool():
+    """无 Agent MCP 时不列 CLI/模型，只列主会话可见池 + 安装提示。"""
+    from startup_probe import render_markdown
+    report = {"agent_mcp": {"configured": False},
+              "clis": {"omp": {"available": True, "models": [{"model": "x/gpt-5.6-sol", "thinking": "high"}]}}}
+    out = render_markdown(report)
+    assert "○ 未发现" in out
+    assert "原生子代理池 task / scout / reviewer" in out
+    assert "gpt-5.6-sol" not in out  # 不列 CLI/模型
+    assert "推荐先安装 Agent MCP" in out
+
+
+def test_render_markdown_with_agent_mcp_lists_cli_models():
+    """有 Agent MCP 时列出会话池 + 各 CLI 模型。"""
+    from startup_probe import render_markdown
+    report = {"agent_mcp": {"configured": True},
+              "clis": {"omp": {"available": True, "models": [{"model": "opencodex/gpt-5.6-sol", "thinking": "high"}]}}}
+    out = render_markdown(report)
+    assert "● 已连接" in out
+    assert "原生子代理池" in out
+    assert "opencodex/gpt-5.6-sol" in out

@@ -42,6 +42,7 @@ from zh_labels import label
 THEMES_DIR = Path(__file__).resolve().parent.parent / "themes"
 MOTION_DIR = Path(__file__).resolve().parent.parent / "motion"
 THEME_NAMES = ("claude", "academic", "datalab", "datalab-dark", "presentation")
+RENDERER_VERSION = "1.0.0"  # must match pyproject.toml version; recorded in artifact manifest
 THEME_DISPLAY = {
     "claude": "Claude Research [Light]",
     "academic": "Academic Paper [Light]",
@@ -546,11 +547,11 @@ def check_numbers(result: dict, charts: dict) -> list[str]:
     problems: list[str] = []
     evidence = {e.get("evidence_id"): e for e in result.get("evidence", [])}
     for outcome in result.get("outcomes", []):
-        dirs = [evidence[eid].get("direction") for eid in outcome.get("evidence_ids", [])
-                if eid in evidence]
-        derived = {k: dirs.count(k) for k in ("support", "contradict", "neutral")}
-        for key, field in (("support", "support_count"), ("contradict", "contradict_count"),
-                           ("neutral", "neutral_count")):
+        effects = [str(evidence[eid].get("effect_direction") or "null").lower()
+                   for eid in outcome.get("evidence_ids", []) if eid in evidence]
+        derived = {k: effects.count(k) for k in ("positive", "negative", "null")}
+        for key, field in (("positive", "positive_count"), ("negative", "negative_count"),
+                           ("null", "null_count")):
             if derived.get(key, 0) != outcome.get(field, 0):
                 problems.append(
                     f"outcome {outcome.get('outcome_type')!r}: {field}={outcome.get(field)} "
@@ -605,6 +606,8 @@ TEXT_LEAF_KEYS = {
     "learner_match", "subject_match", "tool_match", "scope",
     "measured_construct", "teacher_role", "student_role", "reflection_requirement",
     "assessment",
+    "prior_knowledge", "ai_tool", "time_range", "source_location", "search_snippet",
+    "pilot_duration",
 }
 PROSE_LIST_KEYS = {
     "supported_claims", "uncertain_claims", "contradicted_claims", "what_can_be_claimed",
@@ -612,6 +615,7 @@ PROSE_LIST_KEYS = {
     "learning_goals", "inclusion_criteria", "exclusion_criteria", "activities",
     "stop_conditions", "strengths", "limitations", "confounders", "required_conditions",
     "process_metrics", "learning_metrics", "risk_metrics", "suggestions", "risk_control",
+    "evidence_alignment",
 }
 
 
@@ -999,7 +1003,8 @@ def _outcome_support_score(evidence: list[dict], outcome: dict) -> float:
     用于第一屏「证据最充分的结果」排序，不再取第一个满足条件者。"""
     by_study: dict[str, list[dict]] = {}
     for e in evidence:
-        if e.get("outcome_type") == outcome.get("outcome_type") and e.get("direction") == "support":
+        relation = e.get("relation_to_claim") or e.get("direction") or "neutral"
+        if e.get("outcome_type") == outcome.get("outcome_type") and relation == "support":
             by_study.setdefault(e.get("study_id") or e.get("source_id") or "?", []).append(e)
     score = 0.0
     for study, items in by_study.items():
@@ -1019,7 +1024,7 @@ def first_screen(result: dict, lang: str, ui: dict) -> str:
     outcomes = result.get("outcomes", [])
     evidence = result.get("evidence", [])
     ranked = sorted(outcomes, key=lambda o: _outcome_support_score(evidence, o), reverse=True)
-    best_type = next((o.get("outcome_type") for o in ranked if o.get("support_count", 0) > 0), None)
+    best_type = next((o.get("outcome_type") for o in ranked if o.get("positive_count", 0) > 0), None)
     supported_claims = decision.get("supported_claims") or []
     can_claim = decision.get("what_can_be_claimed") or []
     uncertain_claims = decision.get("uncertain_claims") or []
@@ -2199,16 +2204,19 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
 
 def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: dict,
                 infographics_zh: dict, infographics_en: dict, figures_zh: dict,
-                figures_en: dict, theme: str, viz: dict) -> str:
+                figures_en: dict, theme: str, viz: dict,
+                result_sha256: str = "") -> str:
     # Theme is fixed at generation time; language remains switchable in the HTML.
     body_zh = render_body(result_zh, "zh", UI_ZH, charts_zh, infographics_zh, figures_zh, viz, theme)
     body_en = render_body(result_en, "en", UI_EN, charts_en, infographics_en, figures_en, viz, theme)
+    hash_meta = (f'<meta name="eduevidence-result-sha256" content="{esc(result_sha256)}">\n'
+                 if result_sha256 else "")
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN" data-theme="{esc(theme)}">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{hash_meta}<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(result_zh.get("meta", {}).get("question") or result_en.get("meta", {}).get("question") or "EduEvidence Evidence Report")}</title>
 <style>
 {_theme_css()}
@@ -2515,6 +2523,62 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 # 7. Entry point
 # ---------------------------------------------------------------------------
 
+RESULT_HASH_META = re.compile(r'<meta name="eduevidence-result-sha256" content="([0-9a-f]{64})"')
+
+
+def file_sha256(path: Path) -> str:
+    import hashlib
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def embedded_result_hash(html_path: Path) -> str:
+    """读取 HTML 内嵌的 result.json SHA-256（HTML-03 一致性校验）。"""
+    text = Path(html_path).read_text(encoding="utf-8")
+    m = RESULT_HASH_META.search(text)
+    if not m:
+        raise ValueError(f"{html_path}: missing embedded eduevidence-result-sha256")
+    return m.group(1)
+
+
+def write_artifact_manifest(result_path: Path, result_zh_path: Path, html_paths: list[Path],
+                            renderer_version: str, git_commit: str, out_path: Path) -> dict:
+    """HTML-03 Artifact Manifest：5 个 HTML 必须内嵌同一 result.json hash。
+
+    校验每个 HTML 的 embedded hash == result.json 实际 hash，随后写 manifest。
+    """
+    result_path = Path(result_path)
+    result_zh_path = Path(result_zh_path)
+    result_sha = file_sha256(result_path)
+    result = json.loads(result_path.read_text(encoding="utf-8"))
+    themes = []
+    for html_path in html_paths:
+        if embedded_result_hash(html_path) != result_sha:
+            raise ValueError(
+                f"{html_path}: embedded result hash != {result_sha} "
+                f"(not built from {result_path.name})")
+        name = Path(html_path).name
+        for theme in THEME_NAMES:
+            if name.endswith(f"_{theme}.html"):
+                themes.append(theme)
+                break
+    missing = [t for t in THEME_NAMES if t not in themes]
+    if missing:
+        raise ValueError(f"missing theme HTMLs in {html_paths}: {missing}")
+    manifest = {
+        "result_sha256": result_sha,
+        "result_zh_sha256": file_sha256(result_zh_path),
+        "renderer_version": renderer_version,
+        "git_commit": git_commit,
+        "evidence_count": len(result.get("evidence", [])),
+        "source_count": len(result.get("sources", [])),
+        "themes": [t for t in THEME_NAMES if t in themes],
+    }
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    return manifest
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Build single-file offline bilingual EduEvidence_Report.html")
@@ -2589,9 +2653,10 @@ def main() -> int:
 
     html_out = Path(args.out) if args.out else result_path.parent / "EduEvidence_Report.html"
     html_out.parent.mkdir(parents=True, exist_ok=True)
+    result_sha256 = file_sha256(result_path)
     html_text = render_html(result_en, result_zh, charts_zh, charts_en,
                             infographics_zh, infographics_en, figures_zh, figures_en,
-                            theme, viz_decisions)
+                            theme, viz_decisions, result_sha256=result_sha256)
 
     if args.vendor_echarts:
         echarts_js = Path(args.vendor_echarts).read_text(encoding="utf-8")

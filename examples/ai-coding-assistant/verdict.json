@@ -39,9 +39,9 @@
   },
   "confidence": "Moderate",
   "confidence_breakdown": {
-    "score": 0.559,
+    "score": 0.526,
     "evidence_quality": 0.786,
-    "consistency": 0.8,
+    "consistency": 0.667,
     "directness": 0.429,
     "evidence_count": 7,
     "independent_studies": 3,
@@ -72,8 +72,8 @@
     "'AI 编程助手提高学习效果' — exceeds: direct learning-effect evidence is missing.",
     "'AI 对所有人有效' — exceeds: population and subject mismatch."
   ],
-  "confidence_score": 0.559,
-  "confidence_policy_version": "2026-08-12.v1",
+  "confidence_score": 0.526,
+  "confidence_policy_version": "2026-08-12.v2",
   "independent_studies": 3,
   "independent_samples": 3,
   "raw_model_confidence": "Moderate",

@@ -2,7 +2,7 @@
   "meta": {
     "skill": "eduevidence",
     "version": "1.0.0",
-    "generated_at": "2026-08-12T09:32:36.767716+00:00",
+    "generated_at": "2026-08-12T12:36:07.948446+00:00",
     "mode": "platform_native",
     "question": "大学高等数学课程是否应该使用 AI Tutor（GPT-4 等生成式 AI 辅导工具）辅助学习？它是否真的有助于概念理解与独立解题，还是只是把学生变成拐杖使用者？"
   },
@@ -11,10 +11,11 @@
     "mode": "platform_native",
     "agents": [],
     "usage": {
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cost_usd": 0.0,
-      "latency_s": 0.0
+      "measurement_status": "NOT_CAPTURED",
+      "input_tokens": null,
+      "output_tokens": null,
+      "cost_usd": null,
+      "latency_s": null
     }
   },
   "research_frame": {
@@ -120,9 +121,9 @@
     },
     "confidence": "Moderate",
     "confidence_breakdown": {
-      "score": 0.568,
+      "score": 0.534,
       "evidence_quality": 0.767,
-      "consistency": 0.8,
+      "consistency": 0.667,
       "directness": 0.5,
       "evidence_count": 6,
       "independent_studies": 3,
@@ -154,8 +155,8 @@
       "'AI Tutor 无风险' — 超出：E-002 显示无护栏有害。",
       "'AI Tutor 对所有学生有效' — 超出：学段/学科不匹配。"
     ],
-    "confidence_score": 0.568,
-    "confidence_policy_version": "2026-08-12.v1",
+    "confidence_score": 0.534,
+    "confidence_policy_version": "2026-08-12.v2",
     "independent_studies": 3,
     "independent_samples": 3,
     "raw_model_confidence": "Moderate",
@@ -173,27 +174,27 @@
   "outcomes": [
     {
       "outcome_type": "knowledge_gain",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0,
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0,
       "evidence_ids": [
         "E-005"
       ]
     },
     {
       "outcome_type": "retention",
-      "support_count": 0,
-      "contradict_count": 0,
-      "neutral_count": 1,
+      "positive_count": 0,
+      "negative_count": 0,
+      "null_count": 1,
       "evidence_ids": [
         "E-006"
       ]
     },
     {
       "outcome_type": "independent_problem_solving",
-      "support_count": 1,
-      "contradict_count": 1,
-      "neutral_count": 0,
+      "positive_count": 0,
+      "negative_count": 1,
+      "null_count": 1,
       "evidence_ids": [
         "E-002",
         "E-003"
@@ -201,18 +202,18 @@
     },
     {
       "outcome_type": "assignment_score",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0,
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0,
       "evidence_ids": [
         "E-001"
       ]
     },
     {
       "outcome_type": "engagement",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0,
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0,
       "evidence_ids": [
         "E-004"
       ]
@@ -222,6 +223,7 @@
     {
       "claim": "Access to GPT-4 during practice substantially improves practice problem performance (+48% for unguarded GPT Base, +127% for guardrailed GPT Tutor), but these task-performance gains do not transfer to independent exam performance.",
       "outcome_type": "assignment_score",
+      "claim_id": "C-001",
       "evidence_ids": [
         "E-001"
       ],
@@ -230,6 +232,7 @@
     {
       "claim": "Students using unguarded GPT-4 (GPT Base, general chat) performed 17% worse on the independent exam than the control group despite higher practice performance — unguarded generative AI harms learning.",
       "outcome_type": "independent_problem_solving",
+      "claim_id": "C-002",
       "evidence_ids": [
         "E-002"
       ],
@@ -238,6 +241,7 @@
     {
       "claim": "Guardrail design of the AI tutor (hints and guidance instead of direct answers, teacher-informed prompts) largely eliminated the negative learning effect on the independent exam.",
       "outcome_type": "independent_problem_solving",
+      "claim_id": "C-003",
       "evidence_ids": [
         "E-003"
       ],
@@ -246,6 +250,7 @@
     {
       "claim": "Replacing traditional homework with an interactive GPT-4 homework tutor produced higher student satisfaction and greater willingness to continue using the tool.",
       "outcome_type": "engagement",
+      "claim_id": "C-004",
       "evidence_ids": [
         "E-004"
       ],
@@ -254,6 +259,7 @@
     {
       "claim": "Learning outcomes were not harmed when homework was replaced by the GPT-4 interactive tutor, and one of the treatment groups showed significantly better learning gains.",
       "outcome_type": "knowledge_gain",
+      "claim_id": "C-005",
       "evidence_ids": [
         "E-005"
       ],
@@ -262,6 +268,7 @@
     {
       "claim": "One week after training, retention differences between the AI-assistant group and the baseline group were not statistically significant — indirect evidence for a similar AI tutoring tool, but with a null learning effect in a different subject and age group.",
       "outcome_type": "retention",
+      "claim_id": "C-006",
       "evidence_ids": [
         "E-006"
       ],
@@ -346,7 +353,13 @@
         "scope": "practice_task_performance"
       },
       "confidence": 0.75,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
+      "decision_relation": "conditional",
+      "claim_id": "C-001"
     },
     {
       "evidence_id": "E-002",
@@ -399,7 +412,13 @@
         "scope": "unguarded_general_chat_interface"
       },
       "confidence": 0.75,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "contradict",
+      "effect_direction": "negative",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
+      "decision_relation": "oppose_adoption",
+      "claim_id": "C-002"
     },
     {
       "evidence_id": "E-003",
@@ -451,7 +470,13 @@
         "scope": "guardrail_design_principle_transferable"
       },
       "confidence": 0.75,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "null",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
+      "decision_relation": "conditional",
+      "claim_id": "C-003"
     },
     {
       "evidence_id": "E-004",
@@ -504,7 +529,13 @@
         "scope": "engagement_and_willingness_to_continue"
       },
       "confidence": 0.65,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-LEE-2025",
+      "sample_id": "SMPL-LEE-2025-4CLASSES",
+      "decision_relation": "support_adoption",
+      "claim_id": "C-004"
     },
     {
       "evidence_id": "E-005",
@@ -556,7 +587,13 @@
         "scope": "learning_outcomes_within_course"
       },
       "confidence": 0.65,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-LEE-2025",
+      "sample_id": "SMPL-LEE-2025-4CLASSES",
+      "decision_relation": "support_adoption",
+      "claim_id": "C-005"
     },
     {
       "evidence_id": "E-006",
@@ -610,7 +647,13 @@
         "scope": "retention_over_one_week_indirect"
       },
       "confidence": 0.6,
-      "status": "SUPPORTED"
+      "status": "SUPPORTED",
+      "relation_to_claim": "neutral",
+      "effect_direction": "null",
+      "study_id": "STUDY-KAZEMITABAAR-2023",
+      "sample_id": "SMPL-KAZEMITABAAR-2023-N69",
+      "decision_relation": "neutral",
+      "claim_id": "C-006"
     }
   ],
   "methodology_reviews": [
@@ -824,7 +867,6 @@
   },
   "benchmark": {},
   "provenance": {
-    "search_provider": "n/a",
-    "fetched_at": "2026-08-12T09:32:36.768908+00:00"
+    "search_provider": "n/a"
   }
 }

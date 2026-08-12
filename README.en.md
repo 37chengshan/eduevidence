@@ -31,19 +31,25 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 ```
 
 > Requires Python 3.10+; the core has zero third-party dependencies. `pip install matplotlib` is optional for academic-figure PNG/PDF export.
-> After install, the script prompts you to star the repo (auto-runs `gh repo star 37chengshan/eduevidence` when GitHub CLI is logged in, otherwise opens the browser prompt).
+> After install, the script prompts you to star the repo (prompt only — it never runs any GitHub command on your behalf).
 
 ---
 
 ## Install as a Skill (for AI Agent users)
 
-> EduEvidence itself is an **AI Agent Skill** (`SKILL.md` + `skill/agents/` + `references/` + `schemas/` + `scripts/` + `visualization/`).
+> EduEvidence itself is an **AI Agent Skill** (`SKILL.md` + `skill/agents/` + `references/` + `schemas/` + `scripts/` + `retrieval/` + `integrations/` + `visualization/`).
 > Once installed, your host agent (Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …) can auto-load this Skill when it receives teaching-decision questions.
 
 ```bash
 bash install.sh --skill              # interactive: choose which agent to install to
 bash install.sh --list-hosts         # list supported agents and skill locations
 bash install.sh --skill --dry-run    # preview only, write nothing
+```
+
+You can also run it remotely without cloning:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
 ```
 
 Before writing, the script automatically backs up any existing skill directory (`cp -r` to `.bak-<timestamp>`); `--dry-run` only previews the changes.
@@ -72,12 +78,12 @@ Your agent is not in the list? Paste the following prompt **verbatim** into any 
 
 ```text
 Please install EduEvidence from https://github.com/37chengshan/eduevidence as a skill:
-1. Copy SKILL.md, skill/, references/, schemas/, scripts/, visualization/ from the repo root into your
-   (visualization/ is the HTML renderer with 5 themes — the final report depends on it)
-   skill directory (e.g. ~/.claude/skills/eduevidence/, ~/.omp/agent/skills/eduevidence/,
+1. Copy SKILL.md, skill/, references/, schemas/, scripts/, retrieval/, integrations/,
+   visualization/ from the repo root into your skill directory
+   (e.g. ~/.claude/skills/eduevidence/, ~/.omp/agent/skills/eduevidence/,
    ~/.agents/skills/eduevidence/), or import it via your skill loading mechanism;
 2. After install, confirm you can read SKILL.md and run the deterministic scripts under scripts/;
-3. Tell me the result, and remind me to star the repo.
+3. Tell me the result.
 ```
 
 The script also prints this universal prompt after a `--skill` install completes.
@@ -257,7 +263,7 @@ result.json + result.zh.json (Chinese parallel data)
 - **Bilingual switch**: Chinese by default, one click to EN; in Chinese mode the evidence, claims, methodology audit, intervention and evaluation are all in Chinese. Data is isomorphic (`result.zh.json` and `result.json` share keys/numbers/IDs/URLs — bilingual data produced directly by AI, not machine translation).
 - **Executive summary narrative**: the first screen shows a "bottom line" — question → evidence (support/contradict) → action (decision + confidence + rationale); every section opens with a "What this section answers:" lead line.
 - **Two-page layout**: Visual Brief + Full Report (AI-planned 5–7 dynamic chapters, not a fixed template).
-- **Five themes** (claude / academic / editorial / datalab / presentation) with localStorage persistence.
+- **Five styles (chosen at generation time, no in-HTML switcher)**: claude [Light] / academic [Light] / datalab [Light] / datalab-dark [Dark] / presentation [Dark] — same data, different presentation only.
 - **Static-first**: fully readable without JS (decision / matrix / tribunal / intervention / sources); ECharts enhances when available; tables scroll horizontally instead of overflowing.
 - **Integrity gate**: chart numbers are checked against result.json item by item; publishing is blocked with `REPORT_INVALID` on mismatch.
 

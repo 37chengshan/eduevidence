@@ -2,34 +2,52 @@
   "source": "result.json",
   "outcomes": [
     {
-      "outcome_type": "knowledge_gain",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
-      "outcome_type": "retention",
-      "support_count": 0,
-      "contradict_count": 0,
-      "neutral_count": 1
+      "outcome_type": "assignment_score",
+      "positive_count": 3,
+      "negative_count": 0,
+      "null_count": 0
     },
     {
       "outcome_type": "independent_problem_solving",
-      "support_count": 1,
-      "contradict_count": 1,
-      "neutral_count": 1
+      "positive_count": 0,
+      "negative_count": 1,
+      "null_count": 0
+    },
+    {
+      "outcome_type": "knowledge_gain",
+      "positive_count": 1,
+      "negative_count": 1,
+      "null_count": 0
+    },
+    {
+      "outcome_type": "retention",
+      "positive_count": 0,
+      "negative_count": 0,
+      "null_count": 1
+    },
+    {
+      "outcome_type": "engagement",
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0
+    },
+    {
+      "outcome_type": "ai_dependency",
+      "positive_count": 0,
+      "negative_count": 3,
+      "null_count": 0
+    },
+    {
+      "outcome_type": "code_quality",
+      "positive_count": 0,
+      "negative_count": 0,
+      "null_count": 1
     },
     {
       "outcome_type": "completion_time",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
-      "outcome_type": "assignment_score",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0
     }
   ],
   "benchmark_baselines": {},

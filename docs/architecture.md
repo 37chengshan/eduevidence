@@ -14,8 +14,9 @@ EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence
 │  · 评价设计（Task vs Learning，Immediate vs Retention vs Transfer）│
 ├─────────────────────────────────────────────────────────────────┤
 │ 第 2 层  EvidenceFlow Protocol（流程层）                           │
-│  Frame → Retrieve → Extract → Challenge → Audit → Adjudicate     │
-│  每一步有独立输入/输出契约，由 12 个 JSON Schema 约束                │
+│  Frame → Retrieve → Fetch → Validate → Extract →                 │
+│  Challenge → Audit → Adjudicate                                  │
+│  每一步有独立输入/输出契约，由 13 个 JSON Schema 约束                │
 ├─────────────────────────────────────────────────────────────────┤
 │ 第 3 层  执行层（Execution Layer）                                 │
 │  Mode A  Platform Native Mode                                    │
@@ -28,37 +29,39 @@ EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence
 
 - **教育领域知识**：learner / course / intervention / comparison / outcomes / context 的结构化建模（`education-frame.schema.json`），强制在给出任何教学建议前先完成 Framing。
 - **决策**：基于证据三角的判定输出（`verdict.schema.json`），明确区分"证据支持什么"与"证据不能支持什么"，并给出 `adopt / pilot / reject / insufficient_evidence` 四类动作。
-- **干预**：任何决策都落到最小可验证的干预设计（`intervention.schema.json`），强调"永远不直接全量部署，先 PILOT"，且 Pilot 必须带 Stop Conditions 与 Evidence Alignment。
+- **干预**：任何决策都默认落到最小可验证的干预设计（`intervention.schema.json`），默认偏向最小可验证 PILOT；只有关键 Outcome 存在较强直接证据、风险可控且场景高度匹配时才允许 ADOPT。Pilot 必须带 Stop Conditions 与 Evidence Alignment。
 - **评价**：为 PILOT / ADOPT 配套评价方案（`evaluation.schema.json`），强制分离 Task Performance 与 Learning Effect，并单独设计 Retention Test 与 Transfer Test。
 
 ### 1.2 第 2 层：EvidenceFlow Protocol
 
-证据流协议分两层：**Research Core 六阶段**（证据纪律核心）+ **Decision Extension 三阶段**（证据到行动）+ **Present 呈现**。共 10 步，与 `SKILL.md` 的 Workflow 一致。
+证据流协议分两层：**Research Core 八阶段**（证据纪律核心）+ **Decision Extension 三阶段**（证据到行动）+ **Present 呈现**。共 10 步，与 `SKILL.md` 的 Workflow 一致。
 
-**Research Core（六阶段，可剥离的核心）：**
+**Research Core（八阶段，可剥离的核心）：**
 
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
 | 1. 框定 | Frame | 原始教育问题 | Education Research Frame（含 decision_target、scope、inclusion/exclusion criteria） |
 | 2. 检索 | Retrieve | Frame | 候选证据来源列表（含 source_location 可验证指针） |
-| 3. 抽取 | Extract | 来源文献 | Claim 级证据对象（`evidence.schema.json`） |
-| 4. 质询 | Challenge | 证据对象 | 反方证据、负面结果、未发现、confounder 清单 |
-| 5. 审计 | Audit | 证据对象 | 方法学审计（`methodology.schema.json`），含 task_vs_learning_guard |
-| 6. 裁决 | Adjudicate | 全部证据 + 审计 | Education Verdict + Recommended Action + Confidence |
+| 3. 抓取 | Fetch | 候选来源 | 来源全文/可验证内容（snippet ≠ 证据内容，RULE 2） |
+| 4. 校验 | Validate | 抓取结果 | 校验通过的来源与内容（来源有效、抓取完整、Schema 校验） |
+| 5. 抽取 | Extract | 校验后的来源文献 | Claim 级证据对象（`evidence.schema.json`） |
+| 6. 质询 | Challenge | 证据对象 | 反方证据、负面结果、未发现、confounder 清单 |
+| 7. 审计 | Audit | 证据对象 | 方法学审计（`methodology.schema.json`），含 task_vs_learning_guard |
+| 8. 裁决 | Adjudicate | 全部证据 + 审计 | Education Verdict + Recommended Action + Confidence |
 
-**Decision Extension（三阶段，证据到行动）：**
+**Decision Extension（三阶段，证据到行动，即第 9 步 Design）：**
 
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
-| 7. 适用 | Applicability | Verdict | 适用性分析（For whom / which course / which outcome / what conditions） |
-| 8. 干预 | Intervene | Verdict + Applicability | Teaching Intervention（最小可验证试点 + 停止条件） |
-| 9. 评价 | Evaluate | 干预方案 | Evaluation Plan（基线/后测/保持/迁移 + 成功阈值） |
+| 9.1 适用 | Applicability | Verdict | 适用性分析（For whom / which course / which outcome / what conditions） |
+| 9.2 干预 | Intervention | Verdict + Applicability | Teaching Intervention（最小可验证试点 + 停止条件） |
+| 9.3 评价 | Evaluation | 干预方案 | Evaluation Plan（基线/后测/保持/迁移 + 成功阈值） |
 
 **Present（呈现）：**
 
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
-| 10. 呈现 | Present | result.json + result.zh.json | 单文件双语 HTML 报告 + 信息图 + 学术图（`visualization/`） |
+| 10. 呈现 | Present | result.json + result.zh.json | 单文件双语 HTML 报告 + 信息图 + 学术图（`visualization/`；主题在生成前从 `claude`[Light] / `academic`[Light] / `datalab`[Light] / `datalab-dark`[Dark] / `presentation`[Dark] 五选一，最终 HTML 不提供主题切换，仅保留中英文切换） |
 
 该协议是**可剥离的**：即使没有 Agent 框架，只要按此协议组织检索、抽取、审计与裁决，也能得到可复现的决策链。
 
@@ -104,7 +107,7 @@ EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence
 edu/
 ├── SKILL.md                # 技能入口：EduEvidence 使用说明（Mode A 可独立理解）
 ├── references/             # 证据来源、研究报告与检索记录
-├── schemas/                # 12 个 JSON Schema 数据契约
+├── schemas/                # 13 个 JSON Schema 数据契约
 │   ├── education-frame.schema.json
 │   ├── evidence.schema.json
 │   ├── methodology.schema.json
@@ -133,5 +136,5 @@ edu/
 1. **领域层独立于 Agent 层**：EduEvidence 的判断逻辑不耦合任何框架，未来换 Agent 方案时第 1、2 层无需改动。
 2. **协议可剥离**：EvidenceFlow Protocol 可脱离 MCP 单独执行，保证最低运行成本可用。
 3. **决策可追溯**：从 Verdict 出发可反查到 evidence_id、source_location、方法学审计项与置信度分解。
-4. **永远先 PILOT**：领域层内置"先试点、后部署"约束，从架构上防止跳过验证直接给出全量方案。
+4. **默认偏向最小可验证 PILOT**：领域层内置"先试点、后部署"约束，从架构上防止跳过验证直接给出全量方案；只有关键 Outcome 存在较强直接证据、风险可控且场景高度匹配时才允许 ADOPT。
 5. **降级友好**：Mode B 的任何子任务失败，都可降级为 Mode A 语义继续产出，保证结果不中断。

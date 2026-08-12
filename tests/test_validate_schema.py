@@ -19,9 +19,14 @@ def test_valid_evidence_passes():
     evidence = {
         "evidence_id": "E-001",
         "source_id": "S-2023-test",
+        "study_id": "STUDY-2023-TEST",
+        "sample_id": "SMPL-2023-TEST-N1",
+        "claim_id": "C-001",
         "claim": "test claim",
         "outcome_type": "retention",
-        "direction": "support",
+        "relation_to_claim": "support",
+        "effect_direction": "positive",
+        "direction": "support",  # deprecated but still accepted
         "source_location": "https://example.com/doi",
     }
     validate(evidence, schema)  # should not raise
@@ -33,10 +38,29 @@ def test_missing_required_field_fails():
         "evidence_id": "E-001",
         "claim": "no source_id here",
         "outcome_type": "retention",
-        "direction": "support",
+        "relation_to_claim": "support",
+        "effect_direction": "positive",
         "source_location": "https://example.com/doi",
     }
     with pytest.raises(SchemaError, match="source_id"):
+        validate(evidence, schema)
+
+
+def test_missing_study_id_fails():
+    """A-2 acceptance: study_id is now required — an evidence without it must fail."""
+    schema = load_schema("evidence.schema.json")
+    evidence = {
+        "evidence_id": "E-001",
+        "source_id": "S-2023-test",
+        "sample_id": "SMPL-2023-TEST-N1",
+        "claim_id": "C-001",
+        "claim": "test claim",
+        "outcome_type": "retention",
+        "relation_to_claim": "support",
+        "effect_direction": "positive",
+        "source_location": "https://example.com/doi",
+    }
+    with pytest.raises(SchemaError, match="study_id"):
         validate(evidence, schema)
 
 
@@ -45,9 +69,13 @@ def test_bad_enum_fails():
     evidence = {
         "evidence_id": "E-001",
         "source_id": "S-1",
+        "study_id": "STUDY-1",
+        "sample_id": "SMPL-1-N1",
+        "claim_id": "C-001",
         "claim": "x",
         "outcome_type": "retention",
-        "direction": "maybe",  # not in support|contradict|neutral
+        "relation_to_claim": "maybe",  # not in support|contradict|neutral
+        "effect_direction": "positive",
         "source_location": "https://example.com",
     }
     with pytest.raises(SchemaError, match="enum"):
@@ -59,9 +87,13 @@ def test_quality_dimension_range():
     evidence = {
         "evidence_id": "E-001",
         "source_id": "S-1",
+        "study_id": "STUDY-1",
+        "sample_id": "SMPL-1-N1",
+        "claim_id": "C-001",
         "claim": "x",
         "outcome_type": "retention",
-        "direction": "support",
+        "relation_to_claim": "support",
+        "effect_direction": "positive",
         "source_location": "https://example.com",
         "quality_dimensions": {"D1_study_design": 5},  # > 2
     }

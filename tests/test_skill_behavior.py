@@ -327,7 +327,7 @@ def test_e_counter_evidence_is_detected_and_priced_in():
         [{"claim": "AI 助教提升成绩", "evidence_ids": ["E-1"]}],
         [{"evidence_id": "E-1", "source_id": "S-1", "source_location": "https://x",
           "direction": "contradict", "outcome_type": "retention"}])
-    assert results[0]["status"] == "UNSUPPORTED"
+    assert results[0]["status"] == "CONTRADICT"
     # (2) ... and conflict is penalized in the confidence score.
     weak = [
         {"evidence_id": "E-1", "direction": "support", "quality_score": 8,

@@ -17,6 +17,11 @@ evaluation 等文本，en 使用 result.json；数字与结构两边一致（双
 Generated SVG is deterministic, zero-dependency, embedded in the report as
 InfographicBlock components (v5 §36). Numbers always come from result.json.
 
+HTML-02 (2026-08-12): SVG 只承载短标题 / 关键词 / 阶段 / 方向 / 数字（证据 ID、
+阶段名、计数、动作徽章）；长解释（完整 claim、规则、评估文本）一律保留在 SVG
+下方的 HTML <p>/<details> 中，避免单行 SVG <text> 溢出。详情由 build_report.py
+的 tribunal cards / phase blocks / evaluation sections 渲染。
+
 Usage:
     python3 visualization/eduevidence-report/scripts/build_infographics.py \
         --result examples/ai-coding-assistant/result.json \
@@ -26,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import xml.sax.saxutils as sax
 from pathlib import Path
@@ -47,8 +53,12 @@ TITLES = {
 }
 
 TRIBUNAL_LABELS = {
-    "zh": {"can": "可以主张", "cannot": "不可主张", "source": "冲突来源", "none": "（无）"},
-    "en": {"can": "Can claim", "cannot": "Cannot claim", "source": "Source of conflict", "none": "(none)"},
+    "zh": {"can": "可以主张", "cannot": "不可主张", "source": "冲突来源",
+           "none": "（无）", "why_short": "详见下方裁决卡片",
+           "action": "建议决策"},
+    "en": {"can": "Can claim", "cannot": "Cannot claim", "source": "Source of conflict",
+           "none": "(none)", "why_short": "See tribunal cards below",
+           "action": "Recommended action"},
 }
 
 FLOW_STEPS = {
@@ -64,6 +74,8 @@ EVAL_NODES = {
     "en": [("Baseline", "pre-test"), ("Post test", "post-test"),
            ("Retention", "retention test"), ("Transfer", "transfer test (no AI)")],
 }
+
+ACTIVITY_LABEL = {"zh": "项活动", "en": "activities"}
 
 
 def _esc(text: Any) -> str:
@@ -97,6 +109,18 @@ def _svg(title: str, body: str) -> str:
             f'{body}</svg>')
 
 
+def _evidence_ids(items: list[Any], limit: int = 4) -> list[str]:
+    """从主张/反证条目文本中抽取证据 ID（短标识），长文本不进 SVG。"""
+    ids: list[str] = []
+    for item in items:
+        for eid in re.findall(r"\bE-[A-Za-z0-9-]+\b", str(item or "")):
+            if eid not in ids:
+                ids.append(eid)
+        if len(ids) >= limit:
+            break
+    return ids[:limit]
+
+
 def workflow_svg(lang: str = "zh") -> str:
     steps = FLOW_STEPS[lang]
     n = len(steps)
@@ -115,65 +139,84 @@ def workflow_svg(lang: str = "zh") -> str:
 
 
 def tribunal_svg(verdict: dict, lang: str = "zh") -> str:
+    """裁决信息图：只放短标题、计数、证据 ID 与动作徽章。
+
+    完整 claim / reason_for_disagreement 文本由 HTML 卡片承载（HTML-02）。
+    """
     labs = TRIBUNAL_LABELS[lang]
     none_text = labs["none"]
     can = verdict.get("supported_claims") or verdict.get("what_can_be_claimed") or [none_text]
     cannot = verdict.get("contradicted_claims") or verdict.get("what_cannot_be_claimed") or [none_text]
-    why = verdict.get("reason_for_disagreement") or (
-        "证据冲突或缺失" if lang == "zh" else "Conflicting or missing evidence")
     action = verdict.get("recommended_action", "insufficient_evidence").upper()
 
     def col(x: int, title: str, items: list[str], color: str) -> str:
-        parts = [f'<text x="{x + 10}" y="80" font-size="13" font-weight="700" fill="{color}">{_esc(title)}</text>']
-        for i, item in enumerate(items[:4]):
+        ids = _evidence_ids(items)
+        if not ids:
+            ids = [none_text]
+        parts = [f'<text x="{x + 10}" y="80" font-size="13" font-weight="700" fill="{color}">'
+                 f'{_esc(title)}</text>']
+        for i, eid in enumerate(ids):
             yy = 105 + i * 22
             parts.append(f'<circle cx="{x + 14}" cy="{yy - 5}" r="3" fill="{color}"/>')
             parts.append(f'<text x="{x + 26}" y="{yy}" font-size="11" fill="{PALETTE["text"]}">'
-                         f'{_esc(item[:44])}</text>')
+                         f'{_esc(eid)}</text>')
         return "".join(parts)
 
     body = (
         f'<text x="24" y="180" font-size="13" font-weight="700" fill="{PALETTE["text"]}">{_esc(labs["source"])}</text>'
-        f'<text x="24" y="202" font-size="11" fill="{PALETTE["muted"]}">{_esc(why[:80])}</text>'
+        f'<text x="24" y="202" font-size="11" fill="{PALETTE["muted"]}">{_esc(labs["why_short"])}</text>'
         f'<rect x="24" y="216" width="180" height="28" rx="14" fill="{PALETTE["uncertain"]}"/>'
         f'<text x="114" y="235" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">{_esc(action)}</text>'
-        + col(240, labs["can"], can, PALETTE["support"])
-        + col(480, labs["cannot"], cannot, PALETTE["contradict"])
+        + col(240, f'{labs["can"]} ({len(can)})', can, PALETTE["support"])
+        + col(480, f'{labs["cannot"]} ({len(cannot)})', cannot, PALETTE["contradict"])
     )
     return _svg(TITLES[lang]["tribunal"], body)
 
 
+def _phase_short(name: Any, index: int, lang: str) -> str:
+    """阶段名只取标题头部（分隔符前），避免长句进 SVG。"""
+    text = str(name or f"Phase {index + 1}")
+    if lang == "zh" and "：" in text:
+        head = text.split("：")[0].strip()
+        if len(head) <= 12:
+            return head
+    elif lang == "en" and ":" in text:
+        head = text.split(":")[0].strip()
+        if len(head) <= 26:
+            return head
+    return f"Phase {index + 1}"
+
+
 def intervention_svg(intervention: dict, lang: str = "zh") -> str:
+    """干预时间线：只放阶段短名与活动数（HTML-02），长规则文本在 HTML 阶段块。"""
     phases = [intervention.get(p) for p in ("phase_1", "phase_2", "phase_3", "phase_4")]
     phases = [p for p in phases if isinstance(p, dict)]
     if not phases:
-        phases = [{"name": "Phase 1", "ai_usage_rule": "—"}]
+        phases = [{"name": "Phase 1", "activities": []}]
     bw, gap, y = 160, 16, 100
-    rule_label = "AI 规则: " if lang == "zh" else "AI rule: "
     boxes = []
     for i, p in enumerate(phases):
         x = 24 + i * (bw + gap)
-        name = p.get("name", f"Phase {i + 1}")
-        rule = p.get("ai_usage_rule", "")
-        boxes.append(_box(x, y, bw, 96, name, PALETTE["primary"], font_size=12))
-        boxes.append(f'<text x="{x + 8}" y="{y + 30}" font-size="9" fill="#fff" opacity="0.95">'
-                     f'{_esc(rule_label + rule[:34])}</text>')
+        name = _phase_short(p.get("name"), i, lang)
+        n_act = len(p.get("activities") or [])
+        sub = f"{n_act} {ACTIVITY_LABEL[lang]}" if n_act else ""
+        boxes.append(_box(x, y, bw, 96, name, PALETTE["primary"], font_size=12, sub=sub))
         if i < len(phases) - 1:
             boxes.append(_arrow(x + bw, y + 48, x + bw + gap, y + 48))
     return _svg(TITLES[lang]["intervention"], "".join(boxes))
 
 
 def evaluation_svg(evaluation: dict, lang: str = "zh") -> str:
+    """评价设计流程：只放阶段关键词（HTML-02），评估长文本在 HTML 段落。"""
     nodes = EVAL_NODES[lang]
     keys = ("baseline", "post_test", "retention_test", "transfer_test")
     bw, gap, y = 150, 12, 110
     boxes = []
-    for i, ((lab, fallback), key) in enumerate(zip(nodes, keys)):
+    for i, ((lab, keyword), key) in enumerate(zip(nodes, keys)):
         x = 30 + i * (bw + gap)
-        sub = evaluation.get(key) or fallback
         boxes.append(_box(x, y, bw, 56, lab, PALETTE["support"], font_size=12))
         boxes.append(f'<text x="{x + bw / 2}" y="{y + 38}" text-anchor="middle" font-size="9" '
-                     f'fill="#fff" opacity="0.95">{_esc((sub or "")[:30])}</text>')
+                     f'fill="#fff" opacity="0.95">{_esc(keyword)}</text>')
         if i < len(nodes) - 1:
             boxes.append(_arrow(x + bw, y + 28, x + bw + gap, y + 28))
     return _svg(TITLES[lang]["evaluation"], "".join(boxes))

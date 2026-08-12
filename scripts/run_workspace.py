@@ -189,7 +189,7 @@ def build_manifest(
         "agent_mcp_available": agent_mcp_available,
         "agent_mcp_approved": agent_mcp_approved,
         "resource_policy_version": RESOURCE_POLICY_VERSION,
-        "confidence_policy_version": "2026-08-12.v1",
+        "confidence_policy_version": "2026-08-12.v2",
     }
 
 

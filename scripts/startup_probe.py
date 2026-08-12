@@ -198,21 +198,26 @@ def render_markdown(report: dict) -> str:
     am = report["agent_mcp"]
     lines = ["### 当前会话能力检测", ""]
     lines.append(
-        "- Agent MCP：" + ("● 已配置（spawn_agent 可用，以会话内工具可见性为准）"
-                           if am["configured"] else "○ 未配置") + "")
+        "- Agent MCP：" + ("● 已连接（spawn_agent 可用，以会话内工具可见性为准）"
+                           if am["configured"] else "○ 未发现") + "")
     lines.append("")
-    lines.append("- 可用 CLI + 模型（不同系列各列最新；思考等级为默认值，无需确认；完整名=端点）：")
-    for cli, info in report["clis"].items():
-        if not info["available"]:
-            lines.append(f"  `{cli}`: （未检测到）")
-            continue
-        if not info["models"]:
-            lines.append(f"  `{cli}`: （模型列表待扫描）")
-            continue
-        items = " · ".join(f"`{m['model']}`({m['thinking']})" for m in info["models"])
-        lines.append(f"  `{cli}`: {items}")
+    # 当前会话可用模型（主会话直接可见，两种情况都列出）
+    lines.append("- **当前会话可用模型（主会话直接可见）**：原生子代理池 task / scout / reviewer …")
     lines.append("")
-    lines.append("- 宿主原生子代理池：主会话直接可见（task / scout / reviewer 等）")
+    if am["configured"]:
+        lines.append("- **Agent MCP 可用，追加 CLI + 模型**（不同系列各列最新；思考等级默认值；完整名=端点）：")
+        for cli, info in report["clis"].items():
+            if not info["available"]:
+                lines.append(f"  `{cli}`: （未检测到）")
+                continue
+            if not info["models"]:
+                lines.append(f"  `{cli}`: （模型列表待扫描）")
+                continue
+            items = " · ".join(f"`{m['model']}`({m['thinking']})" for m in info["models"])
+            lines.append(f"  `{cli}`: {items}")
+    else:
+        lines.append("- Agent MCP 未发现：不列出 CLI/模型（那是 Agent MCP 的模型选项），推荐先安装 Agent MCP")
+        lines.append("  （`~/.omp/agent/mcp.json` 注册 spawn_agent 后重启会话即可增强）；当前用主会话原生子代理池执行。")
     return "\n".join(lines)
 
 
