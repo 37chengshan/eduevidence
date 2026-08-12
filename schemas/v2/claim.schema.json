@@ -10,7 +10,7 @@
     "created_in_revision", "status", "extensions"
   ],
   "properties": {
-    "claim_id": { "type": "string", "pattern": "^CLM-" },
+    "claim_id": { "type": "string", "pattern": "^(CLM-|C-)" },
     "text": { "type": "string", "minLength": 1 },
     "claim_type": { "type": "string", "minLength": 1 },
     "primary_outcome_ids": {

@@ -10,7 +10,7 @@
     "validation_status", "extensions"
   ],
   "properties": {
-    "source_id": { "type": "string", "pattern": "^SRC-" },
+    "source_id": { "type": "string", "pattern": "^(SRC-|S-)" },
     "origin": { "type": "string", "enum": ["external", "project"] },
     "source_type": { "type": "string", "minLength": 1 },
     "canonical_locator": { "type": "string", "format": "uri" },

@@ -10,10 +10,10 @@
     "independence_key", "identity_status", "extensions"
   ],
   "properties": {
-    "study_id": { "type": "string", "pattern": "^STU-" },
+    "study_id": { "type": "string", "pattern": "^(STU-|STUDY-)" },
     "source_ids": {
       "type": "array",
-      "items": { "type": "string", "pattern": "^SRC-" },
+      "items": { "type": "string", "pattern": "^(SRC-|S-)" },
       "uniqueItems": true,
       "minItems": 1
     },

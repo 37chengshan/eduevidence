@@ -11,7 +11,7 @@
   ],
   "properties": {
     "finding_id": { "type": "string", "pattern": "^FND-" },
-    "study_id": { "type": "string", "pattern": "^STU-" },
+    "study_id": { "type": "string", "pattern": "^(STU-|STUDY-)" },
     "finding_type": {
       "type": "string",
       "enum": [

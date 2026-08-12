@@ -13,7 +13,7 @@
   "properties": {
     "evidence_link_id": { "type": "string", "pattern": "^LNK-" },
     "finding_id": { "type": "string", "pattern": "^FND-" },
-    "claim_id": { "type": "string", "pattern": "^CLM-" },
+    "claim_id": { "type": "string", "pattern": "^(CLM-|C-)" },
     "relation_to_claim": { "type": "string", "enum": ["support", "contradict", "neutral"] },
     "decision_implication": {
       "type": "string",
