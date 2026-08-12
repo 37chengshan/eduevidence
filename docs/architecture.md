@@ -2,6 +2,17 @@
 
 EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence-Based AI Teaching Decision & Intervention Skill）：输入一条教育问题，输出一份可追溯的证据综述、方法论审计、结论判定、试点干预与评估设计。本文档说明其三层架构与双运行模式。
 
+## 〇、EduEvidence Research Engine（V2 内部能力内核）
+
+Skill 本体不变；Skill 内部操作 **EduEvidence Research Engine** —— 以 Project/Run/Revision/DecisionSnapshot 为状态模型的持久化研究引擎：
+
+- **Project Workspace**（`~/.eduevidence/projects/PRJ-.../`）：长期研究项目，持有版本化 **Evidence Graph**（Source→Study→Finding→EvidenceLink→Claim→Outcome→Decision）与 gaps/study-designs/datasets/analyses/decisions/projections/runs。
+- **Evidence Graph 是不可变 revision 模型**：每次提交生成完整快照 `rev-N` 并原子切换 `graph/HEAD`；`result.json`/HTML/Markdown 均为投影，不是事实库。
+- **Shared Research Library**：已验证外部事实（Source/Study/Finding/Audit）经 snapshot import 复用；研究事实可复用，解释（Claim/EvidenceLink/Applicability/Decision）必须项目本地。
+- **两种 Research Mode**：Evidence Review（二手证据）与 Full Research Cycle（证据综述→知识缺口→新研究设计→用户数据→分析→新证据→更新决策）。
+- **冻结科学规则：No new study design without evidence grounding**——任何研究设计必须引用显式、有证据奠基的 KnowledgeGap ID。
+- 引擎是内部能力架构，不是独立服务/应用；Native Core 仅依赖 Python 标准库，不强制 Agent MCP 或 daemon。
+
 ## 一、三层架构总览
 
 ```

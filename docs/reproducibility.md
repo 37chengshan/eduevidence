@@ -2,6 +2,14 @@
 
 本指南确保任何人在全新环境中都能复现 EduEvidence 的校验、测试与 Benchmark 结果。全部命令以仓库根目录 `/Users/cc/edu`（即 pyproject.toml 所在目录）为工作目录执行。
 
+## 〇、V2 Research Engine 复现
+
+- 引擎模块 `engine/`（stdlib-only）可独立复现：`python3 -m pytest tests/test_v2_*.py`。
+- 图状态复现：`graph/HEAD` + `revisions/rev-N` 快照 + `manifest.json` 的 before/after 哈希链；同一输入 bundle 提交产生确定性哈希。
+- V1 历史产物（`examples/ai-coding-assistant/`、旧 `runs/`）不可变；`eduevidence migrate-v1 --pack <dir>` 生成新 V2 Project 且不改动源包。
+- Shared Research Library 与 Project 图同用不可变 revision 模型；快照导入记录 `library_revision/library_entity_id/content_hash/imported_at`。
+- 测试覆盖：V1 兼容基线、图原子性/孤儿 revision/HEAD 镜像分歧修复、迁移不变量、模式推荐、能力规划、synthesis 独立计数、Tribunal 政策、Gap 推导、数据集隐私门、全周期单 revision 提交、决策 diff、CLI 薄分发。
+
 ## 一、环境要求
 
 - **Python**：≥ 3.10（pyproject.toml 中 `requires-python = ">=3.10"`）；

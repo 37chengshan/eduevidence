@@ -3,13 +3,94 @@ name: eduevidence
 description: Use when a teaching or education decision — whether, when, and how to adopt a teaching method, tool, or AI-based intervention — must be grounded in research evidence rather than opinion. Covers any education question: teaching methods, AI tools, assessment, curriculum, and learning interventions, with structured evidence review, counter-evidence search, methodology audit, evidence tribunal, and actionable pilot design.
 ---
 
-# EduEvidence — Evidence-Based Education Decision & Intervention Skill
+# EduEvidence — EduEvidence Research Engine (Evidence-Based Education Decision Skill)
 
 **From Education Questions to Evidence-Based Decisions.**
+
+EduEvidence is delivered as an **AI Agent Skill**; inside the Skill operates
+the **EduEvidence Research Engine** — a persistent, auditable engine that
+turns education questions into evidence-grounded decisions. Users experience
+one Skill; the engine keeps research state in Projects/Runs instead of
+reconstructing it from chat context or a monolithic result file.
 
 ## 1 Purpose
 
 EduEvidence helps teachers, education researchers, and education administrators turn "should we adopt a teaching method or tool?" from an intuition-driven choice into a **traceable, challengeable, verifiable evidence decision process**. It does not generate answers for teachers — it shows what the evidence supports, what it cannot support, who it applies to, and how to pilot and verify it.
+
+### 1.1 Research Engine architecture
+
+```text
+EduEvidence Skill
+        ↓
+Research Router
+        ↓
+Project Workspace
+        ↓
+Capability-first Research Planner
+        ↓
+Research Engine
+├─ Evidence Review
+├─ Retrieval / Fetch / Validation
+├─ Evidence Graph
+├─ Methodology
+├─ Synthesis / Tribunal
+├─ Knowledge Gap
+├─ Study Design
+├─ Dataset / Analysis
+└─ Report Projection
+        ↓
+Project Evidence Graph
+        ↓
+DecisionSnapshot
+        ↓
+Visual Brief / Full Report / Markdown / future PPT
+```
+
+- **Project** = long-lived research project owning a versioned Project
+  Evidence Graph. **Run** = one execution attempt/mutation inside a Project.
+  **Revision** = one immutable scientific evidence state. **DecisionSnapshot**
+  = an adjudication bound to a graph revision. Four concepts stay separate.
+- **Project Workspace** lives under `~/.eduevidence/projects/PRJ-.../` with
+  graph/, gaps/, study-designs/, datasets/, analyses/, decisions/,
+  projections/, reports/ and runs/.
+- **Evidence Graph** is the sole authoritative scientific state; `result.json`,
+  localization packs, Markdown, HTML and charts are projections, never fact
+  stores.
+- **Shared Research Library** (`~/.eduevidence/library/`) reuses verified
+  external facts (Source/Study/Finding/Audit) through immutable snapshot
+  imports: research facts may be reused, interpretations (Claim/EvidenceLink/
+  Applicability/Decision) stay Project-local, and a later library change never
+  silently alters an existing Project's conclusions.
+- Two Research Modes: **Evidence Review** (secondary-evidence research only)
+  and **Full Research Cycle** (Evidence Review → Knowledge Gap → new study
+  design → user data → analysis → new evidence → graph update → updated
+  decision). Mode is recommended from a structured ResearchIntent and may be
+  overridden by the user.
+- **Scientific rule (frozen): No new study design without evidence grounding.** Any experiment/survey design must reference explicit,
+  evidence-grounded KnowledgeGap IDs; the Research Router first verifies the
+  Project has sufficient grounding, otherwise it runs at least a minimum
+  Evidence Review to identify a defensible gap.
+- The engine is an internal capability architecture — it is **not** a
+  server application, and it never requires Agent MCP or a daemon.
+  Native Core runs on Python stdlib only.
+
+### 1.2 Startup flow (Skill-level, updated)
+
+1. Detect an existing Project (resume) or create a new one (Project
+   Workspace).
+2. Produce a schema-valid ResearchIntent (`schemas/v2/research-intent.schema.json`).
+3. Recommend Research Mode (Evidence Review vs Full Research Cycle) via the
+   deterministic mode router.
+4. Recommend depth (quick / standard / deep) from the complexity gate.
+5. Discover scientific capabilities (SCP → local `references/` → native) and
+   execution capabilities (Agent MCP → host subagents → sequential).
+6. Request ONE explicit execution/theme confirmation (per §5.5).
+7. Operate through Project/Run state (graph revisions), never through chat
+   memory alone.
+
+Static agent files become capability execution profiles: a fixed 8-role
+topology is NOT required for every deep run; roles map to capabilities as
+needed.
 
 ## 2 When to Use
 

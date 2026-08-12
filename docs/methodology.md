@@ -2,6 +2,14 @@
 
 方法学层回答"如何把一条教育问题变成一份可信、可追溯、可复核的证据决策"。核心观点：**教育决策的可信度不来自模型更强，而来自方法学纪律**。本文档定义八角色协议、复杂度分级（Complexity Gate）与置信度规则化计算。
 
+## 〇、V2 Research Engine 方法学升级
+
+- **独立研究计数**：合成与置信度只在 Study 级计数（`independence_key`）；同一研究的 5 条 Finding = 1 个独立研究，绝不构成 5:1 投票。
+- **三语义严格分离**：`Finding.effect_direction`（研究观察到什么）/ `EvidenceLink.relation_to_claim`（是否支持该 Claim）/ `EvidenceLink.decision_implication`（对当前决策的含义）永不混用；"支持负面 Claim"不会被画成正向教学效果。
+- **V2 置信度政策（2026-08-12.v3）**：`0.30×方法质量 + 0.25×研究级一致性 + 0.20×Directness + 0.25×独立研究数 − 冲突罚分(仅独立正反研究并存) − 不确定性罚分`；High≥.72 / Moderate≥.45 / Low≥.20 / 其余 Insufficient。Directness 不再重复计权；分数是内部审计指数，不是概率。
+- **KnowledgeGap 结构化**：缺口从图覆盖度推导（frame 请求的 outcome vs 图内实际测量），不是自由文本"未来工作"；任务表现 Finding 永远不能覆盖保持/迁移缺口。
+- **方法学门槛**：usable Study 要求有效/部分接受来源、可解析身份、最新审计非 fail；任何新研究设计必须先通过证据奠基门。
+
 ## 一、八角色协议（Eight-Role Protocol）
 
 EduEvidence 将完整证据流程拆成八个独立职责（Role），每个角色有明确任务、输入与产出。角色是"职责单元"，不是必须独立运行的进程。

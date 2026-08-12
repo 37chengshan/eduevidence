@@ -2,15 +2,31 @@
 
 > **🌐 English | [中文](README.en.md)**
 
-## Evidence-Based AI Teaching Decision & Intervention Skill
+## EduEvidence Research Engine — Evidence-Based Education Decision Skill
 
 > **From Education Questions to Evidence-Based Decisions.**
 
-EduEvidence helps university teachers, education researchers, and teaching administrators turn "should we adopt an AI-based teaching method?" from an intuition-driven choice into a **traceable, challengeable, verifiable evidence decision process**.
+EduEvidence is delivered as an **AI Agent Skill**; inside the Skill operates
+the **EduEvidence Research Engine** — a persistent, auditable engine that
+turns education questions into evidence-grounded decisions.
 
+- **Two Research Modes** — **Evidence Review** (secondary-evidence research)
+  and **Full Research Cycle** (Evidence Review → Knowledge Gap → study design
+  → your data → analysis → updated decision).
+- **Project Workspace + Evidence Graph** — long-lived Projects with versioned,
+  immutable graph revisions; `result.json`/HTML/Markdown are projections, not
+  fact stores.
+- **Shared Research Library** — verified external facts reused via snapshot
+  imports; interpretations stay Project-local.
+- **Frozen scientific rule** — *No new study design without evidence
+  grounding*: designs must reference explicit, evidence-grounded Knowledge
+  Gap IDs.
 - ⚖️ It does not generate answers for teachers — it shows what the evidence supports, what it cannot support, who it applies to, and how to pilot and verify it.
 - 🧪 Built on real research (examples include CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 empirical evidence); no claims without sources.
 - 🚦 The output is not a binary "allow/forbid" answer but a four-state decision — **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** — plus an actionable teaching intervention and evaluation plan.
+- 🧩 The engine is an internal capability architecture — not a standalone
+  server/app; Native Core runs on Python stdlib only and never requires
+  Agent MCP or a daemon.
 
 ![EduEvidence overview banner](assets/top-banner.jpg)
 
