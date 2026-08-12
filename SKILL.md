@@ -1,48 +1,45 @@
 ---
 name: eduevidence
-description: Use when deciding whether, when, or how generative AI or AI teaching tools should be introduced into university teaching and the answer must be grounded in research evidence rather than general advice.
+description: Use when a teaching or education decision — whether, when, and how to adopt a teaching method, tool, or AI-based intervention — must be grounded in research evidence rather than opinion. Covers any education question: teaching methods, AI tools, assessment, curriculum, and learning interventions, with structured evidence review, counter-evidence search, methodology audit, evidence tribunal, and actionable pilot design.
 ---
 
-# EduEvidence — Evidence-Based AI Teaching Decision & Intervention Skill
+# EduEvidence — Evidence-Based Education Decision & Intervention Skill
 
 **From Education Questions to Evidence-Based Decisions.**
-**从教学问题，到有证据支撑的教学决策。**
 
 ## 1 Purpose
 
-EduEvidence 帮助高校教师、教学研究者与教学管理者，把"是否采用一种 AI 教学方式"从经验判断转化为**可追溯、可质疑、可验证的证据决策流程**。它不是替教师生成答案，而是帮助教师知道：证据支持什么、不能支持什么、适用于谁、应该怎样试点并验证。
+EduEvidence helps teachers, education researchers, and education administrators turn "should we adopt a teaching method or tool?" from an intuition-driven choice into a **traceable, challengeable, verifiable evidence decision process**. It does not generate answers for teachers — it shows what the evidence supports, what it cannot support, who it applies to, and how to pilot and verify it.
 
 ## 2 When to Use
 
-第一版冻结垂直场景：**高校课程中是否、何时、如何引入生成式 AI / AI 助教 / AI 编程助手等 AI 教学工具。**
+EduEvidence addresses **any teaching/education decision that needs evidence**: whether to adopt a teaching method, tool, or AI intervention; how to introduce it; for whom it works; and how to verify its effect. Typical scenarios include (not limited to):
 
-典型触发问题（命中其一即可使用）：
+- **AI teaching tools**: Should first-year C programming students be allowed to use AI coding assistants? Is an AI tutor effective for calculus? Does an AI writing assistant harm independent writing skills?
+- **Teaching methods**: Flipped classroom vs traditional lecture? Is project-based learning worth scaling? Peer assessment vs instructor grading?
+- **Curriculum & assessment**: How to set formative assessment frequency? Online vs in-person effect differences?
+- **Learning interventions**: Cognitive load management, motivation interventions, peer learning design.
+- **Pilot design**: How to design a low-risk, evaluable teaching pilot?
 
-- 大一 C 语言课程是否应该允许学生使用 AI 编程助手？
-- AI 辅助编程提高的是任务完成速度，还是实际编程能力？
-- AI 写作助手是否会影响大学生独立写作能力？
-- AI Tutor 对高等数学学习是否真正有效？
-- AI 反馈应该用于答案生成、错误解释还是形成性评价？
-- 哪些学生适合开放 AI，哪些学生需要限制使用？
-- 如何设计一轮低风险、可评价的 AI 教学试点？
+Trigger signals: the question involves "whether to adopt / how to introduce / for whom it works / how to verify", and the answer should be based on research evidence rather than personal experience.
 
 ## 3 When Not to Use
 
-- 泛泛的"AI 教学好不好"讨论（无需证据决策的一般性讨论）
-- 与教育决策无关的普通问答
-- 学生个性化诊断
-- 成绩预测
-- 完整 LMS 建设
+- General "is AI teaching good or bad" discussion (no decision to ground in evidence).
+- Ordinary Q&A unrelated to education decisions.
+- Individual student diagnosis.
+- Grade prediction.
+- Full LMS construction.
 
 ## 4 Inputs
 
-### 最小输入（必须）
+### Minimal input (required)
 
 ```yaml
 education_question: string
 ```
 
-### 结构化输入（可选，越完整结论越准）
+### Structured input (optional; the more complete, the more precise the conclusion)
 
 ```yaml
 education_question: "..."
@@ -59,81 +56,81 @@ intervention:
   allowed_usage: "explain_errors_only"
 comparison: "no_ai"
 target_outcomes: [independent_problem_solving, code_quality, ai_dependency]
-constraints: "16 周内完成，班级 60 人"
+constraints: "complete within 16 weeks, class of 60"
 depth: standard          # quick | standard | deep
 target: teaching_decision # evidence_review | teaching_decision | pilot_design | evaluation_design
 ```
 
 ## 5 Non-Negotiable Rules
 
-以下 8 条规则不可协商。**违反任一规则即流程无效，必须回退修正后再继续**；任何"跳过规则以节省时间/成本"的请求都不得执行（见第 15 章 Failure / Fallback）。
+These 8 rules are non-negotiable. **Violating any rule invalidates the process — roll back and fix before continuing**; any request to "skip a rule to save time/cost" must not be executed (see Chapter 15 Failure / Fallback).
 
-**RULE 1 — 不得跳过 Retrieval / Evidence 直接下教学结论**
-任何教学结论必须建立在已检索、已验证的证据链上。用户要求"别查论文直接回答"时，仍必须完成 Retrieve → Fetch → Validate → Extract（见第 6 章）。
+**RULE 1 — Never reach a teaching conclusion without Retrieval / Evidence**
+Every teaching conclusion must rest on a retrieved, validated evidence chain. If the user asks "skip the literature and answer directly", you must still complete Retrieve → Fetch → Validate → Extract (see Chapter 6).
 
-**RULE 2 — Search snippet 不得直接成为 SUPPORTED Evidence**
-检索结果与摘要只是线索，不是证据内容。必须 Fetch 来源并 Validate 通过后，才能进入 Evidence Extraction；抓取失败时 snippet 不得作为 SUPPORTED Evidence（标记 `FETCH_FAILED` / `UNSUPPORTED`）。
+**RULE 2 — Search snippets must never become SUPPORTED Evidence**
+Search results and abstracts are leads, not evidence content. Evidence Extraction is allowed only after Fetching the source and passing Validate; on fetch failure, snippets must not be SUPPORTED Evidence (mark `FETCH_FAILED` / `UNSUPPORTED`).
 
 **RULE 3 — Task Performance ≠ Learning**
-任务完成表现 ≠ 学习效果；短期成绩 ≠ 长期保持；AI 协助完成任务 ≠ 无 AI 环境下迁移。不得把任务表现等同为学习证据（见第 10 章）。
+Task performance ≠ learning; short-term scores ≠ long-term retention; AI-assisted performance ≠ no-AI transfer. Never equate task performance with learning evidence (see Chapter 10).
 
-**RULE 4 — 必须独立 Counter-Evidence Search**
-每次检索必须包含独立反方证据检索；Skeptic 必须独立寻找 null / negative / contradictory evidence、AI dependency、reduced transfer、novelty effect、self-selection bias、alternative explanation。禁止为形成"双边观点"虚构反方证据；无反方证据时明确输出 `NO CONTRADICTORY EVIDENCE FOUND`。
+**RULE 4 — Independent Counter-Evidence Search is mandatory**
+Every retrieval must include an independent counter-evidence search; the Skeptic must independently seek null / negative / contradictory evidence, AI dependency, reduced transfer, novelty effect, self-selection bias, and alternative explanations. Fabricating counter-evidence to create "both sides" is forbidden; when none exists, output `NO CONTRADICTORY EVIDENCE FOUND`.
 
-**RULE 5 — Tribunal 前必须通过 Pre-Verdict Gate**
-进入 Evidence Tribunal 之前，必须通过第 11 章的 11 项 Pre-Verdict Gate checklist；关键项失败不允许高置信度 Verdict，视情况降级 PILOT / INSUFFICIENT。
+**RULE 5 — Pre-Verdict Gate before Tribunal**
+The Evidence Tribunal (Chapter 6, step 8) requires passing the 11-item Pre-Verdict Gate checklist (Chapter 11); failure of critical items forbids high-confidence verdicts — downgrade to PILOT / INSUFFICIENT as appropriate.
 
-**RULE 6 — Agent MCP 未经用户确认不得 spawn**
-检测到 Agent MCP 可用 ≠ 允许直接使用。必须遵守第 9 章 Confirmation Gate：**Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** 未确认或用户拒绝 → 回退 Native Subagent Mode（宿主无子代理 → Sequential Mode）。
+**RULE 6 — No Agent MCP spawn without user confirmation**
+Agent MCP being available ≠ permission to use it. The Confirmation Gate (Chapter 9) is mandatory: **Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** If unconfirmed or rejected → fall back to Native Subagent Mode (or Sequential Mode if the host has no subagents).
 
-**RULE 7 — 展示层不得修改 Evidence / Verdict / Confidence**
-图表数字必须与 result.json 逐项一致；展示层只改变呈现方式，绝不修改数据。不一致 → `REPORT_INVALID` 禁止发布。
+**RULE 7 — Presentation must never modify Evidence / Verdict / Confidence**
+Chart numbers must match result.json item by item; the presentation layer only changes how data is shown, never the data itself. Mismatch → `REPORT_INVALID`, publication blocked.
 
-**RULE 8 — 完成声明前必须通过 Final Verification**
-宣布完成之前，必须通过第 14 章的 9 项 Final Verification checklist；未通过 → `FINAL_VERIFICATION_FAILED`，禁止声明完成。
+**RULE 8 — Final Verification before declaring done**
+Before announcing DONE, pass the 9-item Final Verification checklist (Chapter 14); otherwise → `FINAL_VERIFICATION_FAILED`, do not declare completion.
 
-## 5.5 启动确认（Step 0：研究开始前一次性确认）
+## 5.5 Startup Confirmation (Step 0: one-time confirmation before research)
 
-用户输入研究问题后，**先展示以下启动清单，一次性收集三项选择，再开始执行**。禁止未经确认直接跑。
+After the user inputs the research question, **present the following startup checklist and collect three choices at once before executing**. Never run without confirmation.
 
-### 启动清单模板
+### Startup checklist template
 
 ```markdown
-# EduEvidence 研究启动确认
+# EduEvidence Research Startup Confirmation
 
-## 📌 研究问题
-「<用户输入的问题>」
+## 📌 Research question
+「<user question>」
 
-## 1️⃣ 难度等级判定（复杂度分级门）
-判定结果：**<S/M/L> 级**
-依据：<单一问题单一 Outcome | 多篇研究 2-3 Outcome 部分冲突 | 多种 Outcome 多人群明显冲突需落地方案>
+## 1️⃣ Complexity assessment (complexity gate)
+Result: **<S/M/L>**
+Basis: <single question single outcome | multiple studies 2-3 outcomes partial conflict | multiple outcomes multiple populations clear conflict needs implementation plan>
 
-## 2️⃣ 研究深度（三选一）
-- [ ] quick   — 快速路径（Frame→Retrieve→Extract→Answer）
-- [ ] standard — 标准路径（+Skeptic/Method Review 简化）
-- [ ] deep    — 深度路径（完整 8 角色 + Pre-Verdict Gate + 交叉审核）← 本题推荐
+## 2️⃣ Research depth (pick one)
+- [ ] quick   — quick path (Frame→Retrieve→Extract→Answer)
+- [ ] standard — standard path (+ simplified Skeptic/Method Review)
+- [ ] deep    — deep path (full 8 roles + Pre-Verdict Gate + cross-review) ← recommended here
 
-## 3️⃣ 运行模式（三选一）
-| 模式 | 说明 | 适合 |
-|------|------|------|
-| **A. Agent MCP 增强**（推荐） | 多 CLI+多模型编排，跨上下文 + 交叉审核 | 深度研究 |
-| B. 宿主原生子代理 | 主会话用自身子代理派发（同一模型池） | 无 Agent MCP 时 |
-| C. 主会话直接 | 单 Agent 串行，不派发 | 快速/简单 |
+## 3️⃣ Execution mode (pick one)
+| Mode | Description | When |
+|------|-------------|------|
+| **A. Agent MCP Enhanced** (recommended) | multi-CLI + multi-model orchestration, cross-context + cross-review | deep research |
+| B. Host native subagents | main session dispatches via its own subagents (same model pool) | no Agent MCP |
+| C. Main session direct | single agent, no dispatch | quick/simple |
 
-### 当前会话能力检测
-- Agent MCP：● 已连接（spawn_agent 可用）/ ○ 未发现
-- **当前会话可用模型（主会话直接可见，两种情况都列出）**：
-  原生子代理池：task / scout / reviewer …
-- **Agent MCP 可用时**，追加列出各 CLI + 模型（不同系列各列最新，供选择；思考等级为默认值，无需确认）：
+### Current session capability check
+- Agent MCP: ● connected (spawn_agent available) / ○ not found
+- **Models usable in this session (visible to the main session; listed in both cases)**:
+  native subagent pool: task / scout / reviewer …
+- **When Agent MCP is available**, additionally list each CLI + models (latest per family; thinking level is default, no confirmation needed):
   `omp`: gpt-5.6-sol(high) · deepseek-v4-flash(max) · glm-5.2(high) · kimi-k2.7(high) …
-  `codex`: <实际扫描> …
-- **Agent MCP 未发现时**：不列出 CLI/模型（那是 Agent MCP 的模型选项），只推荐安装 Agent MCP（`~/.omp/agent/mcp.json` 注册 spawn_agent 后重启会话即可增强），当前用主会话原生子代理池执行。
+  `codex`: <actual scan> …
+- **When Agent MCP is not found**: do not list CLI/models (those are Agent MCP model options); recommend installing Agent MCP (register spawn_agent in `~/.omp/agent/mcp.json` and restart the session to enhance); execute with the main session's native subagent pool.
 
-> **模型默认思考等级（主会话内置，无需用户确认）**：deepseek 系 = `max`；gpt / claude / glm / kimi / qwen / minimax / grok 系 = `high`。派发子代理时按此设置 thinking，不逐项询问。
+> **Default model thinking levels (built into the main session, no user confirmation)**: deepseek family = `max`; gpt / claude / glm / kimi / qwen / minimax / grok families = `high`. Set thinking accordingly when dispatching subagents; do not ask item by item.
 >
-> **模型前缀即端点**：中转站注入的模型名带前缀（如 `opencodex/gpt-5.6-sol`、`opencode-go/deepseek-v4-flash`、`jbb/gpt-5.6-luna`），同一后缀不同前缀是不同端点，**必须保留完整模型名**（含前缀）派发，禁止只取后缀或自行改名。
+> **Model prefix = endpoint**: relay-injected models carry prefixes (`opencodex/gpt-5.6-sol`, `opencode-go/deepseek-v4-flash`, `jbb/gpt-5.6-luna`); same suffix different prefix = different endpoint. **Always dispatch with the full model name (with prefix)**; never strip or rename.
 
-## 4️⃣ 网页风格（五选一）
+## 4️⃣ Report style (pick one)
 
 ```text
 1. Claude Research      [Light]
@@ -143,43 +140,43 @@ target: teaching_decision # evidence_review | teaching_decision | pilot_design |
 5. Presentation / Judge [Dark]
 ```
 
-内部 theme key 依次为：`claude` / `academic` / `datalab` / `datalab-dark` / `presentation`。
+Internal theme keys: `claude` / `academic` / `datalab` / `datalab-dark` / `presentation`.
 
-## ✅ 请一次性回复三项
-1. 运行模式：A / B / C（推荐 A）
-2. 使用的 CLI+模型：如 `omp + gpt-5.6-sol(pro) + deepseek-v4-flash(普通)`
-3. 网页风格：claude / academic / datalab / datalab-dark / presentation
+## ✅ Reply with three choices at once
+1. Execution mode: A / B / C (A recommended)
+2. CLI + models: e.g. `omp + gpt-5.6-sol(pro) + deepseek-v4-flash(standard)`
+3. Report style: claude / academic / datalab / datalab-dark / presentation
 
-确认后全自动执行，产出 HTML + Markdown，完成后打开浏览器展示并说明结果。
+After confirmation, execute fully automatically, produce HTML + Markdown, then open the browser and explain the results.
 ```
 
-### 执行规则
+### Execution rules
 
-- **三项缺一不可**：模式、CLI+模型、风格。缺省时用推荐值（A / omp 扫描结果 / claude）并注明。
-- 用户确认后**不再逐阶段询问**，全自动跑到 Present（第 10 步）。
-- 深度=deep 且用户选 A 时，默认启用 Cross-Model Review（模式 2，第 8.5 节），除非用户明确只要同一模型。
-- 最终交付：`EduEvidence_Report.html` + `RESEARCH.md`（Markdown 版）+ 浏览器打开 + 3-5 句结果说明。
+- **All three choices required**: mode, CLI+models, style. Defaults when omitted (A / omp scan result / claude) with a note.
+- After confirmation, **no more per-stage questions** — run fully automatically to Present (step 10).
+- depth=deep and mode A: Cross-Model Review (mode 2, §8.5) enabled by default unless the user explicitly wants the same model only.
+- Final deliverables: `EduEvidence_Report.html` + `RESEARCH.md` (Markdown) + browser open + 3-5 sentence result summary.
 
 ## 6 Workflow Overview
 
-严格按以下 10 步执行，**每一步产出经过 Schema 校验的数据，再进入下一步**。资源发现（第 7 章）与执行后端选择（第 8 章）在步骤 1–2 之间完成；Confirmation Gate（第 9 章）在委派执行前完成。
+Execute strictly in these 10 steps; **each step's output must pass Schema validation before the next step**. Resource discovery (Chapter 7) and execution backend selection (Chapter 8) happen between steps 1–2; the Confirmation Gate (Chapter 9) completes before any delegation.
 
 ```text
-1. Frame          构建 EducationResearchFrame（问题/学习者/课程/干预/对照/Outcome/范围/纳入排除标准）
-2. Retrieve       文献与证据检索（支持证据 + 独立反方证据检索，RULE 4；执行细则见 retrieval-protocol.md）
-3. Fetch          获取来源全文/可验证内容（snippet ≠ 内容，RULE 2）
-4. Validate       校验来源与内容（来源有效、抓取完整、Schema 校验；判定标准见 source-validity.md）
-5. Extract        抽取 Claim-Level Evidence（Evidence Object，绑定 Outcome）
-6. Challenge      Skeptic 反证协议（固定 9 项检查）
-7. Audit          Method Reviewer 方法学审查（15 项清单）
-8. Adjudicate     Evidence Tribunal 证据裁决（裁决前必须通过 Pre-Verdict Gate，第 11 章）
-9. Design         适用性分析 + 干预设计 + 评价方案（For whom / 最小可验证试点 / Evaluation Plan）
-10. Present       结果呈现（渲染单文件双语 HTML 报告 + 信息图 + 学术图）
+1. Frame          Build the EducationResearchFrame (question/learner/course/intervention/comparison/outcomes/scope/inclusion-exclusion)
+2. Retrieve       Retrieve literature & evidence (support + independent counter-evidence, RULE 4; details: retrieval-protocol.md)
+3. Fetch          Fetch full/verifiable source content (snippet ≠ content, RULE 2)
+4. Validate       Validate source & content (source validity, fetch completeness, Schema; criteria: source-validity.md)
+5. Extract        Extract claim-level evidence (Evidence Object bound to Outcome)
+6. Challenge      Skeptic protocol (fixed 9 checks)
+7. Audit          Method Reviewer methodology audit (15-item checklist)
+8. Adjudicate     Evidence Tribunal (must pass Pre-Verdict Gate first, Chapter 11)
+9. Design         Applicability + intervention design + evaluation plan (For whom / minimum viable pilot / Evaluation Plan)
+10. Present       Render the single-file bilingual HTML report + infographics + academic figures
 ```
 
-**强规则：Search snippet ≠ Evidence。** Retrieve 的结果只是候选线索；只有经过 Fetch（拿到来源内容）与 Validate（来源与内容校验通过）之后，才能进入 Extract。
+**Hard rule: Search snippet ≠ Evidence.** Retrieve results are candidate leads only; Extract is allowed only after Fetch (real source content) and Validate (source & content checks pass).
 
-**每步必须过对应 Schema 校验门，才能进入下一步**：
+**Every step must pass its Schema gate before the next**:
 
 ```text
 Frame        → education-frame.schema.json
@@ -187,172 +184,174 @@ Retrieve     → source.schema.json
 Fetch        → fetch-result.schema.json
 Validate     → source.schema.json / fetch-result.schema.json
 Extract      → evidence.schema.json
-Challenge    → cross-model-review.schema.json（反证记录）
+Challenge    → cross-model-review.schema.json (counter-evidence record)
 Audit        → methodology.schema.json
 Adjudicate   → verdict.schema.json
 Design       → intervention.schema.json / evaluation.schema.json
-Present      → report-result.schema.json（整体契约校验）
+Present      → report-result.schema.json (overall contract)
 ```
 
-### 结果呈现（第 10 步）
+### Presentation (step 10)
 
-研究产出 `result.json` 后，通过确定性适配器渲染为用户可读的展示层（`visualization/eduevidence-report/`）：
+After research produces `result.json`, deterministic adapters render it into the user-facing layer (`visualization/eduevidence-report/`):
 
 ```text
-result.json + result.zh.json（中文平行数据，AI 直接产出双语）
-  ├─ build_charts.py       → ECharts 规格（结果概览 / 主张追溯 / 基准）
-  ├─ build_infographics.py → 4 张信息图 SVG（EvidenceFlow / 裁决 / 干预 / 评价）
-  ├─ build_figures.py      → 出版级学术图（SVG/PNG/PDF）
-  └─ build_report.py       → EduEvidence_Report.html（单文件离线双语报告）
+result.json + result.zh.json (Chinese parallel data, produced directly by AI)
+  ├─ build_charts.py       → ECharts specs (outcome overview / claim trace / benchmark)
+  ├─ build_infographics.py → 4 infographic SVGs (EvidenceFlow / tribunal / intervention / evaluation)
+  ├─ build_figures.py      → publication academic figures (SVG/PNG/PDF)
+  └─ build_report.py       → EduEvidence_Report.html (single-file offline bilingual report)
 ```
 
-- 报告默认中文，一键切换 EN；采用双层结构：Visual Brief 可视化摘要 + Full Report 完整报告（AI 根据研究内容规划 5–7 章动态结构），并在生成前从五种主题中选择其一。
-- **展示层只改变呈现方式，绝不修改数据**（RULE 7）：图表数字必须与 result.json 逐项一致，不一致则 `REPORT_INVALID` 禁止发布。
-- 渲染命令：`python3 visualization/eduevidence-report/scripts/build_report.py --result <result.json> --out REPORT.html`
+- The report defaults to Chinese with one-click EN switch; two-layer structure: Visual Brief + Full Report (AI plans 5–7 dynamic chapters based on the research), one of five styles chosen at generation time.
+- **Presentation only changes how data is shown, never the data** (RULE 7): chart numbers must match result.json item by item, otherwise `REPORT_INVALID` blocks publishing.
+- Render command: `python3 visualization/eduevidence-report/scripts/build_report.py --result <result.json> --out REPORT.html`
 
 ## 7 Resource Discovery
 
-- **SCP 可用则动态发现**：以 Scientific Resource Capability Layer（SCP）为科学能力层，按 capability 动态发现可用资源（literature_search / scholar_metadata / web_fetch / pdf_extraction / document_conversion / citation_validation / statistical_analysis / meta_analysis / data_visualization 等）。
-- **SCP 不可用则 fallback 到本地 `references/`**：方法论文档（education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design / retrieval-protocol / source-validity）与原生工具（Native Search / Smart Web Fetch / 本地解析器）。
-- **不硬编码资源清单**：不把任何资源生态的完整清单（如 SCP 的 Scientific Skills 全集）写死进本 Skill；按 capability 优先级路由，优先级按 capability 决定，不做全局死顺序。典型优先级：
+- **SCP available → dynamic discovery**: use the Scientific Resource Capability Layer (SCP) as the science capability layer, discovering resources by capability (literature_search / scholar_metadata / web_fetch / pdf_extraction / document_conversion / citation_validation / statistical_analysis / meta_analysis / data_visualization, etc.).
+- **SCP unavailable → fall back to local `references/`**: methodology documents (education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design / retrieval-protocol / source-validity) and native tools (Native Search / Smart Web Fetch / local parsers).
+- **Never hard-code a resource inventory**: do not write any ecosystem's full list (e.g. SCP's Scientific Skills) into the Skill; route by capability priority, no global fixed order. Typical priority:
 
 ```text
-文献检索：SCP Skill / SCP Resource → Scholar Provider → Native Search
-网页抓取：Smart Web Fetch → Native / Local Parser
+Literature: SCP Skill / SCP Resource → Scholar Provider → Native Search
+Web fetch:  Smart Web Fetch → Native / Local Parser
 ```
 
-- **SCP 与 Agent MCP 正交**：SCP 选择"用什么科学能力"，Agent MCP 选择"由哪个 CLI / Model / Agent 执行"，两层不得混用。
+- **SCP and Agent MCP are orthogonal**: SCP chooses "which scientific capability", Agent MCP chooses "which CLI / Model / Agent executes" — never mix the two layers.
 
 ## 8 Execution Backend Selection
 
-先判复杂度，再选执行后端。三层后端：
+Assess complexity first, then choose the execution backend. Three tiers:
 
 ```text
-Tier 1  Agent MCP Enhanced       多模型多 Agent 编排（需用户确认，第 9 章）
-Tier 2  Host Native Subagents    宿主原生子代理
-Tier 3  Sequential Main Agent    单 Agent 串行
+Tier 1  Agent MCP Enhanced       multi-model multi-agent orchestration (user confirmation required, Chapter 9)
+Tier 2  Host Native Subagents    host-native subagents
+Tier 3  Sequential Main Agent    single agent, sequential
 ```
 
-**复杂度分级门（先判级，再决定拓扑）：**
+**Complexity gate (assess first, then topology):**
 
-| 级别 | 判据 | 执行路径 |
+| Level | Criteria | Execution path |
 |---|---|---|
-| S | 单一问题、单一 Outcome、少量来源、无明显冲突 | Frame → Retrieve → Fetch → Validate → Extract → Verify → Answer（单 Agent，不拆分） |
-| M | 多篇研究、2–3 个 Outcome、存在部分冲突、需一次独立验证 | Primary Analysis + Independent Check（增强模式最多 2–3 角色） |
-| L | 多种 Outcome、多学习者群体、明显证据冲突、需教学落地方案 | 完整 8 角色工作流（Planner / Retriever / Analyst / Skeptic / Method Reviewer / Judge / Intervention Designer / Evaluation Designer） |
+| S | Single question, single outcome, few sources, no clear conflict | Frame → Retrieve → Fetch → Validate → Extract → Verify → Answer (single agent, no split) |
+| M | Multiple studies, 2–3 outcomes, partial conflict, one independent check needed | Primary Analysis + Independent Check (max 2–3 roles in enhanced mode) |
+| L | Multiple outcomes, multiple learner groups, clear evidence conflict, needs implementation plan | Full 8-role workflow (Planner / Retriever / Analyst / Skeptic / Method Reviewer / Judge / Intervention Designer / Evaluation Designer) |
 
-**选择流程：**
+**Selection flow:**
 
 ```text
-task benefits from delegation?
-  ├─ NO → Native（Tier 2 / Tier 3）
+does the task benefit from delegation?
+  ├─ NO → Native (Tier 2 / Tier 3)
   └─ YES
        ↓
-宿主会话是否暴露 Agent MCP 编排工具（spawn_agent 等）？
-  ├─ NO → Native（Tier 2 / Tier 3）——用宿主自身子代理机制执行
+does the host session expose Agent MCP orchestration tools (spawn_agent etc.)?
+  ├─ NO → Native (Tier 2 / Tier 3) — execute via host's own subagent mechanism
   └─ YES
        ↓
-Mandatory Confirmation Gate（第 9 章）
+Mandatory Confirmation Gate (Chapter 9)
 ```
 
-> **Agent MCP 可用性判定 = 当前会话内 `spawn_agent` 等 MCP 工具可见且可调用**（如 `~/.omp/agent/mcp.json` 中 `agent-mcp ● connected`）。不是 env 变量、不是端口探测、不是文件存在。执行前必须先检查会话工具列表。
+> **Agent MCP availability = `spawn_agent` and related MCP tools visible & callable in the current session** (e.g. `agent-mcp ● connected` in `~/.omp/agent/mcp.json`). Not an env var, not a port probe, not file existence. Check the session tool list before executing.
 
-**两种 spawn 机制（确认门通过后二选一）：**
+**Two spawn mechanisms (choose one after the gate passes):**
 
 ```text
-机制 A  Agent MCP spawn：通过 MCP 工具 spawn_agent 派发到用户批准的 CLI+模型，
-        跨上下文执行，产物由 MCP 回传（multi_cli_dispatch / cross_model_review /
-        memory_bank 可用）。
-机制 B  宿主原生子代理：主 agent 用自身 task/subagent 工具派发，
-        角色分工与模型映射与机制 A 完全一致，但无 MCP 增强特性。
+Mechanism A  Agent MCP spawn: dispatch via the MCP tool spawn_agent to user-approved
+             CLI+models, cross-context execution, results returned by MCP
+             (multi_cli_dispatch / cross_model_review / memory_bank available).
+Mechanism B  Host native subagents: the main agent dispatches via its own
+             task/subagent tools; role split & model mapping identical to A,
+             but without MCP enhancements.
 
-优先机制 A；会话工具不可见/调用失败 → 机制 B（同一角色映射）。
+Prefer A; if session tools are invisible or calls fail → B (same role mapping).
 ```
 
-- 角色数量 ≠ 必须启动的 Agent 数量。Native Mode（Tier 2 / Tier 3）由单 Agent 串行执行角色协议。
-- 三层后端共享同一 Scientific Protocol（第 6 章），仅执行方式不同。
+- Number of roles ≠ number of agents that must launch. Native Mode (Tier 2/3) runs the role protocols sequentially in a single agent.
+- All three tiers share the same Scientific Protocol (Chapter 6); only execution differs.
 
-## 8.5 Cross-Model Review 模式（可选，需用户确认）
+## 8.5 Cross-Model Review Mode (optional, requires user confirmation)
 
-两种审核模式，执行前与用户确认：
+Two review modes; confirm with the user before execution:
 
 ```text
-模式 1  同一模型串行：8 角色由已批准映射执行（Skeptic/Judge 用高级模型），
-        无独立交叉审核。
-模式 2  交叉审核（Cross-Model Review）：同一流程跑完后，用【不同 model
-        family】的独立模型对 raw_verdict 做独立审核（cross_model_review），
-        输出 agreement + 分歧清单；仅"同一模型不同 session"不算交叉审核。
+Mode 1  Same-model sequential: the 8 roles run on the approved mapping
+        (Skeptic/Judge use the strong model); no independent cross-review.
+Mode 2  Cross-Model Review: after the same pipeline, an independent model
+        from a DIFFERENT model family reviews raw_verdict independently
+        (cross_model_review), outputting agreement + disagreement list;
+        "same model different session" does NOT count as cross-review.
 ```
 
-- 模式 2 需额外确认独立审核模型（不得与主映射同 family）。
-- 交叉审核产物写入 `cross_model_review.schema.json` 契约，作为 Pre-Verdict Gate 的可选输入。
+- Mode 2 requires confirming the independent reviewer model (must not be same family as the main mapping).
+- The cross-review artifact follows `cross_model_review.schema.json` and is an optional Pre-Verdict Gate input.
 
 ## 9 Agent MCP Confirmation Gate
 
-最终原则：
+Final principle:
 
 > **Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.**
 
 ```text
-用户允许使用的 CLI（allowed_clis）
-→ 只扫描这些 CLI 当前真实可用模型（model_inventory）
-→ 按角色需求（Role Requirements）生成推荐表
-→ 展示给用户：角色 / CLI / 模型 / 选择理由 / 任务
-→ 用户明确确认（approval）
-→ 才能 spawn Agent
+user-approved CLIs (allowed_clis)
+→ scan only those CLIs for currently available models (model_inventory)
+→ build a recommendation table from Role Requirements
+→ show the user: role / CLI / model / rationale / task
+→ user explicitly confirms (approval)
+→ only then spawn agents
 ```
 
-- **未经确认不得 spawn**：未确认或用户拒绝 → `AGENT_MCP_APPROVAL_REQUIRED`，回退 Native Subagent Mode（Tier 2）；宿主无子代理 → Sequential Mode（Tier 3）。
-- 只扫描用户允许的 CLI，禁止自动遍历整台电脑所有 Agent CLI。
-- **禁止硬编码模型名称**（可用模型会变化）；每个模型只记录可验证信息（reasoning / speed / cost / structured_output / context / tool_use / multimodal），无法确认记 `unknown`，禁止猜。
-- 推荐表同时显示：角色数、并发数、是否 Cross-Model Review、是否 Memory Bank、Cost class（不知道就 Unknown）。
-- 独立 Reviewer 尽量使用不同模型、最好不同 provider / family；不要把"同一模型不同 session"包装成 cross-model。
-- **以下变化必须重新确认**：新增 CLI、替换模型、新增角色、修改 Role → Model 映射、显著提高 token budget、启用新外部 provider。
-- "仅 Agent MCP 已安装"不构成许可；确认后同一 mapping 在本次 run 内有效，不逐 Agent 重复询问。
+- **No spawn without confirmation**: unconfirmed or rejected → `AGENT_MCP_APPROVAL_REQUIRED`, fall back to Native Subagent Mode (Tier 2); no host subagents → Sequential Mode (Tier 3).
+- Scan only user-approved CLIs; never auto-traverse every agent CLI on the machine.
+- **Never hard-code model names** (available models change); record only verifiable capability facts (reasoning / speed / cost / structured_output / context / tool_use / multimodal); unknown → `unknown`, never guess.
+- The recommendation table also shows: role count, concurrency, Cross-Model Review on/off, Memory Bank on/off, Cost class (Unknown if not known).
+- Independent reviewers should use different models, preferably different providers/families; never package "same model different session" as cross-model.
+- **Re-confirmation required on**: new CLI, replaced model, new role, modified Role→Model mapping, significant token budget increase, new external provider.
+- "Agent MCP installed" alone is not permission; after confirmation the same mapping holds for the run, no per-agent re-asking.
 
 ## 10 Evidence Rules
 
-- 所有证据必须绑定到一个 Outcome（Outcome Taxonomy 四类：学习效果 / 任务表现 / 学习过程 / 风险指标）。
-- **Evidence Contract 核心字段**：`source_id`、`study_id`、`sample_id`、`claim_id`、`claim`、`outcome_type`、`relation_to_claim`、`effect_direction`、`source_location`；`direction` 仅保留兼容性，不再作为核心语义。缺失任一核心字段 → 标记 `UNSUPPORTED`。
-- **任务完成表现 ≠ 学习效果；短期成绩 ≠ 长期保持；AI 协助完成任务 ≠ 无 AI 环境下迁移**（RULE 3）。
-- Skeptic 必须独立寻找 null / negative / contradictory evidence、AI dependency、reduced transfer、novelty effect、self-selection bias、alternative explanation（RULE 4）。**禁止为形成"双边观点"虚构反方证据**；无反方证据时明确输出 `NO CONTRADICTORY EVIDENCE FOUND`。
-- 生成最终报告前必须运行 Citation Audit：Claim → Evidence ID → Source ID → Source Location → 支持关系 → Outcome 匹配 → Scope 检查。失败标记 `UNSUPPORTED` 或 `DOWNGRADE_CONFIDENCE`。
-- 质量评分使用五维框架（D1 Study Design / D2 Sample Quality / D3 Measurement Validity / D4 Temporal Strength / D5 Directness，每维 0–2，总分 0–10）。
+- Every evidence item binds to one Outcome (Outcome Taxonomy: learning / task performance / process / risk).
+- **Evidence Contract core fields**: `source_id`, `study_id`, `sample_id`, `claim_id`, `claim`, `outcome_type`, `relation_to_claim`, `effect_direction`, `source_location`; `direction` is backward-compatible only, no longer core semantics. Missing any core field → mark `UNSUPPORTED`.
+- **Task performance ≠ learning; short-term ≠ long-term retention; AI-assisted ≠ no-AI transfer** (RULE 3).
+- The Skeptic must independently seek null / negative / contradictory evidence, AI dependency, reduced transfer, novelty effect, self-selection bias, alternative explanations (RULE 4). **Never fabricate counter-evidence for "both sides"**; when none exists, output `NO CONTRADICTORY EVIDENCE FOUND`.
+- Run a Citation Audit before final report generation: Claim → Evidence ID → Source ID → Source Location → support relation → Outcome match → Scope check. Failures marked `UNSUPPORTED` or `DOWNGRADE_CONFIDENCE`.
+- Quality scoring uses the five-dimension framework (D1 Study Design / D2 Sample Quality / D3 Measurement Validity / D4 Temporal Strength / D5 Directness, each 0–2, total 0–10).
 
 ## 11 Pre-Verdict Gate
 
-Evidence Tribunal（第 6 章步骤 8）之前必须通过以下 checklist（RULE 5）：
+Before the Evidence Tribunal (Chapter 6, step 8), pass this checklist (RULE 5):
 
 ```text
-[ ] Research Frame valid              问题框架有效（education-frame schema）
-[ ] Sources valid                     来源有效（source schema，Fetch / Validate 完成）
-[ ] Evidence Schema valid             证据 Schema 校验通过（evidence schema）
-[ ] Source dedupe completed           来源去重完成
-[ ] Counter-evidence search completed 独立反方证据检索完成（RULE 4）
-[ ] Methodology audit completed       方法学审查完成（15 项清单）
-[ ] Claim-Evidence Audit passed       Claim-证据追溯审计通过
-[ ] Outcome mapping checked           Outcome 映射已检查（四类 Taxonomy）
-[ ] Scope calibration checked         适用范围校准已检查（证据适用范围 vs 目标场景）
-[ ] Independent study/sample count checked  独立研究/样本数量已核验（不把同一研究重复计为多条证据）
-[ ] Deterministic confidence computed 确定性 Confidence 已计算（compute_confidence.py，不由模型自由生成）
+[ ] Research Frame valid              (education-frame schema)
+[ ] Sources valid                     (source schema; Fetch / Validate done)
+[ ] Evidence Schema valid             (evidence schema)
+[ ] Source dedupe completed
+[ ] Counter-evidence search completed (RULE 4)
+[ ] Methodology audit completed       (15-item checklist)
+[ ] Claim-Evidence Audit passed
+[ ] Outcome mapping checked           (four-category Taxonomy)
+[ ] Scope calibration checked         (evidence scope vs target context)
+[ ] Independent study/sample count checked  (same study not double-counted as multiple evidence)
+[ ] Deterministic confidence computed (compute_confidence.py, not model-generated)
 ```
 
-**关键项失败不允许高置信度 Verdict**：视情况降级 PILOT / INSUFFICIENT；失败状态见第 15 章 `PRE_VERDICT_FAILED`。
+**Critical-item failure forbids high-confidence verdicts**: downgrade to PILOT / INSUFFICIENT as appropriate; failure state is `PRE_VERDICT_FAILED` (Chapter 15).
 
 ## 12 Decision Rules
 
-### 四态决策矩阵
+### Four-state decision matrix
 
-| 决策 | 要求 |
+| Decision | Requirement |
 |---|---|
-| **ADOPT** | 多项关键 Outcome 有较强直接证据；风险可控；场景匹配 |
-| **PILOT** | 有积极证据，但长期效果 / 迁移 / 风险仍不明确 |
-| **REJECT** | 关键结果存在较稳定负效应，或风险明显大于收益 |
-| **INSUFFICIENT EVIDENCE** | 来源不足、直接性差、研究设计弱、冲突无法解释 |
+| **ADOPT** | Multiple key outcomes with strong direct evidence; risk controlled; context matches |
+| **PILOT** | Positive evidence, but long-term / transfer / risk still unclear |
+| **REJECT** | Stable negative effect on key outcomes, or risk clearly outweighs benefit |
+| **INSUFFICIENT EVIDENCE** | Too few sources, weak directness, weak design, unexplained conflict |
 
-任何 PILOT / ADOPT 建议必须附 Evaluation Plan；任何建议必须经过 Applicability Analysis。
+Every PILOT / ADOPT recommendation requires an Evaluation Plan; every recommendation passes Applicability Analysis.
 
-### Confidence 规则化计算（不由模型自由生成）
+### Rule-based Confidence (not model-generated)
 
 ```text
 Evidence Quality + Consistency + Directness + Evidence Count
@@ -360,93 +359,93 @@ Evidence Quality + Consistency + Directness + Evidence Count
 → High | Moderate | Low | Insufficient
 ```
 
-- 最终 confidence 由 `scripts/compute_confidence.py` 确定性计算，不由模型自由生成。
-- 数字分值仅作内部比较，不作为"科学概率"宣传。
+- Final confidence is computed deterministically by `scripts/compute_confidence.py`, overriding any model value.
+- Numeric scores are for internal comparison only; never marketed as "scientific probability".
 
 ## 13 Output Contract
 
-最终输出是一个 **Research & Decision Pack**，包含结构化数据产物与双层展示报告：
+The final output is a **Research & Decision Pack**: structured data artifacts plus a two-layer presentation report.
 
 ```text
-结构化数据产物（每步 Schema 校验）：
-  frame.json       问题框架（学习者/课程/干预/对照/Outcome/范围/纳入排除标准）
-  sources.jsonl    来源清单（可验证位置 + fetch 溯源）
-  evidence.jsonl   Claim 级证据（relation_to_claim / effect_direction / decision_relation）
-  methodology.json 方法学审计（15 项清单 + 任务vs学习护栏）
-  raw_verdict.json LLM 裁决（supported/uncertain/contradicted + 证据边界）
-  final_verdict.json 确定性置信度裁决（compute_confidence 覆盖模型值）
-  intervention.json 教学干预（最小可验证试点 + AI 使用规则 + 停止条件）
-  evaluation.json  评价方案（基线/后测/保持测试/迁移测试/成功阈值）
-  result.json      聚合结果（outcomes 按 effect_direction 聚合；claims 稳定 claim_id）
-  result.zh.json   中文平行版
-  artifact_manifest.json  产物一致性清单（result hash / renderer / git commit）
+Structured data artifacts (Schema-validated per step):
+  frame.json       research frame (learner/course/intervention/comparison/outcomes/scope/inclusion-exclusion)
+  sources.jsonl    source list (verifiable locations + fetch provenance)
+  evidence.jsonl   claim-level evidence (relation_to_claim / effect_direction / decision_relation)
+  methodology.json methodology audit (15-item checklist + task-vs-learning guard)
+  raw_verdict.json LLM verdict (supported/uncertain/contradicted + evidence boundary)
+  final_verdict.json deterministic-confidence verdict (compute_confidence overrides model values)
+  intervention.json teaching intervention (minimum viable pilot + AI usage rules + stop conditions)
+  evaluation.json  evaluation plan (baseline/post/retention/transfer + success threshold)
+  result.json      aggregated results (outcomes aggregated by effect_direction; stable claim_ids)
+  result.zh.json   Chinese parallel version
+  artifact_manifest.json  artifact consistency (result hash / renderer / git commit)
 
-展示报告（同一数据两种呈现）：
-  EduEvidence_Report.html  单文件离线双语（Visual Brief + Full Report 双分页，
-                            5-7 章动态结构，五种风格生成时选择）
-  RESEARCH.md              Markdown 版研究包
+Presentation (same data, two views):
+  EduEvidence_Report.html  single-file offline bilingual (Visual Brief + Full Report,
+                           5-7 dynamic chapters, one of five styles at generation time)
+  RESEARCH.md              Markdown research pack
 ```
 
-每个结构化产出（Frame / Evidence / Methodology / Verdict / Intervention / Evaluation）必须通过对应 JSON Schema 校验（`schemas/*.schema.json`），可运行 `scripts/validate_schema.py` 验证。
+Every structured artifact (Frame / Evidence / Methodology / Verdict / Intervention / Evaluation) must pass its JSON Schema (`schemas/*.schema.json`); verify with `scripts/validate_schema.py`.
 
 ## 14 Final Verification
 
-宣布完成（DONE）之前必须通过以下 checklist（RULE 8）：
+Before declaring DONE, pass this checklist (RULE 8):
 
 ```text
-[ ] result.json Schema pass           result.json 通过 Schema 校验
-[ ] Evidence Trace complete           证据追溯链完整（Claim → Evidence → Source）
-[ ] Verdict uses deterministic confidence  Verdict 使用确定性 Confidence
-[ ] HTML data integrity pass          HTML 数据一致性通过（展示层与 result.json 逐项一致）
-[ ] No unsupported high-confidence claim   不存在无支持的 high-confidence claim
-[ ] zh/en structure valid             中英文结构有效
-[ ] report rendered successfully      报告渲染成功
-[ ] provenance saved                  溯源信息已保存（run manifest / trace）
-[ ] no REPORT_INVALID                 无 REPORT_INVALID
+[ ] result.json Schema pass           result.json passes Schema validation
+[ ] Evidence Trace complete           Claim → Evidence → Source fully traced
+[ ] Verdict uses deterministic confidence
+[ ] HTML data integrity pass          presentation matches result.json item by item
+[ ] No unsupported high-confidence claim
+[ ] zh/en structure valid             bilingual structure valid
+[ ] report rendered successfully
+[ ] provenance saved                 (run manifest / trace)
+[ ] no REPORT_INVALID
 ```
 
-全部通过才可声明 **DONE**；任一失败 → `FINAL_VERIFICATION_FAILED`，先修复再声明完成。
+All pass → declare **DONE**; any failure → `FINAL_VERIFICATION_FAILED`, fix before declaring completion.
 
 ## 15 Failure / Fallback
 
-出现以下状态时**禁止强行生成高确定性建议**，如实标注并给出下一步：
+On these states, **never force a high-confidence recommendation**; label honestly and give next steps:
 
 ```text
-INSUFFICIENT_SOURCES     来源不足，提示补充检索或标注 insufficient_evidence
-UNSUPPORTED_CLAIM        结论无法绑定可靠来源，标注 UNSUPPORTED 并降级
-CONFLICT_UNRESOLVED      正反证据冲突无法解释，保持不确定，不强行裁决
-SCOPE_MISMATCH           证据适用范围与目标场景不匹配，标注并缩小结论边界
-METHODOLOGY_TOO_WEAK     研究设计过弱，不能支撑结论
-NEEDS_USER_CONTEXT       缺少学习者/课程/干预信息，先请求补充再继续
-TOOL_FAILURE             检索或工具失败，如实报告，不编造来源
-FETCH_FAILED             来源抓取失败，snippet 不得作为 SUPPORTED Evidence（RULE 2）
-PRE_VERDICT_FAILED       Pre-Verdict Gate 未通过，禁止进入 Tribunal 或降级 Verdict
-REPORT_INVALID           展示层与数据不一致，禁止发布
-FINAL_VERIFICATION_FAILED Final Verification 未通过，禁止声明完成
+INSUFFICIENT_SOURCES     too few sources; suggest more retrieval or mark insufficient_evidence
+UNSUPPORTED_CLAIM        claim cannot bind to a reliable source; mark UNSUPPORTED and downgrade
+CONFLICT_UNRESOLVED      pro/con conflict unexplained; stay uncertain, do not force a ruling
+SCOPE_MISMATCH           evidence scope does not match target context; annotate and narrow
+METHODOLOGY_TOO_WEAK     study design too weak to support the conclusion
+NEEDS_USER_CONTEXT       missing learner/course/intervention info; request before continuing
+TOOL_FAILURE             retrieval or tool failure; report honestly, never fabricate sources
+FETCH_FAILED             source fetch failed; snippet must not be SUPPORTED Evidence (RULE 2)
+PRE_VERDICT_FAILED       Pre-Verdict Gate failed; no Tribunal or downgraded verdict
+REPORT_INVALID           presentation inconsistent with data; publishing blocked
+FINAL_VERIFICATION_FAILED Final Verification failed; no completion declaration
 ```
 
-**执行后端 fallback 链**：
+**Execution backend fallback chain**:
 
 ```text
-Agent MCP（已确认）→ Native Subagent Mode → Sequential Main Agent
+Agent MCP (confirmed) → Native Subagent Mode → Sequential Main Agent
 ```
 
-- Agent MCP 不可用 / 未确认 / 用户拒绝 → Native（Tier 2）；宿主无子代理 → Sequential（Tier 3）。
-- 资源层 fallback：SCP 不可用 → 本地 `references/` 与原生工具（第 7 章）。
-- 任何 fallback 不改变 Scientific Protocol（第 6 章）与 Non-Negotiable Rules（第 5 章）。
+- Agent MCP unavailable / unconfirmed / rejected → Native (Tier 2); no host subagents → Sequential (Tier 3).
+- Resource fallback: SCP unavailable → local `references/` and native tools (Chapter 7).
+- Any fallback keeps the Scientific Protocol (Chapter 6) and Non-Negotiable Rules (Chapter 5).
 
 ## 16 Human-in-the-Loop
 
-EduEvidence 是**教学决策辅助**，不代替教师或学校最终决策。涉及高风险评价、学生处分、个体心理判断、学生重大教育机会时**不自动决策**。核心定位：Research & decision support。
+EduEvidence is a **teaching-decision aid**, not a replacement for teachers' or institutions' final decisions. It never auto-decides on high-stakes assessment, student discipline, individual psychological judgments, or major student educational opportunities. Core positioning: research & decision support.
 
 ## 17 References
 
-- 教育方法论文档（`references/`）：education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design / retrieval-protocol / source-validity
-- 数据契约（`schemas/`）：education-frame / source / fetch-result / evidence / cross-model-review / methodology / verdict / intervention / evaluation / report-result
-- 确定性逻辑（`scripts/`）：validate_schema / evidence_score / evidence_matrix / claim_audit / compute_confidence / benchmark / render_report
-- 文档（`docs/`）：architecture / methodology / benchmark / demo / reproducibility
-- 真实研究锚点示例（`examples/`）：
-  - Kazemitabaar et al. (2023, CHI) — AI Code Generators on Novice Learners：任务完成率 ↑ 1.15×、正确率 ↑ 1.8×，但一周后保持测试无显著差异 → **任务表现 ≠ 保持/学习**
-  - Marzuki et al. (2024, Smart Learn. Environ.) — ChatGPT 形成性反馈对大学生学术写作有显著正向影响 → 写作场景支持性证据
-  - Bastani et al. (2025, PNAS) — 无护栏 GPT Base 学生独立考试比对照组低 17%，有护栏 GPT Tutor 消除负效应 → **工具设计护栏决定学习效应方向**
-  - Lee et al. (2025, ACL) — GPT-4 交互式家庭作业提升参与度且不损学习 → 作业场景可行性证据
+- Methodology documents (`references/`): education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design / retrieval-protocol / source-validity
+- Data contracts (`schemas/`): education-frame / source / fetch-result / evidence / cross-model-review / methodology / verdict / intervention / evaluation / report-result
+- Deterministic logic (`scripts/`): validate_schema / evidence_score / evidence_matrix / claim_audit / compute_confidence / benchmark / render_report
+- Docs (`docs/`): architecture / methodology / benchmark / demo / reproducibility / install-guide / open-source-references
+- Real-research anchor examples (`examples/`):
+  - Kazemitabaar et al. (2023, CHI) — AI Code Generators on Novice Learners: task completion ↑ 1.15×, correctness ↑ 1.8×, but one-week retention showed no significant difference → **task performance ≠ retention/learning**
+  - Marzuki et al. (2024, Smart Learn. Environ.) — ChatGPT formative feedback positively affected undergraduate academic writing → writing-scenario supporting evidence
+  - Bastani et al. (2025, PNAS) — unguarded GPT Base students scored 17% lower on the independent exam; guardrailed GPT Tutor eliminated the negative effect → **tool-design guardrails determine the direction of the learning effect**
+  - Lee et al. (2025, ACL) — GPT-4 interactive homework raised engagement without harming learning → feasibility evidence for homework scenarios
