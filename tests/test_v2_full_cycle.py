@@ -232,3 +232,96 @@ def test_decision_history_and_diff(tmp_path):
     # resolved gaps computed from input gaps, not claimed by the diff itself
     assert diff["resolved_gaps"] == ["GAP-1"]
     assert diff["new_gaps"] == []
+
+
+# ---- V2 benchmark metrics (Task 27) ---------------------------------------
+
+def test_benchmark_metrics_on_real_graph(tmp_path):
+    from benchmarks.evaluator.v2_graph_metrics import (
+        study_identity_accuracy, independent_evidence_counting_accuracy,
+        claim_link_semantics_accuracy, graph_traceability, projection_integrity,
+    )
+    ws = _ws(tmp_path)
+    store = GraphStore.create(ws)
+    run = start_run(ws, purpose="b", capabilities=[],
+                    execution_backend="sequential_main_agent")
+    _base_graph(store, run)
+    from engine.projections import build_report_projection
+    proj = build_report_projection(ws)
+    assert study_identity_accuracy(store) == 1.0
+    assert independent_evidence_counting_accuracy(store) == 1.0
+    assert claim_link_semantics_accuracy(store) == 1.0
+    assert graph_traceability(store) == 1.0
+    assert projection_integrity(store, proj) == 1.0
+
+
+def test_benchmark_catches_finding_vote_inflation(tmp_path):
+    from benchmarks.evaluator.v2_graph_metrics import (
+        independent_evidence_counting_accuracy,
+    )
+    ws = _ws(tmp_path)
+    store = GraphStore.create(ws)
+    run = start_run(ws, purpose="b", capabilities=[],
+                    execution_backend="sequential_main_agent")
+    # two studies with the SAME independence key (double counting)
+    store.commit(run_id=run["run_id"], reason="dup",
+                 mutation=GraphMutation(
+                     upserts={
+                         "sources": [{"source_id": "SRC-1", "origin": "external",
+                                      "source_type": "t",
+                                      "canonical_locator": "https://doi.org/10.0000/1",
+                                      "validation_status": "valid",
+                                      "content_hash": None, "extensions": {}}],
+                         "studies": [
+                             {"study_id": "STU-A", "source_ids": ["SRC-1"],
+                              "study_design": "RCT", "population": "u",
+                              "sample_ids": ["S1"], "sample_size": 30,
+                              "intervention": "AI", "comparison": "none",
+                              "independence_key": "same-key",
+                              "identity_status": "resolved", "extensions": {}},
+                             {"study_id": "STU-B", "source_ids": ["SRC-1"],
+                              "study_design": "RCT", "population": "u",
+                              "sample_ids": ["S2"], "sample_size": 30,
+                              "intervention": "AI", "comparison": "none",
+                              "independence_key": "same-key",
+                              "identity_status": "resolved", "extensions": {}}],
+                     }, retire_ids={}))
+    assert independent_evidence_counting_accuracy(store) == 0.0
+
+
+def test_dataset_provenance_completeness(tmp_path):
+    from benchmarks.evaluator.v2_graph_metrics import dataset_provenance_completeness
+    assert dataset_provenance_completeness({
+        "content_hash": "sha256:x", "privacy_classification": "confidential",
+        "deidentification_status": "done"}) == 1.0
+    assert dataset_provenance_completeness({
+        "content_hash": "sha256:x", "privacy_classification": "public",
+        "deidentification_status": ""}) == 0.0
+    assert dataset_provenance_completeness({
+        "content_hash": "sha256:x", "privacy_classification": "secret",
+        "deidentification_status": "done"}) == 0.0
+
+
+def test_v2_benchmark_questions_are_schema_valid():
+    import json
+    from pathlib import Path
+    qs = Path(__file__).resolve().parent.parent / "benchmarks" / "v2" / "questions.jsonl"
+    for line in qs.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            q = json.loads(line)
+            assert q["id"].startswith("V2Q")
+            assert q["mode"] in ("evidence_review", "full_research_cycle")
+            assert q["expected_outcomes"]
+            assert q["metrics"]
+
+
+def test_full_cycle_fixture_is_marked_synthetic():
+    from pathlib import Path
+    readme = (Path(__file__).resolve().parent.parent /
+              "examples" / "full-research-cycle-fixture" / "README.md")
+    text = readme.read_text(encoding="utf-8")
+    assert "synthetic" in text.lower()
+    assert "never be cited as empirical support" in text
+    data = (Path(__file__).resolve().parent.parent /
+            "examples" / "full-research-cycle-fixture" / "data.csv")
+    assert data.is_file()

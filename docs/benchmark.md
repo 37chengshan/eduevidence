@@ -135,3 +135,20 @@ A1–A7 全部以 B3（单 Agent 全协议）为基准对比，归因到单一�
 - B0/B1 的 Unsupported Claim Rate 显著高于 B3，作为"基线很弱"的 sanity check；
 - A1（去 Skeptic）与 A2（去 Method Reviewer）造成对应指标明显回退，证明组件不可移除；
 - 30 题全部通过 `validate_schema.py` 校验。
+
+---
+
+## V2 Benchmark（Research Engine 契约维度）
+
+`benchmarks/v2/questions.jsonl` 覆盖 Evidence Review 与 Full Research Cycle 两类模式。指标实现于 `benchmarks/evaluator/v2_graph_metrics.py`：
+
+| 指标 | 类型 | 说明 |
+|---|---|---|
+| study_identity_accuracy | 确定性软件/契约指标 | Study id 与 independence_key 是否正确保留/去重 |
+| independent_evidence_counting_accuracy | 确定性 | 同 Study 的 N 条 Finding 是否只计 1 个独立研究（杜绝 5:1 投票） |
+| claim_link_semantics_accuracy | 确定性 | effect_direction / relation_to_claim / decision_implication 是否互不混用 |
+| graph_traceability | 确定性 | Claim→Link→Finding→Study→Source 是否完整可追溯 |
+| projection_integrity | 确定性 | 投影计数是否与图一致、投影是否不改变图 |
+| dataset_provenance_completeness | 确定性 | 数据集哈希/隐私分类/去标识状态是否齐全 |
+
+**边界声明**：上述均为软件/契约指标，衡量引擎产出是否符合规范，**不评判研究结论的科学正确性**。内容级抽取正确性需要人工/金标准标注（如真实论文的 Finding 方向抽取）；fixture 分数不是科学性能证据。`examples/full-research-cycle-fixture/` 为合成数据，仅用于 Full Research Cycle 软件机制测试，不可作为实证引用。
