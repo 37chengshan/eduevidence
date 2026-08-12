@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/outcome.schema.json",
+  "title": "Outcome",
+  "description": "A measurable education outcome from the Outcome Taxonomy: learning / task performance / process / risk.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["outcome_id", "name", "outcome_type", "extensions"],
+  "properties": {
+    "outcome_id": { "type": "string", "pattern": "^OUT-" },
+    "name": { "type": "string", "minLength": 1 },
+    "outcome_type": {
+      "type": "string",
+      "enum": ["learning", "task_performance", "process", "risk"]
+    },
+    "extensions": { "type": "object" }
+  }
+}

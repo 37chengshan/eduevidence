@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/graph-revision.schema.json",
+  "title": "GraphRevision",
+  "description": "Immutable revision manifest. graph/HEAD is authoritative; this manifest describes one committed snapshot.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "revision", "parent_revision", "run_id", "reason",
+    "touched_entities", "before_hash", "after_hash", "created_at", "extensions"
+  ],
+  "properties": {
+    "revision": { "type": "integer", "minimum": 1 },
+    "parent_revision": { "type": "integer", "minimum": 0 },
+    "run_id": { "type": "string", "pattern": "^RUN-" },
+    "reason": { "type": "string", "minLength": 1 },
+    "touched_entities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "uniqueItems": true
+      }
+    },
+    "before_hash": { "type": "string", "minLength": 1 },
+    "after_hash": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object" }
+  }
+}

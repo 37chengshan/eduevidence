@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/finding.schema.json",
+  "title": "Finding",
+  "description": "What a study actually observed. effect_direction records the observed direction only; relation to a Claim lives on the EvidenceLink, never here. Never infer missing precision in effect_estimate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "finding_id", "study_id", "finding_type", "outcome_id", "measure",
+    "effect_direction", "raw_result_text", "source_locator", "extensions"
+  ],
+  "properties": {
+    "finding_id": { "type": "string", "pattern": "^FND-" },
+    "study_id": { "type": "string", "pattern": "^STU-" },
+    "finding_type": {
+      "type": "string",
+      "enum": [
+        "quantitative_effect", "association", "descriptive", "qualitative_theme",
+        "implementation_finding", "process_finding"
+      ]
+    },
+    "outcome_id": { "type": "string", "pattern": "^OUT-" },
+    "measure": { "type": "string", "minLength": 1 },
+    "timepoint": { "type": ["string", "null"] },
+    "effect_direction": {
+      "type": "string",
+      "enum": ["positive", "negative", "null", "mixed", "not_applicable"]
+    },
+    "effect_estimate": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["metric", "raw_text"],
+      "properties": {
+        "metric": { "type": "string", "minLength": 1 },
+        "value": { "type": ["number", "null"] },
+        "unit": { "type": ["string", "null"] },
+        "ci_low": { "type": ["number", "null"] },
+        "ci_high": { "type": ["number", "null"] },
+        "p_value": { "type": ["number", "null"] },
+        "raw_text": { "type": "string", "minLength": 1 }
+      }
+    },
+    "raw_result_text": { "type": "string", "minLength": 1 },
+    "source_locator": { "type": "string", "minLength": 1 },
+    "extensions": { "type": "object" }
+  }
+}

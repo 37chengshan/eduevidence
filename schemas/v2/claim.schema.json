@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/claim.schema.json",
+  "title": "Claim",
+  "description": "A project-local interpretive statement. Claims keep stable Project-local IDs across edits; supersession is recorded via status, never silent re-identification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_id", "text", "claim_type", "primary_outcome_ids", "scope",
+    "created_in_revision", "status", "extensions"
+  ],
+  "properties": {
+    "claim_id": { "type": "string", "pattern": "^CLM-" },
+    "text": { "type": "string", "minLength": 1 },
+    "claim_type": { "type": "string", "minLength": 1 },
+    "primary_outcome_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^OUT-" },
+      "uniqueItems": true
+    },
+    "scope": { "type": "string", "minLength": 1 },
+    "created_in_revision": { "type": "integer", "minimum": 1 },
+    "status": { "type": "string", "enum": ["active", "superseded", "retired"] },
+    "extensions": { "type": "object" }
+  }
+}

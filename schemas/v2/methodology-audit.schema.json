@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/methodology-audit.schema.json",
+  "title": "MethodologyAudit",
+  "description": "Methodological appraisal. Quality belongs primarily to Study/method appraisal, not duplicated into every Claim link.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_id", "study_id", "policy_version",
+    "design_quality", "sample_quality", "measurement_validity", "temporal_strength",
+    "bias_checks", "confounders", "limitations",
+    "overall_status", "audited_at", "extensions"
+  ],
+  "properties": {
+    "audit_id": { "type": "string", "pattern": "^AUD-" },
+    "study_id": { "type": "string", "pattern": "^STU-" },
+    "policy_version": { "type": "string", "minLength": 1 },
+    "design_quality": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "sample_quality": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "measurement_validity": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "temporal_strength": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "bias_checks": { "type": "array", "items": { "type": "string" } },
+    "confounders": { "type": "array", "items": { "type": "string" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "outcome_specific_notes": { "type": "string" },
+    "overall_status": { "type": "string", "enum": ["pass", "concern", "fail"] },
+    "audited_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object" }
+  }
+}

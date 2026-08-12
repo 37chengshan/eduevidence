@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/source.schema.json",
+  "title": "Source",
+  "description": "A verifiable research source. canonical_locator is an absolute external URI or an explicit project:// URI; raw filesystem paths stay provenance metadata.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_id", "origin", "source_type", "canonical_locator",
+    "validation_status", "extensions"
+  ],
+  "properties": {
+    "source_id": { "type": "string", "pattern": "^SRC-" },
+    "origin": { "type": "string", "enum": ["external", "project"] },
+    "source_type": { "type": "string", "minLength": 1 },
+    "canonical_locator": { "type": "string", "format": "uri" },
+    "validation_status": {
+      "type": "string",
+      "enum": ["valid", "accepted_partial", "invalid", "failed"]
+    },
+    "content_hash": { "type": ["string", "null"], "minLength": 1 },
+    "extensions": { "type": "object" }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/evidence-link.schema.json",
+  "title": "EvidenceLink",
+  "description": "The contextual interpretation connecting a Finding to a Claim. relation_to_claim (does this result support the Claim?) and decision_implication (what does it mean for the current decision?) are strictly separate semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_link_id", "finding_id", "claim_id", "relation_to_claim",
+    "decision_implication", "directness", "applicability",
+    "reasoning_note", "created_in_revision", "extensions"
+  ],
+  "properties": {
+    "evidence_link_id": { "type": "string", "pattern": "^LNK-" },
+    "finding_id": { "type": "string", "pattern": "^FND-" },
+    "claim_id": { "type": "string", "pattern": "^CLM-" },
+    "relation_to_claim": { "type": "string", "enum": ["support", "contradict", "neutral"] },
+    "decision_implication": {
+      "type": "string",
+      "enum": ["support_adoption", "oppose_adoption", "conditional", "neutral"]
+    },
+    "directness": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope_match"],
+      "properties": {
+        "scope_match": { "type": "string", "enum": ["direct", "partial", "mismatch"] },
+        "target_population": { "type": "string" },
+        "context_notes": { "type": "string" },
+        "extensions": { "type": "object" }
+      }
+    },
+    "reasoning_note": { "type": "string", "minLength": 1 },
+    "created_in_revision": { "type": "integer", "minimum": 1 },
+    "extensions": { "type": "object" }
+  }
+}
