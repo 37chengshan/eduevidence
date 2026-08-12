@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/research-intent.schema.json",
+  "title": "ResearchIntent",
+  "description": "Structured intent driving mode recommendation. decision_target controls the requested deliverable; research_mode controls lifecycle depth.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_target", "wants_existing_evidence", "wants_study_design",
+    "has_user_data", "wants_data_analysis", "wants_decision_update"
+  ],
+  "properties": {
+    "decision_target": {
+      "type": "string",
+      "enum": ["evidence_review", "teaching_decision", "teaching_pilot", "evaluation_plan", "research_cycle"]
+    },
+    "wants_existing_evidence": { "type": "boolean" },
+    "wants_study_design": { "type": "boolean" },
+    "has_user_data": { "type": "boolean" },
+    "wants_data_analysis": { "type": "boolean" },
+    "wants_decision_update": { "type": "boolean" },
+    "extensions": { "type": "object" }
+  }
+}

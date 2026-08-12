@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/run.schema.json",
+  "title": "Run",
+  "description": "One execution attempt or mutation inside a Project. A Run starts at graph_revision_before and, on completion, records graph_revision_after.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id", "project_id", "purpose", "started_at", "status",
+    "graph_revision_before", "graph_revision_after",
+    "capabilities", "execution_backend", "policy_versions"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "pattern": "^RUN-" },
+    "project_id": { "type": "string", "pattern": "^PRJ-" },
+    "purpose": { "type": "string", "minLength": 1 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "status": { "type": "string", "enum": ["running", "completed", "failed", "aborted"] },
+    "graph_revision_before": { "type": "integer", "minimum": 0 },
+    "graph_revision_after": { "type": ["integer", "null"], "minimum": 0 },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "execution_backend": {
+      "type": "string",
+      "enum": ["agent_mcp_enhanced", "host_native_subagents", "sequential_main_agent"]
+    },
+    "policy_versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_validation", "methodology", "confidence"],
+      "properties": {
+        "source_validation": { "type": "string", "minLength": 1 },
+        "methodology": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "string", "minLength": 1 },
+        "extensions": { "type": "object" }
+      }
+    },
+    "extensions": { "type": "object" }
+  }
+}

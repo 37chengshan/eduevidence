@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/project.schema.json",
+  "title": "Project",
+  "description": "Long-lived research project owning a versioned Project Evidence Graph. Run is an execution attempt inside a Project; the Project is the durable unit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id", "title", "domain", "question", "research_mode",
+    "decision_target", "created_at", "updated_at", "engine_version",
+    "schema_version", "graph_revision", "status"
+  ],
+  "properties": {
+    "project_id": { "type": "string", "pattern": "^PRJ-" },
+    "title": { "type": "string", "minLength": 1 },
+    "domain": { "type": "string", "enum": ["education"] },
+    "question": { "type": "string", "minLength": 1 },
+    "research_mode": { "type": "string", "enum": ["evidence_review", "full_research_cycle"] },
+    "decision_target": {
+      "type": "string",
+      "enum": ["evidence_review", "teaching_decision", "teaching_pilot", "evaluation_plan", "research_cycle"]
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "engine_version": { "type": "string", "minLength": 1 },
+    "schema_version": { "type": "string", "const": "2.0" },
+    "graph_revision": { "type": "integer", "minimum": 0 },
+    "status": { "type": "string", "enum": ["active", "waiting_for_user", "completed", "archived", "failed"] },
+    "extensions": { "type": "object" }
+  }
+}
