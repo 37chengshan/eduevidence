@@ -244,6 +244,27 @@ UI_ZH = {
     "colon": "：",
     "lang_switcher_aria": "语言切换 / Language switch",
     "theme_switcher_aria": "主题 / Theme",
+    "v2_project_title": "项目与研究历史",
+    "v2_project_id": "项目 ID",
+    "v2_graph_revision": "证据图版本",
+    "v2_decision_snapshot": "决策快照",
+    "v2_timeline": "项目时间线",
+    "v2_gaps_title": "知识缺口",
+    "v2_gap_type": "缺口类型",
+    "v2_gap_priority": "优先级",
+    "v2_gap_reasoning": "依据",
+    "v2_design_title": "研究设计",
+    "v2_design_type": "设计类型",
+    "v2_design_question": "研究问题",
+    "v2_provenance_title": "数据集与分析溯源",
+    "v2_diff_title": "决策变更",
+    "v2_diff_action": "决策动作",
+    "v2_diff_confidence": "置信度",
+    "v2_diff_claims": "变更的主张",
+    "v2_diff_gaps": "已解决/新增缺口",
+    "v2_revision": "版本",
+    "v2_decision": "决策",
+    "v2_no_v2_data": "（无 V2 项目数据）",
 }
 
 UI_EN = {
@@ -378,6 +399,27 @@ UI_EN = {
     "colon": ": ",
     "lang_switcher_aria": "语言切换 / Language switch",
     "theme_switcher_aria": "主题 / Theme",
+    "v2_project_title": "Project & Research History",
+    "v2_project_id": "Project ID",
+    "v2_graph_revision": "Graph revision",
+    "v2_decision_snapshot": "Decision snapshot",
+    "v2_timeline": "Project timeline",
+    "v2_gaps_title": "Knowledge gaps",
+    "v2_gap_type": "Gap type",
+    "v2_gap_priority": "Priority",
+    "v2_gap_reasoning": "Reasoning",
+    "v2_design_title": "Study design",
+    "v2_design_type": "Design type",
+    "v2_design_question": "Research question",
+    "v2_provenance_title": "Dataset & analysis provenance",
+    "v2_diff_title": "Decision diff",
+    "v2_diff_action": "Decision action",
+    "v2_diff_confidence": "Confidence",
+    "v2_diff_claims": "Changed claims",
+    "v2_diff_gaps": "Resolved/new gaps",
+    "v2_revision": "Revision",
+    "v2_decision": "Decision",
+    "v2_no_v2_data": "(no V2 project data)",
 }
 
 
@@ -1898,7 +1940,8 @@ def render_full_report(result: dict, lang: str, ui: dict, charts: dict, infograp
         "intervention": intervention_content,
         "evaluation": evaluation_content,
         "sources": (render_sources(result, lang, ui, expandable=True)
-                    + f'<h3>{esc(ui["provenance_title"])}</h3>' + render_provenance(result, lang, ui)),
+                    + f'<h3>{esc(ui["provenance_title"])}</h3>' + render_provenance(result, lang, ui)
+                    + render_v2_history(result, lang, ui)),
     }
 
     default_leads = {
@@ -1933,6 +1976,107 @@ def render_full_toc(result: dict, lang: str, ui: dict) -> str:
             f'<button type="button" class="toc-collapse" aria-expanded="true" '
             f'data-label-collapse="{esc(ui["collapse_contents"])}" data-label-expand="{esc(ui["expand_contents"])}">'
             f'{esc(ui["collapse_contents"])}</button></div><nav>{links}</nav></aside>')
+
+
+def render_v2_history(result: dict, lang: str, ui: dict) -> str:
+    """V2-only surfaces: project id / graph revision / decision snapshot /
+    knowledge gaps / study design / dataset-analysis provenance / decision diff.
+
+    Returns "" for V1 inputs so the renderer is a strict superset.
+    """
+    project_id = result.get("project_id")
+    if not project_id:
+        return ""
+    revision = result.get("graph_revision")
+    snap_id = result.get("decision_snapshot_id")
+    out = [f"<h3>{esc(ui['v2_project_title'])}</h3>"]
+    meta = [
+        (ui["v2_project_id"], project_id),
+        (ui["v2_graph_revision"], revision),
+    ]
+    if snap_id:
+        meta.append((ui["v2_decision_snapshot"], snap_id))
+    out.append("<div class='table-wrap'><table class='data-table'><tbody>"
+               + "".join(f"<tr><th>{esc(k)}</th><td>{esc(v)}</td></tr>"
+                         for k, v in meta if v not in (None, ""))
+               + "</tbody></table></div>")
+
+    # timeline: revision + decision per snapshot
+    decision = result.get("decision") or result.get("decision", {}).get("verdict")
+    confidence = result.get("confidence_label")
+    if revision is not None:
+        label = (f"<code>{esc(ui['v2_revision'])} {esc(revision)}</code>"
+                 f" → {esc(ui['v2_decision'])} {esc(decision)}"
+                 + (f" ({esc(confidence)})" if confidence else ""))
+        out.append(f"<p class='v2-timeline'>{esc(ui['v2_timeline'])}{esc(ui['colon'])}{label}</p>")
+
+    # knowledge gaps
+    gaps = result.get("knowledge_gaps") or []
+    if gaps:
+        rows = []
+        for g in gaps:
+            rows.append(
+                f"<tr><td><code>{esc(g.get('gap_id'))}</code></td>"
+                f"<td>{esc(g.get('gap_type'))}</td>"
+                f"<td>{esc(g.get('priority'))}</td>"
+                f"<td>{esc(g.get('reasoning'))}</td></tr>")
+        out.append(f"<h4>{esc(ui['v2_gaps_title'])}</h4>"
+                   "<div class='table-wrap'><table class='data-table'><thead><tr>"
+                   f"<th>{esc(ui['v2_revision'])}</th><th>{esc(ui['v2_gap_type'])}</th>"
+                   f"<th>{esc(ui['v2_gap_priority'])}</th><th>{esc(ui['v2_gap_reasoning'])}</th>"
+                   "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
+
+    # study designs
+    designs = result.get("study_designs") or []
+    if designs:
+        rows = []
+        for d in designs:
+            rows.append(
+                f"<tr><td><code>{esc(d.get('design_id'))}</code></td>"
+                f"<td>{esc(d.get('design_type'))}</td>"
+                f"<td>{esc(d.get('research_question'))}</td></tr>")
+        out.append(f"<h4>{esc(ui['v2_design_title'])}</h4>"
+                   "<div class='table-wrap'><table class='data-table'><thead><tr>"
+                   f"<th>ID</th><th>{esc(ui['v2_design_type'])}</th>"
+                   f"<th>{esc(ui['v2_design_question'])}</th>"
+                   "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
+
+    # dataset/analysis provenance
+    prov = result.get("analysis_provenance") or []
+    if prov:
+        rows = []
+        for p in prov:
+            rows.append(
+                f"<tr><td><code>{esc(p.get('dataset_id'))}</code></td>"
+                f"<td><code>{esc(p.get('design_id'))}</code></td>"
+                f"<td><code>{esc(p.get('analysis_run_id'))}</code></td></tr>")
+        out.append(f"<h4>{esc(ui['v2_provenance_title'])}</h4>"
+                   "<div class='table-wrap'><table class='data-table'><thead><tr>"
+                   "<th>Dataset</th><th>Design</th><th>AnalysisRun</th>"
+                   "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
+
+    # decision diff when present
+    diff = result.get("decision_diff")
+    if isinstance(diff, dict):
+        rows = []
+        for key, label in (("from_graph_revision", ui["v2_revision"]),
+                           ("to_graph_revision", ui["v2_graph_revision"]),
+                           ("action_changed", ui["v2_diff_action"]),
+                           ("confidence_changed", ui["v2_diff_confidence"])):
+            if key in diff:
+                rows.append(f"<tr><th>{esc(label)}</th><td>{esc(diff[key])}</td></tr>")
+        if diff.get("changed_claims"):
+            rows.append(f"<tr><th>{esc(ui['v2_diff_claims'])}</th>"
+                        f"<td>{esc(', '.join(map(str, diff['changed_claims'])))}</td></tr>")
+        if diff.get("resolved_gaps") or diff.get("new_gaps"):
+            rows.append(f"<tr><th>{esc(ui['v2_diff_gaps'])}</th>"
+                        f"<td>{esc('resolved: ' + ', '.join(map(str, diff.get('resolved_gaps') or [])))}"
+                        f"{esc(' / new: ' + ', '.join(map(str, diff.get('new_gaps') or [])))}</td></tr>")
+        out.append(f"<h4>{esc(ui['v2_diff_title'])}</h4>"
+                   "<div class='table-wrap'><table class='data-table'><tbody>"
+                   + "".join(rows) + "</tbody></table></div>")
+
+    return "".join(out)
 
 
 def _theme_css() -> str:

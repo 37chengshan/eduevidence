@@ -161,3 +161,65 @@ def test_projection_does_not_mutate_graph(tmp_path):
     build_report_projection(ws)
     build_v1_compat_result(ws)
     assert store.canonical_hash() == before
+
+
+# ---- V2 renderer surfaces (Task 23) ---------------------------------------
+
+def _render(ws, **over):
+    """Render a full HTML report from a V2 projection (single-language path)."""
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location(
+        "build_report", "visualization/eduevidence-report/scripts/build_report.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_v2_report_contains_project_surfaces(tmp_path):
+    ws, store = _graph(tmp_path)
+    proj = build_report_projection(ws)
+    compat = build_v1_compat_result(ws)
+    # reuse the demo renderer entry to produce HTML from compat shape
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "build_report", "visualization/eduevidence-report/scripts/build_report.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    compat["project_id"] = proj["project_id"]
+    compat["graph_revision"] = proj["graph_revision"]
+    compat["decision_snapshot_id"] = proj["decision_snapshot_id"]
+    compat["knowledge_gaps"] = proj["knowledge_gaps"]
+    compat["study_designs"] = proj["study_designs"]
+    compat["analysis_provenance"] = proj["analysis_provenance"]
+    compat["decision_diff"] = {
+        "from_graph_revision": 0, "to_graph_revision": 1,
+        "action_changed": True, "confidence_changed": True,
+        "changed_claims": ["CLM-1"], "resolved_gaps": [], "new_gaps": ["GAP-1"],
+    }
+    viz = mod.visualization_decisions(compat, {})
+    html_zh = mod.render_html(compat, compat, {}, {}, {}, {}, {}, {}, "claude", viz)
+    assert str(proj["project_id"]) in html_zh
+    assert "Graph revision" in html_zh or "证据图版本" in html_zh
+    assert "GAP-1" in html_zh
+    assert "DSN-" in html_zh or "DAT-1" in html_zh
+    assert "resolved" in html_zh
+
+
+def test_v1_result_renders_without_v2_surfaces(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "build_report", "visualization/eduevidence-report/scripts/build_report.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    import json
+    v1 = json.loads((Path(tmp_path).parent.parent / "examples" / "ai-coding-assistant" /
+                     "result.json").read_text(encoding="utf-8")) if False else None
+    from pathlib import Path
+    v1_path = Path(__file__).resolve().parent.parent / "examples" / "ai-coding-assistant" / "result.json"
+    v1 = json.loads(v1_path.read_text(encoding="utf-8"))
+    viz = mod.visualization_decisions(v1, {})
+    html = mod.render_html(v1, v1, {}, {}, {}, {}, {}, {}, "claude", viz)
+    assert "Project & Research History" not in html
+    assert "项目与研究历史" not in html
+    assert "CLM-" in html or "C-00" in html  # report still renders claims
