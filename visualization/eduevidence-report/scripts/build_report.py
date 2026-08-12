@@ -36,6 +36,8 @@ from typing import Any
 from build_charts import build_all as build_chart_specs
 from build_figures import build_figure_data, render_figures
 from build_infographics import build_all as build_infographics
+from zh_labels import (zh_action, zh_authority, zh_confidence, zh_mode,
+                       zh_outcome, zh_status, zh_study, zh_verdict)
 
 THEMES_DIR = Path(__file__).resolve().parent.parent / "themes"
 THEME_NAMES = ("claude", "academic", "editorial", "datalab", "presentation")
@@ -240,7 +242,7 @@ def diverging_bar_svg(option: dict, width: int = 720, height: int = 260) -> str:
         parts.append(f'<text x="{lx + 14}" y="{height - 9}" font-size="10" fill="#333">{esc(s.get("name", ""))}</text>')
         lx += 14 + len(s.get("name", "")) * 11 + 18
     return f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" ' \
-           f'role="img" aria-label="Outcome evidence overview: 支持/反驳/中性 per outcome">' \
+           f'role="img" aria-label="各结果类型的支持/反驳/中性证据数量">' \
            f'{"".join(parts)}</svg>'
 
 
@@ -292,11 +294,11 @@ def trace_tree_html(result: dict) -> str:
     """Static Claim-Evidence-Source tree (no JS required)."""
     evidence = {e.get("evidence_id"): e for e in result.get("evidence", [])}
     sources = {s.get("source_id"): s for s in result.get("sources", [])}
-    action = (result.get("decision", {}).get("recommended_action") or "insufficient_evidence").upper()
-    rows = [f'<div class="trace-row trace-decision">决策 → <strong>{esc(action)}</strong></div>']
+    action = (result.get("decision", {}).get("recommended_action") or "insufficient_evidence")
+    rows = [f'<div class="trace-row trace-decision">决策 → <strong>{esc(zh_action(action))}</strong></div>']
     for i, claim in enumerate(result.get("claims", [])):
-        rows.append(f'<div class="trace-row trace-claim">Claim {i + 1}: {esc(claim.get("claim"))} '
-                    f'<span class="method-verdict">{esc(claim.get("status", ""))}</span></div>')
+        rows.append(f'<div class="trace-row trace-claim">主张 {i + 1}：{esc(claim.get("claim"))} '
+                    f'<span class="method-verdict">{esc(zh_status(claim.get("status", "")))}</span></div>')
         for eid in claim.get("evidence_ids", []):
             ev = evidence.get(eid)
             if not ev:
@@ -334,12 +336,12 @@ def first_screen(result: dict) -> str:
     cls = {"adopt": "adopt", "pilot": "pilot", "reject": "reject"}.get(action, "")
     risk = decision.get("main_risk") or decision.get("reason_for_disagreement") or "（无）"
     items = [
-        ("决策", f'<span class="decision-value">{esc(action.upper())}</span>'),
-        ("置信度", f'<span class="confidence-badge">{esc(decision.get("confidence") or "Insufficient")}</span>'),
-        ("证据最充分的结果", esc(supported[0]) if supported else "（无）"),
-        ("最不确定的结果", esc(uncertain[0]) if uncertain else "（无）"),
+        ("决策", f'<span class="decision-value">{esc(zh_action(action))}</span>'),
+        ("置信度", f'<span class="confidence-badge">{esc(zh_confidence(decision.get("confidence") or "Insufficient"))}</span>'),
+        ("证据最充分的结果", esc(zh_outcome(supported[0])) if supported else "（无）"),
+        ("最不确定的结果", esc(zh_outcome(uncertain[0])) if uncertain else "（无）"),
         ("主要风险", esc(risk)[:120]),
-        ("来源数量", str(len(result.get("sources", [])))),
+        ("来源数量", f"{len(result.get('sources', []))} 个"),
     ]
     cells = "".join(f'<div class="kpi"><span class="kpi-label">{esc(k)}</span>'
                     f'<span class="kpi-value">{v}</span></div>' for k, v in items)
@@ -357,17 +359,20 @@ def render_outcomes(result: dict, chart: dict | None, figure_svg: str) -> str:
     for o in outcomes:
         eids = "".join(f"<code>{esc(e)}</code> " for e in o.get("evidence_ids", []))
         rows.append(
-            f"<tr><td>{esc(o.get('outcome_type'))}</td>"
+            f"<tr><td><strong>{esc(zh_outcome(o.get('outcome_type')))}</strong>"
+            f"<span class='raw-tag'>{esc(o.get('outcome_type'))}</span></td>"
             f"<td class='num'>{o.get('support_count', 0)}</td>"
             f"<td class='num'>{o.get('contradict_count', 0)}</td>"
             f"<td class='num'>{o.get('neutral_count', 0)}</td><td>{eids}</td></tr>")
-    table = ("<table class='data-table'><thead><tr><th>结果类型</th><th>支持</th>"
+    table = ("<div class='table-wrap'><table class='data-table'><thead><tr><th>结果类型</th><th>支持</th>"
              "<th>反驳</th><th>中性</th><th>证据</th></tr></thead><tbody>"
-             + "".join(rows) + "</tbody></table>")
+             + "".join(rows) + "</tbody></table></div>")
     static = ""
     if chart:
         static = diverging_bar_svg(chart.get("option", {}))
-    figure = f'<figure class="academic-figure">{figure_svg}<figcaption>Figure 1. 各结果类型支持证据数量（Academic Figures，不随主题变化）。</figcaption></figure>' if figure_svg else ""
+    figure = (f'<figure class="academic-figure">{figure_svg}'
+              f'<figcaption>图 1. 各结果类型的支持证据数量（出版级学术图，不随主题变化）。</figcaption>'
+              f'</figure>') if figure_svg else ""
     return table + static + figure
 
 
@@ -380,35 +385,36 @@ def render_matrix(result: dict) -> str:
         direction = ev.get("direction", "neutral")
         rows.append(
             f"<tr><td><code>{esc(ev.get('evidence_id'))}</code></td>"
-            f"<td>{esc(ev.get('title') or '')}</td>"
-            f"<td>{esc(ev.get('study_type') or '')}</td>"
-            f"<td>{esc(ev.get('outcome_type') or '')}</td>"
-            f"<td>{esc(ev.get('population') or '')[:60]}</td>"
-            f"<td>{esc(ev.get('intervention') or '')[:60]}</td>"
+            f"<td class='cell-main'>{esc(ev.get('title') or '')}</td>"
+            f"<td>{esc(zh_study(ev.get('study_type') or ''))}</td>"
+            f"<td>{esc(zh_outcome(ev.get('outcome_type') or ''))}</td>"
+            f"<td class='cell-main'>{esc(ev.get('population') or '')}</td>"
+            f"<td class='cell-main'>{esc(ev.get('intervention') or '')}</td>"
             f"<td><span class='dir {DIR_CLASS.get(direction, 'neu')}'>{esc(DIR_LABEL.get(direction, '中性'))}</span></td>"
             f"<td class='num'>{esc(ev.get('quality_score'))}</td>"
-            f"<td>{esc(ev.get('directness') or '')}</td>"
+            f"<td>{esc(zh_verdict(str(ev.get('directness') or '')))}</td>"
             f"<td><code>{esc(ev.get('source_id'))}</code></td>"
-            f"<td>{esc(ev.get('claim') or '')[:70]}</td></tr>")
-    return ("<details class='matrix-controls'><summary>筛选 / 搜索（JS 增强）</summary>"
+            f"<td class='cell-main'>{esc(ev.get('claim') or '')}</td></tr>")
+    return ("<details class='matrix-controls'><summary>筛选 / 搜索</summary>"
             "<div class='matrix-tools'><input id='matrix-search' type='search' placeholder='搜索证据…' aria-label='搜索证据'>"
             "<select id='matrix-direction' aria-label='按方向筛选'><option value=''>全部方向</option>"
             "<option value='support'>支持</option><option value='contradict'>反驳</option>"
             "<option value='neutral'>中性</option></select>"
             "<select id='matrix-outcome' aria-label='按结果筛选'><option value=''>全部结果</option>"
-            + "".join(f"<option>{esc(o)}</option>" for o in sorted({e.get('outcome_type', '') for e in evidence}))
+            + "".join(f"<option value='{esc(o)}'>{esc(zh_outcome(o))}</option>"
+                      for o in sorted({e.get('outcome_type', '') for e in evidence}))
             + "</select></div></details>"
-            f"<table id='evidence-matrix' class='data-table'><thead><tr><th>ID</th><th>研究</th>"
+            "<div class='table-wrap'><table id='evidence-matrix' class='data-table'><thead><tr><th>ID</th><th>研究</th>"
             "<th>设计</th><th>结果</th><th>人群</th><th>干预</th><th>方向</th><th>质量</th>"
             "<th>直接性</th><th>来源</th><th>主张</th></tr></thead><tbody>"
-            + "".join(rows) + "</tbody></table>")
+            + "".join(rows) + "</tbody></table></div>")
 
 
 def render_tribunal(result: dict, workflow_svg: str, tribunal_svg: str) -> str:
     decision = result.get("decision", {})
-    action = decision.get("recommended_action", "insufficient_evidence").upper()
-    lines = [f"<p><strong>决策：</strong>{esc(action)} · "
-             f"<strong>置信度：</strong>{esc(decision.get('confidence', ''))}</p>"]
+    action = decision.get("recommended_action", "insufficient_evidence")
+    lines = [f"<p><strong>决策：</strong>{esc(zh_action(action))} · "
+             f"<strong>置信度：</strong>{esc(zh_confidence(decision.get('confidence', '')))}</p>"]
 
     def group(key: str, label: str, cls: str) -> str:
         items = decision.get(key) or []
@@ -417,9 +423,9 @@ def render_tribunal(result: dict, workflow_svg: str, tribunal_svg: str) -> str:
         lis = "".join(f"<li>{esc(i)}</li>" for i in items)
         return f"<h3>{esc(label)}</h3><ul class='{cls}'>{lis}</ul>"
 
-    lines.append(group("supported_claims", "可以主张（CAN CLAIM）", "can"))
-    lines.append(group("uncertain_claims", "尚不能主张（UNCERTAIN）", "uncertain"))
-    lines.append(group("contradicted_claims", "被反驳的主张（CANNOT CLAIM）", "cannot"))
+    lines.append(group("supported_claims", "可以主张", "can"))
+    lines.append(group("uncertain_claims", "尚不能主张", "uncertain"))
+    lines.append(group("contradicted_claims", "被反驳的主张", "cannot"))
     if decision.get("missing_evidence"):
         lines.append(f"<h3>缺失证据</h3><ul>{''.join(f'<li>{esc(m)}</li>' for m in decision['missing_evidence'])}</ul>")
     lines.append('<h3>EvidenceFlow 协议</h3>')
@@ -437,16 +443,17 @@ def render_methodology(result: dict) -> str:
     for r in reviews:
         verdict = r.get("verdict", "")
         lines.append(f"<h3>审查目标：{esc(r.get('target'))} "
-                     f"<span class='method-verdict'>{esc(verdict)}</span></h3>")
+                     f"<span class='method-verdict'>{esc(zh_verdict(verdict))}</span></h3>")
         audit = r.get("audit_items", {})
         if audit:
-            rows = ["<table class='data-table'><thead><tr><th>检查项</th><th>状态</th>"
+            rows = ["<div class='table-wrap'><table class='data-table'><thead><tr><th>检查项</th><th>状态</th>"
                     "<th>说明</th></tr></thead><tbody>"]
             for item, info in audit.items():
                 if isinstance(info, dict):
-                    rows.append(f"<tr><td>{esc(item)}</td><td>{esc(info.get('status'))}</td>"
-                                f"<td>{esc(info.get('note'))}</td></tr>")
-            rows.append("</tbody></table>")
+                    rows.append(f"<tr><td><code>{esc(item)}</code></td>"
+                                f"<td>{esc(zh_verdict(info.get('status')))}</td>"
+                                f"<td class='cell-main'>{esc(info.get('note'))}</td></tr>")
+            rows.append("</tbody></table></div>")
             lines.append("\n".join(rows))
         guard = r.get("task_vs_learning_guard", {})
         if guard:
@@ -565,13 +572,13 @@ def render_sources(result: dict) -> str:
         url = s.get("canonical_url") or s.get("source_location") or ""
         rows.append(
             f"<tr><td><code>{esc(s.get('source_id'))}</code></td>"
-            f"<td>{esc(s.get('title'))}</td><td>{esc(s.get('year'))}</td>"
-            f"<td>{esc(s.get('authority_level'))}</td>"
-            f"<td><a href='{esc(url)}'>{esc(url)}</a></td></tr>")
+            f"<td class='cell-main'>{esc(s.get('title'))}</td><td>{esc(s.get('year'))}</td>"
+            f"<td>{esc(zh_authority(s.get('authority_level')))}</td>"
+            f"<td class='cell-main'><a href='{esc(url)}'>{esc(url)}</a></td></tr>")
     return ("<h3>来源列表</h3>"
-            "<table class='data-table'><thead><tr><th>ID</th><th>标题</th><th>年份</th>"
+            "<div class='table-wrap'><table class='data-table'><thead><tr><th>ID</th><th>标题</th><th>年份</th>"
             "<th>权威级别</th><th>可验证位置</th></tr></thead><tbody>"
-            + "".join(rows) + "</tbody></table>")
+            + "".join(rows) + "</tbody></table></div>")
 
 
 def render_provenance(result: dict) -> str:
@@ -590,9 +597,9 @@ def render_provenance(result: dict) -> str:
             f"检索时间：{esc(provenance.get('fetched_at', 'n/a'))}</p>")
     if not rows:
         return head + "<p>无逐条 fetch 记录（来源由研究管线直接提供）。</p>"
-    return (head + "<table class='data-table'><thead><tr><th>来源</th><th>Fetch 方式</th>"
+    return (head + "<div class='table-wrap'><table class='data-table'><thead><tr><th>来源</th><th>Fetch 方式</th>"
             "<th>状态</th><th>降级</th><th>时间</th></tr></thead><tbody>"
-            + "".join(rows) + "</tbody></table>")
+            + "".join(rows) + "</tbody></table></div>")
 
 
 # ---------------------------------------------------------------------------
@@ -696,27 +703,27 @@ def render_html(result: dict, charts: dict, infographics: dict, figures: dict,
                           if c.get("chart_id") == "outcome-evidence-overview"), None)
 
     body = "\n".join([
-        section("01-executive-decision", "01 Executive Decision", first_screen(result)),
-        section("02-outcome-overview", "02 Outcome Evidence Overview",
+        section("01-executive-decision", "01 执行决策", first_screen(result)),
+        section("02-outcome-overview", "02 结果证据概览",
                 render_outcomes(result, outcome_chart, figure_svg)
                 + '<div id="chart-outcome" class="chart-mount" role="img" aria-label="交互式结果概览（ECharts 增强）"></div>'),
-        section("03-evidence-matrix", "03 Evidence Matrix", render_matrix(result)),
-        section("04-evidence-tribunal", "04 Evidence Tribunal",
+        section("03-evidence-matrix", "03 证据矩阵", render_matrix(result)),
+        section("04-evidence-tribunal", "04 证据裁决",
                 render_tribunal(result, svg.get("workflow", ""), svg.get("tribunal", ""))),
-        section("05-methodology-audit", "05 Methodology Audit", render_methodology(result)),
-        section("06-conflict-analysis", "06 Conflict Analysis", render_conflicts(result)),
-        section("07-claim-trace", "07 Claim-Evidence Trace",
+        section("05-methodology-audit", "05 方法学审计", render_methodology(result)),
+        section("06-conflict-analysis", "06 冲突分析", render_conflicts(result)),
+        section("07-claim-trace", "07 主张-证据追溯",
                 trace_tree_html(result)
-                + '<div id="chart-trace" class="chart-mount" role="img" aria-label="交互式 Claim-Evidence-Source 图（ECharts 增强）"></div>'),
-        section("08-applicability", "08 Applicability", render_applicability(result)),
-        section("09-intervention", "09 Teaching Intervention",
+                + '<div id="chart-trace" class="chart-mount" role="img" aria-label="交互式主张-证据-来源图（ECharts 增强）"></div>'),
+        section("08-applicability", "08 适用性", render_applicability(result)),
+        section("09-intervention", "09 教学干预",
                 render_intervention(result, svg.get("intervention", ""))),
-        section("10-evaluation", "10 Evaluation Plan",
+        section("10-evaluation", "10 评价方案",
                 render_evaluation(result, svg.get("evaluation", ""))),
-        section("11-benchmark", "11 Benchmark", render_benchmark(charts)
-                + '<div id="chart-benchmark" class="chart-mount" role="img" aria-label="交互式 Benchmark（ECharts 增强）"></div>'),
-        section("12-sources", "12 Sources & Provenance",
-                render_sources(result) + "<h3>Fetch Provenance</h3>" + render_provenance(result)),
+        section("11-benchmark", "11 基准测试", render_benchmark(charts)
+                + '<div id="chart-benchmark" class="chart-mount" role="img" aria-label="交互式基准测试（ECharts 增强）"></div>'),
+        section("12-sources", "12 来源与溯源",
+                render_sources(result) + "<h3>Fetch 溯源</h3>" + render_provenance(result)),
     ])
 
     return f"""<!DOCTYPE html>
@@ -750,46 +757,73 @@ body {{ margin:0; background:var(--bg); color:var(--text);
 .report-section h2 {{ font-family:var(--font-head); font-size:1.25rem; margin:0 0 12px;
                      border-bottom:1px solid var(--border); padding-bottom:8px; }}
 .report-section h3 {{ font-size:.95rem; margin:14px 0 6px; }}
-.decision-card {{ padding:16px 18px; border-radius:8px;
-                 border-left:6px solid var(--insufficient); background:var(--surface2); }}
+.decision-card {{ padding:18px 20px; border-radius:10px;
+                 border-left:6px solid var(--insufficient); background:var(--surface2);
+                 box-shadow:var(--shadow); }}
 .decision-card.adopt {{ border-left-color:var(--support); }}
 .decision-card.pilot {{ border-left-color:var(--uncertain); }}
 .decision-card.reject {{ border-left-color:var(--contradict); }}
-.kpi-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px 18px; }}
-.kpi-label {{ display:block; font-size:.72rem; color:var(--insufficient); text-transform:uppercase; letter-spacing:.04em; }}
+.kpi-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px 18px; }}
+.kpi-label {{ display:block; font-size:.72rem; color:var(--insufficient); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }}
 .kpi-value {{ font-size:1.05rem; font-weight:600; }}
 .decision-value {{ font-family:var(--font-head); font-size:1.5rem; font-weight:700; }}
-.confidence-badge {{ background:var(--uncertain); color:#fff; border-radius:999px; padding:2px 10px; font-size:.8rem; }}
-.rationale {{ color:var(--text); font-size:.92rem; margin-top:10px; }}
+.confidence-badge {{ background:var(--uncertain); color:#fff; border-radius:999px; padding:3px 12px; font-size:.82rem; }}
+.rationale {{ color:var(--text); font-size:.92rem; margin-top:12px; border-top:1px dashed var(--border);
+             padding-top:10px; }}
+ul.can li {{ border-left:3px solid var(--support); }}
+ul.uncertain li {{ border-left:3px solid var(--uncertain); }}
+ul.cannot li {{ border-left:3px solid var(--contradict); }}
+ul.can li, ul.uncertain li, ul.cannot li {{ list-style:none; margin:6px 0; padding:6px 10px;
+  background:var(--surface2); border-radius:6px; font-size:.9rem; }}
+.report-section svg {{ max-width:100%; height:auto; border:1px solid var(--border);
+                       border-radius:var(--radius-sm); background:#fff; }}
 .data-table {{ width:100%; border-collapse:collapse; font-size:.88rem; }}
-.data-table th, .data-table td {{ border:1px solid var(--border); padding:6px 10px; text-align:left;
+.table-wrap {{ overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--border);
+               border-radius:var(--radius-sm); max-width:100%; }}
+.table-wrap .data-table {{ border:none; }}
+.table-wrap .data-table th {{ background:var(--surface2); position:sticky; top:0; white-space:nowrap; }}
+.data-table th, .data-table td {{ border:1px solid var(--border); padding:7px 10px; text-align:left;
                                   vertical-align:top; }}
-.data-table th {{ background:var(--surface2); }}
-.num {{ text-align:right; font-variant-numeric:tabular-nums; }}
-.dir {{ display:inline-block; border-radius:999px; padding:1px 8px; font-size:.78rem; }}
+.data-table th {{ background:var(--surface2); white-space:nowrap; }}
+.data-table td.cell-main {{ max-width:280px; overflow:hidden; text-overflow:ellipsis;
+                            white-space:nowrap; }}
+.data-table tbody tr:nth-child(even) {{ background:var(--surface2); }}
+.data-table tbody tr:hover {{ background:var(--primary-soft, #F3E4DC); }}
+.raw-tag {{ display:inline-block; margin-left:6px; font-size:.68rem; color:var(--insufficient);
+           background:var(--surface2); border:1px solid var(--border); border-radius:4px;
+           padding:0 5px; vertical-align:1px; font-family:'SF Mono',Menlo,monospace; }}
+.num {{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }}
+.dir {{ display:inline-block; border-radius:999px; padding:1px 9px; font-size:.78rem; }}
 .dir.pos {{ background:var(--support); color:#fff; }}
 .dir.neg {{ background:var(--contradict); color:#fff; }}
 .dir.neu {{ background:var(--uncertain); color:#fff; }}
 .method-verdict {{ font-weight:700; }}
-.phase {{ border-left:3px solid var(--primary); padding-left:12px; margin:10px 0; }}
+.phase {{ border-left:3px solid var(--primary); padding:4px 0 4px 14px; margin:12px 0;
+         background:var(--surface2); border-radius:6px; }}
+.phase h3 {{ margin-top:4px; }}
 .conflict-card {{ border-left:3px solid var(--contradict); background:var(--surface2);
                  padding:10px 14px; margin:8px 0; border-radius:6px; }}
 .trace-row {{ margin:2px 0; font-size:.88rem; }}
-.trace-decision {{ font-weight:700; }}
-.trace-claim {{ margin-left:16px; }}
-.trace-evidence {{ margin-left:36px; color:var(--text); }}
+.trace-decision {{ font-weight:700; padding:4px 0; }}
+.trace-claim {{ margin-left:16px; padding:3px 0; }}
+.trace-evidence {{ margin-left:36px; color:var(--text); padding:2px 0; }}
 .chart-mount {{ width:100%; height:320px; margin-top:10px; }}
 .chart-summary {{ color:var(--insufficient); font-size:.85rem; }}
+.academic-figure {{ margin:14px 0; }}
 .academic-figure svg {{ max-width:100%; height:auto; }}
-.academic-figure figcaption {{ font-size:.82rem; color:var(--insufficient); margin-top:4px; }}
+.academic-figure figcaption {{ font-size:.82rem; color:var(--insufficient); margin-top:6px; }}
 .matrix-tools {{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0; }}
-.matrix-tools input, .matrix-tools select {{ padding:4px 8px; font-size:.85rem;
+.matrix-tools input, .matrix-tools select {{ padding:5px 10px; font-size:.85rem;
   border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text); }}
+.matrix-controls summary {{ cursor:pointer; color:var(--primary); font-size:.88rem; }}
+details.matrix-controls {{ margin-bottom:8px; }}
 code {{ font-family:'SF Mono',Menlo,monospace; font-size:.82em; background:var(--surface2);
        padding:1px 4px; border-radius:4px; }}
 a {{ color:var(--primary); word-break:break-all; }}
-@media print {{ body {{ background:#fff; }} .report-section {{ box-shadow:none; border:none; }} }}
-@media (max-width:720px) {{ .report-shell {{ padding:12px; }} .data-table {{ font-size:.78rem; }} }}
+@media print {{ body {{ background:#fff; }} .report-section {{ box-shadow:none; border:none; }}
+  .report-section svg {{ border:none; }} .table-wrap {{ overflow:visible; }} }}
+@media (max-width:720px) {{ .report-shell {{ padding:12px; }} .data-table {{ font-size:.78rem; }}
+  .kpi-grid {{ grid-template-columns:1fr 1fr; }} }}
 </style>
 </head>
 <body>
@@ -797,7 +831,7 @@ a {{ color:var(--primary); word-break:break-all; }}
 <header class="report-header">
 {theme_switcher}
 <h1>{esc(question)}</h1>
-<p class="meta">EduEvidence · mode={esc(meta.get('mode'))} · generated_at={esc(meta.get('generated_at'))} · 证据 {len(result.get('evidence', []))} 条 · 来源 {len(result.get('sources', []))} 个</p>
+<p class="meta">EduEvidence · 模式={esc(zh_mode(meta.get('mode')))} · 生成时间={esc(meta.get('generated_at'))} · 证据 {len(result.get('evidence', []))} 条 · 来源 {len(result.get('sources', []))} 个</p>
 </header>
 {body}
 <footer class="report-section"><p>EduEvidence Evidence Report · 由 eduevidence-report Skill 确定性渲染 · 数据源：result.json · 完整性门：通过 · 单文件离线可打开</p></footer>

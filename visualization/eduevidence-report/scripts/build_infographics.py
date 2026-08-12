@@ -67,8 +67,8 @@ def _svg(title: str, body: str) -> str:
 
 
 def workflow_svg() -> str:
-    steps = ["Frame", "Retrieve", "Fetch\nValidate", "Extract", "Skeptic",
-             "Method\nAudit", "Tribunal", "Apply", "Intervene\nEvaluate"]
+    steps = ["问题框架", "检索", "抓取\n验证", "证据抽取", "反方质疑",
+             "方法\n审计", "裁决", "适用性", "干预\n评价"]
     n = len(steps)
     bw, gap = 64, 12
     total = n * bw + (n - 1) * gap
@@ -81,12 +81,12 @@ def workflow_svg() -> str:
         boxes.append(_box(x, y, bw, 52, label, fill, font_size=10))
         if i < n - 1:
             boxes.append(_arrow(x + bw, y + 26, x + bw + gap, y + 26))
-    return _svg("EvidenceFlow Protocol", "".join(boxes))
+    return _svg("EvidenceFlow 协议", "".join(boxes))
 
 
 def tribunal_svg(verdict: dict) -> str:
-    can = verdict.get("what_can_be_claimed") or ["（无）"]
-    cannot = verdict.get("what_cannot_be_claimed") or ["（无）"]
+    can = verdict.get("supported_claims") or verdict.get("what_can_be_claimed") or ["（无）"]
+    cannot = verdict.get("contradicted_claims") or verdict.get("what_cannot_be_claimed") or ["（无）"]
     why = verdict.get("reason_for_disagreement") or "证据冲突或缺失"
     action = verdict.get("recommended_action", "insufficient_evidence").upper()
 
@@ -100,14 +100,14 @@ def tribunal_svg(verdict: dict) -> str:
         return "".join(parts)
 
     body = (
-        f'<text x="24" y="180" font-size="13" font-weight="700" fill="{PALETTE["text"]}">WHY</text>'
+        f'<text x="24" y="180" font-size="13" font-weight="700" fill="{PALETTE["text"]}">冲突来源</text>'
         f'<text x="24" y="202" font-size="11" fill="{PALETTE["muted"]}">{_esc(why[:80])}</text>'
         f'<rect x="24" y="216" width="180" height="28" rx="14" fill="{PALETTE["uncertain"]}"/>'
         f'<text x="114" y="235" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">{_esc(action)}</text>'
-        + col(240, "CAN CLAIM", can, PALETTE["support"])
-        + col(480, "CANNOT CLAIM", cannot, PALETTE["contradict"])
+        + col(240, "可以主张", can, PALETTE["support"])
+        + col(480, "不可主张", cannot, PALETTE["contradict"])
     )
-    return _svg("Evidence Tribunal", body)
+    return _svg("证据裁决", body)
 
 
 def intervention_svg(intervention: dict) -> str:
@@ -122,17 +122,17 @@ def intervention_svg(intervention: dict) -> str:
         name = p.get("name", f"Phase {i + 1}")
         rule = p.get("ai_usage_rule", "")
         boxes.append(_box(x, y, bw, 96, name, PALETTE["primary"], font_size=12))
-        boxes.append(f'<text x="{x + 8}" y="{y + 30}" font-size="9" fill="#fff" opacity="0.95">AI: {_esc(rule[:34])}</text>')
+        boxes.append(f'<text x="{x + 8}" y="{y + 30}" font-size="9" fill="#fff" opacity="0.95">AI 规则: {_esc(rule[:34])}</text>')
         if i < len(phases) - 1:
             boxes.append(_arrow(x + bw, y + 48, x + bw + gap, y + 48))
-    return _svg("Teaching Intervention Timeline", "".join(boxes))
+    return _svg("教学干预时间线", "".join(boxes))
 
 
 def evaluation_svg(evaluation: dict) -> str:
-    nodes = [("Baseline", evaluation.get("baseline") or "前测"),
-             ("Post Test", evaluation.get("post_test") or "后测"),
-             ("Retention", evaluation.get("retention_test") or "保持测试"),
-             ("Transfer", evaluation.get("transfer_test") or "迁移测试（无 AI）")]
+    nodes = [("基线", evaluation.get("baseline") or "前测"),
+             ("后测", evaluation.get("post_test") or "后测"),
+             ("保持", evaluation.get("retention_test") or "保持测试"),
+             ("迁移", evaluation.get("transfer_test") or "迁移测试（无 AI）")]
     bw, gap, y = 150, 12, 110
     boxes = []
     for i, (label, sub) in enumerate(nodes):
@@ -142,7 +142,7 @@ def evaluation_svg(evaluation: dict) -> str:
                      f'fill="#fff" opacity="0.95">{_esc((sub or "")[:30])}</text>')
         if i < len(nodes) - 1:
             boxes.append(_arrow(x + bw, y + 28, x + bw + gap, y + 28))
-    return _svg("Evaluation Design Flow", "".join(boxes))
+    return _svg("评价设计流程", "".join(boxes))
 
 
 def build_all(result: dict) -> dict[str, str]:

@@ -5,7 +5,7 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "chart_type": "diverging_bar",
-      "title": "Outcome Evidence Overview",
+      "title": "结果证据概览",
       "option": {
         "tooltip": {
           "trigger": "axis"
@@ -27,11 +27,11 @@
         "yAxis": {
           "type": "category",
           "data": [
-            "knowledge_gain",
-            "retention",
-            "independent_problem_solving",
-            "completion_time",
-            "assignment_score"
+            "知识获得",
+            "记忆保持",
+            "独立问题解决",
+            "完成时间",
+            "作业成绩"
           ],
           "inverse": true
         },
@@ -93,7 +93,7 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "chart_type": "graph",
-      "title": "Claim-Evidence Trace",
+      "title": "主张-证据追溯",
       "option": {
         "tooltip": {
           "trigger": "item"
@@ -357,7 +357,7 @@
     "purpose": "interactive_analysis",
     "engine": "echarts",
     "chart_type": "composite",
-    "title": "Benchmark: B0-B4",
+    "title": "基准测试：B0-B4",
     "option": {
       "tooltip": {
         "trigger": "axis"
@@ -404,7 +404,7 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "chart_type": "scatter",
-      "title": "Quality vs Cost",
+      "title": "质量 vs 成本",
       "option": {
         "tooltip": {
           "trigger": "item"

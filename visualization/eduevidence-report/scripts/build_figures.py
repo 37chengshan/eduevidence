@@ -31,6 +31,8 @@ import xml.sax.saxutils as sax
 from pathlib import Path
 from typing import Any
 
+from zh_labels import zh_outcome
+
 OKABE_ITO = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"]
 NATURE = ["#1F4E5F", "#5B8C9E", "#9E4B3A", "#7A8B5C", "#C2A24A", "#4E4E4E"]
 CONSERVATIVE = ["#4E4E4E", "#8C8C8C", "#B0B0B0", "#6B6B6B", "#D0D0D0", "#2E2E2E"]
@@ -138,12 +140,11 @@ def render_figures(figure_data: dict, theme: str = "okabe_ito") -> dict[str, str
     # Figure 1: outcome comparison (support counts per outcome)
     outcomes = figure_data.get("outcomes", [])
     if outcomes:
-        names = [o["outcome_type"] for o in outcomes]
+        names = [zh_outcome(o["outcome_type"]) for o in outcomes]
         support = [o["support_count"] for o in outcomes]
         figures["outcome-comparison.svg"] = _bar_chart(
-            "Evidence Support by Outcome", names, support, palette,
-            "Figure 1. Number of supporting evidence items per outcome type. "
-            "Source: EduEvidence result.json.")
+            "各结果类型的支持证据数量", names, support, palette,
+            "图 1. 各结果类型中支持性证据的数量。来源：EduEvidence result.json。")
 
     # Figure 2: benchmark citation support
     baselines = figure_data.get("benchmark_baselines", {})
@@ -151,14 +152,13 @@ def render_figures(figure_data: dict, theme: str = "okabe_ito") -> dict[str, str
         names = list(baselines.keys())
         citation = [b.get("citation_support_precision", 0) for b in baselines.values()]
         figures["benchmark-citation-support.svg"] = _bar_chart(
-            "Baseline Citation Support Precision", names, citation, palette,
-            "Figure 2. Citation support precision across baselines B0-B4. "
-            "Source: EduEvidence benchmark v2.")
+            "各基线引用支持精度", names, citation, palette,
+            "图 2. B0-B4 各基线的引用支持精度。来源：EduEvidence Benchmark v2。")
         costs = [b.get("usage", {}).get("cost_usd", 0) for b in baselines.values()]
         if len(costs) == len(citation):
             figures["benchmark-quality-cost.svg"] = _scatter_chart(
-                "Quality vs Cost", list(zip(costs, citation)), names, palette,
-                "Figure 3. Citation support vs per-question cost across baselines.")
+                "质量 vs 成本", list(zip(costs, citation)), names, palette,
+                "图 3. 各基线的引用支持率与单题成本的对比。")
     return figures
 
 

@@ -16,7 +16,7 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "data_ref": null,
-      "title": "Outcome Evidence Overview",
+      "title": "结果证据概览",
       "integrity": {
         "numbers_match_result": true,
         "no_axis_distortion": true,
@@ -29,7 +29,7 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "data_ref": null,
-      "title": "Claim-Evidence Trace",
+      "title": "主张-证据追溯",
       "integrity": {
         "numbers_match_result": true,
         "no_axis_distortion": true,
@@ -69,7 +69,7 @@
       "chart_id": "outcome-comparison",
       "purpose": "statistical_publication",
       "engine": "academic_figure",
-      "caption": "Figure 1. Number of supporting evidence items per outcome type. Source: EduEvidence result.json."
+      "caption": "图 1. 各结果类型中支持性证据的数量。来源：EduEvidence result.json。"
     }
   ],
   "integrity_gate": {

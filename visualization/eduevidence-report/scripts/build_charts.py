@@ -24,6 +24,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from zh_labels import zh_outcome
+
 WARM_PALETTE = ["#B8694A", "#5E8A6A", "#A85B53", "#C99A4A", "#8A867E", "#4F7A55"]
 OKABE_ITO = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
              "#CC79A7", "#000000"]
@@ -31,7 +33,7 @@ OKABE_ITO = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 
 def outcome_overview(outcomes: list[dict]) -> dict[str, Any]:
     """Diverging evidence bar: per outcome, support (+), contradict (-), neutral (?)."""
-    names = [o.get("outcome_type", "") for o in outcomes]
+    names = [zh_outcome(o.get("outcome_type", "")) for o in outcomes]
     support = [o.get("support_count", 0) for o in outcomes]
     contradict = [-o.get("contradict_count", 0) for o in outcomes]
     neutral = [o.get("neutral_count", 0) for o in outcomes]
@@ -40,7 +42,7 @@ def outcome_overview(outcomes: list[dict]) -> dict[str, Any]:
         "purpose": "interactive_analysis",
         "engine": "echarts",
         "chart_type": "diverging_bar",
-        "title": "Outcome Evidence Overview",
+        "title": "结果证据概览",
         "option": {
             "tooltip": {"trigger": "axis"},
             "legend": {"data": ["支持", "反驳", "中性"]},
@@ -72,7 +74,7 @@ def benchmark_panel(benchmark: dict[str, Any]) -> dict[str, Any]:
         "purpose": "interactive_analysis",
         "engine": "echarts",
         "chart_type": "composite",
-        "title": "Benchmark: B0-B4",
+        "title": "基准测试：B0-B4",
         "option": {
             "tooltip": {"trigger": "axis"},
             "legend": {"data": ["Citation Support", "Unsupported Rate", "Contradiction"]},
@@ -90,7 +92,7 @@ def benchmark_panel(benchmark: dict[str, Any]) -> dict[str, Any]:
             "purpose": "interactive_analysis",
             "engine": "echarts",
             "chart_type": "scatter",
-            "title": "Quality vs Cost",
+            "title": "质量 vs 成本",
             "option": {
                 "tooltip": {"trigger": "item"},
                 "xAxis": {"type": "value", "name": "cost (USD)"},
@@ -149,7 +151,7 @@ def claim_trace(result: dict[str, Any]) -> dict[str, Any]:
         "purpose": "interactive_analysis",
         "engine": "echarts",
         "chart_type": "graph",
-        "title": "Claim-Evidence Trace",
+        "title": "主张-证据追溯",
         "option": {
             "tooltip": {"trigger": "item"},
             "legend": {"data": ["Decision", "Claim", "Evidence", "Source"]},
