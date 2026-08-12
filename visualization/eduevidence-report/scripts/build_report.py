@@ -9,8 +9,8 @@ Pipeline (SKILL.md §8):
       -> adapters in-memory: ECharts specs / AntV infographics / Academic figures
       -> numbers-match integrity gate
       -> report_spec.json (visualization decision record)
-      -> single-file offline HTML: 双语（中文默认 + English 切换）12 节，
-         执行摘要叙事（问题→结论→依据→行动），每节导读行，静态优先 + JS 增强
+      -> single-file offline HTML: 双语（中文默认 + English 切换），
+         Visual Brief + AI 规划的 5–7 章 Full Report，静态优先 + JS 增强
 
 数据契约：
   - result.json  = 研究管线输出的原始数据（英文）
@@ -41,13 +41,13 @@ from zh_labels import label
 
 THEMES_DIR = Path(__file__).resolve().parent.parent / "themes"
 MOTION_DIR = Path(__file__).resolve().parent.parent / "motion"
-THEME_NAMES = ("claude", "academic", "editorial", "datalab", "presentation")
+THEME_NAMES = ("claude", "academic", "datalab", "datalab-dark", "presentation")
 THEME_DISPLAY = {
-    "claude": "Claude Research",
-    "academic": "Academic Paper",
-    "editorial": "Editorial",
-    "datalab": "DataLab",
-    "presentation": "Presentation / Judge",
+    "claude": "Claude Research [Light]",
+    "academic": "Academic Paper [Light]",
+    "datalab": "DataLab [Light]",
+    "datalab-dark": "DataLab [Dark]",
+    "presentation": "Presentation / Judge [Dark]",
 }
 
 # Full report is intentionally NOT a fixed 12-chapter template. The template exposes
@@ -80,6 +80,28 @@ METHODOLOGY_LABELS_ZH = {
     "instructor_effect": "教师效应", "novelty_effect": "新奇效应",
     "tool_version_effect": "工具版本效应", "ai_usage_policy": "AI 使用规则",
     "dropout": "样本流失",
+}
+
+FRAME_ENUM_ZH = {
+    "teaching_decision": "教学决策",
+    "undergraduate_year_1": "大学一年级",
+    "computer_science": "计算机科学与技术",
+    "C_programming": "C 语言程序设计",
+    "compulsory_core_course": "必修核心课程",
+    "primary": "主要结果",
+    "secondary": "次要结果",
+    "risk": "风险结果",
+}
+
+FRAME_ENUM_EN = {
+    "teaching_decision": "Teaching decision",
+    "undergraduate_year_1": "First-year undergraduate",
+    "computer_science": "Computer science",
+    "C_programming": "C programming",
+    "compulsory_core_course": "Compulsory core course",
+    "primary": "Primary outcomes",
+    "secondary": "Secondary outcomes",
+    "risk": "Risk outcomes",
 }
 
 DIR_LABEL = {"support": "支持", "contradict": "反驳", "neutral": "中性"}
@@ -378,8 +400,11 @@ def resolve_theme(requested: str | None, interactive: bool | None = None,
     if not interactive:
         return "claude"
     prompt = ("Choose report visual style / 请选择报告视觉风格\n"
-              "1. Claude Research\n2. Academic Paper\n3. Editorial\n"
-              "4. DataLab\n5. Presentation / Judge\n> ")
+              "1. Claude Research      [Light]\n"
+              "2. Academic Paper       [Light]\n"
+              "3. DataLab              [Light]\n"
+              "4. DataLab              [Dark]\n"
+              "5. Presentation / Judge [Dark]\n> ")
     choice = str(input_fn(prompt)).strip().lower()
     numeric = {str(i + 1): name for i, name in enumerate(THEME_NAMES)}
     aliases = {name: name for name in THEME_NAMES}
@@ -566,7 +591,7 @@ def check_numbers(result: dict, charts: dict) -> list[str]:
 # 双语同构允许差异的“自由文本”叶子键（其余键——ID / enum / URL / 数字 /
 # 数组结构——必须完全一致）。列表元素若属于 PROSE_LIST_KEYS 也可译。
 TEXT_LEAF_KEYS = {
-    "question", "claim", "title", "note", "name",
+    "question", "claim", "title", "title_zh", "title_en", "lead_zh", "lead_en", "note", "name",
     "decision_question", "target_population", "target_context", "reason_for_disagreement",
     "methodology_summary", "short_term_effect", "long_term_effect", "transfer_effect",
     "risk_effect", "decision_rationale",
@@ -704,6 +729,7 @@ def compute_integrity(result_en: dict, result_zh: dict, charts_en: dict,
 def build_report_spec(result: dict, charts: dict, infographics: dict,
                       figures: dict, integrity: dict, theme: str,
                       viz_decisions: dict) -> dict:
+    outline = resolve_full_report_plan(result)
     return {
         "generated_by": "build_report.py",
         "source": "result.json + result.zh.json",
@@ -714,6 +740,16 @@ def build_report_spec(result: dict, charts: dict, infographics: dict,
         "theme_selection": "generation_time",
         "lang_default": "zh",
         "lang_switchable": ["zh", "en"],
+        "report_pages": ["visual_brief", "full_report"],
+        "full_report_outline": {
+            "chapter_count": len(outline),
+            "source": "result.report_outline" if result.get("report_outline") or result.get("report_structure") else "safe_fallback",
+            "chapters": [
+                {"key": chapter.get("key"), "title_zh": chapter.get("title_zh"),
+                 "title_en": chapter.get("title_en"), "modules": list(chapter.get("modules", ())) }
+                for chapter in outline
+            ],
+        },
         "visualization_decisions": viz_decisions,
         "charts": [
             {"chart_id": c.get("chart_id"), "purpose": c.get("purpose"),
@@ -1719,6 +1755,22 @@ def render_full_chapter(chapter_id: str, title: str, content: str, lead: str = "
             f'<div class="full-chapter-body">{content}</div></section>')
 
 
+def frame_enum_label(lang: str, value: Any) -> str:
+    text = str(value or "")
+    return (FRAME_ENUM_ZH if lang == "zh" else FRAME_ENUM_EN).get(text, text)
+
+
+def labeled_pairs(lang: str, data: dict, labels_zh: dict[str, str], labels_en: dict[str, str]) -> str:
+    labels = labels_zh if lang == "zh" else labels_en
+    parts = []
+    for key, value in data.items():
+        if value in (None, "", [], {}):
+            continue
+        rendered = frame_enum_label(lang, value) if isinstance(value, str) else str(value)
+        parts.append(f"{labels.get(key, key)}：{rendered}" if lang == "zh" else f"{labels.get(key, key)}: {rendered}")
+    return "；".join(parts) if lang == "zh" else "; ".join(parts)
+
+
 def render_research_scope(result: dict, lang: str, ui: dict) -> str:
     frame = result.get("research_frame", {}) or {}
     learner = frame.get("learner", {}) or {}
@@ -1732,22 +1784,40 @@ def render_research_scope(result: dict, lang: str, ui: dict) -> str:
         "question": "Research question", "learner": "Target learners", "course": "Course context", "intervention": "AI intervention",
         "comparison": "Comparison", "outcomes": "Outcome constructs", "scope": "Research scope", "success": "Decision success condition",
     })
-    learner_text = "；".join(str(v) for v in learner.values() if v)
-    course_text = "；".join(str(v) for v in course.values() if v)
-    intervention_text = "；".join(str(v) for v in intervention.values() if v)
+    learner_text = labeled_pairs(lang, learner,
+        {"education_level":"教育阶段", "major":"专业", "prior_knowledge":"先验知识", "special_characteristics":"学习者特征"},
+        {"education_level":"Education level", "major":"Major", "prior_knowledge":"Prior knowledge", "special_characteristics":"Learner characteristics"})
+    course_text = labeled_pairs(lang, course,
+        {"subject":"课程", "course_type":"课程类型", "duration":"课程周期"},
+        {"subject":"Subject", "course_type":"Course type", "duration":"Duration"})
+    intervention_text = labeled_pairs(lang, intervention,
+        {"ai_tool":"AI 工具", "allowed_usage":"允许使用", "frequency":"使用频率", "duration":"干预周期"},
+        {"ai_tool":"AI tool", "allowed_usage":"Allowed usage", "frequency":"Frequency", "duration":"Duration"})
     outcome_map = frame.get("outcomes", {}) or {}
     outcome_parts = []
     for group, values in outcome_map.items():
         if isinstance(values, list):
-            rendered = "、".join(label(lang, "outcome", v) for v in values)
-            outcome_parts.append(f"{group}: {rendered}")
-    scope_text = "；".join(f"{k}: {v}" for k, v in scope.items() if v)
+            rendered = "、".join(label(lang, "outcome", v) for v in values) if lang == "zh" else ", ".join(label(lang, "outcome", v) for v in values)
+            outcome_parts.append(f"{frame_enum_label(lang, group)}：{rendered}" if lang == "zh" else f"{frame_enum_label(lang, group)}: {rendered}")
+    scope_parts = []
+    scope_labels_zh = {"time_range":"时间范围", "geography":"地域", "study_types":"研究设计"}
+    scope_labels_en = {"time_range":"Time range", "geography":"Geography", "study_types":"Study designs"}
+    for key, value in scope.items():
+        if value in (None, "", [], {}):
+            continue
+        if key == "study_types" and isinstance(value, list):
+            rendered = "、".join(label(lang, "study", str(v)) for v in value) if lang == "zh" else ", ".join(label(lang, "study", str(v)) for v in value)
+        else:
+            rendered = frame_enum_label(lang, value)
+        field_label = (scope_labels_zh if lang == "zh" else scope_labels_en).get(key, key)
+        scope_parts.append(f"{field_label}：{rendered}" if lang == "zh" else f"{field_label}: {rendered}")
+    scope_text = "；".join(scope_parts) if lang == "zh" else "; ".join(scope_parts)
     cards = [
         (labels["question"], frame.get("question") or result.get("meta", {}).get("question")),
         (labels["learner"], learner_text), (labels["course"], course_text),
         (labels["intervention"], intervention_text), (labels["comparison"], frame.get("comparison")),
-        (labels["outcomes"], "；".join(outcome_parts)), (labels["scope"], scope_text),
-        (labels["success"], frame.get("success_condition")),
+        (labels["outcomes"], "；".join(outcome_parts) if lang == "zh" else "; ".join(outcome_parts)),
+        (labels["scope"], scope_text), (labels["success"], frame.get("success_condition")),
     ]
     return '<div class="scope-grid">' + "".join(
         f'<article class="scope-card"><h3>{esc(title)}</h3>{expandable_text(text, ui["expand_details"], 260, "scope-text")}</article>'
@@ -2072,7 +2142,7 @@ def render_brief_sources(result: dict, lang: str, ui: dict, limit: int = 4) -> s
 
 
 def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: dict,
-                figures: dict, viz: dict) -> str:
+                figures: dict, viz: dict, theme: str) -> str:
     decision = result.get("decision", {})
     meta = result.get("meta", {})
     question = meta.get("question") or decision.get("decision_question") or "EduEvidence Report"
@@ -2110,7 +2180,7 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
                                  numbers=ui['footer_numbers'], bilingual=ui['footer_bilingual'])
     return f"""<div class="report-shell" data-lang-body="{lang}">
 <header class="report-header">
-<div class="report-brand-row"><span class="report-brand">EduEvidence</span><span class="generated-theme-chip">{esc(ui['theme_label'])}</span></div>
+<div class="report-brand-row"><span class="report-brand">EduEvidence</span><span class="generated-theme-chip">{esc(THEME_DISPLAY[theme])}</span></div>
 <h1>{esc(question)}</h1>
 <p class="meta">{esc(ui['header_mode'])}={esc(label(lang, "mode", meta.get("mode") or ""))} · {esc(ui['header_generated'])}={esc(meta.get('generated_at'))} · {esc(ui['header_evidence'])} {len(result.get('evidence', []))}{esc(ui['header_evidence_suffix'])} · {esc(ui['header_sources'])} {len(result.get('sources', []))}{esc(ui['header_sources_suffix'])}</p>
 <nav class="report-view-switcher" aria-label="report view">
@@ -2131,8 +2201,8 @@ def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: di
                 infographics_zh: dict, infographics_en: dict, figures_zh: dict,
                 figures_en: dict, theme: str, viz: dict) -> str:
     # Theme is fixed at generation time; language remains switchable in the HTML.
-    body_zh = render_body(result_zh, "zh", UI_ZH, charts_zh, infographics_zh, figures_zh, viz)
-    body_en = render_body(result_en, "en", UI_EN, charts_en, infographics_en, figures_en, viz)
+    body_zh = render_body(result_zh, "zh", UI_ZH, charts_zh, infographics_zh, figures_zh, viz, theme)
+    body_en = render_body(result_en, "en", UI_EN, charts_en, infographics_en, figures_en, viz, theme)
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN" data-theme="{esc(theme)}">
@@ -2149,11 +2219,13 @@ def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: di
   --border:#E5DFD3; --radius:10px; --shadow:0 1px 3px rgba(60,56,48,.08);
   --font-head:'Georgia','Songti SC',serif; --font-ui:'Helvetica Neue',Arial,sans-serif;
 }}
+* {{ box-sizing:border-box; }}
+html, body {{ max-width:100%; overflow-x:hidden; }}
 body {{ margin:0; background:var(--bg); color:var(--text);
        font-family:var(--font-ui); line-height:1.65; }}
-.report-shell {{ max-width:1200px; margin:0 auto; padding:24px 32px 80px; }}
-.controls {{ display:flex; gap:18px; flex-wrap:wrap; align-items:center;
-            border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px; }}
+.report-shell {{ width:100%; max-width:1200px; margin:0 auto; padding:24px clamp(18px,3vw,32px) 80px; }}
+.controls {{ width:calc(100% - 36px); max-width:1200px; margin:0 auto 16px; padding:12px clamp(0px,1vw,12px); display:flex; gap:18px; flex-wrap:wrap; align-items:center;
+            border-bottom:1px solid var(--border); }}
 .report-header {{ border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; }}
 .report-header h1 {{ font-family:var(--font-head); font-size:1.9rem; margin:0 0 8px; color:var(--text); }}
 .report-header .meta {{ color:var(--insufficient); font-size:.85rem; }}
@@ -2250,9 +2322,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }}
 .generated-theme {{ font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--insufficient); margin-right:auto; }}
 .report-section {{ margin-bottom:clamp(28px,4vw,58px); }}
-.section-narrative {{ max-width:820px; margin-left:auto; margin-right:auto; }}
-.section-data {{ max-width:1180px; margin-left:auto; margin-right:auto; }}
-.section-decision {{ max-width:1040px; margin-left:auto; margin-right:auto; }}
+.section-narrative {{ width:100%; max-width:820px; margin-left:auto; margin-right:auto; }}
+.section-data {{ width:100%; max-width:1180px; margin-left:auto; margin-right:auto; }}
+.section-decision {{ width:100%; max-width:1040px; margin-left:auto; margin-right:auto; }}
 .decision-hero {{ position:relative; overflow:hidden; padding:clamp(22px,4vw,42px); border:1px solid var(--border);
   border-radius:calc(var(--radius) + 4px); background:var(--surface2); }}
 .hero-decision {{ display:flex; gap:12px 18px; flex-wrap:wrap; align-items:center; margin-bottom:18px; }}
@@ -2333,19 +2405,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .report-view-btn {{ border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:999px; padding:7px 14px; cursor:pointer; font-size:.82rem; }}
 .report-view-btn.active {{ background:var(--primary); border-color:var(--primary); color:#fff; }}
 .report-page[hidden] {{ display:none !important; }}
-.report-page {{ animation:reportPageIn .24s ease both; }}
-@keyframes reportPageIn {{ from {{ opacity:0; transform:translateY(4px); }} to {{ opacity:1; transform:none; }} }}
-.brief-block {{ max-width:1040px; margin:0 auto clamp(42px,6vw,76px); }}
+.brief-block {{ width:100%; max-width:1040px; margin:0 auto clamp(42px,6vw,76px); }}
 .brief-block-header {{ max-width:760px; margin-bottom:22px; }}
 .brief-block-header h2 {{ margin:0 0 7px; font-family:var(--font-head); font-size:1.45rem; }}
 .brief-block-header p {{ margin:0; color:var(--insufficient); }}
 .brief-source-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }}
 .brief-source {{ border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface2); padding:14px 15px; }}
 .brief-source h3 {{ margin:7px 0 4px; font-size:.9rem; }} .brief-source p, .brief-source-more {{ color:var(--insufficient); font-size:.78rem; }}
-.full-report-intro {{ max-width:900px; margin:0 auto 30px; }}
+.full-report-intro {{ width:100%; max-width:900px; margin:0 auto 30px; }}
 .full-report-intro h2 {{ font-family:var(--font-head); margin:0 0 7px; font-size:1.8rem; }}
 .full-report-intro p {{ margin:0; color:var(--insufficient); }}
-.full-report-layout {{ display:grid; grid-template-columns:240px minmax(0,1fr); gap:42px; align-items:start; }}
+.full-report-layout {{ position:relative; display:grid; width:100%; grid-template-columns:minmax(180px,240px) minmax(0,1fr); gap:clamp(24px,3vw,42px); align-items:start; }}
 .full-report-toc {{ position:sticky; top:18px; max-height:calc(100vh - 36px); overflow:auto; border-right:1px solid var(--border); padding-right:18px; }}
 .toc-head {{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }}
 .toc-head strong {{ font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--insufficient); }}
@@ -2353,11 +2423,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .full-report-toc nav {{ display:grid; gap:4px; }}
 .full-report-toc a {{ display:block; color:var(--insufficient); text-decoration:none; padding:7px 8px; border-left:2px solid transparent; font-size:.8rem; line-height:1.4; }}
 .full-report-toc a.active {{ color:var(--text); border-left-color:var(--primary); background:var(--surface2); }}
-.full-report-layout.toc-collapsed {{ grid-template-columns:48px minmax(0,1fr); gap:24px; }}
+:root .full-report-layout.toc-collapsed {{ grid-template-columns:minmax(0,1fr); gap:0; }}
 .full-report-layout.toc-collapsed .full-report-toc nav, .full-report-layout.toc-collapsed .toc-head strong {{ display:none; }}
-.full-report-layout.toc-collapsed .full-report-toc {{ padding-right:0; border-right:0; overflow:visible; }}
-.full-report-layout.toc-collapsed .toc-collapse {{ writing-mode:vertical-rl; border:1px solid var(--border); border-radius:999px; padding:9px 5px; background:var(--surface); }}
-.full-report-content {{ min-width:0; max-width:960px; }}
+.full-report-layout.toc-collapsed .full-report-toc {{ position:absolute; left:0; top:0; width:0; max-height:none; padding:0; border:0; overflow:visible; z-index:6; }}
+.full-report-layout.toc-collapsed .toc-head {{ margin:0; }}
+.full-report-layout.toc-collapsed .toc-collapse {{ position:sticky; top:18px; writing-mode:horizontal-tb; white-space:nowrap; border:1px solid var(--border); border-radius:999px; padding:7px 10px; background:var(--surface); box-shadow:var(--shadow); transform:translateX(-6px); }}
+.full-report-content {{ width:100%; min-width:0; max-width:960px; }}
+.full-report-layout.toc-collapsed .full-report-content {{ max-width:none; }}
 .full-chapter {{ scroll-margin-top:24px; padding:0 0 54px; margin:0 0 54px; border-bottom:1px solid var(--border); }}
 .full-chapter:last-child {{ border-bottom:0; }}
 .full-chapter-header {{ max-width:760px; margin-bottom:24px; }}
@@ -2382,23 +2454,43 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .full-report-layout {{ grid-template-columns:1fr; gap:18px; }}
   .full-report-toc {{ position:relative; top:auto; max-height:none; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; }}
   .full-report-toc nav {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }}
-  .full-report-layout.toc-collapsed {{ grid-template-columns:1fr; }}
-  .full-report-layout.toc-collapsed .full-report-toc {{ padding:10px 12px; border:1px solid var(--border); }}
-  .full-report-layout.toc-collapsed .toc-collapse {{ writing-mode:horizontal-tb; padding:4px 8px; }}
+  :root .full-report-layout.toc-collapsed {{ grid-template-columns:1fr; }}
+  .full-report-layout.toc-collapsed .full-report-toc {{ position:relative; width:100%; padding:10px 12px; border:1px solid var(--border); }}
+  .full-report-layout.toc-collapsed .toc-collapse {{ position:static; transform:none; padding:4px 8px; box-shadow:none; }}
   .full-report-layout.toc-collapsed .full-report-toc nav {{ display:none; }}
 }}
-@media (max-width:720px) {{ .report-shell {{ padding:12px 16px 56px; }} .data-table {{ font-size:.78rem; }}
-  .report-header h1 {{ font-size:1.55rem; }} .hero-insights, .tribunal-grid, .scope-grid, .retrieval-grid, .brief-source-grid, .method-audit-grid {{ grid-template-columns:1fr; }}
-  .report-view-switcher {{ width:100%; }} .report-view-btn {{ flex:1; }}
-  .full-report-toc nav {{ grid-template-columns:1fr; }} .full-chapter {{ margin-bottom:38px; padding-bottom:38px; }}
+@media (max-width:720px) {{
+  .controls {{ width:calc(100% - 24px); margin-bottom:10px; padding-left:8px; padding-right:8px; }}
+  .report-shell {{ width:100%; padding:12px 14px 56px; }}
+  .report-header {{ width:100%; }}
+  .report-header h1 {{ font-size:1.55rem; overflow-wrap:anywhere; }}
+  .report-header .meta, .brief-source h3, .claim-cell, .detail-body, .source-detail-grid dd {{ overflow-wrap:anywhere; word-break:break-word; }}
+  .data-table {{ font-size:.78rem; }}
+  .hero-insights, .tribunal-grid, .scope-grid, .retrieval-grid, .brief-source-grid, .method-audit-grid {{ grid-template-columns:1fr; }}
+  .report-view-switcher {{ width:100%; }}
+  .report-view-btn {{ flex:1; min-height:42px; }}
+  .lang-btn, .toc-collapse {{ min-height:40px; }}
+  .lang-btn {{ min-width:46px; }}
+  .detail-expander>summary, .matrix-controls summary, .supporting-visual summary, .tribunal-more>summary {{ padding:7px 0; min-height:38px; display:flex; align-items:center; }}
+  .full-report-toc nav {{ grid-template-columns:1fr; }}
+  .full-chapter {{ width:100%; margin-bottom:38px; padding-bottom:38px; }}
+  .full-chapter-header, .brief-block-header, .visual-heading {{ max-width:100%; }}
   .evidence-detail-grid, .source-detail-grid {{ grid-template-columns:1fr; }}
-  .evidence-detail-grid dt, .source-detail-grid dt {{ padding-bottom:2px; }} .evidence-detail-grid dd, .source-detail-grid dd {{ padding-top:2px; }}
-  .decision-hero {{ padding:20px 16px; }} .section-data, .section-decision, .section-narrative {{ max-width:100%; }}
-  .evidence-to-action {{ flex-direction:column; overflow:visible; }} .flow-arrow {{ transform:rotate(90deg); }}
-  .matrix-wrap {{ border:0; overflow:visible; }} .evidence-matrix thead {{ display:none; }}
+  .evidence-detail-grid dt, .source-detail-grid dt {{ padding-bottom:2px; }}
+  .evidence-detail-grid dd, .source-detail-grid dd {{ padding-top:2px; }}
+  .decision-hero {{ padding:20px 16px; }}
+  .section-data, .section-decision, .section-narrative {{ width:100%; max-width:100%; }}
+  .visual-surface, .outcome-separation, .trace-chain {{ max-width:100%; }}
+  .chart-mount {{ height:clamp(240px,62vw,320px); }}
+  .evidence-to-action {{ flex-direction:column; overflow:visible; }}
+  .flow-arrow {{ transform:rotate(90deg); }}
+  .matrix-wrap {{ width:100%; border:0; overflow:visible; }}
+  .evidence-matrix thead {{ display:none; }}
   .evidence-matrix, .evidence-matrix tbody, .evidence-matrix tr, .evidence-matrix td {{ display:block; width:100%; }}
   .evidence-matrix tr {{ border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; padding:10px; background:var(--surface); }}
-  .evidence-matrix td {{ border:0; padding:5px 0; }} .claim-cell {{ min-width:0; max-width:none; }} }}
+  .evidence-matrix td {{ border:0; padding:5px 0; }}
+  .claim-cell {{ min-width:0; max-width:none; }}
+}}
 </style>
 </head>
 <body>

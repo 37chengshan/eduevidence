@@ -39,6 +39,8 @@ OUTCOME_ZH = {
 STUDY_ZH = {
     "rct": "随机对照试验",
     "quasi_experiment": "准实验",
+    "quasi_experimental": "准实验",
+    "observational": "观察性研究",
     "mixed_methods": "混合方法",
     "case_study": "案例研究",
     "longitudinal": "纵向研究",
@@ -124,6 +126,8 @@ OUTCOME_EN = {
 STUDY_EN = {
     "rct": "Randomized controlled trial",
     "quasi_experiment": "Quasi-experiment",
+    "quasi_experimental": "Quasi-experimental",
+    "observational": "Observational",
     "mixed_methods": "Mixed methods",
     "case_study": "Case study",
     "longitudinal": "Longitudinal",

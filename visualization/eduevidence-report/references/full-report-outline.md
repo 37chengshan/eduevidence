@@ -75,10 +75,10 @@ Evidence, methodology audit items, tribunal claims and sources default to compac
 
 The same Visual Brief / Full Report structure, dynamic outline and evidence content are rendered through five clearly differentiated layout templates:
 
-- Claude Research — calm research reader.
-- Academic Paper — journal/paper layout.
-- Editorial — long-form magazine layout.
-- DataLab — analytical workbench.
-- Presentation / Judge — review/presentation layout.
+- Claude Research [Light] — calm research reader.
+- Academic Paper [Light] — journal/paper layout.
+- DataLab [Light] — light analytical workbench.
+- DataLab [Dark] — dark analytical workbench with the same information architecture.
+- Presentation / Judge [Dark] — review/presentation layout.
 
 Theme differences may include header composition, Brief grid, TOC appearance, body width, chapter surfaces, table density and data breakout width. Themes may not change evidence semantics or chapter content coverage.

@@ -45,11 +45,11 @@ Interactive prompt:
 
 ```text
 Choose report visual style / 请选择报告视觉风格
-1. Claude Research
-2. Academic Paper
-3. Editorial
-4. DataLab
-5. Presentation / Judge
+1. Claude Research      [Light]
+2. Academic Paper       [Light]
+3. DataLab              [Light]
+4. DataLab              [Dark]
+5. Presentation / Judge [Dark]
 ```
 
 Automation and CI must never block on the prompt: explicit `--theme` or a deterministic default must remain available.
@@ -71,7 +71,7 @@ Characteristics:
 - Large whitespace.
 - Low-contrast borders.
 - Sparse cards.
-- Editorial serif headings + clean sans-serif UI.
+- Bookish serif headings + clean sans-serif UI.
 - Comfortable reading width distinct from full-width data surfaces.
 - Calm, quiet hierarchy.
 - Evidence and decisions emphasized through spacing and typography rather than saturation.
@@ -91,33 +91,31 @@ Characteristics:
 - Tables styled closer to academic publishing conventions.
 - Excellent print CSS and grayscale legibility.
 
-### 3.3 Editorial
+### 3.3 DataLab [Light]
 
-Purpose: narrative research communication.
-
-Characteristics:
-
-- Narrower reading column.
-- Strong headline hierarchy.
-- Pull quotes / key findings inserted between narrative sections.
-- Larger opening statement.
-- Text-first rhythm with data surfaces breaking out beyond the reading column.
-- Less dashboard-like, more magazine / long-form report-like.
-
-### 3.4 DataLab
-
-Purpose: researcher inspection and evidence analysis.
+Purpose: researcher inspection and evidence analysis in a bright analytical workspace.
 
 Characteristics:
 
-- Wide workspace.
-- Higher information density.
+- Wide responsive workspace with a maximum width rather than a fixed page width.
+- Decision and Outcome dominate the Visual Brief; Tribunal and Evidence-to-Action form the secondary paired row.
 - Strong filtering and table affordances.
 - Evidence Matrix becomes a first-class analytic surface.
-- Compact cards.
+- Compact but readable cards and controls.
 - Numeric alignment and data scanning prioritized.
 - Visual encodings embedded directly into tables where appropriate.
-- Charts and tables can sit side-by-side when they answer distinct questions.
+
+### 3.4 DataLab [Dark]
+
+Purpose: the same analytical information architecture as DataLab Light, optimized for prolonged dark-mode evidence review.
+
+Characteristics:
+
+- Same content hierarchy, pagination, evidence semantics, and interactions as DataLab Light.
+- Dark surfaces use restrained contrast rather than pure black/white extremes.
+- Evidence Matrix, methodology audit and source trace remain high-density but readable.
+- Charts with white SVG backgrounds remain visually separated from the dark workspace.
+- This is a distinct generation-time theme, not a runtime light/dark toggle.
 
 ### 3.5 Presentation / Judge
 

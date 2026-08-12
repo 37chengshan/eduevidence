@@ -1,83 +1,131 @@
-# HTML Component Catalog（冻结版）
+# HTML Component Catalog（结果层冻结组件）
 
-> 固定组件，不让 LLM 自由创建 DOM 结构（v5 方案 §36 / §10）。Report Spec 只能使用以下组件。避免：每次报告形态漂移、LLM 写坏 HTML、无意义组件、视觉风格漂移、可访问性失控、数据展示错误。
+> LLM 可以规划章节和选择已有组件，但不能自由编写影响证据语义的 DOM / chart 逻辑。组件固定，章节组合动态。
 
-## 一、组件清单（23 个，冻结）
-
-### Shell / 导航
-
-| 组件 | 职责 | 实现 |
-|---|---|---|
-| `ReportShell` | 报告外壳：header / 内容 / footer，响应式容器 | HTML/CSS |
-| `GeneratedThemeMarker` | 展示生成时选定的视觉系统；主题不在成品 HTML 内切换 | `data-theme` + CSS |
-| `LanguageSwitcher` | 中文 / English 平行内容切换，保持报告数据结构一致 | Vanilla JS + `aria-pressed` |
-| `SectionNav` | 章节导航（桌面 sticky sidebar / 平板 top tabs） | HTML/CSS |
-
-### 决策
+## 1. Shell / 导航
 
 | 组件 | 职责 |
 |---|---|
-| `DecisionCard` | 四态决策卡（ADOPT/PILOT/REJECT/INSUFFICIENT EVIDENCE），颜色编码 |
-| `ConfidenceBadge` | High/Moderate/Low/Insufficient 徽标 |
-| `OutcomeSummary` | Outcome Evidence Overview（Diverging Evidence Bar，方向/强度/不确定性） |
+| `ReportShell` | 单文件离线报告外壳 |
+| `GeneratedThemeMarker` | 显示生成时选择的五种视觉系统之一 |
+| `LanguageSwitcher` | 中文 / English 切换 |
+| `PageSwitcher` | Visual Brief / Full Report 一级分页 |
+| `FullReportReader` | 左 TOC + 右完整报告阅读器 |
+| `CollapsibleTOC` | 读取动态 5–7 章 outline；sticky / active / collapse |
+| `FullChapter` | AI 规划后的章节容器，只组合语义模块，不修改研究数据 |
 
-### 图表
+## 2. 决策 / 摘要
+
+| 组件 | 职责 |
+|---|---|
+| `DecisionHero` | Decision / Confidence / strongest claim / uncertainty / risk / action |
+| `ConfidenceBadge` | High / Moderate / Low / Insufficient |
+| `VisualBriefBlock` | 摘要页高价值模块容器；不是完整报告章节 |
+| `KeySourceCards` | 摘要页只显示少量关键来源 |
+
+## 3. Outcome / Visualization
 
 | 组件 | 引擎 | 职责 |
 |---|---|---|
-| `InteractiveChart` | ECharts | 交互分析图（矩阵/趋势/分布） |
-| `AcademicFigure` | Academic Figures | 出版级统计图（SVG/PNG/PDF，Okabe-Ito/Nature/Conservative） |
-| `InfographicBlock` | AntV Infographic | 研究流程/裁决/干预/评价信息图（SVG） |
+| `OutcomeSeparation` | HTML/CSS | Task / Learning / Retention / Transfer / Risk 构念分离 |
+| `EvidenceBalance` | SVG/ECharts | 基于 `effect_direction` 的正向/负向/零效应比较；只有 Gate 通过才渲染 |
+| `InteractiveChart` | ECharts | 有信息增益的交互分析图 |
+| `AcademicFigure` | Academic Figures | 出版级静态图 |
+| `InfographicBlock` | SVG / AntV | 流程、干预、评价等语义图 |
+| `VisualizationSuppressed` | HTML | 数据不足时解释为什么不画图 |
 
-### 证据
-
-| 组件 | 职责 |
-|---|---|
-| `EvidenceMatrix` | 主证据界面：Study/Population/Intervention/Outcome/Direction/Quality/Directness/Claim/Source + Filter/Search/Sort/Expand |
-| `EvidenceRow` | 矩阵单行（可展开显示细节） |
-
-### 裁决
+## 4. Evidence / progressive disclosure
 
 | 组件 | 职责 |
 |---|---|
-| `TribunalView` | CAN CLAIM / CANNOT CLAIM / WHY 三段式 + Decision/Confidence/Missing Evidence |
-| `MethodologyPanel` | small multiples + warning cards（5 维：Study Design/Sample/Measurement/Temporal/Directness） |
-| `ConflictCard` | 冲突分析：正反证据冲突来源（样本/测量/课程/工具/设计） |
-| `ClaimTrace` | ECharts Graph：Decision→Claim→Evidence→Source（点击穿透） |
+| `EvidenceMatrix` | 6 列主视图：Evidence ID / Outcome / Effect / Quality / Claim / Source |
+| `EvidenceRow` | 单条 Evidence 摘要 |
+| `ExpandableEvidence` | 展开 study/sample/design/intervention/comparison/effect/quality/source 等完整字段 |
+| `QualityMeter` | 仅表达已有 quality_score |
+| `SafeSourceLink` | 只允许 http / https 可点击 URL |
 
-### 行动
+Outcome/Matrix 的主方向使用 `effect_direction`。`relation_to_claim` 只作为次级 Claim relation 显示。
 
-| 组件 | 职责 |
-|---|---|
-| `ApplicabilityCard` | For whom / which course / which outcome / conditions |
-| `InterventionTimeline` | 纯 HTML/CSS Timeline（每步 Goal/AI Rule/Teacher/Student/Exit） |
-| `EvaluationFlow` | Inline SVG：Baseline→Treatment/Control→Post→Retention→Transfer |
-
-### 数据与溯源
+## 5. Adjudication / methodology / trace
 
 | 组件 | 职责 |
 |---|---|
-| `BenchmarkPanel` | 四图：Citation Support / Unsupported Rate / Contradiction / Quality vs Cost |
-| `SourceList` | 来源表（含 authority_level / canonical_url / source_location） |
-| `ProvenancePanel` | Fetch Provenance：Original URL / Provider / Status / Fallback / Retrieved At（v3 §20） |
-| `Footnote` | 报告脚注（模式/时间/版本） |
+| `TribunalView` | Supported / Uncertain / Contradicted / Missing Evidence |
+| `ExpandableTribunalClaim` | 长裁决文本和 Evidence IDs 渐进展开 |
+| `MethodologyPanel` | compact status surface |
+| `ExpandableMethodology` | 展开每项 methodology note |
+| `ConflictCard` | 去重后的冲突/异质性解释 |
+| `ClaimTrace` | Claim → Evidence → Outcome → Effect → Quality → Source |
 
-## 二、使用规则
+## 6. Applicability / intervention / evaluation
 
-1. 一个 Section 只用一个主组件；辅助组件（Footnote 等）不受限；
-2. Report Spec 中 `component` 字段必须是上表名称，未知组件 → 渲染器报 `REPORT_INVALID`；
-3. 组件 props 只控制展示（标题/排序/高亮），不能携带数据改写指令；
-4. 图表组件必须携带 `summary_text`（无障碍非颜色编码摘要，v5 §26）。
+| 组件 | 职责 |
+|---|---|
+| `ApplicabilityCard` | Suitable / not suitable / conditions / boundary |
+| `EvidenceToAction` | Evidence → Applicability → Decision → Guardrails → Stop → Evaluation |
+| `InterventionTimeline` | 教学试点阶段 |
+| `EvaluationFlow` | Baseline → Post → Retention → Transfer |
+| `StopConditionBlock` | 失败/停止条件 |
 
-## 三、数据一致性
+## 7. Sources / provenance
 
-- 所有组件只从 `result.json` 取数（经 `report-result.schema.json` 校验）；
-- 图表数字 == result.json 数字（Scientific Integrity Gate，v5 §27）；
-- 组件层禁止新增结论、禁止隐藏 contradiction、禁止捏造统计（v5 §60）。
+| 组件 | 职责 |
+|---|---|
+| `SourceList` | Source ID / original title / year / authority / location |
+| `ExpandableSource` | canonical URL / source location / fetch metadata |
+| `ProvenancePanel` | 只显示真实存在的 fetch metadata；空 fetch 不生成空表 |
+| `Footnote` | 模式 / 版本 / integrity 状态 |
 
-## 四、自检清单
+## 8. Motion Template
 
-- [ ] 同一 report_spec 渲染五种主题，数据完全一致（v5 §49）
-- [ ] 无 JS 时 Decision / Evidence summary / Matrix / Tribunal / Intervention / Sources 仍可读（v5 §28）
-- [ ] ThemeSwitcher 持久化（localStorage），刷新后主题不变
-- [ ] Provenance 只在 Sources & Provenance 面板展示，不出现在主证据界面（v3 §20）
+| 组件 | 职责 |
+|---|---|
+| `MotionTemplate` | 统一 section/stagger/bar/trace/flow/detail/page/toc 动画 |
+
+动画由 `motion/motion.css` + `motion/motion.js` 固化。五种主题不得创建不同的科学/数据动画逻辑。
+
+## 9. Dynamic Report Planner
+
+AI 不创建新组件，而是把固定语义模块组合成 5–7 个章节：
+
+```text
+decision · scope · retrieval · outcomes · evidence · quality
+conflicts · trace · applicability · intervention · evaluation · sources
+```
+
+规则：
+
+1. 第一章包含 `decision`。
+2. 最后一章包含 `sources`。
+3. 全部模块覆盖且每个恰好一次。
+4. AI 可以自由命名章节和合并中间模块。
+5. Invalid outline → safe six-chapter fallback。
+
+## 10. 五种主题共用组件，不共用排版
+
+同一组件在五种主题中可以改变：
+
+- 宽度和列布局。
+- 卡片/横线/面板策略。
+- TOC 外观。
+- Brief 模块网格。
+- 表格密度。
+- 标题尺度和章节节奏。
+
+不能改变：
+
+- Evidence / Claim / Verdict / Confidence。
+- `effect_direction`。
+- 数据数量。
+- 页面功能与 Evidence 展开能力。
+- Meaningful Visualization Gate。
+
+## 11. 自检
+
+- [ ] 同一 result 生成五种主题，数据与章节内容覆盖完全一致。
+- [ ] 五种主题的首屏、Brief 排版、TOC、正文宽度、章节 surface 明显不同。
+- [ ] Visual Brief / Full Report 都可切换。
+- [ ] 5–7 章 TOC 自动读取 outline。
+- [ ] 无 JS 时核心研究内容仍存在于 HTML。
+- [ ] 打印只输出完整报告并暴露 detail 内容。
+- [ ] Outcome visual 使用 `effect_direction`，不是 Claim support。

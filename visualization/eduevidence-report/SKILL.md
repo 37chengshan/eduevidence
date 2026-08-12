@@ -10,7 +10,7 @@ description: EduEvidence HTML 结果层渲染 Skill。把校验过的 result.jso
 ## When to Use
 
 - EduEvidence Research 完成后，需要把 `result.json` / `result.zh.json` 渲染为可交互、可追溯、可离线展示的 HTML Evidence Report。
-- 需要五种 HTML 风格之一：`claude` / `academic` / `editorial` / `datalab` / `presentation`。
+- 需要五种 HTML 风格之一：`claude` / `academic` / `datalab` / `datalab-dark` / `presentation`。其中明确区分 Light / Dark。
 - 需要“快速看懂”与“完整审查”同时存在，而不是二选一。
 - 教师阅读、研究审查、论文附录、答辩演示、公开分享。
 
@@ -186,15 +186,39 @@ positive / negative / null
 
 ## 五主题系统
 
+开始生成报告时，如果用户尚未指定主题，必须先明确询问，并把明暗属性直接标出来：
+
+```text
+请选择报告视觉风格：
+1. Claude Research      [Light]
+2. Academic Paper       [Light]
+3. DataLab              [Light]
+4. DataLab              [Dark]
+5. Presentation / Judge [Dark]
+```
+
 同一份内容、同一分页逻辑、同一 5–7 章 outline、同一 Evidence 数据，五个主题必须在 **UI 结构层明显不同**，不能只换颜色。
 
 | theme | 定位 | 结构差异 |
 |---|---|---|
-| `claude` | Claude Research | 暖色研究阅读器；高留白；细窄目录；正文约 760–900px；数据区适度突破 |
-| `academic` | Academic Paper | 论文/期刊；serif；正式横线；窄正文；目录像论文导航；print-first |
-| `editorial` | Editorial | 杂志长文；超大标题；正文窄；数据和来源横向突破；章节节奏最强 |
-| `datalab` | DataLab | 分析工作台；宽屏；Brief 可两列；TOC/章节面板化；表格和筛选密度最高 |
-| `presentation` | Presentation / Judge | 深色高对比；Decision 首屏最强；Brief 卡片网格；Full Report 为评审面板 |
+| `claude` | Claude Research [Light] | 暖色研究阅读器；高留白；细窄目录；正文约 760–900px；数据区适度突破 |
+| `academic` | Academic Paper [Light] | 论文/期刊；serif；正式横线；窄正文；目录像论文导航；print-first |
+| `datalab` | DataLab [Light] | 浅色分析工作台；宽屏；Decision/Outcome 主导的 Brief；TOC/章节面板化；证据筛选密度高 |
+| `datalab-dark` | DataLab [Dark] | 与 DataLab Light 共用信息架构的深色分析工作台；适合长时间审查、证据矩阵和方法学检查 |
+| `presentation` | Presentation / Judge [Dark] | 深色高对比；Decision 首屏最强；Brief 卡片网格；Full Report 为评审面板 |
+
+### 响应式与报告宽度约束
+
+所有主题必须遵守同一套阅读器响应式规则：
+
+- 页面使用 `width: 100%` + `max-width`，最大宽度只限制超宽屏阅读，不得把正文做成固定宽度。
+- 浏览器缩窄时，header、Visual Brief、Full Report、表格与可视化必须连续压缩；不得出现依赖桌面固定像素宽度的横向溢出。
+- `report-shell`、`brief-block`、`full-report-layout`、`full-report-content` 都必须允许 `min-width: 0` / `width: 100%` 的收缩路径。
+- 宽数据表桌面端可横向滚动；移动端优先卡片化或纵向布局，关键 Evidence 字段不能因为 overflow 被永久隐藏。
+- 980px 以下 Full Report 目录进入单列/折叠模式；720px 以下所有双列/四列关键阅读组件降为单列。
+- 目录展开时可以占用左侧栏；目录收起后必须**真正退出网格布局**，右侧 Full Report 解除常规正文 `max-width` 限制并占满当前主题允许的可用宽度，只保留一个可访问的“展开目录”按钮。
+- 目录收起不能只是隐藏链接而继续保留 48px / 240px 空栏。
+- 移动端交互按钮和 `<summary>` 必须有足够触控面积，长标题、Source、Claim、URL 必须允许换行。
 
 五主题允许不同：
 

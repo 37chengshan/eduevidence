@@ -1,83 +1,125 @@
-/* Theme 04 — DataLab.
-   Research inspection workspace: wide canvas, compact rhythm, sticky controls,
-   dense but readable evidence matrix and numeric alignment. */
+/* Theme 03 — DataLab Light.
+   Analytical workspace with readable density: strong hierarchy, compact controls,
+   full-width decision/outcome surfaces, paired tribunal/action panels and traceable sources. */
 :root[data-theme="datalab"] {
-  --bg:#F4F5F7; --surface:#FFFFFF; --surface2:#EEF0F3; --text:#1F2329;
-  --text-muted:#6B7280; --primary:#2563EB; --primary-soft:#E8EEFC;
-  --support:#059669; --support-soft:#E5F5EF; --contradict:#DC2626;
-  --contradict-soft:#FCEBEB; --uncertain:#D97706; --uncertain-soft:#FCF0E1;
-  --insufficient:#9CA3AF; --border:#D8DCE2; --radius:5px; --radius-sm:4px;
+  --bg:#F3F5F8; --surface:#FFFFFF; --surface2:#F7F9FC; --text:#1F2530;
+  --text-muted:#687386; --primary:#2563EB; --primary-soft:#EAF0FD;
+  --support:#17805E; --support-soft:#E8F5EF; --contradict:#C94343;
+  --contradict-soft:#FBEDED; --uncertain:#B86D12; --uncertain-soft:#FBF1E5;
+  --insufficient:#7A8493; --border:#D9DEE7; --radius:8px; --radius-sm:6px;
   --shadow:0 1px 2px rgba(16,24,40,.05); --font-head:'Helvetica Neue',Arial,'PingFang SC',sans-serif;
   --font-ui:'Helvetica Neue',Arial,'PingFang SC',sans-serif; --font-mono:'SF Mono',Menlo,Consolas,monospace;
 }
-:root[data-theme="datalab"] .report-shell { max-width:1480px; padding:18px 24px 64px; }
-:root[data-theme="datalab"] .report-header { margin-bottom:22px; }
-:root[data-theme="datalab"] .report-header h1 { font-size:1.75rem; }
-:root[data-theme="datalab"] .report-section { max-width:none; margin-bottom:18px; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
-:root[data-theme="datalab"] .report-section>h2 { font-family:var(--font-ui); font-size:.86rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); }
-:root[data-theme="datalab"] .section-lead { padding:6px 9px; margin-bottom:10px; font-size:.78rem; }
-:root[data-theme="datalab"] .decision-hero { display:grid; grid-template-columns:minmax(220px,.7fr) 2fr; gap:16px 22px; padding:18px; }
-:root[data-theme="datalab"] .hero-decision { align-content:start; margin:0; }
-:root[data-theme="datalab"] .hero-rationale { margin:0; font-family:var(--font-ui); font-size:1rem; }
-:root[data-theme="datalab"] .hero-insights { grid-column:1/-1; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
-:root[data-theme="datalab"] .hero-insight { min-height:84px; padding:10px 12px; }
-:root[data-theme="datalab"] .hero-provenance { grid-column:1/-1; margin:0; }
-:root[data-theme="datalab"] .outcome-groups { grid-template-columns:repeat(4,minmax(190px,1fr)); gap:8px; }
-:root[data-theme="datalab"] .outcome-group { padding:10px 12px; }
-:root[data-theme="datalab"] .matrix-controls { position:sticky; top:0; z-index:5; padding:8px; background:color-mix(in srgb,var(--surface) 92%,transparent); backdrop-filter:blur(8px); border:1px solid var(--border); }
-:root[data-theme="datalab"] .matrix-tools { margin:0; }
-:root[data-theme="datalab"] .matrix-tools input,
-:root[data-theme="datalab"] .matrix-tools select { padding:4px 8px; }
-:root[data-theme="datalab"] .data-table { font-size:.76rem; }
-:root[data-theme="datalab"] .data-table th,
-:root[data-theme="datalab"] .data-table td { padding:5px 7px; }
-:root[data-theme="datalab"] .claim-cell { max-width:none; min-width:260px; }
-:root[data-theme="datalab"] .tribunal-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
-:root[data-theme="datalab"] .tribunal-card,
-:root[data-theme="datalab"] .trace-chain-card,
-:root[data-theme="datalab"] .action-node { padding:10px 12px; }
-:root[data-theme="datalab"] .evidence-to-action { gap:6px; }
-:root[data-theme="datalab"] code { font-size:.76em; }
-
-/* Dual-layer reader — dense analytical workstation. */
-:root[data-theme="datalab"] .report-header { max-width:none; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
-:root[data-theme="datalab"] .report-brand-row { margin-bottom:6px; }
-:root[data-theme="datalab"] .report-brand { color:var(--primary); text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; }
-:root[data-theme="datalab"] .generated-theme-chip { border-radius:4px; background:var(--surface2); }
-:root[data-theme="datalab"] .report-view-switcher { margin-top:12px; gap:0; }
-:root[data-theme="datalab"] .report-view-btn { border-radius:4px 0 0 4px; padding:6px 12px; }
-:root[data-theme="datalab"] .report-view-btn+ .report-view-btn { border-radius:0 4px 4px 0; margin-left:-1px; }
+:root[data-theme="datalab"] body { font-size:15.5px; }
+:root[data-theme="datalab"] .controls {
+  max-width:1480px; margin-top:12px; padding:9px 12px; border:1px solid var(--border);
+  border-radius:10px; background:rgba(255,255,255,.92); box-shadow:var(--shadow); backdrop-filter:blur(10px);
+}
+:root[data-theme="datalab"] .generated-theme { color:var(--primary); font-weight:750; letter-spacing:.06em; }
+:root[data-theme="datalab"] .report-shell { width:100%; max-width:1480px; padding:18px clamp(16px,2.4vw,30px) 72px; }
+:root[data-theme="datalab"] .report-header {
+  width:100%; max-width:none; margin:0 0 22px; padding:18px 20px;
+  border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow);
+}
+:root[data-theme="datalab"] .report-header h1 { max-width:1100px; font-size:clamp(1.55rem,2.6vw,2.15rem); line-height:1.22; }
+:root[data-theme="datalab"] .report-header .meta { margin:8px 0 0; font-size:.85rem; }
+:root[data-theme="datalab"] .report-brand-row { margin-bottom:8px; }
+:root[data-theme="datalab"] .report-brand { color:var(--primary); text-transform:uppercase; letter-spacing:.08em; font-size:.83rem; }
+:root[data-theme="datalab"] .generated-theme-chip { border-radius:5px; background:var(--surface2); font-size:.72rem; }
+:root[data-theme="datalab"] .report-view-switcher { margin-top:14px; gap:0; }
+:root[data-theme="datalab"] .report-view-btn { min-height:36px; border-radius:6px 0 0 6px; padding:7px 14px; font-size:.86rem; }
+:root[data-theme="datalab"] .report-view-btn + .report-view-btn { border-radius:0 6px 6px 0; margin-left:-1px; }
 :root[data-theme="datalab"] .report-view-btn.active { background:var(--primary); color:#fff; }
-:root[data-theme="datalab"] .report-page-brief { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:start; }
-:root[data-theme="datalab"] .brief-block { max-width:none; margin:0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+
+/* Visual Brief: decision → outcomes → tribunal/action → sources. */
+:root[data-theme="datalab"] .report-page-brief {
+  width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; align-items:start;
+}
+:root[data-theme="datalab"] .brief-block {
+  width:100%; max-width:none; margin:0; padding:18px 20px;
+  border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow);
+}
 :root[data-theme="datalab"] .brief-decision,
 :root[data-theme="datalab"] .brief-outcomes,
 :root[data-theme="datalab"] .brief-sources { grid-column:1/-1; }
-:root[data-theme="datalab"] .brief-block-header { max-width:none; margin-bottom:12px; display:flex; justify-content:space-between; gap:20px; align-items:baseline; }
-:root[data-theme="datalab"] .brief-block-header h2 { font-family:var(--font-ui); font-size:.9rem; text-transform:uppercase; letter-spacing:.07em; }
-:root[data-theme="datalab"] .brief-block-header p { max-width:680px; font-size:.76rem; text-align:right; }
-:root[data-theme="datalab"] .brief-source-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
-:root[data-theme="datalab"] .brief-source { padding:10px 12px; }
-:root[data-theme="datalab"] .full-report-intro { max-width:none; margin:22px 0 14px; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); }
-:root[data-theme="datalab"] .full-report-intro h2 { font-family:var(--font-ui); font-size:1.15rem; }
-:root[data-theme="datalab"] .full-report-layout { grid-template-columns:270px minmax(0,1fr); gap:16px; }
-:root[data-theme="datalab"] .full-report-toc { top:12px; padding:10px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
-:root[data-theme="datalab"] .toc-head { margin-bottom:7px; }
-:root[data-theme="datalab"] .full-report-toc a { border-left:3px solid transparent; border-radius:3px; padding:6px 8px; font-size:.74rem; }
+:root[data-theme="datalab"] .brief-block-header {
+  max-width:none; margin-bottom:16px; display:flex; justify-content:space-between; align-items:flex-start; gap:24px;
+}
+:root[data-theme="datalab"] .brief-block-header h2 {
+  margin:0; font-family:var(--font-ui); font-size:1.02rem; line-height:1.35; text-transform:uppercase; letter-spacing:.055em;
+}
+:root[data-theme="datalab"] .brief-block-header p { max-width:680px; margin:0; font-size:.86rem; line-height:1.55; text-align:right; }
+:root[data-theme="datalab"] .brief-decision { padding:0; overflow:hidden; }
+:root[data-theme="datalab"] .brief-decision .brief-block-header { padding:18px 20px 0; }
+:root[data-theme="datalab"] .brief-decision .decision-hero {
+  border-width:1px 0 0; border-radius:0; display:grid; grid-template-columns:minmax(210px,.7fr) minmax(0,2fr); gap:18px 28px; padding:24px 20px;
+}
+:root[data-theme="datalab"] .brief-decision .hero-decision { align-content:start; margin:0; }
+:root[data-theme="datalab"] .brief-decision .hero-rationale { margin:0; font-family:var(--font-ui); font-size:1.08rem; line-height:1.55; }
+:root[data-theme="datalab"] .brief-decision .hero-insights { grid-column:1/-1; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+:root[data-theme="datalab"] .brief-decision .hero-insight { min-height:96px; padding:12px 14px; border:1px solid var(--border); border-top-width:3px; border-radius:7px; }
+:root[data-theme="datalab"] .brief-outcomes .brief-block-body { display:grid; gap:18px; }
+:root[data-theme="datalab"] .brief-outcomes .outcome-groups { grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; }
+:root[data-theme="datalab"] .brief-outcomes .outcome-group { padding:13px 14px; }
+:root[data-theme="datalab"] .brief-chart { margin:0; }
+:root[data-theme="datalab"] .brief-tribunal,
+:root[data-theme="datalab"] .brief-action { min-height:100%; }
+:root[data-theme="datalab"] .tribunal-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+:root[data-theme="datalab"] .tribunal-card { min-height:0; padding:13px 14px; }
+:root[data-theme="datalab"] .evidence-to-action { gap:7px; padding-bottom:8px; margin-bottom:0; }
+:root[data-theme="datalab"] .action-node { min-width:150px; padding:12px 13px; }
+:root[data-theme="datalab"] .brief-source-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+:root[data-theme="datalab"] .brief-source { min-width:0; padding:12px 14px; background:var(--surface2); }
+:root[data-theme="datalab"] .brief-source h3 { font-size:.88rem; line-height:1.45; overflow-wrap:anywhere; }
+
+/* Full report: compact analytical reader. */
+:root[data-theme="datalab"] .full-report-intro { max-width:none; margin:24px 0 16px; padding:16px 18px; border:1px solid var(--border); border-radius:10px; background:var(--surface); }
+:root[data-theme="datalab"] .full-report-intro h2 { font-family:var(--font-ui); font-size:1.35rem; }
+:root[data-theme="datalab"] .full-report-layout { grid-template-columns:minmax(210px,270px) minmax(0,1fr); gap:18px; }
+:root[data-theme="datalab"] .full-report-toc { top:12px; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--surface); box-shadow:var(--shadow); }
+:root[data-theme="datalab"] .full-report-toc a { border-left:3px solid transparent; border-radius:5px; padding:8px 9px; font-size:.82rem; }
 :root[data-theme="datalab"] .full-report-toc a.active { border-left-color:var(--primary); background:var(--primary-soft); color:var(--text); }
 :root[data-theme="datalab"] .full-report-content { max-width:none; }
-:root[data-theme="datalab"] .full-chapter { margin:0 0 14px; padding:16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
-:root[data-theme="datalab"] .full-chapter-header { max-width:none; margin-bottom:14px; display:grid; grid-template-columns:minmax(220px,.65fr) 1fr; gap:16px; align-items:start; }
-:root[data-theme="datalab"] .full-chapter-header h2 { font-family:var(--font-ui); font-size:1rem; text-transform:uppercase; letter-spacing:.05em; }
-:root[data-theme="datalab"] .full-chapter-lead { font-size:.78rem; }
-:root[data-theme="datalab"] .scope-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
-:root[data-theme="datalab"] .method-audit-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
-:root[data-theme="datalab"] .evidence-detail-grid { grid-template-columns:140px 1fr; }
-:root[data-theme="datalab"] .detail-body { padding:8px 10px; }
-:root[data-theme="datalab"] .source-table { font-size:.75rem; }
+:root[data-theme="datalab"] .full-chapter { margin:0 0 18px; padding:20px; border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow); }
+:root[data-theme="datalab"] .full-chapter-header { max-width:none; margin-bottom:18px; display:grid; grid-template-columns:minmax(220px,.65fr) minmax(0,1fr); gap:20px; align-items:start; }
+:root[data-theme="datalab"] .full-chapter-header h2 { font-family:var(--font-ui); font-size:1.18rem; line-height:1.35; }
+:root[data-theme="datalab"] .full-chapter-lead { font-size:.88rem; line-height:1.55; }
+:root[data-theme="datalab"] .scope-grid { grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+:root[data-theme="datalab"] .method-audit-grid { grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:9px; }
+:root[data-theme="datalab"] .matrix-controls { position:sticky; top:0; z-index:5; padding:9px; background:rgba(255,255,255,.94); backdrop-filter:blur(8px); border:1px solid var(--border); border-radius:7px; }
+:root[data-theme="datalab"] .matrix-tools input,
+:root[data-theme="datalab"] .matrix-tools select { min-height:36px; padding:6px 9px; }
+:root[data-theme="datalab"] .data-table { font-size:.82rem; }
+:root[data-theme="datalab"] .data-table th,
+:root[data-theme="datalab"] .data-table td { padding:7px 8px; }
+:root[data-theme="datalab"] .claim-cell { max-width:none; min-width:260px; }
+:root[data-theme="datalab"] code { font-size:.78em; }
+
+@media (max-width:1100px) {
+  :root[data-theme="datalab"] .brief-decision .hero-insights { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :root[data-theme="datalab"] .brief-source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
 @media (max-width:980px) {
   :root[data-theme="datalab"] .report-page-brief { grid-template-columns:1fr; }
   :root[data-theme="datalab"] .brief-block { grid-column:1 !important; }
-  :root[data-theme="datalab"] .brief-source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :root[data-theme="datalab"] .brief-block-header { display:block; }
+  :root[data-theme="datalab"] .brief-block-header p { margin-top:6px; max-width:none; text-align:left; }
+  :root[data-theme="datalab"] .brief-decision .decision-hero { grid-template-columns:1fr; }
+  :root[data-theme="datalab"] .brief-decision .hero-insights { grid-column:1; }
   :root[data-theme="datalab"] .full-chapter-header { grid-template-columns:1fr; }
+}
+@media (max-width:720px) {
+  :root[data-theme="datalab"] .controls { width:calc(100% - 24px); padding:8px 10px; }
+  :root[data-theme="datalab"] .report-shell { padding-left:14px; padding-right:14px; }
+  :root[data-theme="datalab"] .report-header { padding:15px 14px; }
+  :root[data-theme="datalab"] .report-header h1 { font-size:1.45rem; }
+  :root[data-theme="datalab"] .brief-block { padding:15px 14px; }
+  :root[data-theme="datalab"] .brief-decision { padding:0; }
+  :root[data-theme="datalab"] .brief-decision .brief-block-header { padding:15px 14px 0; }
+  :root[data-theme="datalab"] .brief-decision .decision-hero { padding:18px 14px; }
+  :root[data-theme="datalab"] .brief-decision .hero-insights,
+  :root[data-theme="datalab"] .brief-source-grid,
+  :root[data-theme="datalab"] .tribunal-grid { grid-template-columns:1fr; }
+  :root[data-theme="datalab"] .full-chapter { padding:16px 14px; }
+  :root[data-theme="datalab"] .data-table { font-size:.8rem; }
 }
