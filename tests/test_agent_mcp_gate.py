@@ -208,6 +208,7 @@ def test_scan_cli_models_parses_omp_table(monkeypatch):
         "└───────────┴─────────┴─────────┴───────────┴────────┘\n"
     )
     monkeypatch.setattr(agent_mcp, "_run_cli_cmd", lambda argv, timeout=20: table)
+    monkeypatch.setattr(agent_mcp.shutil, "which", lambda cmd: f"/usr/bin/{cmd}")
     entry = scan_cli_models("omp")
     assert entry["available"] is True
     assert entry["models"] == ["opencode-go/deepseek-v4-flash",
