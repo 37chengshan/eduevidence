@@ -38,3 +38,46 @@
 :root[data-theme="datalab"] .action-node { padding:10px 12px; }
 :root[data-theme="datalab"] .evidence-to-action { gap:6px; }
 :root[data-theme="datalab"] code { font-size:.76em; }
+
+/* Dual-layer reader — dense analytical workstation. */
+:root[data-theme="datalab"] .report-header { max-width:none; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+:root[data-theme="datalab"] .report-brand-row { margin-bottom:6px; }
+:root[data-theme="datalab"] .report-brand { color:var(--primary); text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; }
+:root[data-theme="datalab"] .generated-theme-chip { border-radius:4px; background:var(--surface2); }
+:root[data-theme="datalab"] .report-view-switcher { margin-top:12px; gap:0; }
+:root[data-theme="datalab"] .report-view-btn { border-radius:4px 0 0 4px; padding:6px 12px; }
+:root[data-theme="datalab"] .report-view-btn+ .report-view-btn { border-radius:0 4px 4px 0; margin-left:-1px; }
+:root[data-theme="datalab"] .report-view-btn.active { background:var(--primary); color:#fff; }
+:root[data-theme="datalab"] .report-page-brief { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:start; }
+:root[data-theme="datalab"] .brief-block { max-width:none; margin:0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+:root[data-theme="datalab"] .brief-decision,
+:root[data-theme="datalab"] .brief-outcomes,
+:root[data-theme="datalab"] .brief-sources { grid-column:1/-1; }
+:root[data-theme="datalab"] .brief-block-header { max-width:none; margin-bottom:12px; display:flex; justify-content:space-between; gap:20px; align-items:baseline; }
+:root[data-theme="datalab"] .brief-block-header h2 { font-family:var(--font-ui); font-size:.9rem; text-transform:uppercase; letter-spacing:.07em; }
+:root[data-theme="datalab"] .brief-block-header p { max-width:680px; font-size:.76rem; text-align:right; }
+:root[data-theme="datalab"] .brief-source-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+:root[data-theme="datalab"] .brief-source { padding:10px 12px; }
+:root[data-theme="datalab"] .full-report-intro { max-width:none; margin:22px 0 14px; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); }
+:root[data-theme="datalab"] .full-report-intro h2 { font-family:var(--font-ui); font-size:1.15rem; }
+:root[data-theme="datalab"] .full-report-layout { grid-template-columns:270px minmax(0,1fr); gap:16px; }
+:root[data-theme="datalab"] .full-report-toc { top:12px; padding:10px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+:root[data-theme="datalab"] .toc-head { margin-bottom:7px; }
+:root[data-theme="datalab"] .full-report-toc a { border-left:3px solid transparent; border-radius:3px; padding:6px 8px; font-size:.74rem; }
+:root[data-theme="datalab"] .full-report-toc a.active { border-left-color:var(--primary); background:var(--primary-soft); color:var(--text); }
+:root[data-theme="datalab"] .full-report-content { max-width:none; }
+:root[data-theme="datalab"] .full-chapter { margin:0 0 14px; padding:16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+:root[data-theme="datalab"] .full-chapter-header { max-width:none; margin-bottom:14px; display:grid; grid-template-columns:minmax(220px,.65fr) 1fr; gap:16px; align-items:start; }
+:root[data-theme="datalab"] .full-chapter-header h2 { font-family:var(--font-ui); font-size:1rem; text-transform:uppercase; letter-spacing:.05em; }
+:root[data-theme="datalab"] .full-chapter-lead { font-size:.78rem; }
+:root[data-theme="datalab"] .scope-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+:root[data-theme="datalab"] .method-audit-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+:root[data-theme="datalab"] .evidence-detail-grid { grid-template-columns:140px 1fr; }
+:root[data-theme="datalab"] .detail-body { padding:8px 10px; }
+:root[data-theme="datalab"] .source-table { font-size:.75rem; }
+@media (max-width:980px) {
+  :root[data-theme="datalab"] .report-page-brief { grid-template-columns:1fr; }
+  :root[data-theme="datalab"] .brief-block { grid-column:1 !important; }
+  :root[data-theme="datalab"] .brief-source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :root[data-theme="datalab"] .full-chapter-header { grid-template-columns:1fr; }
+}

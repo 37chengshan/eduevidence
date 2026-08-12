@@ -17,31 +17,35 @@ def _load(rel: str):
 
 
 def test_figure1_has_three_direction_series():
-    """P0-12：主图必须是 Outcome × Direction（support/contradict/neutral 三色分组）。"""
+    """P0-12：主图必须是 Outcome × effect_direction（positive/negative/null 三色分组）。"""
     data = build_figure_data(_load("examples/ai-coding-assistant/result.json"))
     zh = render_figures(data, lang="zh")["outcome-comparison.svg"]
     en = render_figures(data, lang="en")["outcome-comparison.svg"]
     # 三种图例
-    for name in ("支持", "反驳", "中性"):
+    for name in ("正向效应", "负向效应", "零效应"):
         assert name in zh
-    for name in ("Support", "Contradict", "Neutral"):
+    for name in ("Positive effect", "Negative effect", "Null effect"):
         assert name in en
-    # 不止 support_count：每个结果应有非零方向的柱（demo：5 结果共 9 条非零计数）
+    # 不止 support_count：每个结果应有非零方向的柱（demo：5 结果共 6 条非零聚合计数）
     rects = re.findall(r'<rect x="[\d.]+" y="[\d.]+" width="[\d.]+" height="[\d.]+" '
                        r'fill="(#[0-9A-Fa-f]{6})"', zh)
-    assert len(rects) >= 6, "Figure 1 must draw support/contradict/neutral bars"
+    assert len(rects) >= 6, "Figure 1 must draw positive/negative/null bars"
 
 
 def test_figure1_counts_match_result():
-    """图 1 各方向柱值必须等于 result 计数。"""
+    """图 1 各方向柱值必须等于 result 的 effect_direction 聚合计数。"""
     result = _load("examples/ai-coding-assistant/result.json")
     data = build_figure_data(result)
     zh = render_figures(data, lang="zh")["outcome-comparison.svg"]
     labels = re.findall(r'<text x="[\d.]+" y="[\d.]+" text-anchor="middle" font-size="9" '
                         r'fill="#333">(\d+)</text>', zh)
     values = [int(v) for v in labels]
-    expected = [n for o in result["outcomes"] for n in
-                (o["support_count"], o["contradict_count"], o["neutral_count"]) if n > 0]
+    # 预期：每个 outcome 的 positive/negative/null 非零计数（按 outcome 顺序展平）
+    expected = []
+    for o in data["outcomes"]:
+        for k in ("positive_count", "negative_count", "null_count"):
+            if o.get(k, 0) > 0:
+                expected.append(o[k])
     assert values == expected, f"{values} != {expected}"
 
 
@@ -60,8 +64,8 @@ def test_figure_titles_and_captions_bilingual():
     data = build_figure_data(_load("examples/ai-coding-assistant/result.json"))
     zh = render_figures(data, lang="zh")
     en = render_figures(data, lang="en")
-    assert "各结果类型的方向证据分布" in zh["outcome-comparison.svg"]
-    assert "Direction of evidence by outcome type" in en["outcome-comparison.svg"]
+    assert "各结果类型的正向 / 负向 / 零效应证据条数" in zh["outcome-comparison.svg"]
+    assert "Counts of positive / negative / null effects" in en["outcome-comparison.svg"]
     assert "图 1." in zh["outcome-comparison.svg"]
     assert "Fig. 1." in en["outcome-comparison.svg"]
 

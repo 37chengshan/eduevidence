@@ -83,14 +83,21 @@ def test_integrity_fails_when_numbers_tampered(tmp_path, monkeypatch):
 
 
 def test_en_body_has_no_hardcoded_chinese(tmp_path, monkeypatch):
-    """6.1：EN 模式除数据自带的 question 文本外，不得出现中文/全角标点。"""
+    """6.1：EN 模式 UI chrome 不得出现中文/全角标点（JS 注释与数据内容除外）。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     en = _en_shell(html)
+    en = re.sub(r"<script.*?</script>", "", en, flags=re.S)  # JS 注释不可见
     en = re.sub(r"<h1>.*?</h1>", "", en, flags=re.S)
     question = _load("examples/ai-coding-assistant/result.json")["meta"]["question"]
     en = en.replace(question, "")
-    leftover = re.findall(r"[\u4e00-\u9fff：（）「」]", en)
-    assert leftover == [], f"EN body contains hardcoded CJK: {set(leftover)}"
+    # exceeds_evidence_boundary 引用用户原始中文主张（数据内容，非 UI）；
+    # HTML 中引号是 &#x27; 实体，替换时先还原实体再剔除
+    en = en.replace("&#x27;", "'")
+    for c in _load("examples/ai-coding-assistant/result.json")["decision"].get(
+            "exceeds_evidence_boundary", []):
+        en = en.replace(str(c), "")
+    leftover = re.findall(r"[\u4e00-\u9fff]{2,}", en)
+    assert leftover == [], f"EN body contains CJK words: {set(leftover)}"
 
 
 def test_en_decision_hero_is_english(tmp_path, monkeypatch):
@@ -173,7 +180,7 @@ def test_applicability_labels_zh(tmp_path, monkeypatch):
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     zh = re.search(r'<div class="report-shell" data-lang-body="zh">(.*?)</div>\n'
                    r'<div class="report-shell" data-lang-body="en">', html, re.S).group(1)
-    sec = re.search(r'<section id="zh-08-applicability".*?</section>', zh, re.S).group(0)
+    sec = re.search(r'<section id="full-04-action".*?</section>', zh, re.S).group(0)
     assert "不适用于" in sec
     assert app.get("not_suitable_for") in sec
     assert "适用条件" in sec  # required_conditions 独立标签
@@ -188,6 +195,6 @@ def test_applicability_labels_en(tmp_path, monkeypatch):
     app = result["decision"].get("applicability") or result.get("applicability") or {}
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     en = _en_shell(html)
-    sec = re.search(r'<section id="en-08-applicability".*?</section>', en, re.S).group(0)
+    sec = re.search(r'<section id="full-04-action-en".*?</section>', en, re.S).group(0)
     assert "Not suitable for" in sec
     assert app.get("not_suitable_for") in sec

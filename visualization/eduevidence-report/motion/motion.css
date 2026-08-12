@@ -1,0 +1,89 @@
+/* EduEvidence Motion Template
+   Motion explains hierarchy only. It never changes evidence meaning or numeric state. */
+
+.motion-ready [data-animate] {
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .52s cubic-bezier(.22,.61,.36,1),
+             transform .52s cubic-bezier(.22,.61,.36,1);
+  transition-delay:var(--motion-delay,0ms);
+}
+.motion-ready [data-animate].is-visible { opacity:1; transform:none; }
+
+.motion-ready .quality-meter i,
+.motion-ready .balance-track i {
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform .72s cubic-bezier(.22,.61,.36,1) var(--motion-delay,0ms);
+}
+.motion-ready .quality-meter.is-visible i,
+.motion-ready .balance-track.is-visible i { transform:scaleX(1); }
+
+.motion-ready .flow-arrow {
+  opacity:.18;
+  transform:translateX(-4px);
+  transition:opacity .36s ease, transform .36s ease;
+  transition-delay:var(--motion-delay,0ms);
+}
+.motion-ready .flow-arrow.is-visible { opacity:1; transform:none; }
+
+.motion-ready .detail-expander[open] .detail-body {
+  animation:eduevidenceDetailReveal .24s cubic-bezier(.22,.61,.36,1) both;
+}
+@keyframes eduevidenceDetailReveal {
+  from { opacity:0; transform:translateY(-4px); }
+  to { opacity:1; transform:none; }
+}
+
+.motion-ready .report-page:not([hidden]) {
+  animation:eduevidencePageReveal .24s cubic-bezier(.22,.61,.36,1) both;
+}
+@keyframes eduevidencePageReveal {
+  from { opacity:0; transform:translateY(4px); }
+  to { opacity:1; transform:none; }
+}
+
+.motion-ready .full-report-toc a {
+  transition:color .18s ease, background-color .18s ease,
+             border-color .18s ease, box-shadow .18s ease;
+}
+
+@media (hover:hover) {
+  .motion-ready .tribunal-card:hover,
+  .motion-ready .trace-chain-card:hover,
+  .motion-ready .outcome-group:hover,
+  .motion-ready .action-node:hover,
+  .motion-ready .method-audit-item:hover {
+    transform:translateY(-2px);
+  }
+  .motion-ready .evidence-matrix tbody tr:hover .dir {
+    transform:translateY(-1px);
+    filter:saturate(1.08);
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .motion-ready [data-animate],
+  .motion-ready .quality-meter i,
+  .motion-ready .balance-track i,
+  .motion-ready .flow-arrow,
+  .motion-ready .dir,
+  .motion-ready .detail-body,
+  .motion-ready .report-page,
+  .motion-ready .full-report-toc a {
+    opacity:1 !important;
+    transform:none !important;
+    transition:none !important;
+    animation:none !important;
+  }
+  html { scroll-behavior:auto; }
+}
+
+@media print {
+  [data-animate], .quality-meter i, .balance-track i, .flow-arrow {
+    opacity:1 !important;
+    transform:none !important;
+    transition:none !important;
+    animation:none !important;
+  }
+}

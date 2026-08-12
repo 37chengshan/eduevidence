@@ -40,6 +40,7 @@ from build_infographics import build_all as build_infographics
 from zh_labels import label
 
 THEMES_DIR = Path(__file__).resolve().parent.parent / "themes"
+MOTION_DIR = Path(__file__).resolve().parent.parent / "motion"
 THEME_NAMES = ("claude", "academic", "editorial", "datalab", "presentation")
 THEME_DISPLAY = {
     "claude": "Claude Research",
@@ -1352,13 +1353,18 @@ def trace_chain_html(result: dict, lang: str, ui: dict) -> str:
             url = safe_http_url(src.get("canonical_url") or src.get("source_location"))
             source_html = (f'<a href="{esc(url)}"><code>{esc(ev.get("source_id"))}</code></a>'
                            if url else f'<code>{esc(ev.get("source_id"))}</code>')
+            effect = str(ev.get("effect_direction") or "null").lower()
+            relation = ev.get("relation_to_claim") or ev.get("direction") or "neutral"
+            relation_note = ("主张关系" if lang == "zh" else "claim relation") + ": " + label(lang, "dir", relation)
             evidence_nodes.append(
                 f'<div class="trace-evidence-node"><code>{esc(eid)}</code>'
                 f'<span>{esc(label(lang, "outcome", ev.get("outcome_type") or ""))}</span>'
-                f'<span class="dir {DIR_CLASS.get(ev.get("direction"), "neu")}">{esc(label(lang, "dir", ev.get("direction") or "neutral"))}</span>'
+                f'<span class="dir {EFFECT_CLASS.get(effect, "neu")}">{esc(effect_label(lang, effect))}</span>'
+                f'<span class="trace-relation">{esc(relation_note)}</span>'
                 f'<span>Q {esc(ev.get("quality_score"))}</span><span class="trace-arrow">→</span>{source_html}</div>')
+        claim_html = expandable_text(claim.get("claim"), ui["expand_details"], 240, "trace-claim-text")
         chains.append(f'<article class="trace-chain-card"><div class="trace-claim-node"><strong>{esc(claim.get("claim_id") or ui["trace_claim_prefix"])}</strong>'
-                      f'<p>{esc(claim.get("claim"))}</p></div><div class="trace-arrow">↓</div>'
+                      f'{claim_html}</div><div class="trace-arrow">↓</div>'
                       f'<div class="trace-evidence-list">{"".join(evidence_nodes)}</div></article>')
     return f'<div class="trace-chain" data-visual="trace-chain">{"".join(chains)}</div>'
 
@@ -1691,6 +1697,8 @@ def resolve_full_report_plan(result: dict) -> list[dict[str, Any]]:
         })
     if set(seen_modules) != set(FULL_REPORT_MODULES):
         return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+    if "decision" not in normalized[0]["modules"] or "sources" not in normalized[-1]["modules"]:
+        return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
     return normalized
 
 
@@ -1861,6 +1869,16 @@ def _theme_css() -> str:
     return "\n".join(blocks)
 
 
+def _motion_css() -> str:
+    path = MOTION_DIR / "motion.css"
+    return path.read_text(encoding="utf-8") if path.exists() else ""
+
+
+def _motion_js() -> str:
+    path = MOTION_DIR / "motion.js"
+    return path.read_text(encoding="utf-8") if path.exists() else ""
+
+
 def _lang_switcher(ui_zh: dict, ui_en: dict) -> str:
     return (
         f'<div class="lang-switcher" role="group" aria-label="{esc(ui_zh["lang_switcher_aria"])}">'
@@ -1911,13 +1929,61 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
     btn.addEventListener('click', function () {{ applyLang(btn.dataset.langTarget); }});
   }});
 
-  // ---- Evidence matrix filter / search (zh body 与 en body 各自一套) ----
-  function bindMatrix(scope) {{
-    var matrix = scope.querySelector('table[id^=evidence-matrix-]');
-    if (!matrix) return;
-    var search = scope.querySelector('[id^="matrix-search-"]');
-    var dirSel = scope.querySelector('[id^="matrix-direction-"]');
-    var outSel = scope.querySelector('[id^="matrix-outcome-"]');
+  // ---- Top-level Visual Brief / Full Report pagination ----
+  function applyReportView(view) {{
+    view = view === 'full' ? 'full' : 'brief';
+    document.querySelectorAll('.report-page[data-report-page]').forEach(function (page) {{
+      page.hidden = page.dataset.reportPage !== view;
+    }});
+    document.querySelectorAll('.report-view-btn').forEach(function (btn) {{
+      var active = btn.dataset.reportView === view;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    }});
+    root.dataset.reportView = view;
+    try {{ localStorage.setItem('eduevidence-report-view', view); }} catch (e) {{}}
+  }}
+  var savedView = null;
+  try {{ savedView = localStorage.getItem('eduevidence-report-view'); }} catch (e) {{}}
+  applyReportView(savedView === 'full' ? 'full' : 'brief');
+  document.querySelectorAll('.report-view-btn').forEach(function (btn) {{
+    btn.addEventListener('click', function () {{ applyReportView(btn.dataset.reportView); }});
+  }});
+
+  // ---- Collapsible Full Report TOC ----
+  document.querySelectorAll('.full-report-layout').forEach(function (layout) {{
+    var button = layout.querySelector('.toc-collapse');
+    if (!button) return;
+    button.addEventListener('click', function () {{
+      var collapsed = layout.classList.toggle('toc-collapsed');
+      button.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      button.textContent = collapsed ? button.dataset.labelExpand : button.dataset.labelCollapse;
+    }});
+  }});
+
+  // ---- TOC active chapter tracking ----
+  if ('IntersectionObserver' in window) {{
+    document.querySelectorAll('.report-shell').forEach(function (shell) {{
+      var links = Array.from(shell.querySelectorAll('[data-toc-target]'));
+      if (!links.length) return;
+      var sections = links.map(function (link) {{ return shell.querySelector('#' + CSS.escape(link.dataset.tocTarget)); }}).filter(Boolean);
+      var activeObserver = new IntersectionObserver(function (entries) {{
+        var visible = entries.filter(function (entry) {{ return entry.isIntersecting; }})
+          .sort(function (a,b) {{ return a.boundingClientRect.top - b.boundingClientRect.top; }});
+        if (!visible.length) return;
+        var id = visible[0].target.id;
+        links.forEach(function (link) {{ link.classList.toggle('active', link.dataset.tocTarget === id); }});
+      }}, {{rootMargin:'-12% 0px -72% 0px', threshold:[0,0.01]}});
+      sections.forEach(function (section) {{ activeObserver.observe(section); }});
+    }});
+  }}
+
+  // ---- Evidence matrix filter / search ----
+  function bindMatrix(matrix) {{
+    var suffix = matrix.id.replace(/^evidence-matrix-/, '');
+    var search = document.getElementById('matrix-search-' + suffix);
+    var dirSel = document.getElementById('matrix-direction-' + suffix);
+    var outSel = document.getElementById('matrix-outcome-' + suffix);
     var rows = matrix.querySelectorAll('tbody tr');
     function applyFilter() {{
       var q = (search && search.value || '').toLowerCase();
@@ -1925,7 +1991,7 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
       var o = outSel ? outSel.value : '';
       rows.forEach(function (row) {{
         var haystack = (row.dataset.search || row.textContent || '').toLowerCase();
-        var direction = row.dataset.direction || '';
+        var direction = row.dataset.direction || row.dataset.effect || '';
         var outcome = row.dataset.outcome || '';
         var show = (!q || haystack.indexOf(q) >= 0)
           && (!d || direction === d) && (!o || outcome === o);
@@ -1936,40 +2002,11 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
     if (dirSel) dirSel.addEventListener('change', applyFilter);
     if (outSel) outSel.addEventListener('change', applyFilter);
   }}
-  document.querySelectorAll('.report-shell').forEach(bindMatrix);
+  document.querySelectorAll('table[id^=evidence-matrix-]').forEach(bindMatrix);
 
-  // ---- Calm micro-motion: explain structure, never decorate meaning ----
-  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  if (!reduceMotion) {{
-    root.classList.add('motion-ready');
-    var motionGroups = [
-      ['.decision-hero', 0], ['.hero-insight', 70], ['.outcome-group', 70],
-      ['.tribunal-card', 75], ['.trace-chain-card', 80], ['.action-node', 65],
-      ['.flow-arrow', 65], ['.phase', 65]
-    ];
-    motionGroups.forEach(function (entry) {{
-      document.querySelectorAll(entry[0]).forEach(function (el, index) {{
-        el.setAttribute('data-animate', '');
-        el.style.setProperty('--motion-delay', Math.min(index * entry[1], 360) + 'ms');
-      }});
-    }});
-    document.querySelectorAll('.quality-meter').forEach(function (el, index) {{
-      el.style.setProperty('--motion-delay', Math.min((index % 8) * 35, 210) + 'ms');
-    }});
-    var animated = document.querySelectorAll('[data-animate], .quality-meter');
-    if ('IntersectionObserver' in window) {{
-      var observer = new IntersectionObserver(function (entries, obs) {{
-        entries.forEach(function (entry) {{
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
-        }});
-      }}, {{threshold:0.12, rootMargin:'0px 0px -6% 0px'}});
-      animated.forEach(function (el) {{ observer.observe(el); }});
-    }} else {{
-      animated.forEach(function (el) {{ el.classList.add('is-visible'); }});
-    }}
-  }}
+  // ---- Motion preference is owned by the fixed Motion Template. ----
+  var reduceMotion = !!window.__EDUEVIDENCE_REDUCE_MOTION__ ||
+    !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   // ---- ECharts enhancer (only when window.echarts exists) ----
   // 成功 init 后给容器加 .is-mounted 才显示（6.2：无 ECharts 时不占空白高度）
@@ -2329,44 +2366,33 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .full-chapter-body>*+* {{ margin-top:20px; }}
 .report-footer {{ margin-top:64px; padding-top:18px; border-top:1px solid var(--border); color:var(--insufficient); font-size:.76rem; }}
 
-/* Motion system — progressive enhancement only; static HTML remains fully readable without JS. */
-.motion-ready [data-animate] {{
-  opacity:0; transform:translateY(10px);
-  transition:opacity .52s cubic-bezier(.22,.61,.36,1), transform .52s cubic-bezier(.22,.61,.36,1);
-  transition-delay:var(--motion-delay,0ms);
-}}
-.motion-ready [data-animate].is-visible {{ opacity:1; transform:none; }}
-.motion-ready .quality-meter i {{
-  transform:scaleX(0); transform-origin:left center;
-  transition:transform .72s cubic-bezier(.22,.61,.36,1) var(--motion-delay,0ms);
-}}
-.motion-ready .quality-meter.is-visible i {{ transform:scaleX(1); }}
-.motion-ready .flow-arrow {{
-  opacity:.18; transform:translateX(-4px);
-  transition:opacity .36s ease, transform .36s ease;
-  transition-delay:var(--motion-delay,0ms);
-}}
-.motion-ready .flow-arrow.is-visible {{ opacity:1; transform:none; }}
-.motion-ready .dir {{ transition:transform .18s ease, filter .18s ease; }}
-@media (hover:hover) {{
-  .motion-ready .tribunal-card:hover, .motion-ready .trace-chain-card:hover,
-  .motion-ready .outcome-group:hover, .motion-ready .action-node:hover {{ transform:translateY(-2px); }}
-  .motion-ready .evidence-matrix tbody tr:hover .dir {{ transform:translateY(-1px); filter:saturate(1.08); }}
-}}
-@media (prefers-reduced-motion:reduce) {{
-  .motion-ready [data-animate], .motion-ready .quality-meter i, .motion-ready .flow-arrow,
-  .motion-ready .dir {{ opacity:1 !important; transform:none !important; transition:none !important; }}
-  html {{ scroll-behavior:auto; }}
-}}
+{_motion_css()}
 
-@media print {{ body {{ background:#fff; }} .controls {{ display:none !important; }}
+@media print {{ body {{ background:#fff; }} .controls, .report-view-switcher, .full-report-toc {{ display:none !important; }}
   .report-shell {{ max-width:none !important; padding:0 !important; }}
+  .report-page-brief {{ display:none !important; }} .report-page-full {{ display:block !important; }}
+  .full-report-layout {{ display:block !important; }} .full-report-content {{ max-width:none !important; }}
+  .full-chapter {{ break-before:auto; break-inside:auto; }}
   .report-section {{ box-shadow:none !important; border:none !important; break-inside:avoid-page; }}
   .report-section svg {{ border:none; }} .table-wrap {{ overflow:visible; }}
-  .decision-hero, .tribunal-card, .trace-chain-card, .action-node {{ box-shadow:none !important; background:#fff !important; }}
+  details>summary {{ display:none !important; }} details>*:not(summary) {{ display:block !important; }}
+  .decision-hero, .tribunal-card, .trace-chain-card, .action-node, .method-audit-item {{ box-shadow:none !important; background:#fff !important; }}
   a {{ color:#000; text-decoration:underline; }} }}
+@media (max-width:980px) {{
+  .full-report-layout {{ grid-template-columns:1fr; gap:18px; }}
+  .full-report-toc {{ position:relative; top:auto; max-height:none; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; }}
+  .full-report-toc nav {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }}
+  .full-report-layout.toc-collapsed {{ grid-template-columns:1fr; }}
+  .full-report-layout.toc-collapsed .full-report-toc {{ padding:10px 12px; border:1px solid var(--border); }}
+  .full-report-layout.toc-collapsed .toc-collapse {{ writing-mode:horizontal-tb; padding:4px 8px; }}
+  .full-report-layout.toc-collapsed .full-report-toc nav {{ display:none; }}
+}}
 @media (max-width:720px) {{ .report-shell {{ padding:12px 16px 56px; }} .data-table {{ font-size:.78rem; }}
-  .report-header h1 {{ font-size:1.55rem; }} .hero-insights, .tribunal-grid {{ grid-template-columns:1fr; }}
+  .report-header h1 {{ font-size:1.55rem; }} .hero-insights, .tribunal-grid, .scope-grid, .retrieval-grid, .brief-source-grid, .method-audit-grid {{ grid-template-columns:1fr; }}
+  .report-view-switcher {{ width:100%; }} .report-view-btn {{ flex:1; }}
+  .full-report-toc nav {{ grid-template-columns:1fr; }} .full-chapter {{ margin-bottom:38px; padding-bottom:38px; }}
+  .evidence-detail-grid, .source-detail-grid {{ grid-template-columns:1fr; }}
+  .evidence-detail-grid dt, .source-detail-grid dt {{ padding-bottom:2px; }} .evidence-detail-grid dd, .source-detail-grid dd {{ padding-top:2px; }}
   .decision-hero {{ padding:20px 16px; }} .section-data, .section-decision, .section-narrative {{ max-width:100%; }}
   .evidence-to-action {{ flex-direction:column; overflow:visible; }} .flow-arrow {{ transform:rotate(90deg); }}
   .matrix-wrap {{ border:0; overflow:visible; }} .evidence-matrix thead {{ display:none; }}
@@ -2382,6 +2408,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 </div>
 {body_zh}
 {body_en}
+<script>
+{_motion_js()}
+</script>
 <script>
 {_enhancer_js(charts_zh, charts_en, result_en)}
 </script>

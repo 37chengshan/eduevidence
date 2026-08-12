@@ -16,30 +16,34 @@ def _load(rel: str):
 
 
 def test_diverging_series_lanes():
-    """support/contradict 走主道（xAxisIndex 0），neutral 走独立细条道（xAxisIndex 1）。"""
+    """正/负向效应走主道（xAxisIndex 0），零效应走独立细条道（xAxisIndex 1）。"""
     result = _load("examples/ai-coding-assistant/result.json")
     spec = build_all(result, lang="zh")
     overview = next(c for c in spec["charts"] if c["chart_id"] == "outcome-evidence-overview")
     option = overview["option"]
     series = {s["name"]: s for s in option["series"]}
-    assert series["支持"]["xAxisIndex"] == 0 and series["支持"]["yAxisIndex"] == 0
-    assert series["反驳"]["xAxisIndex"] == 0 and series["反驳"]["yAxisIndex"] == 0
-    assert series["中性"]["xAxisIndex"] == 1 and series["中性"]["yAxisIndex"] == 1
-    assert series["中性"].get("barWidth")  # 细条
+    assert series["正向效应"]["xAxisIndex"] == 0 and series["正向效应"]["yAxisIndex"] == 0
+    assert series["负向效应"]["xAxisIndex"] == 0 and series["负向效应"]["yAxisIndex"] == 0
+    assert series["零效应"]["xAxisIndex"] == 1 and series["零效应"]["yAxisIndex"] == 1
+    assert series["零效应"].get("barWidth")  # 细条
 
 
 def test_diverging_sign_encoding():
-    """support ≥ 0、contradict ≤ 0、neutral ≥ 0；数字与 result 一致。"""
+    """正向 ≥ 0、负向 ≤ 0、零效应 ≥ 0；数字与 result 的 effect_direction 聚合一致。"""
     result = _load("examples/ai-coding-assistant/result.json")
     spec = build_all(result, lang="zh")
     overview = next(c for c in spec["charts"] if c["chart_id"] == "outcome-evidence-overview")
     series = {s["name"]: s["data"] for s in overview["option"]["series"]}
-    for outcome, s_data, c_data, n_data in zip(
-            result["outcomes"], series["支持"], series["反驳"], series["中性"]):
-        assert s_data == outcome["support_count"]
-        assert c_data == -outcome["contradict_count"]
-        assert n_data == outcome["neutral_count"]
-        assert s_data >= 0 and c_data <= 0 and n_data >= 0
+    # effect_direction 聚合：每个 outcome 按 direction 计数（负向为负数）
+    from collections import Counter
+    for o in result["outcomes"]:
+        rel_ev = [e for e in result["evidence"] if e["outcome_type"] == o["outcome_type"]]
+        dirs = Counter(e.get("effect_direction", "null") for e in rel_ev)
+        idx = result["outcomes"].index(o)
+        assert series["正向效应"][idx] == dirs.get("positive", 0)
+        assert series["负向效应"][idx] == -dirs.get("negative", 0)
+        assert series["零效应"][idx] == dirs.get("null", 0)
+        assert series["正向效应"][idx] >= 0 and series["负向效应"][idx] <= 0 and series["零效应"][idx] >= 0
 
 
 def test_count_axis_integer_ticks():
@@ -76,7 +80,8 @@ def test_bilingual_specs_same_numbers():
     assert ov_zh["title"] == "结果证据概览" and ov_en["title"] == "Outcome Evidence Overview"
     data_zh = {s["name"]: s["data"] for s in ov_zh["option"]["series"]}
     data_en = {s["name"]: s["data"] for s in ov_en["option"]["series"]}
-    for zh_name, en_name in (("支持", "Support"), ("反驳", "Contradict"), ("中性", "Neutral")):
+    for zh_name, en_name in (("正向效应", "Positive effect"), ("负向效应", "Negative effect"),
+                             ("零效应", "Null effect")):
         assert data_zh[zh_name] == data_en[en_name]
 
 
