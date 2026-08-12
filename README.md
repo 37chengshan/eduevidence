@@ -255,7 +255,7 @@ result.json + result.zh.json（中文平行数据）
 
 - **双语切换**：默认中文，顶部一键切换 EN；中文模式下证据、主张、方法学审计、干预与评价全部为中文，数据同构（`result.zh.json` 与 `result.json` 键/数字/ID/URL 一致，由 AI 直接产出双语数据而非机器翻译）。
 - **执行摘要叙事**：第一屏"一句话结论"——问题 → 依据（支持/反驳证据）→ 行动（决策+置信度+理由）；每个 Section 顶部有"本节回答：…"导读行。
-- **12 个 Section**：执行决策 / 结果证据概览 / 证据矩阵（可筛选搜索）/ 证据裁决 / 方法学审计 / 冲突分析 / 主张-证据追溯 / 适用性 / 教学干预 / 评价方案 / 基准测试 / 来源与溯源。
+- **双层分页**：可视化摘要（Visual Brief）+ 完整报告（Full Report，AI 规划 5–7 章动态结构，非固定模板）。
 - **五主题切换**（claude / academic / editorial / datalab / presentation）+ localStorage 持久化。
 - **静态优先**：无 JS 也可读（决策/矩阵/裁决/干预/来源）；ECharts 可用时增强交互；表格横向滚动防溢出。
 - **完整性门**：图表数字与 result.json 逐项核对，`REPORT_INVALID` 时禁止发布。
@@ -275,8 +275,8 @@ EduEvidence/  （= 一个 Skill 包）
 │  ├─ skill/agents/          8 个角色协议（Planner / Retriever / Analyst / Skeptic /
 │  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer）
 │  ├─ references/            9 个教育方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计…）
-│  ├─ schemas/               12 个 JSON Schema 数据契约（每步输出的校验门）
-│  ├─ scripts/               12 个确定性逻辑脚本（评分 / 矩阵 / 审计 / 渲染）
+│  ├─ schemas/               13 个 JSON Schema 数据契约（每步输出的校验门）
+│  ├─ scripts/               17 个确定性逻辑脚本（评分 / 矩阵 / 审计 / 置信度 / Orchestrator / 启动探测）
 │  ├─ retrieval/             检索与抓取层（fetch / validate / dedupe / failures）
 │  ├─ integrations/          Agent MCP 增强层 + Smart Web Fetch 集成
 │  └─ visualization/         结果呈现层（ECharts / 信息图 / 学术图 / 双语 HTML Composer）

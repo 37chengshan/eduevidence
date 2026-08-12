@@ -255,7 +255,7 @@ result.json + result.zh.json (Chinese parallel data)
 
 - **Bilingual switch**: Chinese by default, one click to EN; in Chinese mode the evidence, claims, methodology audit, intervention and evaluation are all in Chinese. Data is isomorphic (`result.zh.json` and `result.json` share keys/numbers/IDs/URLs — bilingual data produced directly by AI, not machine translation).
 - **Executive summary narrative**: the first screen shows a "bottom line" — question → evidence (support/contradict) → action (decision + confidence + rationale); every section opens with a "What this section answers:" lead line.
-- **12 sections**: Executive Decision / Outcome Evidence Overview / Evidence Matrix (filterable & searchable) / Evidence Tribunal / Methodology Audit / Conflict Analysis / Claim-Evidence Trace / Applicability / Teaching Intervention / Evaluation Plan / Benchmark / Sources & Provenance.
+- **Two-page layout**: Visual Brief + Full Report (AI-planned 5–7 dynamic chapters, not a fixed template).
 - **Five themes** (claude / academic / editorial / datalab / presentation) with localStorage persistence.
 - **Static-first**: fully readable without JS (decision / matrix / tribunal / intervention / sources); ECharts enhances when available; tables scroll horizontally instead of overflowing.
 - **Integrity gate**: chart numbers are checked against result.json item by item; publishing is blocked with `REPORT_INVALID` on mismatch.
@@ -276,8 +276,8 @@ EduEvidence/  (= one Skill package)
 │  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer)
 │  ├─ references/            9 education methodology documents (evidence quality / skeptic /
 │  │                         tribunal policy / intervention design…)
-│  ├─ schemas/               12 JSON Schema data contracts (validation gates per step)
-│  ├─ scripts/               12 deterministic logic scripts (scoring / matrix / audit / render)
+│  ├─ schemas/               13 JSON Schema data contracts (validation gates per step)
+│  ├─ scripts/               17 deterministic logic scripts (scoring / matrix / audit / confidence / orchestrator / startup probe)
 │  ├─ retrieval/             Search & fetch layer (fetch / validate / dedupe / failures)
 │  ├─ integrations/          Agent MCP enhancement layer + Smart Web Fetch integration
 │  └─ visualization/         Presentation layer (ECharts / infographics / academic figures / bilingual HTML composer)
