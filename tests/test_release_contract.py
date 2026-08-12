@@ -39,3 +39,15 @@ def test_skill_installer_copies_every_runtime_directory():
         "visualization",
     }
     assert required <= payload
+
+
+def test_public_readmes_document_current_themes_and_full_skill_payload():
+    for name in ("README.md", "README.en.md"):
+        text = (ROOT / name).read_text(encoding="utf-8")
+        lower = text.lower()
+
+        assert "datalab-dark" in lower
+        assert "academic / editorial / datalab" not in lower
+        assert "retrieval/" in text
+        assert "integrations/" in text
+        assert "visualization/" in text
