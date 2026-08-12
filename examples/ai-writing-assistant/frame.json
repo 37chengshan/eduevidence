@@ -1,0 +1,48 @@
+{
+  "question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？应当如何引入？",
+  "decision_target": "teaching_decision",
+  "learner": {
+    "education_level": "undergraduate",
+    "major": "undergraduate_academic_writing_course_learners",
+    "prior_knowledge": "first_academic_writing_course_including_esl_students",
+    "special_characteristics": "mixed_ability_including_non_native_speakers"
+  },
+  "course": {
+    "subject": "academic_writing",
+    "course_type": "lecture_workshop_seminar",
+    "duration": "16_weeks_one_semester"
+  },
+  "intervention": {
+    "teaching_method": "process_writing_with_formative_feedback",
+    "ai_tool": "chatgpt_generative_ai_writing_assistant",
+    "allowed_usage": "under_design_pending_evidence_review_formative_feedback_first",
+    "frequency": "weekly_writing_assignments",
+    "duration": "8_weeks_pilot"
+  },
+  "comparison": "no_ai_traditional_writing_instruction",
+  "outcomes": {
+    "primary": ["independent_problem_solving", "knowledge_gain"],
+    "secondary": ["assignment_score", "engagement", "motivation", "retention"],
+    "risk": ["ai_dependency", "academic_integrity_risk", "false_confidence"]
+  },
+  "context": {
+    "teacher_support": "instructor_feedback_and_rubric_review",
+    "class_size": "30_60_students_two_sections",
+    "online_or_offline": "offline"
+  },
+  "scope": {
+    "time_range": "2024-2026",
+    "geography": "worldwide",
+    "study_types": ["rct", "quasi_experimental", "mixed_methods"]
+  },
+  "inclusion_criteria": [
+    "studies_of_generative_AI_writing_assistants_in_learning_academic_or_esl_writing",
+    "outcomes_measuring_writing_skill_or_learning_not_only_task_speed",
+    "university_or_high_school_populations_learning_to_write"
+  ],
+  "exclusion_criteria": [
+    "practitioner_anecdotes_without_data",
+    "industry_professional_writing_settings_only"
+  ],
+  "success_condition": "independent writing ability improves or does not decline on no-AI assessments while AI dependency, academic integrity risk and false confidence stay controlled; evidence base supports a bounded pilot."
+}

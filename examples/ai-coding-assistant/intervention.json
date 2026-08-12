@@ -1,0 +1,51 @@
+{
+  "decision": "pilot",
+  "target_learners": "university first-year C programming students (60-student lecture-lab class)",
+  "learning_goals": [
+    "independently write and debug small C programs without AI",
+    "understand core concepts: variables, conditionals, loops, arrays, pointers",
+    "use AI tools critically as explanation and debugging aids, not answer machines"
+  ],
+  "pilot_duration": "8_weeks",
+  "phase_1": {
+    "name": "Phase 1 — Independent Foundation",
+    "activities": ["baseline assessment", "first 2 weeks of assignments completed without any AI code generation"],
+    "ai_usage_rule": "full code generation forbidden; AI allowed only for conceptual explanations",
+    "outcome_check": "baseline task-performance and independent-problem-solving measures"
+  },
+  "phase_2": {
+    "name": "Phase 2 — Explain, Don't Solve",
+    "activities": ["weeks 3-4: AI allowed to explain errors, concepts and debugging approaches"],
+    "ai_usage_rule": "AI may explain but must not produce full solutions",
+    "outcome_check": "mid-pilot quiz without AI"
+  },
+  "phase_3": {
+    "name": "Phase 3 — Structured Collaboration",
+    "activities": ["weeks 5-7: AI allowed to generate partial code; students must explain every AI-generated block in their own words"],
+    "ai_usage_rule": "partial code generation allowed; mandatory written explanation of key logic; submission requires reasoning trace",
+    "outcome_check": "weekly lab completion and code-quality rubric"
+  },
+  "phase_4": {
+    "name": "Phase 4 — Transfer Check",
+    "activities": ["week 8: new programming task completed in a no-AI environment"],
+    "ai_usage_rule": "no AI access during transfer assessment",
+    "outcome_check": "transfer test score, independent problem solving"
+  },
+  "ai_usage_policy": "AI usage is allowed in three explicitly graded modes (explain / collaborate / no-AI-transfer). Copying unexamined AI output is an academic integrity violation and is assessed via the reasoning-trace requirement.",
+  "teacher_role": "design guardrailed prompts and rubrics; monitor usage logs; hold weekly reflection debriefs",
+  "student_role": "complete assignments in the allowed mode; submit reasoning traces; reflect on when AI helped vs. when it masked understanding",
+  "reflection_requirement": "students must explain key AI-generated logic in their own words; one written reflection per phase",
+  "assessment": "no-AI baseline quiz, mid-pilot quiz, no-AI transfer task, code-quality rubric, AI-usage self-report",
+  "risk_control": [
+    "guardrailed usage policy modeled on Bastani 2026 GPT Tutor (hints, not answers)",
+    "no-AI transfer assessment prevents grade inflation from task-performance gains",
+    "usage logs reviewed weekly to detect crutch behavior"
+  ],
+  "stop_conditions": [
+    "transfer-test scores drop significantly below baseline cohort expectations",
+    "widespread integrity violations in reasoning traces",
+    "AI dependency signals exceed threshold in risk metrics",
+    "TA/teacher workload becomes unsustainable"
+  ],
+  "evidence_alignment": ["E-004", "E-005", "E-006"]
+}

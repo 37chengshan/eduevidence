@@ -1,0 +1,23 @@
+{
+  "id": "Q01",
+  "key_claims": [
+    "AI编程助手（如GitHub Copilot）可提高新手学生完成编程任务的正确率",
+    "Copilot类工具主要减少语法与低级错误，而非逻辑设计错误"
+  ],
+  "key_supporting_sources": [
+    "Peng et al. (2023) Copilot on LeetCode 受控实验",
+    "Vasconcelos et al. (2023) 对Copilot使用的受控对比研究"
+  ],
+  "known_contradictions": [
+    "部分研究未发现对复杂/开放性任务的正确率有显著差异",
+    "正确率提升的效应量在不同题目难度下不稳定"
+  ],
+  "correct_outcome_types": ["accuracy"],
+  "allowed_scope": "仅限编程作业/代码生成任务的任务正确率，不扩展到长期编程能力或学习效果",
+  "known_methodological_limitations": [
+    "多为短期单次任务，样本以计算机专业学生为主",
+    "任务正确率衡量的是任务完成质量而非学习获得，存在混淆",
+    "AI版本与提示策略差异可能导致结论不可复制"
+  ],
+  "expected_decision_range": ["pilot"]
+}

@@ -1,0 +1,120 @@
+# EduEvidence 架构说明
+
+EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence-Based AI Teaching Decision & Intervention Skill）：输入一条教育问题，输出一份可追溯的证据综述、方法论审计、结论判定、试点干预与评估设计。本文档说明其三层架构与双运行模式。
+
+## 一、三层架构总览
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ 第 1 层  EduEvidence（领域层）                                    │
+│  教育领域知识 + 决策 + 干预 + 评价                                 │
+│  · 教育研究问题结构化（Education Frame）                          │
+│  · 教学决策（ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE）     │
+│  · 最小可验证干预（Phase 化试点 + Stop Conditions）                │
+│  · 评价设计（Task vs Learning，Immediate vs Retention vs Transfer）│
+├─────────────────────────────────────────────────────────────────┤
+│ 第 2 层  EvidenceFlow Protocol（流程层）                           │
+│  Frame → Retrieve → Extract → Challenge → Audit → Adjudicate     │
+│  每一步有独立输入/输出契约，由六类 JSON Schema 约束                │
+├─────────────────────────────────────────────────────────────────┤
+│ 第 3 层  执行层（Execution Layer）                                 │
+│  Mode A  Platform Native Mode                                    │
+│  Mode B  Agent MCP Enhanced Mode                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+### 1.1 第 1 层：EduEvidence 领域层
+
+领域层承载教育学科的专业判断，不依赖任何具体 Agent 框架：
+
+- **教育领域知识**：learner / course / intervention / comparison / outcomes / context 的结构化建模（`education-frame.schema.json`），强制在给出任何教学建议前先完成 Framing。
+- **决策**：基于证据三角的判定输出（`verdict.schema.json`），明确区分"证据支持什么"与"证据不能支持什么"，并给出 `adopt / pilot / reject / insufficient_evidence` 四类动作。
+- **干预**：任何决策都落到最小可验证的干预设计（`intervention.schema.json`），强调"永远不直接全量部署，先 PILOT"，且 Pilot 必须带 Stop Conditions 与 Evidence Alignment。
+- **评价**：为 PILOT / ADOPT 配套评价方案（`evaluation.schema.json`），强制分离 Task Performance 与 Learning Effect，并单独设计 Retention Test 与 Transfer Test。
+
+### 1.2 第 2 层：EvidenceFlow Protocol
+
+证据流协议是全流程的六个阶段，每个阶段有明确的输入与输出契约：
+| 阶段 | 英文名 | 输入 | 输出 |
+|------|--------|------|------|
+| 1. 框定 | Frame | 原始教育问题 | Education Research Frame（含 decision_target、scope、inclusion/exclusion criteria） |
+| 2. 检索 | Retrieve | Frame | 候选证据来源列表（含 source_location 可验证指针） |
+| 3. 抽取 | Extract | 来源文献 | Claim 级证据对象（`evidence.schema.json`） |
+| 4. 质询 | Challenge | 证据对象 | 反方证据、负面结果、未发现、confounder 清单 |
+| 5. 审计 | Audit | 证据对象 | 方法学审计（`methodology.schema.json`），含 task_vs_learning_guard |
+| 6. 裁决 | Adjudicate | 全部证据 + 审计 | Education Verdict + Recommended Action + Confidence |
+
+该协议是**可剥离的**：即使没有 Agent 框架，只要按此协议组织检索、抽取、审计与裁决，也能得到可复现的决策链。
+
+### 1.3 第 3 层：执行层
+
+执行层负责把第 1、2 层的能力实际跑起来，提供两种运行模式。
+
+## 二、双运行模式
+
+### Mode A：Platform Native Mode（平台原生模式）
+
+- **不依赖** daemon、CLI、Agent MCP 或任何外部进程，是纯提示词/静态技能交付。
+- **SKILL.md 可单独理解**：单文件包含领域知识、EvidenceFlow Protocol、JSON Schema 说明、示例与复现命令，任一支持自定义指令的 AI 平台均可直接加载。
+- 适合：Claude Projects、ChatGPT Custom Instructions、Cursor Rules 等"以文档为技能载体"的平台。
+- 局限：检索依赖模型自身或平台内建工具，上下文不持久，跨会话一致性靠提示词保证。
+
+### Mode B：Agent MCP Enhanced Mode（Agent MCP 增强模式）
+
+在 Mode A 基础上，通过 MCP（Model Context Protocol）接入执行工具，获得以下增强能力：
+
+- **多 CLI**：可同时挂载检索、代码、测试、Schema 校验等命令行工具，检索不再是模型"猜测来源"，而是真实调用检索器。
+- **多模型**：允许检索/抽取/裁决由不同模型承担，例如轻量模型负责 Retrieve，强推理模型负责 Adjudicate。
+- **独立上下文**：每个子任务拥有独立 Context，避免长对话稀释关键证据，裁决阶段再合并。
+- **超时恢复**：子任务可设置超时与重试，网络/工具失败可降级回 Mode A 语义继续。
+- **成本优化**：按阶段选择模型与 Token 预算，Framing 与 Extraction 用低成本路径，裁决与审计用高成本路径。
+- **Memory Bank**：跨会话缓存已审来源、历史裁决与常用检索词，二次提问命中缓存则跳过重复检索。
+
+| 能力维度 | Mode A Platform Native | Mode B Agent MCP Enhanced |
+|----------|------------------------|---------------------------|
+| 依赖 | 无（纯 SKILL.md） | daemon / CLI / MCP Server |
+| 检索 | 模型内建/平台工具 | 真实多 CLI 检索 |
+| 模型 | 单模型 | 多模型分工 |
+| 上下文 | 单上下文 | 独立子上下文 + 汇总 |
+| 超时 | 无 | 可配置超时与恢复 |
+| 成本 | 固定 | 分阶段 Token 预算优化 |
+| 记忆 | 无 | Memory Bank 跨会话缓存 |
+
+**推荐组合**：文档与协议以 Mode A 形式交付（任何人可独立理解与使用），接入 MCP 后自动升级为 Mode B（检索更真实、决策更稳健、成本更低）。
+
+## 三、项目目录结构
+
+```
+edu/
+├── SKILL.md                # 技能入口：EduEvidence 使用说明（Mode A 可独立理解）
+├── references/             # 证据来源、研究报告与检索记录
+├── schemas/                # 六类 JSON Schema
+│   ├── education-frame.schema.json
+│   ├── evidence.schema.json
+│   ├── methodology.schema.json
+│   ├── verdict.schema.json
+│   ├── intervention.schema.json
+│   └── evaluation.schema.json
+├── scripts/                # 工具脚本
+│   ├── validate_schema.py  # Schema 校验
+│   └── benchmark.py        # Benchmark 运行器
+├── benchmarks/             # 基准评测
+│   ├── questions.jsonl     # 评测题目
+│   ├── annotations/        # 人工标注（参考答案）
+│   ├── baselines/          # 基线结果
+│   ├── evaluator/          # 评估器实现
+│   └── results/            # 评估结果输出
+├── examples/               # 端到端示例（按教育问题组织）
+│   └── ai-coding-assistant/ # 主 Demo：大一 C 语言课程 AI 编程助手
+├── docs/                   # 本文档（架构/方法学/Benchmark/Demo/复现指南）
+└── tests/                  # pytest 测试
+```
+
+各目录职责单一：`schemas/` 是协议契约，`scripts/` 是校验与评测入口，`benchmarks/` 沉淀评估资产，`examples/` 提供可复现案例，`docs/` 解释"为什么这样设计"。
+
+## 四、设计原则
+
+1. **领域层独立于 Agent 层**：EduEvidence 的判断逻辑不耦合任何框架，未来换 Agent 方案时第 1、2 层无需改动。
+2. **协议可剥离**：EvidenceFlow Protocol 可脱离 MCP 单独执行，保证最低运行成本可用。
+3. **决策可追溯**：从 Verdict 出发可反查到 evidence_id、source_location、方法学审计项与置信度分解。
+4. **永远先 PILOT**：领域层内置"先试点、后部署"约束，从架构上防止跳过验证直接给出全量方案。
+5. **降级友好**：Mode B 的任何子任务失败，都可降级为 Mode A 语义继续产出，保证结果不中断。

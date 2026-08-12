@@ -1,0 +1,53 @@
+{
+  "decision": "pilot",
+  "target_learners": "university first-year science-and-engineering students in advanced mathematics (calculus), large cohort",
+  "learning_goals": [
+    "independently solve routine and non-routine calculus problems without AI",
+    "understand core concepts: limits, derivatives, integrals and their geometric meaning",
+    "use the AI Tutor critically as a hint-and-explanation aid, not an answer machine"
+  ],
+  "pilot_duration": "8_weeks",
+  "phase_1": {
+    "name": "Phase 1 — 独立解题基线 (Independent Baseline)",
+    "activities": ["无 AI 独立解题基线测验", "前两周作业完全在无 AI 环境下完成"],
+    "ai_usage_rule": "AI Tutor 禁用，仅允许教材与讲义",
+    "outcome_check": "基线概念理解与独立解题测量"
+  },
+  "phase_2": {
+    "name": "Phase 2 — 提示式护栏 Tutor 辅导练习 (Hint-only Guardrailed Tutor)",
+    "activities": ["第 3-4 周：引入护栏式 AI Tutor 辅导练习", "Tutor 只给提示与思路引导，不直接给答案"],
+    "ai_usage_rule": "Tutor 只提供提示/分步引导/错误定位；禁止给出完整解答",
+    "outcome_check": "练习完成率、求助类型记录与中期无 AI 测验"
+  },
+  "phase_3": {
+    "name": "Phase 3 — 结构化合作 (Structured Collaboration)",
+    "activities": ["第 5-7 周：先自己作答，再对照 Tutor 提示比对与订正", "每次练习后书面写出与 Tutor 提示的差异及自己的错因"],
+    "ai_usage_rule": "必须先行独立尝试 10 分钟以上才能向 Tutor 求助；每次求助后提交反思记录",
+    "outcome_check": "每周作业正确率与反思记录质量"
+  },
+  "phase_4": {
+    "name": "Phase 4 — 无 AI 独立考试与迁移任务 (No-AI Independent Exam & Transfer)",
+    "activities": ["第 8 周：无 AI 环境下的独立考试", "新增题型（未在练习中出现）的迁移任务"],
+    "ai_usage_rule": "考试与迁移任务全程禁止 AI 访问",
+    "outcome_check": "独立考试得分、迁移任务得分、AI 依赖指标"
+  },
+  "ai_usage_policy": "明确护栏：AI Tutor 只允许提供提示、思路引导与错误诊断，禁止直接给出答案或完整解题过程；未先行独立尝试不得求助；直接复制 Tutor 输出视为学术诚信违规。",
+  "teacher_role": "设计护栏提示词与评分量规；每周审阅使用日志与反思记录；主持反思复盘",
+  "student_role": "按阶段规则使用 Tutor；先自答再求助；提交反思记录；诚实报告求助频率",
+  "reflection_requirement": "每次使用 Tutor 后书面说明：我卡在哪里、Tutor 给了什么提示、我如何用它自己完成；每阶段提交一份反思小结",
+  "assessment": "无 AI 基线测验、中期无 AI 测验、期末无 AI 独立考试、迁移任务、练习完成率、反思记录质量",
+  "risk_control": [
+    "护栏策略复刻 Bastani 2026 GPT Tutor 设计（提示不给答案）",
+    "无 AI 独立考试与迁移任务防止练习表现掩盖学习缺失",
+    "每周审阅使用日志识别'抄答案'拐杖行为",
+    "AI 依赖与虚假信心指标阈值监控"
+  ],
+  "stop_conditions": [
+    "无 AI 独立考试成绩较同校历史基线下降超过 10%",
+    "迁移任务得分显著低于对照组",
+    "反思记录中出现大量直接复制 Tutor 输出（学术诚信违规超过 20%）",
+    "AI 依赖指标连续两周超过预设阈值",
+    "教师/助教工作量不可持续"
+  ],
+  "evidence_alignment": ["E-001", "E-002", "E-003", "E-004", "E-005", "E-006"]
+}

@@ -1,0 +1,36 @@
+{
+  "research_question": "In a university academic writing course, does a guardrailed AI writing assistant (feedback-only → AI-assisted revision with explanation) improve independent writing ability without increasing AI dependency, academic-integrity risk, or false confidence, compared to traditional no-AI writing instruction?",
+  "groups": {
+    "treatment": "one section using the 4-phase guardrailed AI writing-assistant policy",
+    "comparison": "one matched section without AI access (same instructor, materials and rubrics)"
+  },
+  "baseline": "week-1 independent writing assessment in a strictly no-AI environment (writing quality rubric, fluency, grammar/accuracy)",
+  "post_test": "week-8 independent writing assessment in a no-AI environment (same rubric as baseline)",
+  "retention_test": "delayed writing task 4-6 weeks after the pilot ends, in a no-AI environment",
+  "transfer_test": "week-8 novel academic writing task on an unseen topic in a strictly no-AI environment",
+  "process_metrics": [
+    "AI usage logs: prompts submitted, feedback requested, accepted vs rejected suggestions",
+    "revision memo completeness and explanation quality",
+    "help-seeking behaviour: self-generated revision vs AI-suggested revision ratio",
+    "draft revision counts and writing fluency measures"
+  ],
+  "learning_metrics": [
+    "independent writing score on no-AI assessments (baseline / post / retention / transfer)",
+    "writing quality rubric (structure, argument, grammar, vocabulary)",
+    "knowledge_gain from baseline to post-test",
+    "retention on the delayed no-AI writing task"
+  ],
+  "risk_metrics": [
+    "ai_dependency: usage-without-understanding index from revision-memo quality and ratio of unexplained AI edits",
+    "academic_integrity_risk: detected copying of AI-generated text without attribution/explanation; integrity violations per submission",
+    "false_confidence: predicted grade vs actual grade gap on no-AI assessments; self-reported confidence vs independent performance"
+  ],
+  "analysis_plan": "Pre-registered comparison of treatment vs comparison sections on baseline-adjusted learning metrics (ANCOVA); learning metrics (no-AI independent writing) analysed separately from process/task metrics; subgroup analysis by initial writing proficiency; risk metrics monitored weekly with stop-condition checks at weeks 3, 5, 7 and at the transfer test.",
+  "success_threshold": "treatment shows non-inferior independent writing (delta within 5%) AND equal or better retention AND AI dependency index and integrity violations below thresholds; if independent writing declines >10% on the transfer test, the pilot is judged unsuccessful regardless of in-class score gains.",
+  "stop_conditions": [
+    "independent writing transfer-test decline >10% vs comparison",
+    "integrity violations (unexplained AI copying) in >20% of submissions",
+    "ai_dependency index exceeding the pre-set threshold for two consecutive weeks",
+    "false-confidence gap widening beyond the pre-set bound across two consecutive assessments"
+  ]
+}

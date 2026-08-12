@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/methodology.schema.json",
+  "title": "MethodologyAudit",
+  "description": "Methodological audit of one study (or the overall evidence base). The highest-priority rule: task performance must NOT be automatically equated with learning effect.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["target", "verdict"],
+  "properties": {
+    "target": { "type": "string", "description": "evidence_id or source_id being audited, or 'overall'." },
+    "audit_items": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["met", "partial", "missing", "not_applicable"] },
+          "note": { "type": "string" }
+        }
+      },
+      "description": "Keys: control_group, randomization, pre_test, post_test, retention_test, transfer_test, sample_bias, self_selection, measurement_validity, confounders, instructor_effect, novelty_effect, tool_version_effect, ai_usage_policy, dropout."
+    },
+    "task_vs_learning_guard": {
+      "type": "object",
+      "properties": {
+        "measured_construct": { "type": "string", "examples": ["task_completion", "learning_outcome"] },
+        "equates_task_with_learning": { "type": "boolean" },
+        "note": { "type": "string" }
+      }
+    },
+    "verdict": { "type": "string", "enum": ["PASS", "CONCERN", "FAIL"] },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "suggestions": { "type": "array", "items": { "type": "string" } }
+  }
+}

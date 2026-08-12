@@ -1,0 +1,24 @@
+{
+  "id": "Q06",
+  "key_claims": [
+    "翻转课堂相比传统课堂讲授可提高学生两周后对课程知识的保持率",
+    "课堂内主动加工与课下视频预习的组合促进深度编码",
+    "保持率的提升依赖课堂活动的设计质量"
+  ],
+  "key_supporting_sources": [
+    "翻转课堂教学效果的元分析（如Van Alten et al. 2019）",
+    "主动学习与记忆保持关系的实验证据"
+  ],
+  "known_contradictions": [
+    "部分元分析显示翻转课堂对知识记忆类结局的效应量很小或不显著",
+    "不同学科、不同实施质量下效果差异大"
+  ],
+  "correct_outcome_types": ["retention"],
+  "allowed_scope": "仅限知识保持/记忆类结局，不扩展到高阶应用或学生满意度",
+  "known_methodological_limitations": [
+    "翻转课堂定义与实施强度不统一",
+    "学生课前视频完成率难以保证，存在依从性偏差",
+    "两周保持率的测量方式（再认 vs 回忆）影响结论"
+  ],
+  "expected_decision_range": ["pilot"]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "Q04",
+  "key_claims": [
+    "AI提供错误步骤解释比直接给出最终答案更能提升学生后续同类题目的解答正确率",
+    "错误解释促进对错误原因的理解，从而增强保持",
+    "答案型反馈仅产生短时记忆但迁移弱"
+  ],
+  "key_supporting_sources": [
+    "反馈干预元分析（Hattie & Timperley 2007）中解释型反馈的证据",
+    "AI辅导场景下解释型 vs 答案型反馈的对照实验"
+  ],
+  "known_contradictions": [
+    "部分研究发现低水平学生无法利用错误解释，效果反而差于直接答案",
+    "解释的详细程度过高可能增加认知负荷降低保持"
+  ],
+  "correct_outcome_types": ["retention"],
+  "allowed_scope": "仅限反馈形式对同类型题目解答保持的影响，不扩展到开放性题目或跨知识领域",
+  "known_methodological_limitations": [
+    "同类题目的测试间隔与重测次数影响保持量",
+    "学生是否真正阅读并使用解释难以观测",
+    "样例数量少时效应量估计不稳定"
+  ],
+  "expected_decision_range": ["adopt"]
+}

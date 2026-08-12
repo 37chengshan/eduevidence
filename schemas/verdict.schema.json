@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/verdict.schema.json",
+  "title": "EducationVerdict",
+  "description": "Output of the Evidence Tribunal: what the evidence supports, cannot support, and the recommended action. Decision is one of ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE (expressed here as adopt|pilot|reject|insufficient_evidence).",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["decision_question", "recommended_action", "confidence"],
+  "properties": {
+    "decision_question": { "type": "string" },
+    "target_population": { "type": "string" },
+    "target_context": { "type": "string" },
+    "supported_claims": { "type": "array", "items": { "type": "string" } },
+    "uncertain_claims": { "type": "array", "items": { "type": "string" } },
+    "contradicted_claims": { "type": "array", "items": { "type": "string" } },
+    "reason_for_disagreement": { "type": "string" },
+    "methodology_summary": { "type": "string" },
+    "outcome_specific_findings": { "type": "object", "additionalProperties": true },
+    "short_term_effect": { "type": ["string", "null"] },
+    "long_term_effect": { "type": ["string", "null"] },
+    "transfer_effect": { "type": ["string", "null"] },
+    "risk_effect": { "type": ["string", "null"] },
+    "applicability": { "type": "object", "additionalProperties": true },
+    "confidence": { "type": "string", "enum": ["High", "Moderate", "Low", "Insufficient"] },
+    "confidence_breakdown": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Rule-based components: evidence_quality, consistency, directness, evidence_count, conflict_penalty, unsupported_penalty."
+    },
+    "what_can_be_claimed": { "type": "array", "items": { "type": "string" } },
+    "what_cannot_be_claimed": { "type": "array", "items": { "type": "string" } },
+    "missing_evidence": { "type": "array", "items": { "type": "string" } },
+    "recommended_action": { "type": "string", "enum": ["adopt", "pilot", "reject", "insufficient_evidence"] },
+    "decision_rationale": { "type": "string" },
+    "exceeds_evidence_boundary": { "type": "array", "items": { "type": "string" }, "description": "Conclusions that currently go beyond the evidence boundary." }
+  }
+}

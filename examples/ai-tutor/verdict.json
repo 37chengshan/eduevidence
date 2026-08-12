@@ -1,0 +1,69 @@
+{
+  "decision_question": "大学高等数学课程是否应该使用 AI Tutor（GPT-4 等生成式 AI 辅导工具）辅助学习？",
+  "target_population": "university first-year science-and-engineering students taking advanced mathematics (calculus)",
+  "target_context": "one-semester university advanced-mathematics course, large cohort, TA support, offline",
+  "supported_claims": [
+    "护栏式（提示不给答案）AI Tutor 在练习任务上显著提升表现（Bastani: +127%），无护栏版本也有 +48% — E-001。",
+    "无护栏的通用生成式 AI 会损害移除 AI 后的独立解题能力（Bastani: 独立考试 -17%）— E-002。",
+    "护栏设计（教师设计的提示式 Tutor）基本消除负效应 — E-003。",
+    "AI 辅导工具能提升学习参与度与满意度，且学习结果不受损（Lee）— E-004, E-005。"
+  ],
+  "uncertain_claims": [
+    "AI Tutor 是否能在大学高数课程中提高长期概念理解与迁移能力 — 直接证据缺失。",
+    "Kazemitabaar 一周保持测试不显著是否延伸到更长周期 — E-006。"
+  ],
+  "contradicted_claims": [
+    "'只要给学生用生成式 AI 就能提高学习' 被 E-002 否定（无护栏 GPT Base 独立考试 -17%）。"
+  ],
+  "reason_for_disagreement": "分歧来自结果分离（练习任务表现 vs 独立考试）、工具设计（护栏 vs 无护栏）与人群/学科直接性（高中生数学、高中生英语、K-12 编程 vs 大学高数）。任务表现证据一致为正，但唯一测到独立学习结果的 RCT（Bastani）显示无护栏有害、护栏可消除负效应。",
+  "methodology_summary": "三个来源均为随机对照（Bastani 近千人大规模 RCT、Lee 四班 RCT、Kazemitabaar 69 人受控实验），内部效度强；但对'大学高等数学 + 概念理解/长期学习'的直接性弱，且无大学数学学段的保留/迁移长周期证据。",
+  "outcome_specific_findings": {
+    "assignment_score": "positive during practice: +48% (unguarded), +127% (guardrailed) — E-001",
+    "independent_problem_solving": "negative -17% without guardrails; neutralized with guardrails — E-002, E-003",
+    "engagement": "positive: higher satisfaction and continued-use willingness — E-004",
+    "knowledge_gain": "not harmed, one group significantly better — E-005",
+    "retention": "neutral over 1 week in a programming context — E-006"
+  },
+  "short_term_effect": "练习任务表现提升明显；无护栏时独立考试受损，护栏可消除负效应。",
+  "long_term_effect": "无证据 — 无超过课程期末/一周的长期学习效应测量。",
+  "transfer_effect": "无直接迁移证据；Bastani 的闭卷独立考试是最接近'去除 AI 后'的学习测量。",
+  "risk_effect": "AI 依赖与过度依赖风险真实存在（Bastani 中学生把 GPT Base 当拐杖抄答案）；护栏设计可显著降低该风险。",
+  "applicability": {
+    "suitable_for": "大学高数课堂的护栏式 AI Tutor 试点",
+    "not_suitable_for": "无护栏的通用 AI 直接进入课堂",
+    "required_conditions": ["只给提示不给答案的护栏策略", "无 AI 独立考试与迁移测试", "TA/教师监控与反思要求"]
+  },
+  "confidence": "Moderate",
+  "confidence_breakdown": {
+    "score": 0.6,
+    "evidence_quality": 0.85,
+    "consistency": 0.7,
+    "directness": 0.3,
+    "evidence_count": 6,
+    "conflict_penalty": 0.25,
+    "unsupported_penalty": 0.0
+  },
+  "what_can_be_claimed": [
+    "护栏设计（提示而非答案）决定生成式 AI 辅导工具的学习效应方向 — 无护栏有害，护栏基本消除负效应。",
+    "AI 辅导工具能显著提升练习任务表现（+48%~+127%）。",
+    "AI 辅导工具可提升参与度与满意度，且学习结果不受损（至少在现有研究覆盖的学科/学段内）。",
+    "无护栏的通用生成式 AI 会损害独立解题能力。"
+  ],
+  "what_cannot_be_claimed": [
+    "AI Tutor 在大学高数课程中提高长期概念理解或迁移能力 — 直接证据缺失。",
+    "AI Tutor 对任何学段/学科/学生都有效 — 人群与学科直接性不足。",
+    "任务表现提升等于学习提升 — Bastani 内嵌对照已证伪。"
+  ],
+  "missing_evidence": [
+    "大学数学（高数/微积分）课堂的 RCT，含无 AI 独立考试与保持/迁移测试。",
+    "同一课程内对护栏 vs 无护栏 AI 使用策略的对照研究。",
+    "超越一个学期的 AI 依赖与学习保持数据。"
+  ],
+  "recommended_action": "pilot",
+  "decision_rationale": "护栏式 AI Tutor 在练习表现、参与度上证据积极，无护栏有害有实证；但'大学高数 + 长期理解'的直接证据缺失 → 有边界、有评估、带停止条件的护栏式试点，而非全面采用。",
+  "exceeds_evidence_boundary": [
+    "'AI Tutor 提高大学高数学习效果' — 超出：大学高数直接学习效应证据缺失。",
+    "'AI Tutor 无风险' — 超出：E-002 显示无护栏有害。",
+    "'AI Tutor 对所有学生有效' — 超出：学段/学科不匹配。"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/evidence.schema.json",
+  "title": "EvidenceObject",
+  "description": "Claim-level evidence object. MANDATORY fields: source_id, claim, outcome_type, direction, source_location. Missing any mandatory field marks the object as UNSUPPORTED.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["evidence_id", "source_id", "claim", "outcome_type", "direction", "source_location"],
+  "properties": {
+    "evidence_id": { "type": "string", "examples": ["E-001"] },
+    "source_id": { "type": "string", "examples": ["S-2023-kazemitabaar"] },
+    "title": { "type": "string" },
+    "year": { "type": ["integer", "null"] },
+    "study_type": {
+      "type": "string",
+      "enum": ["rct", "quasi_experimental", "observational", "survey", "qualitative", "meta_analysis", "literature_review", "case_study", "mixed_methods"]
+    },
+    "education_level": { "type": "string", "examples": ["undergraduate", "k12", "graduate"] },
+    "subject": { "type": "string", "examples": ["programming", "mathematics", "writing"] },
+    "population": { "type": "string", "examples": ["first_year_CS_students"] },
+    "sample_size": { "type": ["integer", "null"], "minimum": 0 },
+    "intervention": { "type": "string", "examples": ["copilot_allowed_in_lab"] },
+    "comparison": { "type": "string", "examples": ["no_ai_control_group"] },
+    "outcome_type": {
+      "type": "string",
+      "enum": [
+        "knowledge_gain", "concept_understanding", "retention", "transfer",
+        "independent_problem_solving", "completion_time", "accuracy",
+        "code_quality", "assignment_score", "engagement", "motivation",
+        "cognitive_load", "help_seeking", "metacognition", "ai_dependency",
+        "over_reliance", "reduced_effort", "reduced_transfer",
+        "academic_integrity_risk", "false_confidence"
+      ]
+    },
+    "outcome_measure": { "type": "string", "examples": ["final_exam_score", "post_test_transfer_task"] },
+    "claim": { "type": "string", "description": "The specific claim this evidence supports or contradicts." },
+    "direction": { "type": "string", "enum": ["support", "contradict", "neutral"] },
+    "effect": { "type": "string", "examples": ["positive_medium", "null", "negative_small"] },
+    "duration": { "type": "string", "examples": ["8_weeks"] },
+    "method": { "type": "string", "examples": ["quasi_experimental_pre_post"] },
+    "strengths": { "type": "array", "items": { "type": "string" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "confounders": { "type": "array", "items": { "type": "string" } },
+    "source_location": { "type": "string", "description": "Verifiable pointer to the source (DOI / URL / database identifier / page)." },
+    "quality_dimensions": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "D1 Study Design, D2 Sample Quality, D3 Measurement Validity, D4 Temporal Strength, D5 Directness. Each scored 0/1/2.",
+      "properties": {
+        "D1_study_design": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "D2_sample_quality": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "D3_measurement_validity": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "D4_temporal_strength": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "D5_directness": { "type": "integer", "minimum": 0, "maximum": 2 }
+      }
+    },
+    "quality_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+    "evidence_level": {
+      "type": "string",
+      "enum": ["strong", "moderate", "weak", "very_weak"]
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Match against the target context: learner match, subject match, tool match, usage match, teacher support match."
+    },
+    "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "status": { "type": "string", "enum": ["SUPPORTED", "UNSUPPORTED", "DOWNGRADE_CONFIDENCE"], "default": "SUPPORTED" }
+  }
+}

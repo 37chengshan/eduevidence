@@ -1,0 +1,48 @@
+{
+  "question": "大学高等数学课程是否应该使用 AI Tutor（GPT-4 等生成式 AI 辅导工具）辅助学习？它是否真的有助于概念理解与独立解题，还是只是把学生变成拐杖使用者？",
+  "decision_target": "teaching_decision",
+  "learner": {
+    "education_level": "undergraduate_year_1",
+    "major": "science_and_engineering_majors",
+    "prior_knowledge": "high_school_mathematics_foundation",
+    "special_characteristics": "large_cohort_mixed_ability"
+  },
+  "course": {
+    "subject": "university_advanced_mathematics_calculus",
+    "course_type": "lecture_with_recitation",
+    "duration": "one_semester"
+  },
+  "intervention": {
+    "teaching_method": "lecture_plus_tutor_supported_practice",
+    "ai_tool": "gpt4_generative_ai_tutor",
+    "allowed_usage": "under_design_pending_evidence_review",
+    "frequency": "weekly_practice_sessions",
+    "duration": "one_semester"
+  },
+  "comparison": "no_ai_tutor_control",
+  "outcomes": {
+    "primary": ["concept_understanding", "independent_problem_solving"],
+    "secondary": ["knowledge_gain", "engagement"],
+    "risk": ["ai_dependency", "over_reliance", "false_confidence"]
+  },
+  "context": {
+    "teacher_support": "TA_supported",
+    "class_size": "100_students",
+    "online_or_offline": "offline"
+  },
+  "scope": {
+    "time_range": "2021-2026",
+    "geography": "worldwide",
+    "study_types": ["rct", "quasi_experimental", "observational"]
+  },
+  "inclusion_criteria": [
+    "studies_of_generative_AI_tutors_or_chatbots_in_mathematics_or_adjacent_subjects",
+    "outcomes_measuring_learning_not_only_practice_performance",
+    "randomized_or_controlled_designs_preferred"
+  ],
+  "exclusion_criteria": [
+    "practitioner_anecdotes_without_data",
+    "studies_of_non_AI_tutoring_tools"
+  ],
+  "success_condition": "护栏式 AI Tutor 在无 AI 独立考试与迁移任务上不劣于对照且概念理解改善，同时 AI 依赖风险受控；证据足以支撑一个有边界的试点而非全面铺开。"
+}

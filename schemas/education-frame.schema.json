@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/education-frame.schema.json",
+  "title": "EducationResearchFrame",
+  "description": "Structured framing of an education research question. Framing MUST be completed before any final teaching recommendation is generated (EduEvidence EvidenceFlow Protocol, step 1).",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["question", "decision_target"],
+  "properties": {
+    "question": {
+      "type": "string",
+      "minLength": 5,
+      "description": "The teaching/education question, e.g. 'Should first-year C programming students be allowed to use generative AI coding assistants?'"
+    },
+    "decision_target": {
+      "type": "string",
+      "enum": ["evidence_review", "teaching_decision", "pilot_design", "evaluation_design"],
+      "description": "What the user wants to produce. Default for the skill: evidence_review."
+    },
+    "learner": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "education_level": { "type": "string", "examples": ["undergraduate_year_1"] },
+        "major": { "type": "string", "examples": ["computer_science"] },
+        "prior_knowledge": { "type": "string", "examples": ["first_programming_course"] },
+        "special_characteristics": { "type": "string", "examples": ["mixed_ability", "large_class"] }
+      }
+    },
+    "course": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "subject": { "type": "string", "examples": ["C_programming"] },
+        "course_type": { "type": "string", "examples": ["lecture_lab", "lab_only", "flipped"] },
+        "duration": { "type": "string", "examples": ["16_weeks", "one_semester"] }
+      }
+    },
+    "intervention": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "teaching_method": { "type": "string", "examples": ["paired_programming", "problem_based_learning"] },
+        "ai_tool": { "type": "string", "examples": ["github_copilot", "chatgpt", "generic_generative_ai"] },
+        "allowed_usage": { "type": "string", "examples": ["explain_errors_only", "full_code_generation"] },
+        "frequency": { "type": "string", "examples": ["every_class", "weekly"] },
+        "duration": { "type": "string", "examples": ["8_weeks"] }
+      }
+    },
+    "comparison": {
+      "type": "string",
+      "description": "Comparison condition, e.g. 'no AI usage', 'textbook-only', 'TA support only'."
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "primary": {
+          "type": "array",
+          "items": { "type": "string", "enum": [
+            "knowledge_gain", "concept_understanding", "retention", "transfer",
+            "independent_problem_solving", "completion_time", "accuracy",
+            "code_quality", "assignment_score", "engagement", "motivation",
+            "cognitive_load", "help_seeking", "metacognition", "ai_dependency",
+            "over_reliance", "reduced_effort", "reduced_transfer",
+            "academic_integrity_risk", "false_confidence"
+          ] }
+        },
+        "secondary": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "risk": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "teacher_support": { "type": "string", "examples": ["TA_supported", "trained_instructors"] },
+        "class_size": { "type": "string", "examples": ["60_students"] },
+        "online_or_offline": { "type": "string", "enum": ["online", "offline", "hybrid"] }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "time_range": { "type": "string", "examples": ["2019-2025"] },
+        "geography": { "type": "string", "examples": ["worldwide"] },
+        "study_types": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "inclusion_criteria": { "type": "array", "items": { "type": "string" } },
+    "exclusion_criteria": { "type": "array", "items": { "type": "string" } },
+    "success_condition": { "type": "string", "description": "What would count as a successful outcome for this decision." }
+  }
+}

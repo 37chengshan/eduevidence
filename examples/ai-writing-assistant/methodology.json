@@ -1,0 +1,155 @@
+{
+  "target": "overall",
+  "study_audits": [
+    {
+      "target": "S-2024-marzuki",
+      "study_design": "mixed methods intervention study: pre/post/delayed writing tests plus questionnaires and focus groups",
+      "audit_items": {
+        "control_group": {"status": "met", "note": "Comparison group of 56 students received traditional writing instruction without ChatGPT."},
+        "randomization": {"status": "missing", "note": "No random assignment; group allocation raises self-selection risk."},
+        "pre_test": {"status": "met", "note": "Pre-test administered before the 6-hour intervention."},
+        "post_test": {"status": "met", "note": "Post-test after the intervention."},
+        "retention_test": {"status": "met", "note": "Delayed post-test included."},
+        "transfer_test": {"status": "missing", "note": "No independent no-AI writing transfer test; all outcomes measured while ChatGPT usage was part of the condition."},
+        "sample_bias": {"status": "partial", "note": "Final analysis 35 EG + 37 CG (72) from 78 + 56 initial enrolments."},
+        "self_selection": {"status": "partial", "note": "Consent-based participation; students may self-select into the experimental group."},
+        "measurement_validity": {"status": "met", "note": "Rubric-scored writing tests with pre/post/delayed structure, triangulated by questionnaires and focus groups."},
+        "confounders": {"status": "partial", "note": "Novelty effect and single-institution context not controlled."},
+        "instructor_effect": {"status": "partial", "note": "Single institution; instructor assignment across groups not detailed."},
+        "novelty_effect": {"status": "partial", "note": "6-hour intervention is very short; novelty likely inflates perceived benefit."},
+        "tool_version_effect": {"status": "partial", "note": "ChatGPT version used not specified."},
+        "ai_usage_policy": {"status": "partial", "note": "ChatGPT deployed as a formative feedback tool, but precise usage boundaries are not fully specified."},
+        "dropout": {"status": "partial", "note": "Attrition from 78/56 to 35/37 final analysed; reasons not detailed."}
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "rubric-scored writing test performance in a formative-feedback condition",
+        "equates_task_with_learning": false,
+        "note": "Improved writing scores may partly reflect AI-supported task performance rather than independent writing ability; without a no-AI independent writing assessment, writing score gain cannot be equated with independent writing skill gain."
+      },
+      "verdict": "CONCERN",
+      "limitations": [
+        "No randomization; self-selection risk",
+        "Single institution (elite private university)",
+        "6-hour short intervention",
+        "No independent no-AI writing transfer test",
+        "Attrition between initial and final samples not fully explained"
+      ],
+      "suggestions": [
+        "Add randomization or matched-section design",
+        "Extend intervention duration to a full term",
+        "Add an independent no-AI writing transfer assessment",
+        "Report dropout reasons and usage-fidelity data"
+      ]
+    },
+    {
+      "target": "S-2026-bastani",
+      "study_design": "large-scale three-arm randomized controlled trial (no AI / GPT Base unguarded / GPT Tutor guardrailed)",
+      "audit_items": {
+        "control_group": {"status": "met", "note": "No-generative-AI control group present."},
+        "randomization": {"status": "met", "note": "Large-scale randomized controlled trial."},
+        "pre_test": {"status": "met", "note": "Baseline covariates measured."},
+        "post_test": {"status": "met", "note": "Practice performance and independent exam measured."},
+        "retention_test": {"status": "missing", "note": "No delayed/retention test."},
+        "transfer_test": {"status": "partial", "note": "Independent closed-book exam functions as a transfer check from practice, but no longer-term transfer measure."},
+        "sample_bias": {"status": "met", "note": "Nearly 1000 students; large and well-powered."},
+        "self_selection": {"status": "met", "note": "Random assignment removes self-selection."},
+        "measurement_validity": {"status": "met", "note": "Independent exam without AI access cleanly separates task performance from learning."},
+        "confounders": {"status": "met", "note": "Three-arm design isolates the effect of tool design."},
+        "instructor_effect": {"status": "not_applicable", "note": "Standardized study sessions; instructor effects minimized."},
+        "novelty_effect": {"status": "partial", "note": "Short in-class sessions; novelty not explicitly controlled."},
+        "tool_version_effect": {"status": "not_applicable", "note": "Single GPT version studied."},
+        "ai_usage_policy": {"status": "met", "note": "Explicit contrast between unguarded (GPT Base) and guardrailed (GPT Tutor) usage."},
+        "dropout": {"status": "not_applicable", "note": "Not reported in the reviewed summary."}
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "practice problem performance vs independent closed-book exam performance",
+        "equates_task_with_learning": false,
+        "note": "The study itself demonstrates the dissociation: +48%/+127% practice performance coexisted with -17% independent exam performance in the unguarded arm."
+      },
+      "verdict": "PASS",
+      "limitations": [
+        "Subject mismatch: high school mathematics, not university academic writing",
+        "No positive learning gain even with guardrails (they eliminate harm, do not produce gain)",
+        "No long-term retention test"
+      ],
+      "suggestions": [
+        "Replicate the guardrail design in a writing context",
+        "Extend to a university population",
+        "Add a delayed independent test"
+      ]
+    },
+    {
+      "target": "S-2025-lee",
+      "study_design": "randomized controlled trial across four high school ESL classes comparing GPT-4 interactive homework with traditional homework",
+      "audit_items": {
+        "control_group": {"status": "met", "note": "Traditional-homework comparison group present."},
+        "randomization": {"status": "met", "note": "Randomized controlled trial at class level."},
+        "pre_test": {"status": "partial", "note": "Baseline learning levels measured; detail limited in the reviewed summary."},
+        "post_test": {"status": "met", "note": "Learning outcome assessments and engagement measures collected."},
+        "retention_test": {"status": "missing", "note": "No delayed test."},
+        "transfer_test": {"status": "missing", "note": "No independent no-AI transfer task."},
+        "sample_bias": {"status": "partial", "note": "Four classes only; modest sample, clustering at class level."},
+        "self_selection": {"status": "met", "note": "Randomized assignment."},
+        "measurement_validity": {"status": "met", "note": "Learning outcomes measured in addition to engagement, not only task performance."},
+        "confounders": {"status": "partial", "note": "Class-level clustering and possible platform differences between homework modes."},
+        "instructor_effect": {"status": "partial", "note": "Four classes; instructor differences across classes not fully controlled."},
+        "novelty_effect": {"status": "partial", "note": "Novel interactive platform may inflate engagement."},
+        "tool_version_effect": {"status": "not_applicable", "note": "Single GPT-4 version studied."},
+        "ai_usage_policy": {"status": "partial", "note": "Interactive homework tutor design defined, but guardrail details limited in the reviewed summary."},
+        "dropout": {"status": "not_applicable", "note": "Not reported in the reviewed summary."}
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "homework task completion/engagement vs ESL learning outcome assessments",
+        "equates_task_with_learning": false,
+        "note": "Learning outcomes are measured separately from engagement, which is a strength; but no independent no-AI writing transfer test exists."
+      },
+      "verdict": "PASS",
+      "limitations": [
+        "High school ESL context, not university academic writing",
+        "Homework-only setting does not cover the classroom writing process",
+        "No retention or transfer test",
+        "Small number of classes (four)"
+      ],
+      "suggestions": [
+        "Extend to university academic writing with classroom writing tasks",
+        "Add retention and no-AI transfer assessments",
+        "Increase the number of classes/sections"
+      ]
+    }
+  ],
+  "audit_items": {
+    "control_group": {"status": "met", "note": "All three studies include a no-AI or traditional-instruction comparison."},
+    "randomization": {"status": "partial", "note": "Bastani 2026 and Lee 2025 randomized; Marzuki 2024 did not."},
+    "pre_test": {"status": "met", "note": "Marzuki has pre/post/delayed tests; Bastani and Lee measure baselines."},
+    "post_test": {"status": "met", "note": "Immediate outcome measures present in all studies."},
+    "retention_test": {"status": "partial", "note": "Only Marzuki 2024 includes a delayed test; Bastani and Lee have none."},
+    "transfer_test": {"status": "missing", "note": "No study tests independent no-AI writing in a university context; Bastani's independent exam is the closest analogue but in mathematics."},
+    "sample_bias": {"status": "partial", "note": "Bastani is large; Lee is four classes; Marzuki is a single elite private university."},
+    "self_selection": {"status": "partial", "note": "Marzuki consent-based; Bastani and Lee randomized."},
+    "measurement_validity": {"status": "partial", "note": "Task performance is separated from independent performance only in Bastani 2026."},
+    "confounders": {"status": "partial", "note": "Novelty effects, tool versions and instructor effects not fully controlled across the set."},
+    "instructor_effect": {"status": "partial", "note": "Marzuki single institution; Lee across four classes; Bastani standardized sessions."},
+    "novelty_effect": {"status": "partial", "note": "Short interventions in all three studies likely inflate engagement."},
+    "tool_version_effect": {"status": "partial", "note": "ChatGPT/GPT-4 versions differ across studies and continue to evolve."},
+    "ai_usage_policy": {"status": "partial", "note": "Only Bastani explicitly contrasts unguarded vs guardrailed usage policies."},
+    "dropout": {"status": "partial", "note": "Only Marzuki reports attrition."}
+  },
+  "task_vs_learning_guard": {
+    "measured_construct": "writing/assignment scores vs independent writing ability",
+    "equates_task_with_learning": false,
+    "note": "Writing scores or assignment scores must NOT be equated with independent writing ability. Bastani 2026 shows +48-127% task performance coexisting with -17% independent exam performance; Marzuki's improved writing scores under a ChatGPT-feedback condition carry the same risk of reflecting AI-supported task performance rather than independent writing skill."
+  },
+  "verdict": "CONCERN",
+  "limitations": [
+    "No university-level academic writing RCT measuring independent no-AI writing ability.",
+    "Bastani 2026 is methodologically strong but in high school mathematics; subject directness to university academic writing is low.",
+    "Lee 2025 is a high school ESL RCT with no retention or transfer test.",
+    "Marzuki 2024 is the only writing-context study but lacks randomization, is single-institution, and has no transfer assessment."
+  ],
+  "suggestions": [
+    "Design a randomized or matched-section pilot in university academic writing with an independent no-AI writing transfer test.",
+    "Adopt guardrail principles from Bastani's GPT Tutor (feedback/hints instead of answers) for the writing context.",
+    "Measure process (AI usage logs, reflections) alongside learning and risk outcomes.",
+    "Separate task/assignment performance metrics from independent learning metrics in all analyses."
+  ]
+}

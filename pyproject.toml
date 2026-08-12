@@ -1,0 +1,25 @@
+[project]
+name = "eduevidence"
+version = "1.0.0"
+description = "Evidence-Based AI Teaching Decision & Intervention Skill — from education questions to evidence-based decisions."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "EduEvidence Contributors" }]
+keywords = ["education", "evidence", "AI4SS", "skill", "evidence-based", "teaching"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Education",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q"
+
+[tool.setuptools]
+py-modules = []

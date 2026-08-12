@@ -1,0 +1,24 @@
+{
+  "id": "Q05",
+  "key_claims": [
+    "完成AI辅助编程任务的学生，在无AI情境下独立调试不熟悉代码的成功率低于全程自主完成的学生",
+    "AI辅助降低了练习过程中的主动加工，导致技能迁移受损",
+    "迁移下降可能与问题解决经验被AI代劳有关"
+  ],
+  "key_supporting_sources": [
+    "生成式AI对编程学习迁移影响的前瞻性研究",
+    "过度依赖与减少主动练习导致迁移受损的证据（Yu & Guo 2023 等）"
+  ],
+  "known_contradictions": [
+    "部分研究显示AI辅助仅作为反馈工具时不损害甚至提升迁移",
+    "迁移测试难度与任务相似度不同导致结论不一致"
+  ],
+  "correct_outcome_types": ["transfer"],
+  "allowed_scope": "仅限无AI情境下代码调试任务的迁移表现，不扩展到综合项目开发能力",
+  "known_methodological_limitations": [
+    "迁移任务与训练任务相似度影响结果",
+    "缺少对任务时间与尝试次数的过程性控制",
+    "样本以单一课程学生为主，代表性有限"
+  ],
+  "expected_decision_range": ["reject"]
+}

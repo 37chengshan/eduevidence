@@ -1,0 +1,24 @@
+{
+  "id": "Q09",
+  "key_claims": [
+    "使用自我解释策略学习新概念的学生，概念理解测试得分显著高于仅反复阅读的学生",
+    "自我解释促进新旧知识联结与错误发现",
+    "效果依赖学习者能否产出高质量的解释"
+  ],
+  "key_supporting_sources": [
+    "Chi et al. (1989, 1994) 自我解释效应系列研究",
+    "自我解释策略在大学生概念学习中的实证干预"
+  ],
+  "known_contradictions": [
+    "部分研究显示低先验知识学生自我解释困难，效果不显著",
+    "提示方式（引导性 vs 自由性）不同效果方向不同"
+  ],
+  "correct_outcome_types": ["concept_understanding"],
+  "allowed_scope": "仅限概念理解类测试结局，不扩展到程序性技能或记忆保持",
+  "known_methodological_limitations": [
+    "概念理解的测量工具缺乏统一标准",
+    "自我解释质量难以客观量化，编码主观",
+    "样本多为心理学课程学生，外部效度有限"
+  ],
+  "expected_decision_range": ["adopt"]
+}

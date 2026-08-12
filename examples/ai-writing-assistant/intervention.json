@@ -1,0 +1,53 @@
+{
+  "decision": "pilot",
+  "target_learners": "university undergraduate students in an academic writing course (1-2 sections, ~30-60 students, including ESL learners)",
+  "learning_goals": [
+    "independently plan, draft and revise academic writing without AI",
+    "use AI writing assistants critically as formative feedback and error-explanation tools, not as text generators",
+    "develop reflection skills: explain every AI-assisted change in their own words"
+  ],
+  "pilot_duration": "8_weeks",
+  "phase_1": {
+    "name": "Phase 1 — Independent Drafting (No AI)",
+    "activities": ["baseline writing assessment", "weeks 1-2: students draft essays with no AI access whatsoever"],
+    "ai_usage_rule": "all AI usage forbidden; drafts must be entirely student-written",
+    "outcome_check": "baseline independent writing quality and no-AI baseline score"
+  },
+  "phase_2": {
+    "name": "Phase 2 — AI Feedback and Error Explanation Only",
+    "activities": ["weeks 3-4: AI allowed to give feedback on student drafts and explain grammar/style errors; it must not generate new text"],
+    "ai_usage_rule": "AI may give formative feedback and explain errors only; no generation or rewriting of passages",
+    "outcome_check": "mid-pilot in-class writing sample without AI; student reflection on which feedback was applied"
+  },
+  "phase_3": {
+    "name": "Phase 3 — AI-Assisted Revision with Explanation",
+    "activities": ["weeks 5-7: AI may suggest revisions; students must accept/reject each suggestion and justify their choices in a revision memo"],
+    "ai_usage_rule": "AI-assisted revision allowed only with a mandatory revision memo explaining every AI-suggested change that was kept",
+    "outcome_check": "weekly draft quality rubric plus revision-memo completeness"
+  },
+  "phase_4": {
+    "name": "Phase 4 — Independent Writing Transfer Test (No AI)",
+    "activities": ["week 8: a new academic writing task on an unseen topic completed in a strictly no-AI environment"],
+    "ai_usage_rule": "no AI access during the transfer assessment",
+    "outcome_check": "independent writing score and transfer-task rubric"
+  },
+  "ai_usage_policy": "AI usage is restricted to three explicitly graded modes: no-AI drafting (phase 1), feedback/error-explanation only (phase 2), AI-assisted revision with mandatory explanation (phase 3). Copying AI-generated text into a submission without explanation is an academic integrity violation. A no-AI transfer assessment closes the pilot (phase 4).",
+  "teacher_role": "design guardrailed feedback prompts and rubrics; review AI usage logs and revision memos weekly; hold short reflection debriefs",
+  "student_role": "draft independently in phase 1; use AI only for feedback in phase 2; revise with AI while documenting every change in phase 3; complete the independent no-AI transfer task in phase 4",
+  "reflection_requirement": "students must explain every AI-assisted change in their own words (revision memo); one written reflection per phase on when AI helped versus when it masked understanding",
+  "assessment": "no-AI baseline writing assessment, mid-pilot in-class writing sample, draft quality rubric, independent no-AI writing transfer task, revision memos, AI usage self-report",
+  "risk_control": [
+    "guardrailed usage policy modeled on Bastani 2026 GPT Tutor (feedback/hints instead of answers)",
+    "independent no-AI writing transfer test prevents score inflation from AI-supported task performance",
+    "revision memos and usage logs reviewed weekly to detect AI dependency",
+    "academic integrity policy explicitly covers AI-generated text and unexamined copying",
+    "false-confidence check: predicted grade vs actual grade on no-AI assessments"
+  ],
+  "stop_conditions": [
+    "independent writing transfer-test scores drop significantly below baseline/cohort expectations",
+    "revision memos show widespread unexamined AI copying (integrity violations in >20% of submissions)",
+    "AI dependency signals (usage without understanding, explanation quality) exceed threshold for two consecutive weeks",
+    "teacher workload for reviewing memos/logs becomes unsustainable"
+  ],
+  "evidence_alignment": ["E-001", "E-002", "E-003", "E-004", "E-005", "E-006", "E-007", "E-008"]
+}

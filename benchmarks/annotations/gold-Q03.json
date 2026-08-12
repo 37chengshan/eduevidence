@@ -1,0 +1,24 @@
+{
+  "id": "Q03",
+  "key_claims": [
+    "基于大模型的AI辅导系统可提高大学微积分课程的期末考试成绩",
+    "AI Tutor的即时个性化反馈是成绩提升的可能机制",
+    "效果主要体现为程序性练习熟练而非概念理解"
+  ],
+  "key_supporting_sources": [
+    "Khanmigo等高数AI辅导工具的中等规模实证评估",
+    "智能辅导系统（ITS）元分析中即时反馈效应的证据"
+  ],
+  "known_contradictions": [
+    "部分研究显示成绩提升仅在中等难度题目上显著",
+    "低参与度学生使用AI Tutor后成绩无显著变化甚至下降"
+  ],
+  "correct_outcome_types": ["assignment_score"],
+  "allowed_scope": "仅限课程期末考试成绩与练习正确率，不扩展到跨学期保持或高阶数学推理",
+  "known_methodological_limitations": [
+    "非随机分配导致自选择偏差",
+    "期末成绩受多次测量与课程难度影响，标准化程度不足",
+    "短期干预为主，缺乏对作弊或依赖行为的控制"
+  ],
+  "expected_decision_range": ["pilot"]
+}

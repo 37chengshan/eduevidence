@@ -1,0 +1,24 @@
+{
+  "id": "Q02",
+  "key_claims": [
+    "在写作课程中使用AI写作助手的学生，脱离工具后的独立写作得分低于不使用AI的学生",
+    "AI写作助手的使用与独立写作能力存在负向关联",
+    "即时任务表现提升不等同于写作能力增长"
+  ],
+  "key_supporting_sources": [
+    "Warschauer et al. (2023) 关于生成式AI与写作教育的研究",
+    "对AI辅助写作后撤除工具情境的受控实验"
+  ],
+  "known_contradictions": [
+    "部分研究认为AI写作助手可作为脚手架提高低水平写作者的基础写作能力",
+    "使用方式（改写 vs 代写）不同导致效果方向相反"
+  ],
+  "correct_outcome_types": ["independent_problem_solving"],
+  "allowed_scope": "仅限无AI条件下独立写作表现的测量，不扩展到内容创意或批判性思维",
+  "known_methodological_limitations": [
+    "独立写作测量方式（命题作文/限时）影响结论",
+    "写作水平基线未充分控制时存在选择偏差",
+    "缺乏纵向跟踪以区分短期下降与长期适应"
+  ],
+  "expected_decision_range": ["reject"]
+}

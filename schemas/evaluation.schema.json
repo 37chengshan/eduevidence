@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/evaluation.schema.json",
+  "title": "EvaluationPlan",
+  "description": "Evaluation design attached to any PILOT / ADOPT recommendation. Must separate Task Performance from Learning, and Immediate from Retention/Transfer.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["research_question", "groups", "analysis_plan"],
+  "properties": {
+    "research_question": { "type": "string" },
+    "groups": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "treatment": { "type": "string" },
+        "comparison": { "type": "string" }
+      }
+    },
+    "baseline": { "type": "string", "description": "Pre-test / baseline measurement." },
+    "post_test": { "type": "string" },
+    "retention_test": { "type": ["string", "null"], "description": "Delayed test (e.g. 4-8 weeks after intervention)." },
+    "transfer_test": { "type": ["string", "null"], "description": "New task in a no-AI environment to verify real transfer." },
+    "process_metrics": { "type": "array", "items": { "type": "string" } },
+    "learning_metrics": { "type": "array", "items": { "type": "string" } },
+    "risk_metrics": { "type": "array", "items": { "type": "string" } },
+    "analysis_plan": { "type": "string" },
+    "success_threshold": { "type": "string" },
+    "stop_conditions": { "type": "array", "items": { "type": "string" } }
+  }
+}

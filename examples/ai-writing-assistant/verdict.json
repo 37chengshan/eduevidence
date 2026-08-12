@@ -1,0 +1,78 @@
+{
+  "decision_question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？",
+  "target_population": "university undergraduate students enrolled in academic writing courses",
+  "target_context": "university academic writing course (16-week semester), scaffolded formative-feedback instruction, instructor feedback available, offline",
+  "supported_claims": [
+    "Using ChatGPT as a formative feedback tool can significantly improve short-term academic writing scores and is positively perceived by students (E-001, E-002).",
+    "Guardrail design (hints and feedback instead of answers) eliminates the negative learning effect of unguarded AI access (E-004).",
+    "Interactive AI homework can raise engagement and satisfaction without harming learning outcomes (E-007, E-008).",
+    "Task/assignment scores must not be equated with independent writing ability (E-003, E-005)."
+  ],
+  "uncertain_claims": [
+    "Whether AI-assisted writing instruction improves or preserves long-term independent writing ability in university students — no direct evidence; E-003 (subject-mismatched) is the only independent-performance signal.",
+    "Whether the 6-hour Marzuki effect extends to a full semester (E-001).",
+    "Whether engagement gains from high school ESL homework (Lee) generalize to university academic writing courses (E-007, E-008)."
+  ],
+  "contradicted_claims": [
+    "The claim that 'AI writing assistants always improve independent writing performance' is contradicted by E-003 (unguarded access → 17% worse independent exam performance)."
+  ],
+  "reason_for_disagreement": "Disagreement comes from outcome separation (task/assignment scores vs independent ability), tool design (guarded feedback vs unguarded generation), and population (high school vs university). Writing-context evidence (Marzuki) is positive but short and uncontrolled; the strongest evidence (Bastani) shows unguarded AI harms independent performance but in a different subject and level.",
+  "methodology_summary": "One mixed-methods university writing study (Marzuki 2024: no randomization, 6-hour intervention, delayed test), one large high-school mathematics RCT (Bastani 2026: task-vs-learning separation, guardrail comparison), and one high-school ESL RCT (Lee 2025: engagement plus non-inferior learning). No randomized university-level academic writing study with a no-AI independent writing transfer test exists in the reviewed set.",
+  "outcome_specific_findings": {
+    "knowledge_gain": "positive short-term writing-skill gain with AI feedback (E-001); non-inferior with a significant gain in one group for ESL homework (E-008)",
+    "independent_problem_solving": "negative for unguarded access, neutralized by guardrails (E-003, E-004); never measured in a university writing context",
+    "assignment_score": "improves during practice but does not transfer to independent performance (E-005)",
+    "engagement": "positive for AI interactive homework (E-007) and positive student perceptions of AI feedback (E-002)",
+    "ai_dependency": "documented crutch behavior with unguarded access (E-006)"
+  },
+  "short_term_effect": "Positive: AI-assisted formative feedback improves short-term writing scores (E-001) and engagement (E-002, E-007).",
+  "long_term_effect": "Unknown: no university writing study measures independent writing ability beyond the intervention; Marzuki's delayed test follows only a 6-hour intervention (E-001).",
+  "transfer_effect": "Negative evidence from mathematics warns that task gains do not transfer to independent performance (E-003, E-005); no university writing transfer test exists.",
+  "risk_effect": "AI dependency, academic-integrity violations and false confidence are real risks for unguarded usage (E-006); guardrail design mitigates the negative learning effect (E-004).",
+  "applicability": {
+    "suitable_for": "bounded pilot in a university academic writing course with a guardrailed AI usage policy and independent no-AI writing assessment",
+    "not_suitable_for": "unrestricted student AI use without a usage policy or integrity safeguards",
+    "required_conditions": [
+      "guardrailed formative-feedback usage policy",
+      "independent no-AI writing transfer test",
+      "reflection requirement and usage logging",
+      "academic integrity policy covering AI-assisted writing"
+    ]
+  },
+  "confidence": "Moderate",
+  "confidence_breakdown": {
+    "score": 0.55,
+    "evidence_quality": 0.72,
+    "consistency": 0.6,
+    "directness": 0.45,
+    "evidence_count": 8,
+    "conflict_penalty": 0.3,
+    "unsupported_penalty": 0.1
+  },
+  "what_can_be_claimed": [
+    "AI writing assistants used as formative feedback tools can improve short-term academic writing scores and are positively perceived by students.",
+    "Unguarded generative AI access carries a real risk of harming independent performance when the AI is removed.",
+    "Guardrail design (feedback/hints instead of answers) substantially mitigates that risk.",
+    "AI interactive homework can improve engagement without harming learning outcomes.",
+    "Direct evidence about university academic writing independent ability is missing."
+  ],
+  "what_cannot_be_claimed": [
+    "AI writing assistants improve (or even preserve) university students' long-term independent writing ability.",
+    "Any semester-long academic writing outcome based on a 6-hour intervention.",
+    "That writing/assignment score gains reflect genuine independent writing skill rather than AI-supported task performance.",
+    "Any claim about academic-integrity outcomes, which none of the three studies directly measured."
+  ],
+  "missing_evidence": [
+    "Randomized or matched-section study of AI writing assistants in university academic writing courses with a no-AI independent writing transfer test.",
+    "Studies varying AI usage policy (guardrailed feedback vs open generation) within a writing course.",
+    "Longitudinal data on AI dependency and academic integrity in university writing beyond one course.",
+    "Retention evidence for writing outcomes beyond a few weeks."
+  ],
+  "recommended_action": "pilot",
+  "decision_rationale": "Writing-context evidence is positive but short and uncontrolled; strong general evidence warns that unguarded AI harms independent performance; and no university writing study measures independent ability. A bounded, guardrailed, 4-phase pilot with an independent no-AI writing transfer test is the evidence-consistent action.",
+  "exceeds_evidence_boundary": [
+    "'AI 写作助手能提高大学生的独立写作能力' — exceeds: no university writing study measures independent no-AI writing ability.",
+    "'AI 写作助手对学术诚信无风险' — exceeds: no reviewed study measured academic-integrity outcomes.",
+    "'AI 辅助写作的分数提升等于写作能力提升' — exceeds: task performance and independent ability are demonstrably distinct (E-003, E-005)."
+  ]
+}
