@@ -1,144 +1,129 @@
 # EduEvidence
 
-> **🌐 [English](README.en.md) | 中文**
+> **🌐 English | [中文](README.en.md)**
 
 ## Evidence-Based AI Teaching Decision & Intervention Skill
 
 > **From Education Questions to Evidence-Based Decisions.**
-> **从教学问题，到有证据支撑的教学决策。**
 
-EduEvidence 面向高校教师、教学研究者与教学管理者，把"是否采用一种 AI 教学方式"从经验判断转化为**可追溯、可质疑、可验证的证据决策流程**。
+EduEvidence helps university teachers, education researchers, and teaching administrators turn "should we adopt an AI-based teaching method?" from an intuition-driven choice into a **traceable, challengeable, verifiable evidence decision process**.
 
-- ⚖️ 不是替教师生成答案，而是帮助教师知道：证据支持什么、不能支持什么、适用于谁、应该怎样试点并验证。
-- 🧪 基于真实研究（示例包含 CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 的实证证据），不做无来源断言。
-- 🚦 最终输出不是"允许/禁止"的二元结论，而是 **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** 四态决策 + 可落地的教学干预与评价方案。
+- ⚖️ It does not generate answers for teachers — it shows what the evidence supports, what it cannot support, who it applies to, and how to pilot and verify it.
+- 🧪 Built on real research (examples include CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 empirical evidence); no claims without sources.
+- 🚦 The output is not a binary "allow/forbid" answer but a four-state decision — **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** — plus an actionable teaching intervention and evaluation plan.
 
-![EduEvidence 顶层宣传图](assets/top-banner.jpg)
+![EduEvidence overview banner](assets/top-banner.jpg)
 
 ---
 
-## 快速安装
-
-**方式一：curl 一键安装（推荐，无需 clone）**
-
-```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
-```
-
-脚本自动 clone 仓库到 `./eduevidence` 并完成安装（venv + 依赖 + 自检 + 测试）。
-
-**方式二：git clone**
+## Quick Install
 
 ```bash
 git clone https://github.com/37chengshan/eduevidence.git
 cd eduevidence
-bash install.sh              # 一键：venv + 依赖 + 自检 + 测试
+bash install.sh              # one-click: venv + deps + self-check + tests
 ```
 
-安装后直接打开示例报告：
+Open the example report right away:
 
 ```bash
 open examples/ai-coding-assistant/EduEvidence_Report.html
 ```
 
-> 需要 Python 3.10+；核心零第三方依赖。学术图 PNG/PDF 导出可选装 matplotlib。
-> 安装完成后脚本会提示为项目点 star（仅提示，不会自动执行任何 GitHub 操作）。
-> ⚠️ 管道执行远程脚本以当前用户权限运行，建议先审阅 [install.sh](install.sh) 或用 git clone。
+> Requires Python 3.10+; the core has zero third-party dependencies. `pip install matplotlib` is optional for academic-figure PNG/PDF export.
+> After install, the script prompts you to star the repo (prompt only — it never runs any GitHub command on your behalf).
 
 ---
 
-## 安装为 Skill（AI Agent 用户）
+## Install as a Skill (for AI Agent users)
 
-> EduEvidence 本体是一个 **AI Agent Skill**（SKILL.md + skill/agents/ + references/ + schemas/ + scripts/ + retrieval/ + integrations/ + visualization/）。
-> 安装后，你的宿主 Agent（Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …）就能在收到教学决策类问题时自动装载本 Skill。
+> EduEvidence itself is an **AI Agent Skill** (`SKILL.md` + `skill/agents/` + `references/` + `schemas/` + `scripts/` + `retrieval/` + `integrations/` + `visualization/`).
+> Once installed, your host agent (Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …) can auto-load this Skill when it receives teaching-decision questions.
 
 ```bash
-bash install.sh --skill              # 交互式选择安装到哪个 Agent
-bash install.sh --list-hosts         # 查看支持的 Agent 与 Skill 落点
-bash install.sh --skill --dry-run    # 只预览将执行的变更，不写入
+bash install.sh --skill              # interactive: choose which agent to install to
+bash install.sh --list-hosts         # list supported agents and skill locations
+bash install.sh --skill --dry-run    # preview only, write nothing
 ```
 
-也可以不经 clone 直接远程执行：
+You can also run it remotely without cloning:
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
 ```
 
-安装前脚本会自动备份目标目录中已有的 skill（`cp -r` 到 `.bak-<时间戳>`）；`--dry-run` 只预览不写入。
+Before writing, the script automatically backs up any existing skill directory (`cp -r` to `.bak-<timestamp>`); `--dry-run` only previews the changes.
 
-### 支持的 Agent 与配置落点
+### Supported agents and install locations
 
-| Agent | 探测路径 | Skill 安装落点 |
+| Agent | Detection path | Skill install location |
 |---|---|---|
-| Claude Code | `~/.claude` | `~/.claude/skills/eduevidence/`（无用户级配置则装到项目 `.claude/skills/`）|
-| Codex | `~/.codex` 或 `codex` 命令 | `~/.agents/skills/`（兼容 `~/.codex/skills/`、`~/.codex/prompts/`）|
+| Claude Code | `~/.claude` | `~/.claude/skills/eduevidence/` (project `.claude/skills/` when no user-level config) |
+| Codex | `~/.codex` or `codex` command | `~/.agents/skills/` (falls back to `~/.codex/skills/`, `~/.codex/prompts/`) |
 | OMP | `~/.omp` | `~/.omp/agent/skills/eduevidence/` |
 | OpenCode | `~/.config/opencode` | `~/.config/opencode/skills/eduevidence/` |
-| Kimi Code | `$KIMI_CODE_HOME` 或 `~/.kimi-code` | `~/.kimi-code/skills/eduevidence/` |
+| Kimi Code | `$KIMI_CODE_HOME` or `~/.kimi-code` | `~/.kimi-code/skills/eduevidence/` |
 | ZCode | `~/.zcode` | `~/.zcode/skills/eduevidence/` |
 | OpenClaw | `~/.openclaw` | `~/.openclaw/skills/eduevidence/` |
 | Harness | `~/.harness` | `~/.harness/skills/eduevidence/` |
 | Grok | `~/.grok` | `~/.grok/skills/eduevidence/` |
 | GitHub Copilot CLI | `~/.copilot` | `~/.copilot/skills/eduevidence/` |
-| Cline | `~/.cline` 或 `~/.config/cline` | `~/.cline/skills/eduevidence/` |
+| Cline | `~/.cline` or `~/.config/cline` | `~/.cline/skills/eduevidence/` |
 
-交互菜单中：选择 `all` 安装到全部 Agent；`custom` 手动指定 skill 目录；`local` 只装本地（venv + pytest + 自检）。
+In the interactive menu: pick `all` to install to every agent, `custom` to type a directory manually, or `local` for local-only install (venv + pytest + self-check).
 
-### 方式三：通用提示词（未列出的 Agent）
+### Method 3: Universal prompt (agents not listed)
 
-你的 Agent 不在列表里？把下面这段提示词**原样**交给任意支持 skill / 自定义指令的 AI，它会读取 [安装指南](docs/install-guide.md) 自行完成安装：
+Your agent is not in the list? Paste the following prompt **verbatim** into any AI that supports skills / custom instructions:
 
 ```text
-请按照 https://github.com/37chengshan/eduevidence/blob/main/docs/install-guide.md
-的安装指南，为我把 EduEvidence 安装为 skill：先读取该文档，按第 2 节的落点表
-把 SKILL.md、skill/、references/、schemas/、scripts/、retrieval/、integrations/、
-visualization/ 复制到我的 skill 目录（或按我的装载机制导入），然后按第 3 节
-完成验证（SKILL.md 可读 + 脚本可运行 + 示例报告可渲染）。
+Follow the install guide at https://github.com/37chengshan/eduevidence/blob/main/docs/install-guide.md
+to install EduEvidence as a skill for me: read the doc first, then per Section 2's
+landing table copy SKILL.md, skill/, references/, schemas/, scripts/, retrieval/,
+integrations/, visualization/ into my skill directory (or import via my loading
+mechanism), then complete the Section 3 verification (SKILL.md readable + scripts
+runnable + sample report renderable).
 ```
-
-安装完成后的收尾动作（含是否点 star 的询问）见 [安装指南](docs/install-guide.md) 第 4 节。
-
-脚本在 `--skill` 安装完成后也会打印这段通用提示词。
 
 ## What Problem We Solve
 
-普通 AI 面对教育问题通常执行：
+A typical AI answers an education question like this:
 
 ```text
-问题 → 搜索若干材料 → 总结观点 → 给出建议
+Question → Search a few sources → Summarize opinions → Give advice
 ```
 
-EduEvidence 执行：
+EduEvidence does this instead:
 
 ```text
-教学问题
-  → Education Research Framing（学习者/干预/对照/Outcome/场景）
-  → 文献与证据检索（支持证据 + 独立反方证据）
+Education question
+  → Education Research Framing (learner / intervention / comparison / outcomes / context)
+  → Literature & evidence retrieval (supporting evidence + independent counter-evidence)
   → Claim-Level Evidence Extraction
-  → Skeptic 反证协议 + Method Reviewer 方法学审查
-  → Evidence Tribunal（证据裁决）
-  → Applicability Analysis（适用性）
+  → Skeptic challenge protocol + Method Reviewer audit
+  → Evidence Tribunal
+  → Applicability Analysis
   → Decision: ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE
-  → Teaching Intervention（最小可验证试点）
-  → Evaluation Plan（效果评价）
+  → Teaching Intervention (minimum viable pilot)
+  → Evaluation Plan
 ```
 
-最终回答六个问题：
+It answers six questions:
 
-1. 当前证据到底支持什么？
-2. 当前证据不能支持什么？
-3. 为什么不同研究会得到不同结果？
-4. 对哪类学生、什么课程、什么条件适用？
-5. 如果学校真的要用，怎样低风险落地？
-6. 实施后如何验证它到底有没有效果？
+1. What does the current evidence actually support?
+2. What can the current evidence not support?
+3. Why do different studies reach different results?
+4. Which students, which courses, under which conditions does it apply to?
+5. If an institution adopts it, how to roll it out with low risk?
+6. How to verify whether it actually works after implementation?
 
 ## 30-second Demo
 
-> 主 Demo：**大一 C 语言课程是否应该允许学生使用生成式 AI 编程助手？**
+> Main demo: **Should first-year C programming students be allowed to use generative AI coding assistants?**
 
-| 时间 | 阶段 |
+| Time | Stage |
 |---|---|
-| 0–20s | 输入教学问题 |
+| 0–20s | Ask the education question |
 | 20–45s | Education Research Frame |
 | 45–75s | Evidence Retrieval |
 | 75–110s | Evidence Matrix |
@@ -147,23 +132,24 @@ EduEvidence 执行：
 | 155–170s | Teaching Intervention + Evaluation |
 | 170–180s | Benchmark |
 
-完整示例包见 [`examples/ai-coding-assistant/`](examples/ai-coding-assistant/)。
+Full example pack: [`examples/ai-coding-assistant/`](examples/ai-coding-assistant/).
 
 ## Why Education Evidence Is Hard
 
-教育研究证据有几个天然陷阱，EduEvidence 的核心创新就是把应对这些陷阱的环节标准化：
+Education evidence has natural pitfalls. EduEvidence's core contribution is standardizing the countermeasures:
 
-- **Outcome Separation**：`代码完成更快 ≠ 真正学会编程`；`短期成绩提高 ≠ 长期保持提高`；`AI 协助完成任务 ≠ 无 AI 环境下能够迁移`。
-- **Counter-Evidence Search**：不能只验证用户的最初假设，必须独立寻找 null / negative / contradictory 证据、AI dependency、novelty effect、self-selection bias 等。
-- **Evidence Tribunal**：不是简单把正反论文列在一起，而是判断哪些研究更可信、冲突来自样本/测量/课程/工具还是实验设计、目前最多能得出什么结论。
-- **Evidence-to-Action Bridge**：不能停在"研究显示……"，必须连到适用性判断、教学决策、试点干预与评价设计。
+- **Outcome Separation**: `faster task completion ≠ actually learning to program`; `short-term score gains ≠ long-term retention`; `completing tasks with AI ≠ transferring skills without AI`.
+- **Counter-Evidence Search**: it does not just verify the user's initial assumption — it independently searches for null / negative / contradictory evidence, AI dependency, novelty effects, self-selection bias, and more.
+- **Evidence Tribunal**: instead of listing pros and cons, it judges which studies are more credible, whether conflicts come from samples / measurement / course / tool / design, and what can be concluded so far.
+- **Evidence-to-Action Bridge**: it does not stop at "research shows…" — it connects to applicability, the teaching decision, pilot intervention, and evaluation design.
 
 ## How EduEvidence Works
 
 ```text
 ┌─────────────────────────────────────┐
 │            EduEvidence              │
-│  教育领域知识 + 决策 + 干预 + 评价   │
+│  education knowledge + decision +   │
+│  intervention + evaluation          │
 └────────────────┬────────────────────┘
                  │
 ┌────────────────▼────────────────────┐
@@ -178,182 +164,184 @@ EduEvidence 执行：
  Execution Mode      Enhanced Mode
 ```
 
-完整工作流（9 步）：
+The 9-step workflow:
 
 ```text
-1. Frame          构建 EducationResearchFrame
-2. Retrieve       文献与证据检索（支持证据 + 独立反方证据）
-3. Extract        抽取 Claim-Level Evidence（绑定 Outcome）
-4. Challenge      Skeptic 反证协议（固定 9 项检查）
-5. Audit          Method Reviewer 方法学审查（15 项清单）
-6. Adjudicate     Evidence Tribunal 证据裁决（Evidence Matrix + Verdict）
-7. Applicability  适用性分析
-8. Intervene      Teaching Intervention 设计（最小可验证试点）
-9. Evaluate       Evaluation Plan 设计
+1. Frame          Build the EducationResearchFrame
+2. Retrieve       Retrieve literature & evidence (support + independent counter-evidence)
+3. Extract        Extract claim-level evidence (bound to outcomes)
+4. Challenge      Skeptic protocol (fixed 9 checks)
+5. Audit          Method Reviewer audit (15-item checklist)
+6. Adjudicate     Evidence Tribunal (Evidence Matrix + Verdict)
+7. Applicability  Applicability analysis
+8. Intervene      Teaching Intervention design (minimum viable pilot)
+9. Evaluate       Evaluation Plan design
 ```
 
-每一步产出经过 JSON Schema 校验（`schemas/`），确定性逻辑由 `scripts/` 提供，教育方法论在 `references/` 中独立成文。
+Every step is validated against JSON Schemas (`schemas/`), deterministic logic lives in `scripts/`, and the education methodology is documented independently in `references/`.
 
 ## Outcome Separation
 
-EduEvidence 强制区分 20 类 Outcome（`references/outcome-taxonomy.md`）：
+EduEvidence enforces 20 outcome types (`references/outcome-taxonomy.md`):
 
 ```text
-学习效果:   Knowledge Gain / Concept Understanding / Retention / Transfer / Independent Problem Solving
-任务表现:   Completion Time / Accuracy / Code Quality / Assignment Score
-学习过程:   Engagement / Motivation / Cognitive Load / Help-Seeking / Metacognition
-风险指标:   AI Dependency / Over-reliance / Reduced Effort / Reduced Transfer / Academic Integrity Risk / False Confidence
+Learning:    Knowledge Gain / Concept Understanding / Retention / Transfer / Independent Problem Solving
+Task:        Completion Time / Accuracy / Code Quality / Assignment Score
+Process:     Engagement / Motivation / Cognitive Load / Help-Seeking / Metacognition
+Risk:        AI Dependency / Over-reliance / Reduced Effort / Reduced Transfer / Academic Integrity Risk / False Confidence
 ```
 
-主 Demo 的高光点正是这种区分：Kazemitabaar et al. (CHI 2023) 中 AI 代码助手使任务完成率提升 1.15×、得分提升 1.8×，但一周后的保持测试差异不显著——**任务表现 ≠ 学习效果**。
+The demo's highlight: in Kazemitabaar et al. (CHI 2023), the AI code assistant raised task completion by 1.15× and correctness by 1.8×, but the one-week retention test showed no significant difference — **task performance ≠ learning**.
 
 ## Evidence Tribunal
 
-`references/tribunal-policy.md` 定义了裁决规则：输入 Frame + Evidence Matrix + Skeptic Findings + Method Reviews，输出 EducationVerdict（`schemas/verdict.schema.json`），包括：
+`references/tribunal-policy.md` defines the adjudication rules: input = Frame + Evidence Matrix + Skeptic Findings + Method Reviews; output = EducationVerdict (`schemas/verdict.schema.json`), including:
 
 - supported / uncertain / contradicted claims
-- 冲突来源分析（样本 / 测量 / 课程 / 工具 / 实验设计）
-- Can Claim / Cannot Claim 边界
-- 四态决策 + Confidence（规则化计算，不由模型自由生成）
+- conflict-source analysis (sample / measurement / course / tool / design)
+- Can Claim / Cannot Claim boundaries
+- four-state decision + Confidence (rule-based, not model-generated freely)
 
 ![Evidence Tribunal Workflow](assets/tribunal-workflow.jpg)
 
 ## From Evidence to Action
 
-证据必须连接到真实教学现场（`references/applicability-policy.md`、`intervention-design.md`、`evaluation-design.md`）：
+Evidence must connect to the real classroom (`references/applicability-policy.md`, `intervention-design.md`, `evaluation-design.md`):
 
-- **Applicability**：For whom? For which course? For which outcome? Under what conditions? With what AI usage policy?
-- **Intervention**：永远是"最小可验证试点"，禁止直接全面部署；含 AI 使用规则、教师/学生角色、反思要求、停止条件。
-- **Evaluation**：任何 PILOT/ADOPT 建议必须附评价方案；区分基线/后测/保持测试/迁移测试；区分任务表现指标与学习指标。
+- **Applicability**: For whom? For which course? For which outcome? Under what conditions? With what AI usage policy?
+- **Intervention**: always a "minimum viable pilot", never direct full deployment; includes AI usage rules, teacher/student roles, reflection requirements, and stop conditions.
+- **Evaluation**: every PILOT/ADOPT recommendation must come with an evaluation plan; distinguishes baseline / post-test / retention / transfer, and task-performance vs learning metrics.
 
 ## Benchmark
 
-第一版 30 个教育研究问题（`benchmarks/questions.jsonl`），S×10 / M×10 / L×10；其中 15 题为主域"高校 AI 辅助教学"，10 题含人工金标注（`benchmarks/annotations/`）。
+30 education research questions in v1 (`benchmarks/questions.jsonl`), S×10 / M×10 / L×10; 15 in the core domain "AI-assisted university teaching", 10 with human gold annotations (`benchmarks/annotations/`).
 
-基线设计：
+Baseline design:
 
 ```text
 B0 Direct LLM
 B1 Search + LLM
 B2 Standard Research Agent
-B3 EduEvidence Single-Agent     ← 证明教育方法论价值（B2 vs B3）
-B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
+B3 EduEvidence Single-Agent     ← demonstrates the value of the education methodology (B2 vs B3)
+B4 EduEvidence + Agent MCP      ← demonstrates the value of multi-agent enhancement (B3 vs B4)
 ```
 
-核心指标：Citation Support Precision / Unsupported Claim Rate / Contradiction Discovery Rate / Outcome Separation Accuracy / Scope Calibration / Intervention Evidence Alignment。详见 `docs/benchmark.md`。
+Key metrics: Citation Support Precision / Unsupported Claim Rate / Contradiction Discovery Rate / Outcome Separation Accuracy / Scope Calibration / Intervention Evidence Alignment. See `docs/benchmark.md`.
 
-> ⚠️ 当前 `benchmarks/results/` 为 **harness validation（deterministic simulation）**，仅证明评测框架可运行，不是真实模型性能。真实 B2 vs B3 实证运行结果上线前不会用于效果宣称。
+> ⚠️ `benchmarks/results/` is currently **harness validation (deterministic simulation)** — it proves the evaluation framework runs, not real model performance. No effectiveness claims will be made until real B2 vs B3 empirical runs are published.
 
 ## Example: AI Coding Assistant
 
-> **大学一年级 C 语言课程是否应该允许学生使用生成式 AI 编程助手？**
+> **Should first-year C programming students be allowed to use generative AI coding assistants?**
 
-`examples/ai-coding-assistant/` 完整展示了从问题到决策的全过程：
+`examples/ai-coding-assistant/` shows the full path from question to decision:
 
-- **证据**（7 条，均绑定真实来源）：任务表现提升（Kazemitabaar 2023）、无护栏访问损害独立考试表现 -17%（Bastani 2025, PNAS）、护栏设计消除负效应（Bastani 2025）、形成性反馈写作证据（Marzuki 2024）。
-- **决策**：**PILOT** —— 任务表现证据强，但大学编程课程的直接学习效应证据缺失，无护栏风险已被证实。
-- **干预**：4 阶段试点（Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check）。
-- **评价**：无 AI 基线/后测/期末考试保持/无 AI 迁移任务 + AI 依赖风险指标。
+- **Evidence** (7 items, all bound to real sources): task-performance gains (Kazemitabaar 2023), unguarded access harming independent exam performance by −17% (Bastani 2025, PNAS), guardrails eliminating the negative effect (Bastani 2025), formative-feedback writing evidence (Marzuki 2024).
+- **Decision**: **PILOT** — task-performance evidence is strong, but direct learning-effect evidence for university programming courses is missing, and the unguarded-access risk is documented.
+- **Intervention**: 4-phase pilot (Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check).
+- **Evaluation**: no-AI baseline / post-test / final-exam retention / no-AI transfer task + AI-dependency risk metrics.
 
-另外两个示例：AI 写作助手（`examples/ai-writing-assistant/`）、高数 AI Tutor（`examples/ai-tutor/`）——证明 Skill 不是为一个问题写死。
+Two more examples — AI writing assistant (`examples/ai-writing-assistant/`) and a calculus AI tutor (`examples/ai-tutor/`) — show the skill is not hard-coded to one question.
 
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
-研究完成后，`result.json` 通过确定性适配器渲染为三套可视化产物（全部零第三方依赖，单文件离线可打开）：
+After research completes, `result.json` is rendered into three visualization outputs by deterministic adapters (all zero third-party dependencies, single-file offline):
 
 ```text
-result.json + result.zh.json（中文平行数据）
-  ├─ build_charts.py        → chart_specs.json（ECharts 规格：结果概览/主张追溯/基准）
-  ├─ build_infographics.py  → infographics.json（4 张 AntV 风格 SVG：EvidenceFlow/裁决/干预/评价）
-  ├─ build_figures.py       → figures/（出版级学术图：figure_data.json + SVG/PNG/PDF）
-  └─ build_report.py        → EduEvidence_Report.html（单文件双语报告 + report_spec.json）
+result.json + result.zh.json (Chinese parallel data)
+  ├─ build_charts.py        → chart_specs.json (ECharts specs: outcome overview / claim trace / benchmark)
+  ├─ build_infographics.py  → infographics.json (4 AntV-style SVGs: EvidenceFlow / tribunal / intervention / evaluation)
+  ├─ build_figures.py       → figures/ (publication figures: figure_data.json + SVG/PNG/PDF)
+  └─ build_report.py        → EduEvidence_Report.html (single-file bilingual report + report_spec.json)
 ```
 
-**EduEvidence_Report.html（主产物）**：
+**EduEvidence_Report.html (main deliverable)**:
 
-- **双语切换**：默认中文，顶部一键切换 EN；中文模式下证据、主张、方法学审计、干预与评价全部为中文，数据同构（`result.zh.json` 与 `result.json` 键/数字/ID/URL 一致，由 AI 直接产出双语数据而非机器翻译）。
-- **执行摘要叙事**：第一屏"一句话结论"——问题 → 依据（支持/反驳证据）→ 行动（决策+置信度+理由）；每个 Section 顶部有"本节回答：…"导读行。
-- **双层分页**：可视化摘要（Visual Brief）+ 完整报告（Full Report，AI 规划 5–7 章动态结构，非固定模板）。
-- **五种风格（生成时选择，HTML 内不提供切换）**：claude [Light] / academic [Light] / datalab [Light] / datalab-dark [Dark] / presentation [Dark]，同一数据仅呈现方式不同。
-- **静态优先**：无 JS 也可读（决策/矩阵/裁决/干预/来源）；ECharts 可用时增强交互；表格横向滚动防溢出。
-- **完整性门**：图表数字与 result.json 逐项核对，`REPORT_INVALID` 时禁止发布。
+- **Bilingual switch**: Chinese by default, one click to EN; in Chinese mode the evidence, claims, methodology audit, intervention and evaluation are all in Chinese. Data is isomorphic (`result.zh.json` and `result.json` share keys/numbers/IDs/URLs — bilingual data produced directly by AI, not machine translation).
+- **Executive summary narrative**: the first screen shows a "bottom line" — question → evidence (support/contradict) → action (decision + confidence + rationale); every section opens with a "What this section answers:" lead line.
+- **Two-page layout**: Visual Brief + Full Report (AI-planned 5–7 dynamic chapters, not a fixed template).
+- **Five styles (chosen at generation time, no in-HTML switcher)**: claude [Light] / academic [Light] / datalab [Light] / datalab-dark [Dark] / presentation [Dark] — same data, different presentation only.
+- **Static-first**: fully readable without JS (decision / matrix / tribunal / intervention / sources); ECharts enhances when available; tables scroll horizontally instead of overflowing.
+- **Integrity gate**: chart numbers are checked against result.json item by item; publishing is blocked with `REPORT_INVALID` on mismatch.
 
-> 示例产物直接打开：`examples/ai-coding-assistant/EduEvidence_Report.html`
+> Open the example directly: `examples/ai-coding-assistant/EduEvidence_Report.html`
 
 ## Architecture
 
-仓库是一个完整的 **Skill 包**：`SKILL.md` 是入口，其余目录按"Skill 运行必需 → 质量保障 → 演示"分层。详见 [`docs/architecture.md`](docs/architecture.md)：
+The repository is a complete **Skill package**: `SKILL.md` is the entry point; everything else is layered as *skill core → quality assurance → demos*. See [`docs/architecture.md`](docs/architecture.md):
 
 ```text
-EduEvidence/  （= 一个 Skill 包）
+EduEvidence/  (= one Skill package)
 │
-├─ SKILL.md                  ← Skill 入口：When to Use / Inputs / 10 步 Workflow / 输出契约
+├─ SKILL.md                  ← Skill entry: When to Use / Inputs / 10-step Workflow / Output Contract
 │
-├─ Skill 本体（运行必需）
-│  ├─ skill/agents/          8 个角色协议（Planner / Retriever / Analyst / Skeptic /
-│  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer）
-│  ├─ references/            9 个教育方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计…）
-│  ├─ schemas/               13 个 JSON Schema 数据契约（每步输出的校验门）
-│  ├─ scripts/               17 个确定性逻辑脚本（评分 / 矩阵 / 审计 / 置信度 / Orchestrator / 启动探测）
-│  ├─ retrieval/             检索与抓取层（fetch / validate / dedupe / failures）
-│  ├─ integrations/          Agent MCP 增强层 + Smart Web Fetch 集成
-│  └─ visualization/         结果呈现层（ECharts / 信息图 / 学术图 / 双语 HTML Composer）
+├─ Skill core (required to run)
+│  ├─ skill/agents/          8 role protocols (Planner / Retriever / Analyst / Skeptic /
+│  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer)
+│  ├─ references/            9 education methodology documents (evidence quality / skeptic /
+│  │                         tribunal policy / intervention design…)
+│  ├─ schemas/               13 JSON Schema data contracts (validation gates per step)
+│  ├─ scripts/               17 deterministic logic scripts (scoring / matrix / audit / confidence / orchestrator / startup probe)
+│  ├─ retrieval/             Search & fetch layer (fetch / validate / dedupe / failures)
+│  ├─ integrations/          Agent MCP enhancement layer + Smart Web Fetch integration
+│  └─ visualization/         Presentation layer (ECharts / infographics / academic figures / bilingual HTML composer)
 │
-├─ 质量保障
-│  ├─ tests/                 pytest 测试矩阵（50 个用例）
-│  └─ benchmarks/            30 题 + 10 题金标注 + B0–B4 评测框架
+├─ Quality assurance
+│  ├─ tests/                 pytest test matrix (50 cases)
+│  └─ benchmarks/            30 questions + 10 gold annotations + B0–B4 evaluation framework
 │
-└─ 演示与分发
-   ├─ examples/              3 个完整 Research & Decision Pack（含双语 HTML 报告）
-   ├─ docs/                  架构 / 方法论 / Benchmark / Demo / 复现指南
-   ├─ install.sh             一键安装（本地 / 多 Agent Skill）+ 自检
-   ├─ pyproject.toml         打包元数据（核心零第三方依赖）
-   └─ README(.en).md         双语说明
+└─ Demos & distribution
+   ├─ examples/              3 complete Research & Decision Packs (incl. bilingual HTML reports)
+   ├─ docs/                  architecture / methodology / benchmark / demo / reproducibility
+   ├─ install.sh             one-click install (local / multi-agent Skill) + self-check
+   ├─ pyproject.toml         packaging metadata (core has zero third-party deps)
+   └─ README(.en).md         bilingual docs
 ```
 
-> Skill 包设计原则：**运行所需的最小集是 `SKILL.md + skill/ + references/ + schemas/ + scripts/`**；`retrieval/`、`integrations/`、`visualization/` 是让 Skill 真正"可运行、可呈现"的执行层；`tests/`、`benchmarks/`、`examples/`、`docs/` 是可信度与上手保障，不影响 Skill 本体。
+> Skill-package principle: the **minimal runtime set is `SKILL.md + skill/ + references/ + schemas/ + scripts/`**; `retrieval/`, `integrations/`, `visualization/` are the execution/presentation layers that make the Skill actually runnable; `tests/`, `benchmarks/`, `examples/`, `docs/` provide credibility and onboarding — none of them affect the Skill body itself.
 
 ### SCP / Platform Native Mode
 
-EduEvidence 可完全脱离 Agent MCP 独立运行（无需任何外部服务）：
+EduEvidence runs fully standalone without Agent MCP (no external service required):
 
-- 不依赖本地 daemon
-- 不依赖某一个 CLI
-- 不依赖 Agent MCP
-- SKILL.md 可单独理解，核心工作流可完整执行
-- 所有 Schema / 方法 / 输出契约独立存在
+- No local daemon
+- No dependency on any single CLI
+- No Agent MCP dependency
+- SKILL.md is self-contained; the core workflow runs end to end
+- All schemas / methods / output contracts exist independently
 
 ### Agent MCP Enhanced Mode
 
-Agent MCP 是**性能与可靠性增强层，不是 EduEvidence 成立的前提**（`docs/methodology.md` 的 Complexity Gate）：
+Agent MCP is a **performance & reliability enhancement layer, not a prerequisite** (Complexity Gate in `docs/methodology.md`):
 
-- S 级任务：单 Agent 直接执行，0 spawn
-- M 级任务：Primary Analysis + Independent Check
-- L 级任务：8 角色工作流（Planner / Retriever / Analyst / Skeptic / Method Reviewer / Judge / Intervention Designer / Evaluation Designer）
+- S-level tasks: single agent, 0 spawns
+- M-level tasks: Primary Analysis + Independent Check
+- L-level tasks: 8-role workflow (Planner / Retriever / Analyst / Skeptic / Method Reviewer / Judge / Intervention Designer / Evaluation Designer)
 
-> 角色数量 ≠ 必须启动的 Agent 数量。Platform Native Mode 由单 Agent 串行执行角色协议。
+> Number of roles ≠ number of agents that must be launched. Platform Native Mode runs the role protocols sequentially in a single agent.
 
-> 🔒 Agent MCP 原则：**Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** 未经用户确认不得 spawn；用户拒绝则回退 Native。
+> 🔒 Agent MCP principle: **Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** No spawn without user approval; reject → fall back to Native.
 
 ![Controlled Multi-Agent Research](assets/multi-agent-research.jpg)
+
 
 ## Usage
 
 ```bash
-# 1. 验证数据符合 Schema 契约
+# 1. Validate data against the schema contracts
 python3 scripts/validate_schema.py --schema schemas/evidence.schema.json \
     --data examples/ai-coding-assistant/evidence.jsonl
 
-# 2. 计算证据质量分与 Confidence
+# 2. Compute evidence quality scores and Confidence
 python3 scripts/evidence_score.py examples/ai-coding-assistant/evidence.jsonl
 
-# 3. 生成 Evidence Matrix（主产品界面之一）
+# 3. Generate the Evidence Matrix (one of the core views)
 python3 scripts/evidence_matrix.py examples/ai-coding-assistant/evidence.jsonl
 
-# 4. 运行 Citation Audit（Claim-证据追溯）
+# 4. Run the Citation Audit (claim-evidence traceability)
 python3 scripts/claim_audit.py --claims claims.jsonl --evidence evidence.jsonl
 
-# 5. 渲染 Research & Decision Pack（Markdown）
+# 5. Render the Research & Decision Pack (Markdown)
 python3 scripts/render_report.py \
     --frame examples/ai-coding-assistant/frame.json \
     --evidence examples/ai-coding-assistant/evidence.jsonl \
@@ -363,34 +351,33 @@ python3 scripts/render_report.py \
     --evaluation examples/ai-coding-assistant/evaluation.json \
     --out REPORT.md
 
-# 6. 渲染单文件双语 HTML 报告（主产物）
+# 6. Render the single-file bilingual HTML report (main deliverable)
 python3 visualization/eduevidence-report/scripts/build_report.py \
     --result examples/ai-coding-assistant/result.json \
     --out examples/ai-coding-assistant/EduEvidence_Report.html
 
-# 7. 校验 Benchmark 题目集
+# 7. Validate the benchmark question set
 python3 scripts/benchmark.py --questions benchmarks/questions.jsonl
 
-# 8. 运行测试
+# 8. Run the tests
 pytest
 ```
 
-> 真实使用中，Skill 由 Agent 读取 SKILL.md 执行 9 步工作流；`scripts/` 保证结构化数据的确定性校验，`visualization/` 保证展示层的确定性渲染，`examples/` 是完整运行示例。
+> In real use, the Skill is executed by an agent that reads SKILL.md and runs the 9-step workflow; `scripts/` guarantees deterministic validation of structured data, `visualization/` guarantees deterministic rendering, and `examples/` are complete runnable packs.
 
 ## Methodology
 
-- 教育证据质量框架：五维 0–2 分（D1 研究设计 / D2 样本质量 / D3 测量效度 / D4 时间强度 / D5 直接性），总分 0–10（`references/evidence-quality.md`）。
-- 方法学审查 15 项清单，最高优先级规则：**任务完成表现不能自动等价为学习效果**（`references/methodology-audit.md`）。
-- Confidence 规则化计算：`Evidence Quality + Consistency + Directness + Evidence Count - Conflict Penalty - Unsupported Penalty` → High / Moderate / Low / Insufficient（`scripts/evidence_score.py`）。
-- 失败处理：INSUFFICIENT_SOURCES / UNSUPPORTED_CLAIM / CONFLICT_UNRESOLVED / SCOPE_MISMATCH / METHODOLOGY_TOO_WEAK / NEEDS_USER_CONTEXT / TOOL_FAILURE —— 失败时禁止强行生成高确定性建议。
+- Education evidence quality framework: five dimensions, 0–2 each (D1 study design / D2 sample quality / D3 measurement validity / D4 temporal strength / D5 directness), total 0–10 (`references/evidence-quality.md`).
+- 15-item methodology audit; top-priority rule: **task performance must not be equated with learning** (`references/methodology-audit.md`).
+- Rule-based Confidence: `Evidence Quality + Consistency + Directness + Evidence Count − Conflict Penalty − Unsupported Penalty` → High / Moderate / Low / Insufficient (`scripts/evidence_score.py`).
+- Failure handling: INSUFFICIENT_SOURCES / UNSUPPORTED_CLAIM / CONFLICT_UNRESOLVED / SCOPE_MISMATCH / METHODOLOGY_TOO_WEAK / NEEDS_USER_CONTEXT / TOOL_FAILURE — on failure, high-confidence recommendations are never forced.
 
 ## Limitations
 
-- 第一版冻结垂直场景：**高校 AI 辅助教学**；翻转课堂、项目式学习等第二阶段扩展。
-- Benchmark 基于真实文献的可检索证据；模型实际运行结果需按 `docs/benchmark.md` 的 B0–B4 基线采集。
-- 搜索与抽取依赖可用检索资源；`TOOL_FAILURE` 时不编造来源。
-- EduEvidence 是教学决策辅助，**不代替教师或学校最终决策**；涉及高风险评价、学生处分、个体心理判断、学生重大教育机会时不自动决策。
+- The benchmark is based on retrievable evidence from real literature; actual model runs must be collected per the B0–B4 baselines in `docs/benchmark.md`.
+- Search and extraction depend on available retrieval resources; `TOOL_FAILURE` never fabricates sources.
+- EduEvidence assists teaching decisions — **it does not replace the final decision of teachers or institutions**; it never auto-decides on high-stakes assessment, student discipline, individual psychological judgments, or major student educational opportunities.
 
 ## License
 
-MIT — 见 [LICENSE](LICENSE)。
+MIT — see [LICENSE](LICENSE).
