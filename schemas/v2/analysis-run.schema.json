@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/analysis-run.schema.json",
+  "title": "AnalysisRun",
+  "description": "One auditable analysis execution. Advanced results enter only with explicit provider/software/parameter provenance; Native Core never fabricates p-values or effect estimates it cannot compute.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "analysis_run_id", "analysis_plan_id", "dataset_ids", "status",
+    "outputs", "assumption_checks", "created_at", "extensions"
+  ],
+  "properties": {
+    "analysis_run_id": { "type": "string", "pattern": "^ANL-" },
+    "analysis_plan_id": { "type": "string", "pattern": "^APL-" },
+    "dataset_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^DAT-" },
+      "uniqueItems": true
+    },
+    "status": { "type": "string", "enum": ["completed", "failed", "capability_unavailable"] },
+    "outputs": { "type": "object" },
+    "assumption_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["check", "result"]
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object" }
+  }
+}
