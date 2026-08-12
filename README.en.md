@@ -37,7 +37,7 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 
 ## Install as a Skill (for AI Agent users)
 
-> EduEvidence itself is an **AI Agent Skill** (`SKILL.md` + `skill/agents/` + `references/` + `schemas/` + `scripts/`).
+> EduEvidence itself is an **AI Agent Skill** (`SKILL.md` + `skill/agents/` + `references/` + `schemas/` + `scripts/` + `visualization/`).
 > Once installed, your host agent (Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …) can auto-load this Skill when it receives teaching-decision questions.
 
 ```bash
@@ -72,7 +72,8 @@ Your agent is not in the list? Paste the following prompt **verbatim** into any 
 
 ```text
 Please install EduEvidence from https://github.com/37chengshan/eduevidence as a skill:
-1. Copy SKILL.md, skill/, references/, schemas/, scripts/ from the repo root into your
+1. Copy SKILL.md, skill/, references/, schemas/, scripts/, visualization/ from the repo root into your
+   (visualization/ is the HTML renderer with 5 themes — the final report depends on it)
    skill directory (e.g. ~/.claude/skills/eduevidence/, ~/.omp/agent/skills/eduevidence/,
    ~/.agents/skills/eduevidence/), or import it via your skill loading mechanism;
 2. After install, confirm you can read SKILL.md and run the deterministic scripts under scripts/;
