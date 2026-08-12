@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/analysis-plan.schema.json",
+  "title": "AnalysisPlan",
+  "description": "Separately versioned analysis plan owning design_id (the StudyDesign does NOT reference the plan, avoiding a circular Design↔AnalysisPlan reference).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "analysis_plan_id", "design_id", "primary_analysis",
+    "secondary_analyses", "assumption_checks", "preregistered",
+    "created_at", "extensions"
+  ],
+  "properties": {
+    "analysis_plan_id": { "type": "string", "pattern": "^APL-" },
+    "design_id": { "type": "string", "pattern": "^DSN-" },
+    "primary_analysis": { "type": "string", "minLength": 1 },
+    "secondary_analyses": { "type": "array", "items": { "type": "string" } },
+    "assumption_checks": { "type": "array", "items": { "type": "string" } },
+    "preregistered": { "type": "boolean" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object" }
+  }
+}

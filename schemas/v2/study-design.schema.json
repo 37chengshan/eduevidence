@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/study-design.schema.json",
+  "title": "StudyDesign",
+  "description": "An evidence-grounded study design plan. A StudyDesign can only be created from one or more explicit KnowledgeGap entities. Carries analysis_requirements[] but NOT analysis_plan_id — the separately versioned AnalysisPlan owns design_id, avoiding a circular reference. EduEvidence flags human-subject ethics fields but never claims ethics approval.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "design_id", "gap_ids", "research_question", "design_type",
+    "population", "sampling_plan", "intervention", "comparison",
+    "outcomes", "measures", "timepoints", "assignment_strategy",
+    "confounder_plan", "analysis_requirements", "success_criteria",
+    "stop_conditions", "ethics_flags", "preregistration_fields",
+    "derived_from_graph_revision", "created_at", "extensions"
+  ],
+  "properties": {
+    "design_id": { "type": "string", "pattern": "^DSN-" },
+    "gap_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^GAP-" },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "research_question": { "type": "string", "minLength": 1 },
+    "design_type": {
+      "type": "string",
+      "enum": ["rct", "cluster_rct", "quasi_experimental", "pre_post",
+               "observational", "survey", "qualitative", "mixed_methods"]
+    },
+    "population": { "type": "string", "minLength": 1 },
+    "sampling_plan": { "type": "string", "minLength": 1 },
+    "intervention": { "type": ["string", "null"] },
+    "comparison": { "type": ["string", "null"] },
+    "outcomes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "measures": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "timepoints": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "assignment_strategy": { "type": "string", "minLength": 1 },
+    "confounder_plan": { "type": "string" },
+    "analysis_requirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "success_criteria": { "type": "array", "items": { "type": "string" } },
+    "stop_conditions": { "type": "array", "items": { "type": "string" } },
+    "ethics_flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_subjects", "sensitive_data", "minors_involved",
+        "consent_status", "ethics_review_required", "deidentification_required"
+      ],
+      "properties": {
+        "human_subjects": { "type": "boolean" },
+        "sensitive_data": { "type": "boolean" },
+        "minors_involved": { "type": "boolean" },
+        "consent_status": { "type": "string", "enum": ["obtained", "pending", "not_required", "unknown"] },
+        "ethics_review_required": { "type": "boolean" },
+        "deidentification_required": { "type": "boolean" },
+        "extensions": { "type": "object" }
+      }
+    },
+    "preregistration_fields": { "type": "object" },
+    "derived_from_graph_revision": { "type": "integer", "minimum": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object" }
+  }
+}
