@@ -38,7 +38,7 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 
 ## 安装为 Skill（AI Agent 用户）
 
-> EduEvidence 本体是一个 **AI Agent Skill**（SKILL.md + skill/agents/ + references/ + schemas/ + scripts/）。
+> EduEvidence 本体是一个 **AI Agent Skill**（SKILL.md + skill/agents/ + references/ + schemas/ + scripts/ + retrieval/ + integrations/ + visualization/）。
 > 安装后，你的宿主 Agent（Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …）就能在收到教学决策类问题时自动装载本 Skill。
 
 ```bash
@@ -73,8 +73,8 @@ bash install.sh --skill --dry-run    # 只预览将执行的变更，不写入
 
 ```text
 请把 https://github.com/37chengshan/eduevidence 仓库中的 EduEvidence 安装为 skill：
-1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/、visualization/ 复制到你的 skill 目录
-   （visualization/ 是 HTML 渲染器与 5 主题，最终报告依赖它）
+1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/、retrieval/、integrations/、visualization/ 复制到你的 skill 目录
+   （retrieval/ 与 integrations/ 是确定性运行依赖；visualization/ 是 HTML 渲染器与 5 主题）
    （如 ~/.claude/skills/eduevidence/、~/.omp/agent/skills/eduevidence/、~/.agents/skills/eduevidence/ 等），
    或按你的 skill 装载机制导入；
 2. 安装完成后确认能读取 SKILL.md，并能运行 scripts/ 下的确定性脚本；
