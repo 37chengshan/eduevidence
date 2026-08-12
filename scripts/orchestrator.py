@@ -718,7 +718,7 @@ def _print_status(ws: RunWorkspace) -> None:
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
-    ws = init_run(args.runs_dir, args.question, depth=args.depth, run_id=args.run_id,
+    ws = init_run(Path(args.runs_dir), args.question, depth=args.depth, run_id=args.run_id,
                   approve_agent_mcp=args.approve_agent_mcp)
     print(f"workspace created: {ws.path}")
     print(f"manifest: {json.dumps(ws.load_manifest(), ensure_ascii=False, indent=2)}")
@@ -733,7 +733,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
 
 
 def _cmd_resume(args: argparse.Namespace) -> int:
-    ws = RunWorkspace(args.runs_dir, args.run_id)
+    ws = RunWorkspace(Path(args.runs_dir), args.run_id)
     if not ws.exists():
         print(f"ERROR: no run {args.run_id} under {args.runs_dir}", file=sys.stderr)
         return 2
@@ -743,7 +743,7 @@ def _cmd_resume(args: argparse.Namespace) -> int:
 
 
 def _cmd_status(args: argparse.Namespace) -> int:
-    ws = RunWorkspace(args.runs_dir, args.run_id)
+    ws = RunWorkspace(Path(args.runs_dir), args.run_id)
     if not ws.exists():
         print(f"ERROR: no run {args.run_id} under {args.runs_dir}", file=sys.stderr)
         return 2
@@ -768,7 +768,7 @@ def _cmd_list(args: argparse.Namespace) -> int:
 
 
 def _cmd_gate(args: argparse.Namespace) -> int:
-    ws = RunWorkspace(args.runs_dir, args.run_id)
+    ws = RunWorkspace(Path(args.runs_dir), args.run_id)
     if not ws.exists():
         print(f"ERROR: no run {args.run_id} under {args.runs_dir}", file=sys.stderr)
         return 2
@@ -781,6 +781,186 @@ def main_gate(argv: list[str] | None = None) -> int:
     """Re-export of the Pre-Verdict Gate CLI (used by `eduevidence gate`)."""
     from pre_verdict_gate import main as gate_main
     return gate_main(argv)
+
+
+# ---- V2 command handlers --------------------------------------------------
+
+def _home(args) -> "object":
+    from engine.paths import resolve_home
+    return resolve_home(getattr(args, "home", None))
+
+
+def _cmd_project(args) -> int:
+    from engine.project import ProjectWorkspace
+    home = _home(args)
+    if args.action == "create":
+        if not args.question:
+            print("project create requires --question", file=sys.stderr)
+            return 2
+        ws = ProjectWorkspace.create(
+            home, question=args.question, title=args.title or args.question,
+            research_mode=args.mode)
+        print(ws.project_id)
+        return 0
+    if args.action == "list":
+        projects_dir = home / "projects"
+        if not projects_dir.is_dir():
+            return 0
+        for p in sorted(projects_dir.iterdir()):
+            manifest = p / "project.json"
+            if manifest.is_file():
+                import json
+                m = json.loads(manifest.read_text(encoding="utf-8"))
+                print(f"{m['project_id']}\t{m['status']}\trev {m['graph_revision']}\t{m['question'][:60]}")
+        return 0
+    # status
+    ws = ProjectWorkspace.open(home, args.project)
+    m = ws.manifest()
+    print(f"project: {m['project_id']}")
+    print(f"mode: {m['research_mode']}  target: {m['decision_target']}")
+    print(f"status: {m['status']}  graph_revision: {m['graph_revision']}")
+    return 0
+
+
+def _cmd_research(args) -> int:
+    from engine.mode_router import recommend_mode
+    from engine.planner import build_research_plan
+    from engine.project import ProjectWorkspace
+    ws = ProjectWorkspace.open(_home(args), args.project)
+    if args.action == "plan":
+        intent = {
+            "decision_target": ws.manifest()["decision_target"],
+            "wants_existing_evidence": True,
+            "wants_study_design": ws.manifest()["research_mode"] == "full_research_cycle",
+            "has_user_data": False,
+            "wants_data_analysis": False,
+            "wants_decision_update": False,
+        }
+        rec = recommend_mode(intent, project_has_grounding=ws.current_revision() > 0)
+        plan = build_research_plan(
+            mode=rec.mode, decision_target=ws.manifest()["decision_target"],
+            depth="standard", has_grounding=ws.current_revision() > 0,
+            has_dataset=False)
+        print(f"mode: {rec.mode}")
+        for step in plan:
+            print(f"  {step.kind:10s} {step.capability_id or step.wait_state}")
+        return 0
+    # run/resume: create a Run record
+    from engine.run import start_run
+    run = start_run(ws, purpose="research run", capabilities=[],
+                    execution_backend="sequential_main_agent")
+    print(run["run_id"])
+    return 0
+
+
+def _cmd_graph(args) -> int:
+    from engine.graph_store import GraphStore
+    from engine.project import ProjectWorkspace
+    ws = ProjectWorkspace.open(_home(args), args.project)
+    store = GraphStore.create(ws)
+    problems = store.validate()
+    if problems:
+        for p in problems:
+            print(p, file=sys.stderr)
+        return 1
+    print(f"graph valid at revision {store.active_revision()}")
+    return 0
+
+
+def _cmd_study(args) -> int:
+    from engine.study_design import validate_design_grounding
+    from engine.project import ProjectWorkspace
+    from engine.ids import new_local_id
+    ws = ProjectWorkspace.open(_home(args), args.project)
+    design = {
+        "design_id": new_local_id("DSN", set()),
+        "gap_ids": args.gap,
+        "research_question": "grounded study",
+        "design_type": "rct",
+        "population": "", "sampling_plan": "", "intervention": None,
+        "comparison": None, "outcomes": [], "measures": [],
+        "timepoints": [], "assignment_strategy": "", "confounder_plan": "",
+        "analysis_requirements": [], "success_criteria": [],
+        "stop_conditions": [],
+        "ethics_flags": {"human_subjects": True, "sensitive_data": False,
+                         "minors_involved": False, "consent_status": "unknown",
+                         "ethics_review_required": True,
+                         "deidentification_required": False},
+        "preregistration_fields": {},
+        "derived_from_graph_revision": ws.current_revision(),
+        "created_at": __import__("datetime").datetime.now(
+            __import__("datetime").timezone.utc).isoformat(),
+        "extensions": {},
+    }
+    errors = validate_design_grounding(ws, design)
+    if errors:
+        for e in errors:
+            print(e, file=sys.stderr)
+        return 1
+    from engine.study_design import save_study_design
+    path = save_study_design(ws, design)
+    print(design["design_id"])
+    return 0
+
+
+def _cmd_data(args) -> int:
+    from engine.datasets import ingest_dataset
+    from engine.project import ProjectWorkspace
+    ws = ProjectWorkspace.open(_home(args), args.project)
+    asset = ingest_dataset(
+        ws, design_id=args.design, source_path=args.file,
+        privacy={"classification": args.privacy, "deidentification_status": "not_done",
+                 "consent_metadata": None})
+    print(asset["dataset_id"])
+    return 0
+
+
+def _cmd_analyze(args) -> int:
+    from engine.analysis import run_native_descriptive
+    from engine.project import ProjectWorkspace
+    import json
+    ws = ProjectWorkspace.open(_home(args), args.project)
+    plan_path = ws.path / "analyses" / f"{args.plan}.json"
+    if not plan_path.is_file():
+        print(f"plan not found: {plan_path}", file=sys.stderr)
+        return 1
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    run = run_native_descriptive(ws, plan)
+    print(json.dumps(run, ensure_ascii=False, indent=2))
+    return 0
+
+
+def _cmd_adjudicate(args) -> int:
+    from engine.graph_store import GraphStore
+    from engine.project import ProjectWorkspace
+    from engine.tribunal import adjudicate, save_decision_snapshot
+    ws = ProjectWorkspace.open(_home(args), args.project)
+    store = GraphStore.create(ws)
+    snap = adjudicate(store, project=ws)
+    path = save_decision_snapshot(ws, snap)
+    print(f"{snap['decision']} / {snap['confidence_label']} ({path})")
+    return 0
+
+
+def _cmd_report(args) -> int:
+    from engine.project import ProjectWorkspace
+    from engine.projections import build_v1_compat_result
+    ws = ProjectWorkspace.open(_home(args), args.project)
+    compat = build_v1_compat_result(ws)
+    out = ws.path / "projections" / f"report-rev-{ws.current_revision():06d}.json"
+    out.write_text(__import__("json").dumps(compat, ensure_ascii=False, indent=2) + "\n",
+                   encoding="utf-8")
+    print(out)
+    return 0
+
+
+def _cmd_migrate(args) -> int:
+    from engine.migration import migrate_v1_pack
+    result = migrate_v1_pack(args.pack, home=_home(args), title=args.title)
+    print(f"{result.project_id} rev {result.graph_revision}")
+    for w in result.warnings:
+        print(f"warning: {w}", file=sys.stderr)
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -823,6 +1003,70 @@ def main(argv: list[str] | None = None) -> int:
     p_gate.add_argument("--require-final", action="store_true")
     p_gate.add_argument("--runs-dir", default=str(ROOT / "runs"))
     p_gate.set_defaults(func=_cmd_gate)
+
+    # ---- V2 project-scoped commands ------------------------------------
+    p_proj_create = sub.add_parser("project", help="V2 project lifecycle")
+    p_proj_create.add_argument("action", choices=["create", "list", "status"])
+    p_proj_create.add_argument("--question", default=None, help="research question (create)")
+    p_proj_create.add_argument("--title", default=None, help="project title (create)")
+    p_proj_create.add_argument("--mode", default="evidence_review",
+                               choices=["evidence_review", "full_research_cycle"])
+    p_proj_create.add_argument("--project", default=None, help="project id (status)")
+    p_proj_create.add_argument("--home", default=None, help="EDUEVIDENCE_HOME override")
+    p_proj_create.set_defaults(func=_cmd_project)
+
+    p_research = sub.add_parser("research", help="V2 research planning/run")
+    p_research.add_argument("action", choices=["plan", "run", "resume"])
+    p_research.add_argument("--project", required=True)
+    p_research.add_argument("--home", default=None)
+    p_research.set_defaults(func=_cmd_research)
+
+    p_graph = sub.add_parser("graph", help="V2 graph validation")
+    p_graph.add_argument("action", choices=["validate"])
+    p_graph.add_argument("--project", required=True)
+    p_graph.add_argument("--home", default=None)
+    p_graph.set_defaults(func=_cmd_graph)
+
+    p_study = sub.add_parser("study", help="V2 study design (grounded)")
+    p_study.add_argument("action", choices=["design"])
+    p_study.add_argument("--project", required=True)
+    p_study.add_argument("--gap", action="append", default=[], help="GAP-xxx ids")
+    p_study.add_argument("--home", default=None)
+    p_study.set_defaults(func=_cmd_study)
+
+    p_data = sub.add_parser("data", help="V2 dataset ingest")
+    p_data.add_argument("action", choices=["ingest"])
+    p_data.add_argument("--project", required=True)
+    p_data.add_argument("--design", required=True)
+    p_data.add_argument("--file", required=True, type=Path)
+    p_data.add_argument("--privacy", default="internal",
+                        choices=["public", "internal", "confidential", "restricted"])
+    p_data.add_argument("--home", default=None)
+    p_data.set_defaults(func=_cmd_data)
+
+    p_analyze = sub.add_parser("analyze", help="V2 analysis (native descriptive)")
+    p_analyze.add_argument("--project", required=True)
+    p_analyze.add_argument("--plan", required=True)
+    p_analyze.add_argument("--home", default=None)
+    p_analyze.set_defaults(func=_cmd_analyze)
+
+    p_adjudicate = sub.add_parser("adjudicate", help="V2 tribunal over current graph")
+    p_adjudicate.add_argument("--project", required=True)
+    p_adjudicate.add_argument("--home", default=None)
+    p_adjudicate.set_defaults(func=_cmd_adjudicate)
+
+    p_report = sub.add_parser("report", help="V2 projection/report")
+    p_report.add_argument("--project", required=True)
+    p_report.add_argument("--theme", default="claude",
+                          choices=["claude", "academic", "datalab", "datalab-dark", "presentation"])
+    p_report.add_argument("--home", default=None)
+    p_report.set_defaults(func=_cmd_report)
+
+    p_migrate = sub.add_parser("migrate-v1", help="import a V1 pack into a V2 project")
+    p_migrate.add_argument("--pack", required=True, type=Path)
+    p_migrate.add_argument("--title", default=None)
+    p_migrate.add_argument("--home", default=None)
+    p_migrate.set_defaults(func=_cmd_migrate)
 
     args = parser.parse_args(argv)
     return args.func(args)
