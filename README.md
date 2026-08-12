@@ -19,6 +19,16 @@ EduEvidence 面向高校教师、教学研究者与教学管理者，把"是否�
 
 ## 快速安装
 
+**方式一：curl 一键安装（推荐，无需 clone）**
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
+```
+
+脚本自动 clone 仓库到 `./eduevidence` 并完成安装（venv + 依赖 + 自检 + 测试）。
+
+**方式二：git clone**
+
 ```bash
 git clone https://github.com/37chengshan/eduevidence.git
 cd eduevidence
@@ -33,6 +43,7 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 
 > 需要 Python 3.10+；核心零第三方依赖。学术图 PNG/PDF 导出可选装 matplotlib。
 > 安装完成后脚本会提示为项目点 star（仅提示，不会自动执行任何 GitHub 操作）。
+> ⚠️ 管道执行远程脚本以当前用户权限运行，建议先审阅 [install.sh](install.sh) 或用 git clone。
 
 ---
 
@@ -75,16 +86,17 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/
 
 ### 方式三：通用提示词（未列出的 Agent）
 
-你的 Agent 不在列表里？把下面这段提示词**原样**交给任意支持 skill / 自定义指令的 AI，即可手动安装：
+你的 Agent 不在列表里？把下面这段提示词**原样**交给任意支持 skill / 自定义指令的 AI，它会读取 [安装指南](docs/install-guide.md) 自行完成安装：
 
 ```text
-请把 https://github.com/37chengshan/eduevidence 仓库中的 EduEvidence 安装为 skill：
-1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/、retrieval/、integrations/、visualization/ 复制到你的 skill 目录
-   （如 ~/.claude/skills/eduevidence/、~/.omp/agent/skills/eduevidence/、~/.agents/skills/eduevidence/ 等），
-   或按你的 skill 装载机制导入；
-2. 安装完成后确认能读取 SKILL.md，并能运行 scripts/ 下的确定性脚本；
-3. 告诉我安装结果。
+请按照 https://github.com/37chengshan/eduevidence/blob/main/docs/install-guide.md
+的安装指南，为我把 EduEvidence 安装为 skill：先读取该文档，按第 2 节的落点表
+把 SKILL.md、skill/、references/、schemas/、scripts/、retrieval/、integrations/、
+visualization/ 复制到我的 skill 目录（或按我的装载机制导入），然后按第 3 节
+完成验证（SKILL.md 可读 + 脚本可运行 + 示例报告可渲染）。
 ```
+
+安装完成后的收尾动作（含是否点 star 的询问）见 [安装指南](docs/install-guide.md) 第 4 节。
 
 脚本在 `--skill` 安装完成后也会打印这段通用提示词。
 
