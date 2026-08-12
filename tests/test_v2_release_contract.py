@@ -56,3 +56,40 @@ def test_skill_startup_flow_uses_project_state_not_chat_memory():
     assert "Project" in text
     assert "Run" in text
     assert "research_mode" in text or "Research Mode" in text
+
+
+# ---- packaging (Task 26) --------------------------------------------------
+
+def test_skill_payload_includes_engine():
+    install = (ROOT / "install.sh").read_text(encoding="utf-8")
+    line = next(l for l in install.splitlines() if l.startswith("SKILL_PAYLOAD="))
+    for item in ("SKILL.md", "engine", "skill", "references", "schemas",
+                 "scripts", "retrieval", "integrations", "visualization"):
+        assert item in line, f"install.sh payload missing {item!r}"
+
+
+def test_wheel_metadata_includes_engine_package():
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'packages = ["engine"]' in pyproject
+
+
+def test_copied_payload_imports_engine_without_source_repo(tmp_path):
+    """A copied Skill payload must import engine modules standalone."""
+    import shutil, subprocess, sys
+    payload = tmp_path / "payload"
+    payload.mkdir()
+    for item in ("engine", "scripts"):
+        shutil.copytree(ROOT / item, payload / item)
+    shutil.copytree(ROOT / "schemas", payload / "schemas")
+    probe = (
+        "import sys; sys.path.insert(0, %r)\n"
+        "import engine.project, engine.graph_store, engine.projections\n"
+        "print('engine-import-ok')\n" % str(payload)
+    )
+    code = ("import sys\n" + probe)
+    # run in an isolated interpreter whose cwd is NOT the repo
+    result = subprocess.run(
+        [sys.executable, "-c", probe], capture_output=True, text=True,
+        cwd=str(tmp_path))
+    assert result.returncode == 0, result.stderr
+    assert "engine-import-ok" in result.stdout

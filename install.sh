@@ -14,7 +14,7 @@ REPO_URL="https://github.com/37chengshan/eduevidence"
 SKILL_NAME="eduevidence"
 # Skill 本体（运行协议 + 确定性脚本 + 检索/集成层 + 展示层）。
 # retrieval/ 与 integrations/ 会被 scripts/ 直接 import；visualization/ 负责最终 HTML 渲染。
-SKILL_PAYLOAD=(SKILL.md skill references schemas scripts retrieval integrations visualization)
+SKILL_PAYLOAD=(SKILL.md engine skill references schemas scripts retrieval integrations visualization)
 
 # ---------- curl 远程执行支持 ----------
 # 用法: bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
