@@ -13,7 +13,7 @@ EduEvidence 面向高校教师、教学研究者与教学管理者，把"是否�
 - 🧪 基于真实研究（示例包含 CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 的实证证据），不做无来源断言。
 - 🚦 最终输出不是"允许/禁止"的二元结论，而是 **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** 四态决策 + 可落地的教学干预与评价方案。
 
-![EduEvidence 顶层宣传图](assets/top-banner.png)
+![EduEvidence 顶层宣传图](assets/top-banner.jpg)
 
 ---
 
@@ -199,7 +199,7 @@ EduEvidence 强制区分 20 类 Outcome（`references/outcome-taxonomy.md`）：
 - Can Claim / Cannot Claim 边界
 - 四态决策 + Confidence（规则化计算，不由模型自由生成）
 
-![Evidence Tribunal Workflow](assets/tribunal-workflow.png)
+![Evidence Tribunal Workflow](assets/tribunal-workflow.jpg)
 
 ## From Evidence to Action
 
@@ -318,7 +318,7 @@ Agent MCP 是**性能与可靠性增强层，不是 EduEvidence 成立的前提*
 
 > 🔒 Agent MCP 原则：**Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** 未经用户确认不得 spawn；用户拒绝则回退 Native。
 
-![Controlled Multi-Agent Research](assets/multi-agent-research.png)
+![Controlled Multi-Agent Research](assets/multi-agent-research.jpg)
 
 ## Usage
 

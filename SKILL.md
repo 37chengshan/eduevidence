@@ -132,18 +132,21 @@ target: teaching_decision # evidence_review | teaching_decision | pilot_design |
 > **模型前缀即端点**：中转站注入的模型名带前缀（如 `opencodex/gpt-5.6-sol`、`opencode-go/deepseek-v4-flash`、`jbb/gpt-5.6-luna`），同一后缀不同前缀是不同端点，**必须保留完整模型名**（含前缀）派发，禁止只取后缀或自行改名。
 
 ## 4️⃣ 网页风格（五选一）
-| 风格 | 定位 |
-|------|------|
-| claude（默认） | 温暖研究风 |
-| academic | 论文风 |
-| editorial | 编辑风 |
-| datalab | 数据实验室 |
-| presentation | 演讲深色大屏 |
+
+```text
+1. Claude Research      [Light]
+2. Academic Paper       [Light]
+3. DataLab              [Light]
+4. DataLab              [Dark]
+5. Presentation / Judge [Dark]
+```
+
+内部 theme key 依次为：`claude` / `academic` / `datalab` / `datalab-dark` / `presentation`。
 
 ## ✅ 请一次性回复三项
 1. 运行模式：A / B / C（推荐 A）
 2. 使用的 CLI+模型：如 `omp + gpt-5.6-sol(pro) + deepseek-v4-flash(普通)`
-3. 网页风格：claude / academic / editorial / datalab / presentation
+3. 网页风格：claude / academic / datalab / datalab-dark / presentation
 
 确认后全自动执行，产出 HTML + Markdown，完成后打开浏览器展示并说明结果。
 ```
@@ -201,7 +204,7 @@ result.json + result.zh.json（中文平行数据，AI 直接产出双语）
   └─ build_report.py       → EduEvidence_Report.html（单文件离线双语报告）
 ```
 
-- 报告默认中文，一键切换 EN；含执行摘要（问题→结论→依据→行动）、12 个 Section、五主题。
+- 报告默认中文，一键切换 EN；采用双层结构：Visual Brief 可视化摘要 + Full Report 完整报告（AI 根据研究内容规划 5–7 章动态结构），并在生成前从五种主题中选择其一。
 - **展示层只改变呈现方式，绝不修改数据**（RULE 7）：图表数字必须与 result.json 逐项一致，不一致则 `REPORT_INVALID` 禁止发布。
 - 渲染命令：`python3 visualization/eduevidence-report/scripts/build_report.py --result <result.json> --out REPORT.html`
 

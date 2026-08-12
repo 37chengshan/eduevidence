@@ -28,5 +28,8 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-q"
 
+# wheel 只分发 CLI（eduevidence_cli）；Skill 本体（SKILL.md + skill/ + references/
+# + schemas/ + scripts/ + retrieval/ + integrations/ + visualization/ + assets/）
+# 由 install.sh 或源码包（git archive）完整分发，不打包进 wheel。
 [tool.setuptools]
 py-modules = ["eduevidence_cli"]

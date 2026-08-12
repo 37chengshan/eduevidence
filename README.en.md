@@ -12,7 +12,7 @@ EduEvidence helps university teachers, education researchers, and teaching admin
 - 🧪 Built on real research (examples include CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 empirical evidence); no claims without sources.
 - 🚦 The output is not a binary "allow/forbid" answer but a four-state decision — **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** — plus an actionable teaching intervention and evaluation plan.
 
-![EduEvidence overview banner](assets/top-banner.png)
+![EduEvidence overview banner](assets/top-banner.jpg)
 
 ---
 
@@ -199,7 +199,7 @@ The demo's highlight: in Kazemitabaar et al. (CHI 2023), the AI code assistant r
 - Can Claim / Cannot Claim boundaries
 - four-state decision + Confidence (rule-based, not model-generated freely)
 
-![Evidence Tribunal Workflow](assets/tribunal-workflow.png)
+![Evidence Tribunal Workflow](assets/tribunal-workflow.jpg)
 
 ## From Evidence to Action
 
@@ -319,7 +319,7 @@ Agent MCP is a **performance & reliability enhancement layer, not a prerequisite
 
 > 🔒 Agent MCP principle: **Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** No spawn without user approval; reject → fall back to Native.
 
-![Controlled Multi-Agent Research](assets/multi-agent-research.png)
+![Controlled Multi-Agent Research](assets/multi-agent-research.jpg)
 
 
 ## Usage

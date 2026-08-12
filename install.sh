@@ -12,9 +12,9 @@ set -euo pipefail
 
 REPO_URL="https://github.com/37chengshan/eduevidence"
 SKILL_NAME="eduevidence"
-# Skill 本体（对应仓库根目录结构：SKILL.md + skill/agents/ + references/ + schemas/
-# + scripts/ + visualization/（HTML 渲染器与 5 主题，install 自检与最终报告都依赖它））
-SKILL_PAYLOAD=(SKILL.md skill references schemas scripts visualization)
+# Skill 本体（运行协议 + 确定性脚本 + 检索/集成层 + 展示层）。
+# retrieval/ 与 integrations/ 会被 scripts/ 直接 import；visualization/ 负责最终 HTML 渲染。
+SKILL_PAYLOAD=(SKILL.md skill references schemas scripts retrieval integrations visualization)
 
 # ---------- 参数解析 ----------
 INSTALL_DEV=""
@@ -92,7 +92,7 @@ host_skill_root() {
 
 # ---------- 通用提示词（方式三：宿主不在支持列表时交给任意 AI） ----------
 UNIVERSAL_PROMPT="请把 https://github.com/37chengshan/eduevidence 仓库中的 EduEvidence 安装为 skill：
-1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/ 复制到你的 skill 目录
+1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/、retrieval/、integrations/、visualization/ 复制到你的 skill 目录
    （如 ~/.claude/skills/eduevidence/、~/.omp/agent/skills/eduevidence/、~/.agents/skills/eduevidence/ 等），
    或按你的 skill 装载机制导入；
 2. 安装完成后确认能读取 SKILL.md，并能运行 scripts/ 下的确定性脚本；
