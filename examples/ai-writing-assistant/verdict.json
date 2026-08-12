@@ -17,7 +17,7 @@
     "The claim that 'AI writing assistants always improve independent writing performance' is contradicted by E-003 (unguarded access → 17% worse independent exam performance)."
   ],
   "reason_for_disagreement": "Disagreement comes from outcome separation (task/assignment scores vs independent ability), tool design (guarded feedback vs unguarded generation), and population (high school vs university). Writing-context evidence (Marzuki) is positive but short and uncontrolled; the strongest evidence (Bastani) shows unguarded AI harms independent performance but in a different subject and level.",
-  "methodology_summary": "One mixed-methods university writing study (Marzuki 2024: no randomization, 6-hour intervention, delayed test), one large high-school mathematics RCT (Bastani 2026: task-vs-learning separation, guardrail comparison), and one high-school ESL RCT (Lee 2025: engagement plus non-inferior learning). No randomized university-level academic writing study with a no-AI independent writing transfer test exists in the reviewed set.",
+  "methodology_summary": "One mixed-methods university writing study (Marzuki 2024: no randomization, 6-hour intervention, delayed test), one large high-school mathematics RCT (Bastani 2025: task-vs-learning separation, guardrail comparison), and one high-school ESL RCT (Lee 2025: engagement plus non-inferior learning). No randomized university-level academic writing study with a no-AI independent writing transfer test exists in the reviewed set.",
   "outcome_specific_findings": {
     "knowledge_gain": "positive short-term writing-skill gain with AI feedback (E-001); non-inferior with a significant gain in one group for ESL homework (E-008)",
     "independent_problem_solving": "negative for unguarded access, neutralized by guardrails (E-003, E-004); never measured in a university writing context",
@@ -41,12 +41,14 @@
   },
   "confidence": "Moderate",
   "confidence_breakdown": {
-    "score": 0.665,
+    "score": 0.602,
     "evidence_quality": 0.738,
     "consistency": 0.875,
     "directness": 0.625,
     "evidence_count": 8,
-    "count_term": 1.0,
+    "independent_studies": 3,
+    "independent_samples": 3,
+    "count_term": 0.75,
     "conflict_penalty": 0.15,
     "unsupported_penalty": 0.0
   },
@@ -75,5 +77,20 @@
     "'AI 写作助手能提高大学生的独立写作能力' — exceeds: no university writing study measures independent no-AI writing ability.",
     "'AI 写作助手对学术诚信无风险' — exceeds: no reviewed study measured academic-integrity outcomes.",
     "'AI 辅助写作的分数提升等于写作能力提升' — exceeds: task performance and independent ability are demonstrably distinct (E-003, E-005)."
-  ]
+  ],
+  "confidence_score": 0.602,
+  "confidence_policy_version": "2026-08-12.v1",
+  "independent_studies": 3,
+  "independent_samples": 3,
+  "raw_model_confidence": "Moderate",
+  "raw_model_confidence_breakdown": {
+    "score": 0.665,
+    "evidence_quality": 0.738,
+    "consistency": 0.875,
+    "directness": 0.625,
+    "evidence_count": 8,
+    "count_term": 1.0,
+    "conflict_penalty": 0.15,
+    "unsupported_penalty": 0.0
+  }
 }

@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/evaluation.schema.json",
   "title": "EvaluationPlan",
-  "description": "Evaluation design attached to any PILOT / ADOPT recommendation. Must separate Task Performance from Learning, and Immediate from Retention/Transfer.",
+  "description": "Evaluation design attached to any PILOT / ADOPT recommendation. Must separate Task Performance from Learning, and Immediate from Retention/Transfer. 扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["research_question", "groups", "analysis_plan"],
   "properties": {
     "research_question": { "type": "string" },
@@ -25,6 +25,11 @@
     "risk_metrics": { "type": "array", "items": { "type": "string" } },
     "analysis_plan": { "type": "string" },
     "success_threshold": { "type": "string" },
-    "stop_conditions": { "type": "array", "items": { "type": "string" } }
+    "stop_conditions": { "type": "array", "items": { "type": "string" } },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
   }
 }

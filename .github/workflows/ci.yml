@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+
+      - name: Run tests
+        run: python -m pytest -q
+
+      - name: Schema fixtures (strict)
+        run: |
+          python scripts/validate_schema.py --schema schemas/verdict.schema.json \
+            --data examples/ai-coding-assistant/verdict.json
+          python scripts/validate_schema.py --schema schemas/evidence.schema.json \
+            --data examples/ai-coding-assistant/evidence.jsonl
+
+      - name: Deterministic HTML build
+        run: |
+          python visualization/eduevidence-report/scripts/build_report.py \
+            --result examples/ai-coding-assistant/result.json \
+            --out /tmp/eduevidence-ci.html
+          test -s /tmp/eduevidence-ci.html
+
+      - name: Generated artifacts unchanged (determinism)
+        run: |
+          git diff --exit-code -- examples/ai-coding-assistant/chart_specs.json \
+            examples/ai-coding-assistant/infographics.json || \
+            (echo "ERROR: generated artifacts are not deterministic — regenerate and commit"; exit 1)
+
+      - name: Security scan (fetch private-network guards)
+        run: |
+          python - <<'EOF'
+          import sys
+          sys.path.insert(0, '.')
+          from integrations.smart_web_fetch import is_private
+          assert is_private('http://127.0.0.1:8000') is True
+          assert is_private('http://169.254.169.254/latest/meta-data') is True
+          assert is_private('https://doi.org/10.1145/3544548.3580919') is False
+          print('private-network guard OK')
+          EOF

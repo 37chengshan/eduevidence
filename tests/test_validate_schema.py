@@ -91,7 +91,8 @@ def test_methodology_additional_properties_schema_enforced():
     """schema-valued additionalProperties (methodology audit_items) must be validated."""
     schema = load_schema("methodology.schema.json")
     bad_audit = {"target": "S-1", "verdict": "PASS",
-                 "audit_items": {"control_group": {"status": "approved"}}}  # invalid status
+                 "audit_items": {"control_group": {"status": "approved"}},  # invalid status
+                 "task_vs_learning_guard": {}, "limitations": [], "suggestions": []}
     with pytest.raises(SchemaError, match="enum"):
         validate(bad_audit, schema)
 
@@ -99,7 +100,9 @@ def test_methodology_additional_properties_schema_enforced():
 def test_methodology_valid_audit_passes():
     schema = load_schema("methodology.schema.json")
     good = {"target": "S-1", "verdict": "PASS",
-            "audit_items": {"control_group": {"status": "met", "note": "ok"}}}
+            "audit_items": {"control_group": {"status": "met", "note": "ok"}},
+            "task_vs_learning_guard": {"equates_task_with_learning": False},
+            "limitations": ["l"], "suggestions": ["s"]}
     validate(good, schema)  # should not raise
 
 

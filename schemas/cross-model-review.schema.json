@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/cross-model-review.schema.json",
   "title": "CrossModelReview",
-  "description": "Output contract of the independent-model cross review (总体实施计划 §25). An independent model (different model/CLI than the primary analysis) verifies a Draft Verdict before the Final Judge rules.",
+  "description": "Output contract of the independent-model cross review (总体实施计划 §25). An independent model (different model/CLI than the primary analysis) verifies a Draft Verdict before the Final Judge rules. 扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["agreement", "final_recommendation"],
   "properties": {
     "agreement": {
@@ -18,6 +18,11 @@
     "methodology_issues": { "type": "array", "items": { "type": "string" } },
     "confidence_adjustment": { "type": "string", "enum": ["upgrade", "downgrade", "no_change"] },
     "required_revision": { "type": "boolean", "default": false },
-    "final_recommendation": { "type": "string" }
+    "final_recommendation": { "type": "string" },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
   }
 }

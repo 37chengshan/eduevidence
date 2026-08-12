@@ -2,25 +2,25 @@
   "target": "overall",
   "audit_items": {
     "control_group": {"status": "met", "note": "All three studies include a no-AI control group."},
-    "randomization": {"status": "met", "note": "Kazemitabaar 2023 and Bastani 2026 use randomized assignment."},
-    "pre_test": {"status": "met", "note": "Kazemitabaar 2023 has a pre-study evaluation; Bastani 2026 measures baseline covariates."},
+    "randomization": {"status": "met", "note": "Kazemitabaar 2023 and Bastani 2025 use randomized assignment."},
+    "pre_test": {"status": "met", "note": "Kazemitabaar 2023 has a pre-study evaluation; Bastani 2025 measures baseline covariates."},
     "post_test": {"status": "met", "note": "Immediate post-tests present in all studies."},
-    "retention_test": {"status": "partial", "note": "Kazemitabaar 2023 has 1-week retention; Bastani 2026 has no delayed test; Marzuki 2024 has delayed test."},
+    "retention_test": {"status": "partial", "note": "Kazemitabaar 2023 has 1-week retention; Bastani 2025 has no delayed test; Marzuki 2024 has delayed test."},
     "transfer_test": {"status": "partial", "note": "Kazemitabaar 2023 code-modification task is transfer-adjacent; no full no-AI transfer task."},
-    "sample_bias": {"status": "met", "note": "Bastani 2026 nearly 1000 students; Kazemitabaar 2023 small (69) young sample."},
+    "sample_bias": {"status": "met", "note": "Bastani 2025 nearly 1000 students; Kazemitabaar 2023 small (69) young sample."},
     "self_selection": {"status": "partial", "note": "Marzuki 2024 consent-based participation risks self-selection."},
-    "measurement_validity": {"status": "partial", "note": "Practice/task performance is not equated to learning; independent exams present in Bastani 2026 only."},
+    "measurement_validity": {"status": "partial", "note": "Practice/task performance is not equated to learning; independent exams present in Bastani 2025 only."},
     "confounders": {"status": "partial", "note": "Prior programming competency interacts with AI benefit in Kazemitabaar 2023."},
     "instructor_effect": {"status": "not_applicable", "note": "Kazemitabaar 2023 is self-paced; classroom studies may carry instructor effects."},
     "novelty_effect": {"status": "partial", "note": "Short interventions likely inflate engagement; none of the studies controlled for novelty."},
     "tool_version_effect": {"status": "not_applicable", "note": "Single tool versions studied; rapid tool change limits durability."},
-    "ai_usage_policy": {"status": "partial", "note": "Bastani 2026 explicitly contrasts unguarded vs guardrailed usage policies."},
+    "ai_usage_policy": {"status": "partial", "note": "Bastani 2025 explicitly contrasts unguarded vs guardrailed usage policies."},
     "dropout": {"status": "partial", "note": "Marzuki 2024 reports attrition; others not detailed."}
   },
   "task_vs_learning_guard": {
     "measured_construct": "practice/task performance vs independent exam",
     "equates_task_with_learning": false,
-    "note": "Bastani 2026 demonstrates the danger of equating the two: +48-127% practice performance coexisted with -17% independent exam performance."
+    "note": "Bastani 2025 demonstrates the danger of equating the two: +48-127% practice performance coexisted with -17% independent exam performance."
   },
   "verdict": "CONCERN",
   "limitations": [
@@ -30,7 +30,7 @@
   ],
   "suggestions": [
     "Treat all learning-effect conclusions as requiring direct university-level studies.",
-    "Design the pilot with guardrails modeled on Bastani 2026's GPT Tutor (hints, not answers).",
+    "Design the pilot with guardrails modeled on Bastani 2025's GPT Tutor (hints, not answers).",
     "Include a no-AI transfer task in the evaluation plan."
   ]
 }

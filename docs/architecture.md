@@ -15,7 +15,7 @@ EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence
 ├─────────────────────────────────────────────────────────────────┤
 │ 第 2 层  EvidenceFlow Protocol（流程层）                           │
 │  Frame → Retrieve → Extract → Challenge → Audit → Adjudicate     │
-│  每一步有独立输入/输出契约，由六类 JSON Schema 约束                │
+│  每一步有独立输入/输出契约，由 12 个 JSON Schema 约束                │
 ├─────────────────────────────────────────────────────────────────┤
 │ 第 3 层  执行层（Execution Layer）                                 │
 │  Mode A  Platform Native Mode                                    │
@@ -33,7 +33,10 @@ EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence
 
 ### 1.2 第 2 层：EvidenceFlow Protocol
 
-证据流协议是全流程的六个阶段，每个阶段有明确的输入与输出契约：
+证据流协议分两层：**Research Core 六阶段**（证据纪律核心）+ **Decision Extension 三阶段**（证据到行动）+ **Present 呈现**。共 10 步，与 `SKILL.md` 的 Workflow 一致。
+
+**Research Core（六阶段，可剥离的核心）：**
+
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
 | 1. 框定 | Frame | 原始教育问题 | Education Research Frame（含 decision_target、scope、inclusion/exclusion criteria） |
@@ -42,6 +45,20 @@ EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence
 | 4. 质询 | Challenge | 证据对象 | 反方证据、负面结果、未发现、confounder 清单 |
 | 5. 审计 | Audit | 证据对象 | 方法学审计（`methodology.schema.json`），含 task_vs_learning_guard |
 | 6. 裁决 | Adjudicate | 全部证据 + 审计 | Education Verdict + Recommended Action + Confidence |
+
+**Decision Extension（三阶段，证据到行动）：**
+
+| 阶段 | 英文名 | 输入 | 输出 |
+|------|--------|------|------|
+| 7. 适用 | Applicability | Verdict | 适用性分析（For whom / which course / which outcome / what conditions） |
+| 8. 干预 | Intervene | Verdict + Applicability | Teaching Intervention（最小可验证试点 + 停止条件） |
+| 9. 评价 | Evaluate | 干预方案 | Evaluation Plan（基线/后测/保持/迁移 + 成功阈值） |
+
+**Present（呈现）：**
+
+| 阶段 | 英文名 | 输入 | 输出 |
+|------|--------|------|------|
+| 10. 呈现 | Present | result.json + result.zh.json | 单文件双语 HTML 报告 + 信息图 + 学术图（`visualization/`） |
 
 该协议是**可剥离的**：即使没有 Agent 框架，只要按此协议组织检索、抽取、审计与裁决，也能得到可复现的决策链。
 
@@ -87,7 +104,7 @@ EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence
 edu/
 ├── SKILL.md                # 技能入口：EduEvidence 使用说明（Mode A 可独立理解）
 ├── references/             # 证据来源、研究报告与检索记录
-├── schemas/                # 六类 JSON Schema
+├── schemas/                # 12 个 JSON Schema 数据契约
 │   ├── education-frame.schema.json
 │   ├── evidence.schema.json
 │   ├── methodology.schema.json

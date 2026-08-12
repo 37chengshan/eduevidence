@@ -44,6 +44,8 @@
     "consistency": 0.8,
     "directness": 0.5,
     "evidence_count": 6,
+    "independent_studies": 3,
+    "independent_samples": 3,
     "count_term": 0.75,
     "conflict_penalty": 0.15,
     "unsupported_penalty": 0.0
@@ -70,5 +72,20 @@
     "'AI Tutor 提高大学高数学习效果' — 超出：大学高数直接学习效应证据缺失。",
     "'AI Tutor 无风险' — 超出：E-002 显示无护栏有害。",
     "'AI Tutor 对所有学生有效' — 超出：学段/学科不匹配。"
-  ]
+  ],
+  "confidence_score": 0.568,
+  "confidence_policy_version": "2026-08-12.v1",
+  "independent_studies": 3,
+  "independent_samples": 3,
+  "raw_model_confidence": "Moderate",
+  "raw_model_confidence_breakdown": {
+    "score": 0.568,
+    "evidence_quality": 0.767,
+    "consistency": 0.8,
+    "directness": 0.5,
+    "evidence_count": 6,
+    "count_term": 0.75,
+    "conflict_penalty": 0.15,
+    "unsupported_penalty": 0.0
+  }
 }

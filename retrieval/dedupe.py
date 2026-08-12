@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""dedupe.py — Evidence / Source deduplication (Smart Web Fetch v3 §13).
+"""dedupe.py — Evidence / Source deduplication (Smart Web Fetch v3 §13, P1-4).
 
 The same paper behind different mirror URLs must not count as multiple
-independent evidence items. Dedupe keys:
+independent evidence items. Multi-index dedupe (P1-4):
 
-    canonical_url / doi / title fingerprint / content_hash
+    doi_index / url_index / title_index / hash_index
+
+Any index hit marks a candidate duplicate; the hit source and the new source
+are then merged keeping the entry with the higher authority tier and the more
+complete metadata.
 """
 from __future__ import annotations
 
@@ -13,39 +17,89 @@ from typing import Any, Iterable
 from retrieval.source import title_fingerprint
 
 
-def dedupe_sources(sources: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Dedupe sources by (doi -> canonical_url -> title_fingerprint -> content_hash).
+def _source_keys(src: dict[str, Any]) -> dict[str, str]:
+    """Extract the four dedupe keys (lowercased/normalized) from a source."""
+    keys = src.get("dedupe_keys", {}) or {}
+    return {
+        "doi": (keys.get("doi") or "").strip().lower(),
+        "url": (keys.get("canonical_url") or "").strip().rstrip("/").lower(),
+        "title": keys.get("title_fingerprint") or title_fingerprint(src.get("title", "")),
+        "hash": keys.get("content_hash") or src.get("content_hash", ""),
+    }
 
-    Keeps the highest-authority entry when duplicates collide (v3 §13: 同一论文
-    不同镜像 URL 不能算成多个独立证据).
-    """
+
+def _metadata_score(src: dict[str, Any]) -> int:
+    """Completeness score: how much identifying metadata does this entry have."""
+    keys = _source_keys(src)
+    score = 0
+    if keys["doi"]:
+        score += 4
+    if keys["url"]:
+        score += 2
+    if keys["title"]:
+        score += 1
+    if src.get("authors"):
+        score += 1
+    if src.get("year") is not None:
+        score += 1
+    return score
+
+
+def _merge_sources(existing: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
+    """Merge two duplicate candidates: keep the higher-authority entry (lower
+    tier number); on ties keep the more complete one."""
     from retrieval.source import is_higher_authority
 
-    unique: dict[str, dict[str, Any]] = {}
+    a_authority = existing.get("authority_level", "tier5_general_web")
+    b_authority = incoming.get("authority_level", "tier5_general_web")
+    if is_higher_authority(b_authority, a_authority):
+        return incoming
+    if is_higher_authority(a_authority, b_authority):
+        return existing
+    return incoming if _metadata_score(incoming) > _metadata_score(existing) else existing
+
+
+def dedupe_sources(sources: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Dedupe sources through four parallel indexes
+    (doi -> url -> title_fingerprint -> content_hash).
+
+    A new source that hits ANY index is a candidate duplicate of the indexed
+    entry; the pair is merged keeping the higher-authority / more complete one
+    (v3 §13: 同一论文不同镜像 URL 不能算成多个独立证据).
+    """
+    indexes: dict[str, dict[str, dict[str, Any]]] = {
+        "doi": {},
+        "url": {},
+        "title": {},
+        "hash": {},
+    }
+    unique: list[dict[str, Any]] = []
     for src in sources:
-        keys = src.get("dedupe_keys", {})
-        doi = (keys.get("doi") or "").strip().lower()
-        canon = (keys.get("canonical_url") or "").strip().rstrip("/").lower()
-        fp = keys.get("title_fingerprint") or title_fingerprint(src.get("title", ""))
-        chash = keys.get("content_hash") or src.get("content_hash", "")
-
-        chosen_key: str | None = None
-        for candidate in (doi, canon, fp, chash):
-            if candidate:
-                chosen_key = candidate
+        keys = _source_keys(src)
+        hit: dict[str, Any] | None = None
+        hit_index = ""
+        for name in ("doi", "url", "title", "hash"):
+            key = keys[name]
+            if key and key in indexes[name]:
+                hit = indexes[name][key]
+                hit_index = name
                 break
-        if not chosen_key:
+        if hit is None:
+            unique.append(src)
+            for name in ("doi", "url", "title", "hash"):
+                key = keys[name]
+                if key:
+                    indexes[name][key] = src
             continue
-
-        existing = unique.get(chosen_key)
-        if existing is None:
-            unique[chosen_key] = src
-            continue
-        # keep the higher-authority (lower tier number) source
-        if is_higher_authority(src.get("authority_level", "tier5_general_web"),
-                               existing.get("authority_level", "tier5_general_web")):
-            unique[chosen_key] = src
-    return list(unique.values())
+        # Candidate duplicate: merge, keep the better entry, reindex it.
+        kept = _merge_sources(hit, src)
+        if kept is src:
+            unique[unique.index(hit)] = src
+        for name in ("doi", "url", "title", "hash"):
+            key = keys[name]
+            if key:
+                indexes[name][key] = kept
+    return unique
 
 
 def dedupe_evidence(evidence: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:

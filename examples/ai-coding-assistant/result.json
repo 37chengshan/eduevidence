@@ -121,12 +121,14 @@
     },
     "confidence": "Moderate",
     "confidence_breakdown": {
-      "score": 0.577,
-      "evidence_quality": 0.743,
+      "score": 0.559,
+      "evidence_quality": 0.786,
       "consistency": 0.8,
       "directness": 0.429,
       "evidence_count": 7,
-      "count_term": 0.875,
+      "independent_studies": 3,
+      "independent_samples": 3,
+      "count_term": 0.75,
       "conflict_penalty": 0.15,
       "unsupported_penalty": 0.0
     },
@@ -151,7 +153,11 @@
     "exceeds_evidence_boundary": [
       "'AI 编程助手提高学习效果' — exceeds: direct learning-effect evidence is missing.",
       "'AI 对所有人有效' — exceeds: population and subject mismatch."
-    ]
+    ],
+    "confidence_score": 0.559,
+    "confidence_policy_version": "2026-08-12.v1",
+    "independent_studies": 3,
+    "independent_samples": 3
   },
   "outcomes": [
     {
@@ -205,6 +211,7 @@
   "claims": [
     {
       "claim": "AI coding assistants significantly increase task completion speed and completion rate during training.",
+      "claim_id": "C-001",
       "outcome_type": "completion_time",
       "evidence_ids": [
         "E-001"
@@ -213,6 +220,7 @@
     },
     {
       "claim": "Access to AI code generation did not decrease performance on manual code-modification tasks.",
+      "claim_id": "C-002",
       "outcome_type": "independent_problem_solving",
       "evidence_ids": [
         "E-002"
@@ -221,6 +229,7 @@
     },
     {
       "claim": "One week after training, retention differences between Codex and baseline groups did not reach statistical significance.",
+      "claim_id": "C-003",
       "outcome_type": "retention",
       "evidence_ids": [
         "E-003"
@@ -229,6 +238,7 @@
     },
     {
       "claim": "Students with unguarded GPT-4 access performed 17% worse on the independent exam than the control group, despite higher practice performance.",
+      "claim_id": "C-004",
       "outcome_type": "independent_problem_solving",
       "evidence_ids": [
         "E-004"
@@ -237,6 +247,7 @@
     },
     {
       "claim": "Guardrail design of the AI tutor (hints instead of answers, teacher-informed prompts) largely eliminated the negative learning effect.",
+      "claim_id": "C-005",
       "outcome_type": "independent_problem_solving",
       "evidence_ids": [
         "E-005"
@@ -245,6 +256,7 @@
     },
     {
       "claim": "Access to GPT-4 during practice improves task performance (48% for GPT Base, 127% for GPT Tutor) — but this task performance does not transfer to independent exam performance.",
+      "claim_id": "C-006",
       "outcome_type": "assignment_score",
       "evidence_ids": [
         "E-006"
@@ -253,6 +265,7 @@
     },
     {
       "claim": "ChatGPT as a formative feedback tool produced a significant positive impact on students' academic writing skills with positive student perceptions.",
+      "claim_id": "C-007",
       "outcome_type": "knowledge_gain",
       "evidence_ids": [
         "E-007"
@@ -270,9 +283,9 @@
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919"
     },
     {
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
-      "year": 2026,
+      "year": 2025,
       "canonical_url": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
       "authority_level": "tier3_professional_institution",
       "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122"
@@ -303,6 +316,10 @@
       "outcome_measure": "code_authoring_task_progress_and_time",
       "claim": "AI coding assistants significantly increase task completion speed and completion rate during training.",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-KAZEMITABAAR-2023",
+      "sample_id": "SMPL-KAZEMITABAAR-2023-N69",
       "effect": "1.15x completion rate, 0.57x time, 1.8x correctness",
       "duration": "3_weeks_training",
       "method": "controlled experiment with random assignment, immediate post-test and 1-week retention test",
@@ -322,12 +339,12 @@
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
       "quality_dimensions": {
         "D1_study_design": 2,
-        "D2_sample_quality": 1,
+        "D2_sample_quality": 2,
         "D3_measurement_validity": 2,
         "D4_temporal_strength": 2,
         "D5_directness": 1
       },
-      "quality_score": 8.0,
+      "quality_score": 9.0,
       "evidence_level": "strong",
       "applicability": {
         "learner_match": "partial_novice_programmers_but_younger",
@@ -354,6 +371,10 @@
       "outcome_measure": "manual code-modification tasks during training",
       "claim": "Access to AI code generation did not decrease performance on manual code-modification tasks.",
       "direction": "neutral",
+      "relation_to_claim": "neutral",
+      "effect_direction": "null",
+      "study_id": "STUDY-KAZEMITABAAR-2023",
+      "sample_id": "SMPL-KAZEMITABAAR-2023-N69",
       "effect": "no significant difference between groups",
       "duration": "3_weeks_training",
       "method": "controlled experiment, code-modification task followed each code-authoring task",
@@ -371,12 +392,12 @@
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
       "quality_dimensions": {
         "D1_study_design": 2,
-        "D2_sample_quality": 1,
+        "D2_sample_quality": 2,
         "D3_measurement_validity": 1,
         "D4_temporal_strength": 1,
         "D5_directness": 1
       },
-      "quality_score": 6.0,
+      "quality_score": 7.0,
       "evidence_level": "moderate",
       "applicability": {
         "learner_match": "partial",
@@ -403,6 +424,10 @@
       "outcome_measure": "retention post-test one week after training",
       "claim": "One week after training, retention differences between Codex and baseline groups did not reach statistical significance.",
       "direction": "neutral",
+      "relation_to_claim": "neutral",
+      "effect_direction": "null",
+      "study_id": "STUDY-KAZEMITABAAR-2023",
+      "sample_id": "SMPL-KAZEMITABAAR-2023-N69",
       "effect": "slightly better for Codex group but not significant",
       "duration": "3_weeks_training_plus_1_week_retention",
       "method": "controlled experiment with delayed retention test",
@@ -420,12 +445,12 @@
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
       "quality_dimensions": {
         "D1_study_design": 2,
-        "D2_sample_quality": 1,
+        "D2_sample_quality": 2,
         "D3_measurement_validity": 2,
         "D4_temporal_strength": 2,
         "D5_directness": 1
       },
-      "quality_score": 8.0,
+      "quality_score": 9.0,
       "evidence_level": "strong",
       "applicability": {
         "learner_match": "partial",
@@ -438,9 +463,9 @@
     },
     {
       "evidence_id": "E-004",
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
-      "year": 2026,
+      "year": 2025,
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
@@ -452,6 +477,10 @@
       "outcome_measure": "exam without access to AI resources after practice phase",
       "claim": "Students with unguarded GPT-4 access performed 17% worse on the independent exam than the control group, despite higher practice performance.",
       "direction": "contradict",
+      "relation_to_claim": "contradict",
+      "effect_direction": "negative",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
       "effect": "negative_17_percent_on_independent_exam",
       "duration": "in_class_study_sessions",
       "method": "large-scale randomized controlled trial, practice phase then closed-book exam",
@@ -488,9 +517,9 @@
     },
     {
       "evidence_id": "E-005",
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
-      "year": 2026,
+      "year": 2025,
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
@@ -502,6 +531,10 @@
       "outcome_measure": "exam without access to AI resources after practice phase",
       "claim": "Guardrail design of the AI tutor (hints instead of answers, teacher-informed prompts) largely eliminated the negative learning effect.",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "null",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
       "effect": "negative effect essentially eradicated, no positive effect observed",
       "duration": "in_class_study_sessions",
       "method": "large-scale randomized controlled trial, three arms",
@@ -537,9 +570,9 @@
     },
     {
       "evidence_id": "E-006",
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
-      "year": 2026,
+      "year": 2025,
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
@@ -551,6 +584,10 @@
       "outcome_measure": "practice problem performance during study sessions",
       "claim": "Access to GPT-4 during practice improves task performance (48% for GPT Base, 127% for GPT Tutor) — but this task performance does not transfer to independent exam performance.",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
       "effect": "48-127 percent improvement on practice problems",
       "duration": "in_class_study_sessions",
       "method": "randomized controlled trial with practice and closed-book exam phases",
@@ -599,6 +636,10 @@
       "outcome_measure": "writing tests with pre-post-delayed design",
       "claim": "ChatGPT as a formative feedback tool produced a significant positive impact on students' academic writing skills with positive student perceptions.",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-MARZUKI-2024",
+      "sample_id": "SMPL-MARZUKI-2024-N72",
       "effect": "significant positive impact on writing skills",
       "duration": "6_hours_intervention",
       "method": "mixed methods intervention study, pre/post/delayed tests and focus groups",
@@ -644,11 +685,11 @@
         },
         "randomization": {
           "status": "met",
-          "note": "Kazemitabaar 2023 and Bastani 2026 use randomized assignment."
+          "note": "Kazemitabaar 2023 and Bastani 2025 use randomized assignment."
         },
         "pre_test": {
           "status": "met",
-          "note": "Kazemitabaar 2023 has a pre-study evaluation; Bastani 2026 measures baseline covariates."
+          "note": "Kazemitabaar 2023 has a pre-study evaluation; Bastani 2025 measures baseline covariates."
         },
         "post_test": {
           "status": "met",
@@ -656,7 +697,7 @@
         },
         "retention_test": {
           "status": "partial",
-          "note": "Kazemitabaar 2023 has 1-week retention; Bastani 2026 has no delayed test; Marzuki 2024 has delayed test."
+          "note": "Kazemitabaar 2023 has 1-week retention; Bastani 2025 has no delayed test; Marzuki 2024 has delayed test."
         },
         "transfer_test": {
           "status": "partial",
@@ -664,7 +705,7 @@
         },
         "sample_bias": {
           "status": "met",
-          "note": "Bastani 2026 nearly 1000 students; Kazemitabaar 2023 small (69) young sample."
+          "note": "Bastani 2025 nearly 1000 students; Kazemitabaar 2023 small (69) young sample."
         },
         "self_selection": {
           "status": "partial",
@@ -672,7 +713,7 @@
         },
         "measurement_validity": {
           "status": "partial",
-          "note": "Practice/task performance is not equated to learning; independent exams present in Bastani 2026 only."
+          "note": "Practice/task performance is not equated to learning; independent exams present in Bastani 2025 only."
         },
         "confounders": {
           "status": "partial",
@@ -692,7 +733,7 @@
         },
         "ai_usage_policy": {
           "status": "partial",
-          "note": "Bastani 2026 explicitly contrasts unguarded vs guardrailed usage policies."
+          "note": "Bastani 2025 explicitly contrasts unguarded vs guardrailed usage policies."
         },
         "dropout": {
           "status": "partial",
@@ -702,7 +743,7 @@
       "task_vs_learning_guard": {
         "measured_construct": "practice/task performance vs independent exam",
         "equates_task_with_learning": false,
-        "note": "Bastani 2026 demonstrates the danger of equating the two: +48-127% practice performance coexisted with -17% independent exam performance."
+        "note": "Bastani 2025 demonstrates the danger of equating the two: +48-127% practice performance coexisted with -17% independent exam performance."
       },
       "verdict": "CONCERN",
       "limitations": [
@@ -712,7 +753,7 @@
       ],
       "suggestions": [
         "Treat all learning-effect conclusions as requiring direct university-level studies.",
-        "Design the pilot with guardrails modeled on Bastani 2026's GPT Tutor (hints, not answers).",
+        "Design the pilot with guardrails modeled on Bastani 2025's GPT Tutor (hints, not answers).",
         "Include a no-AI transfer task in the evaluation plan."
       ]
     }
@@ -779,7 +820,7 @@
     "reflection_requirement": "students must explain key AI-generated logic in their own words; one written reflection per phase",
     "assessment": "no-AI baseline quiz, mid-pilot quiz, no-AI transfer task, code-quality rubric, AI-usage self-report",
     "risk_control": [
-      "guardrailed usage policy modeled on Bastani 2026 GPT Tutor (hints, not answers)",
+      "guardrailed usage policy modeled on Bastani 2025 GPT Tutor (hints, not answers)",
       "no-AI transfer assessment prevents grade inflation from task-performance gains",
       "usage logs reviewed weekly to detect crutch behavior"
     ],

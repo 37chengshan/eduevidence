@@ -155,13 +155,15 @@ B4 EduEvidence + Agent MCP      ← demonstrates the value of multi-agent enhanc
 
 Key metrics: Citation Support Precision / Unsupported Claim Rate / Contradiction Discovery Rate / Outcome Separation Accuracy / Scope Calibration / Intervention Evidence Alignment. See `docs/benchmark.md`.
 
+> ⚠️ `benchmarks/results/` is currently **harness validation (deterministic simulation)** — it proves the evaluation framework runs, not real model performance. No effectiveness claims will be made until real B2 vs B3 empirical runs are published.
+
 ## Example: AI Coding Assistant
 
 > **Should first-year C programming students be allowed to use generative AI coding assistants?**
 
 `examples/ai-coding-assistant/` shows the full path from question to decision:
 
-- **Evidence** (7 items, all bound to real sources): task-performance gains (Kazemitabaar 2023), unguarded access harming independent exam performance by −17% (Bastani 2026, PNAS), guardrails eliminating the negative effect (Bastani 2026), formative-feedback writing evidence (Marzuki 2024).
+- **Evidence** (7 items, all bound to real sources): task-performance gains (Kazemitabaar 2023), unguarded access harming independent exam performance by −17% (Bastani 2025, PNAS), guardrails eliminating the negative effect (Bastani 2025), formative-feedback writing evidence (Marzuki 2024).
 - **Decision**: **PILOT** — task-performance evidence is strong, but direct learning-effect evidence for university programming courses is missing, and the unguarded-access risk is documented.
 - **Intervention**: 4-phase pilot (Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check).
 - **Evaluation**: no-AI baseline / post-test / final-exam retention / no-AI transfer task + AI-dependency risk metrics.

@@ -50,8 +50,9 @@ def test_consistency_score():
 def test_confidence_high_for_consistent_strong_evidence():
     evs = [
         {"direction": "support", "quality_score": 8, "quality_dimensions": {"D5_directness": 2},
-         "outcome_type": "retention", "status": "SUPPORTED"}
-        for _ in range(8)
+         "outcome_type": "retention", "status": "SUPPORTED",
+         "source_id": f"S-{i}", "study_id": f"STUDY-{i}", "sample_id": f"SAMPLE-{i}"}
+        for i in range(8)
     ]
     result = confidence(evs)
     assert result["confidence"] == "High"

@@ -13,6 +13,14 @@ Two rule-based engines:
    Evidence Quality + Consistency + Directness + Evidence Count
    - Conflict Penalty - Unsupported Penalty
    -> High | Moderate | Low | Insufficient
+
+The authoritative pipeline entry for final verdicts is
+scripts/compute_confidence.py (independent-studies/samples-weighted formula
+with confidence_policy_version); the `confidence()` function below remains the
+backward-compatible engine used by example reproducibility checks.
+
+IMPORTANT: the confidence score is a rule-based index in [0, 1], NOT a
+probability. Never present it as "85% confidence" or any probabilistic claim.
 """
 from __future__ import annotations
 
@@ -20,6 +28,9 @@ from typing import Any
 
 DIMENSIONS = ["D1_study_design", "D2_sample_quality", "D3_measurement_validity",
               "D4_temporal_strength", "D5_directness"]
+
+#: Version of the deterministic confidence policy (bump on any formula change).
+CONFIDENCE_POLICY_VERSION = "2026-08-12.v1"
 
 
 def quality_score(dimensions: dict[str, int]) -> float:
@@ -42,6 +53,40 @@ def quality_level(score: float) -> str:
     if score >= 2:
         return "weak"
     return "very_weak"
+
+
+def direction_of(evidence: dict[str, Any]) -> str:
+    """Direction of one evidence object.
+
+    Prefers the new contract field ``relation_to_claim`` (support | contradict |
+    neutral) and falls back to the legacy ``direction`` field, kept for backward
+    compatibility. Returns 'neutral' when neither is present/valid.
+    """
+    relation = evidence.get("relation_to_claim")
+    if relation in ("support", "contradict", "neutral"):
+        return relation
+    return evidence.get("direction", "neutral")
+
+
+def independent_studies(evidence_list: list[dict[str, Any]]) -> int:
+    """Number of distinct studies behind the evidence.
+
+    Counts unique non-empty ``study_id`` values; falls back to unique
+    ``source_id`` values when ``study_id`` is absent.
+    """
+    ids = [e.get("study_id") or e.get("source_id") for e in evidence_list]
+    return len({i for i in ids if i})
+
+
+def independent_samples(evidence_list: list[dict[str, Any]]) -> int:
+    """Number of distinct samples behind the evidence.
+
+    Counts unique non-empty ``sample_id`` values. When ``sample_id`` is missing
+    entirely, falls back to study-level ids (each study contributes at least one
+    sample), so the count stays a deterministic lower-bound estimate.
+    """
+    ids = [e.get("sample_id") or e.get("study_id") or e.get("source_id") for e in evidence_list]
+    return len({i for i in ids if i})
 
 
 def consistency_score(directions: list[str]) -> float:
@@ -76,7 +121,9 @@ def confidence(evidence_list: list[dict[str, Any]], *, target_outcome: str | Non
     Returns breakdown dict plus final label (High | Moderate | Low | Insufficient).
     """
     if not evidence_list:
-        return {"confidence": "Insufficient", "confidence_breakdown": {"evidence_count": 0}}
+        return {"confidence": "Insufficient",
+                "confidence_policy_version": CONFIDENCE_POLICY_VERSION,
+                "confidence_breakdown": {"evidence_count": 0}}
 
     # 1. Evidence Quality (mean of quality scores, scaled to 0-1 range)
     quality_values = [e.get("quality_score") for e in evidence_list]
@@ -84,15 +131,18 @@ def confidence(evidence_list: list[dict[str, Any]], *, target_outcome: str | Non
     avg_quality = sum(numeric) / len(numeric) if numeric else 0.0
     quality_term = avg_quality / 10.0  # 0-1
 
-    # 2. Consistency
-    directions = [e.get("direction", "neutral") for e in evidence_list]
+    # 2. Consistency (relation_to_claim preferred, legacy direction fallback)
+    directions = [direction_of(e) for e in evidence_list]
     consistency = consistency_score(directions)
 
     # 3. Directness (0-2 -> 0-1)
     directness = directness_score(evidence_list) / 2.0
 
-    # 4. Evidence count (log-scaled, capped at 1)
-    count_term = min(1.0, len(evidence_list) / 8.0)
+    # 4. Evidence count (capped at 1) — 独立研究 + 独立样本双计权，防止同一研究的
+    #    多个 Evidence Object 重复放大信心（审查 P0-03）；公式与 compute_confidence.py 一致
+    n_studies = independent_studies(evidence_list)
+    n_samples = independent_samples(evidence_list)
+    count_term = min(1.0, (n_studies + n_samples) / 8.0)
 
     # 5. Conflict penalty (0.15 when contradiction exists)
     conflict_penalty = 0.15 if "contradict" in directions else 0.0
@@ -113,12 +163,18 @@ def confidence(evidence_list: list[dict[str, Any]], *, target_outcome: str | Non
     label = _confidence_label(score)
     return {
         "confidence": label,
+        "confidence_score": round(score, 3),
+        "confidence_policy_version": CONFIDENCE_POLICY_VERSION,
+        "independent_studies": n_studies,
+        "independent_samples": n_samples,
         "confidence_breakdown": {
             "score": round(score, 3),
             "evidence_quality": round(quality_term, 3),
             "consistency": round(consistency, 3),
             "directness": round(directness, 3),
             "evidence_count": len(evidence_list),
+            "independent_studies": n_studies,
+            "independent_samples": n_samples,
             "count_term": round(count_term, 3),
             "conflict_penalty": conflict_penalty,
             "unsupported_penalty": round(unsupported_penalty, 3),

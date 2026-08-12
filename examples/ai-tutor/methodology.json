@@ -2,36 +2,36 @@
   "target": "overall",
   "audit_items": {
     "control_group": {"status": "met", "note": "All three sources include a no-AI comparison condition."},
-    "randomization": {"status": "met", "note": "Bastani 2026 (large RCT), Lee 2025 (four-class RCT) and Kazemitabaar 2023 (randomized controlled experiment) all use randomized assignment."},
-    "pre_test": {"status": "partial", "note": "Bastani 2026 measures baseline covariates; Kazemitabaar 2023 has a pre-study evaluation; Lee 2025 baseline not fully detailed."},
+    "randomization": {"status": "met", "note": "Bastani 2025 (large RCT), Lee 2025 (four-class RCT) and Kazemitabaar 2023 (randomized controlled experiment) all use randomized assignment."},
+    "pre_test": {"status": "partial", "note": "Bastani 2025 measures baseline covariates; Kazemitabaar 2023 has a pre-study evaluation; Lee 2025 baseline not fully detailed."},
     "post_test": {"status": "met", "note": "Immediate post-measures present in all sources (practice exams, homework assessments, programming tests)."},
-    "retention_test": {"status": "partial", "note": "Kazemitabaar 2023 has a 1-week retention test; Bastani 2026 has no delayed test; Lee 2025 covers course length but no delayed retention beyond the course."},
-    "transfer_test": {"status": "partial", "note": "Bastani 2026's closed-book independent exam is the strongest transfer-adjacent measure (AI removed); no full novel-topic transfer task in any study."},
-    "sample_bias": {"status": "met", "note": "Bastani 2026 ~950 students; Lee 2025 four intact classes; Kazemitabaar 2023 small (69) but explicitly randomized."},
+    "retention_test": {"status": "partial", "note": "Kazemitabaar 2023 has a 1-week retention test; Bastani 2025 has no delayed test; Lee 2025 covers course length but no delayed retention beyond the course."},
+    "transfer_test": {"status": "partial", "note": "Bastani 2025's closed-book independent exam is the strongest transfer-adjacent measure (AI removed); no full novel-topic transfer task in any study."},
+    "sample_bias": {"status": "met", "note": "Bastani 2025 ~950 students; Lee 2025 four intact classes; Kazemitabaar 2023 small (69) but explicitly randomized."},
     "self_selection": {"status": "met", "note": "Random assignment in all three studies limits self-selection."},
-    "measurement_validity": {"status": "partial", "note": "Bastani 2026 correctly separates practice/task performance from independent exam learning; but no study directly measures university mathematics concept understanding."},
+    "measurement_validity": {"status": "partial", "note": "Bastani 2025 correctly separates practice/task performance from independent exam learning; but no study directly measures university mathematics concept understanding."},
     "confounders": {"status": "partial", "note": "Education-level mismatch (high school / K-12 vs university) is the dominant issue; prior ability interacts with AI benefit in Kazemitabaar 2023."},
-    "instructor_effect": {"status": "partial", "note": "Lee 2025 runs four intact classes — class/instructor effects possible; Bastani 2026 in-class sessions may carry teacher effects."},
+    "instructor_effect": {"status": "partial", "note": "Lee 2025 runs four intact classes — class/instructor effects possible; Bastani 2025 in-class sessions may carry teacher effects."},
     "novelty_effect": {"status": "partial", "note": "Short interventions and new tool exposure may inflate engagement; not controlled in any study."},
     "tool_version_effect": {"status": "not_applicable", "note": "Each study used one GPT/Codex version; rapid model iteration limits durability of findings."},
-    "ai_usage_policy": {"status": "met", "note": "Bastani 2026 explicitly contrasts unguarded (GPT Base) vs guardrailed (GPT Tutor) usage policies — directly informative for policy design."},
+    "ai_usage_policy": {"status": "met", "note": "Bastani 2025 explicitly contrasts unguarded (GPT Base) vs guardrailed (GPT Tutor) usage policies — directly informative for policy design."},
     "dropout": {"status": "partial", "note": "Attrition not systematically reported across all studies."}
   },
   "task_vs_learning_guard": {
     "measured_construct": "practice/task performance vs independent exam performance",
     "equates_task_with_learning": false,
-    "note": "Bastani 2026 provides an embedded contrast: +48%/+127% practice performance coexisted with -17% independent exam performance for the unguarded arm — practice performance must NOT be equated with learning."
+    "note": "Bastani 2025 provides an embedded contrast: +48%/+127% practice performance coexisted with -17% independent exam performance for the unguarded arm — practice performance must NOT be equated with learning."
   },
   "verdict": "CONCERN",
   "limitations": [
     "No study directly targets university advanced-mathematics (calculus) students.",
-    "Subject/level directness is insufficient: high-school math (Bastani 2026), high-school English (Lee 2025), K-12 programming (Kazemitabaar 2023).",
+    "Subject/level directness is insufficient: high-school math (Bastani 2025), high-school English (Lee 2025), K-12 programming (Kazemitabaar 2023).",
     "No retention beyond 1 week (Kazemitabaar 2023) or beyond course end (Lee 2025); no long-term transfer evidence.",
     "无护栏 GPT Base 的负效应 (-17%) 说明工具设计护栏是决定因素，直接照搬通用聊天工具进入大学课堂不可行。"
   ],
   "suggestions": [
     "Treat all conclusions as indirect until a university-mathematics study exists.",
-    "Design the pilot's guardrailed tutor on Bastani 2026's GPT Tutor design (hints, not answers).",
+    "Design the pilot's guardrailed tutor on Bastani 2025's GPT Tutor design (hints, not answers).",
     "Include a no-AI independent exam and a retention/transfer test in the evaluation plan.",
     "Vary the AI usage policy within the pilot to isolate guardrail effects."
   ]

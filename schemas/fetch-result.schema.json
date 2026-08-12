@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/fetch-result.schema.json",
   "title": "FetchResult",
-  "description": "Result of one fetch attempt through the Smart Web Fetch degradation chain (v3 方案 §6-8). Only FETCH_VALID (or rule-confirmed FETCH_PARTIAL) may enter Evidence Extraction; FETCH_FAILED must not let the model guess content from search snippets.",
+  "description": "Result of one fetch attempt through the Smart Web Fetch degradation chain (v3 方案 §6-8). Only FETCH_VALID (or rule-confirmed FETCH_PARTIAL) may enter Evidence Extraction; FETCH_FAILED must not let the model guess content from search snippets. 扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["original_url", "fetch_status"],
   "properties": {
     "original_url": { "type": "string", "format": "uri" },
@@ -23,6 +23,7 @@
     "content": { "type": "string", "description": "清洗后的正文（Markdown/文本），仅 FETCH_VALID/PARTIAL 时携带" },
     "validation": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "http_success": { "type": "boolean" },
         "body_length_ok": { "type": "boolean" },
@@ -35,6 +36,11 @@
         "date_identifiable": { "type": ["boolean", "null"] },
         "checks": { "type": "array", "items": { "type": "string" } }
       }
+    },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
     }
   }
 }

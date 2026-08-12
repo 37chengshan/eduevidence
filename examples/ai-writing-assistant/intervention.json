@@ -37,7 +37,7 @@
   "reflection_requirement": "students must explain every AI-assisted change in their own words (revision memo); one written reflection per phase on when AI helped versus when it masked understanding",
   "assessment": "no-AI baseline writing assessment, mid-pilot in-class writing sample, draft quality rubric, independent no-AI writing transfer task, revision memos, AI usage self-report",
   "risk_control": [
-    "guardrailed usage policy modeled on Bastani 2026 GPT Tutor (feedback/hints instead of answers)",
+    "guardrailed usage policy modeled on Bastani 2025 GPT Tutor (feedback/hints instead of answers)",
     "independent no-AI writing transfer test prevents score inflation from AI-supported task performance",
     "revision memos and usage logs reviewed weekly to detect AI dependency",
     "academic integrity policy explicitly covers AI-generated text and unexamined copying",

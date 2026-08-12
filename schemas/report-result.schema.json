@@ -2,23 +2,26 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/report-result.schema.json",
   "title": "ReportResult",
-  "description": "Validated result.json contract (总体实施计划 §27). Produced by the EduEvidence research core, consumed by the visualization layer. The report layer may choose HOW to present but must never change this data.",
+  "description": "Validated result.json contract (总体实施计划 §27). Produced by the EduEvidence research core, consumed by the visualization layer. The report layer may choose HOW to present but must never change this data. claims 每条必须携带 claim_id（C-001 格式，Claim-Evidence Contract）。扩展字段一律放在各对象 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["meta", "research_frame", "decision", "evidence"],
   "properties": {
     "meta": {
       "type": "object",
+      "additionalProperties": false,
+      "required": ["skill"],
       "properties": {
         "skill": { "type": "string", "const": "eduevidence" },
         "version": { "type": "string" },
-        "generated_at": { "type": "string" },
+        "generated_at": { "type": "string", "format": "date-time" },
         "mode": { "type": "string", "enum": ["platform_native", "agent_mcp_enhanced"] },
         "question": { "type": "string" }
       }
     },
     "execution": {
       "type": "object",
+      "additionalProperties": false,
       "description": "How this result was produced: complexity grade, agent topology, token/cost usage.",
       "properties": {
         "complexity": { "type": "string", "enum": ["S", "M", "L"] },
@@ -26,6 +29,7 @@
         "agents": { "type": "array", "items": { "type": "string" } },
         "usage": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "input_tokens": { "type": "integer" },
             "output_tokens": { "type": "integer" },
@@ -42,6 +46,7 @@
       "description": "Outcome-level aggregation: per outcome type, direction counts and evidence ids.",
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "outcome_type": { "type": "string" },
           "support_count": { "type": "integer" },
@@ -56,7 +61,10 @@
       "description": "Claim-level rows bound to evidence (Claim-Evidence Contract).",
       "items": {
         "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id"],
         "properties": {
+          "claim_id": { "type": "string", "pattern": "^C-[0-9]{3}$", "examples": ["C-001"] },
           "claim": { "type": "string" },
           "outcome_type": { "type": "string" },
           "evidence_ids": { "type": "array", "items": { "type": "string" } },
@@ -70,19 +78,20 @@
     "conflicts": {
       "type": "array",
       "description": "Conflict analysis entries (why studies disagree).",
-      "items": { "type": "object" }
+      "items": { "type": "object", "additionalProperties": true }
     },
-    "applicability": { "type": "object" },
+    "applicability": { "type": "object", "additionalProperties": true },
     "intervention": { "type": "object", "description": "TeachingIntervention (see intervention.schema.json)." },
     "evaluation": { "type": "object", "description": "EvaluationPlan (see evaluation.schema.json)." },
-    "benchmark": { "type": "object", "description": "Benchmark metrics for this result (optional)." },
+    "benchmark": { "type": "object", "additionalProperties": true, "description": "Benchmark metrics for this result (optional)." },
     "provenance": {
       "type": "object",
+      "additionalProperties": false,
       "description": "Fetch/search provenance (Smart Web Fetch v3 §6): sources must carry fetch provenance.",
       "properties": {
         "search_provider": { "type": "string" },
-        "fetched_at": { "type": "string" },
-        "fetch_summary": { "type": "object" }
+        "fetched_at": { "type": "string", "format": "date-time" },
+        "fetch_summary": { "type": "object", "additionalProperties": true }
       }
     }
   }

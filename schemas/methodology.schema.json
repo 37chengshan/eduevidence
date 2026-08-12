@@ -2,16 +2,18 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/methodology.schema.json",
   "title": "MethodologyAudit",
-  "description": "Methodological audit of one study (or the overall evidence base). The highest-priority rule: task performance must NOT be automatically equated with learning effect.",
+  "description": "Methodological audit of one study (or the overall evidence base). The highest-priority rule: task performance must NOT be automatically equated with learning effect. 扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
-  "required": ["target", "verdict"],
+  "additionalProperties": false,
+  "required": ["target", "verdict", "audit_items", "task_vs_learning_guard", "limitations", "suggestions"],
   "properties": {
     "target": { "type": "string", "description": "evidence_id or source_id being audited, or 'overall'." },
     "audit_items": {
       "type": "object",
       "additionalProperties": {
         "type": "object",
+        "additionalProperties": false,
+        "required": ["status"],
         "properties": {
           "status": { "type": "string", "enum": ["met", "partial", "missing", "not_applicable"] },
           "note": { "type": "string" }
@@ -21,6 +23,7 @@
     },
     "task_vs_learning_guard": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "measured_construct": { "type": "string", "examples": ["task_completion", "learning_outcome"] },
         "equates_task_with_learning": { "type": "boolean" },
@@ -29,6 +32,11 @@
     },
     "verdict": { "type": "string", "enum": ["PASS", "CONCERN", "FAIL"] },
     "limitations": { "type": "array", "items": { "type": "string" } },
-    "suggestions": { "type": "array", "items": { "type": "string" } }
+    "suggestions": { "type": "array", "items": { "type": "string" } },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
   }
 }

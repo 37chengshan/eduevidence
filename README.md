@@ -155,13 +155,15 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 
 核心指标：Citation Support Precision / Unsupported Claim Rate / Contradiction Discovery Rate / Outcome Separation Accuracy / Scope Calibration / Intervention Evidence Alignment。详见 `docs/benchmark.md`。
 
+> ⚠️ 当前 `benchmarks/results/` 为 **harness validation（deterministic simulation）**，仅证明评测框架可运行，不是真实模型性能。真实 B2 vs B3 实证运行结果上线前不会用于效果宣称。
+
 ## Example: AI Coding Assistant
 
 > **大学一年级 C 语言课程是否应该允许学生使用生成式 AI 编程助手？**
 
 `examples/ai-coding-assistant/` 完整展示了从问题到决策的全过程：
 
-- **证据**（7 条，均绑定真实来源）：任务表现提升（Kazemitabaar 2023）、无护栏访问损害独立考试表现 -17%（Bastani 2026, PNAS）、护栏设计消除负效应（Bastani 2026）、形成性反馈写作证据（Marzuki 2024）。
+- **证据**（7 条，均绑定真实来源）：任务表现提升（Kazemitabaar 2023）、无护栏访问损害独立考试表现 -17%（Bastani 2025, PNAS）、护栏设计消除负效应（Bastani 2025）、形成性反馈写作证据（Marzuki 2024）。
 - **决策**：**PILOT** —— 任务表现证据强，但大学编程课程的直接学习效应证据缺失，无护栏风险已被证实。
 - **干预**：4 阶段试点（Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check）。
 - **评价**：无 AI 基线/后测/期末考试保持/无 AI 迁移任务 + AI 依赖风险指标。

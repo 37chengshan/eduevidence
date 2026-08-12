@@ -17,24 +17,61 @@
             "中性"
           ]
         },
-        "grid": {
-          "left": 140,
-          "right": 40
-        },
-        "xAxis": {
-          "type": "value"
-        },
-        "yAxis": {
-          "type": "category",
-          "data": [
-            "知识获得",
-            "记忆保持",
-            "独立问题解决",
-            "完成时间",
-            "作业成绩"
-          ],
-          "inverse": true
-        },
+        "grid": [
+          {
+            "left": 150,
+            "right": 40,
+            "top": 30,
+            "height": "52%"
+          },
+          {
+            "left": 150,
+            "right": 40,
+            "top": "70%",
+            "height": "18%"
+          }
+        ],
+        "xAxis": [
+          {
+            "type": "value",
+            "gridIndex": 0,
+            "minInterval": 1
+          },
+          {
+            "type": "value",
+            "gridIndex": 1,
+            "min": 0,
+            "max": 1,
+            "minInterval": 1
+          }
+        ],
+        "yAxis": [
+          {
+            "type": "category",
+            "data": [
+              "知识获得",
+              "记忆保持",
+              "独立问题解决",
+              "完成时间",
+              "作业成绩"
+            ],
+            "inverse": true,
+            "gridIndex": 0
+          },
+          {
+            "type": "category",
+            "data": [
+              "知识获得",
+              "记忆保持",
+              "独立问题解决",
+              "完成时间",
+              "作业成绩"
+            ],
+            "inverse": true,
+            "gridIndex": 1,
+            "show": false
+          }
+        ],
         "series": [
           {
             "name": "支持",
@@ -48,7 +85,10 @@
             ],
             "itemStyle": {
               "color": "#5E8A6A"
-            }
+            },
+            "xAxisIndex": 0,
+            "yAxisIndex": 0,
+            "lane": "main"
           },
           {
             "name": "反驳",
@@ -62,7 +102,10 @@
             ],
             "itemStyle": {
               "color": "#A85B53"
-            }
+            },
+            "xAxisIndex": 0,
+            "yAxisIndex": 0,
+            "lane": "main"
           },
           {
             "name": "中性",
@@ -76,16 +119,20 @@
             ],
             "itemStyle": {
               "color": "#C99A4A"
-            }
+            },
+            "xAxisIndex": 1,
+            "yAxisIndex": 1,
+            "barWidth": 6,
+            "lane": "neutral"
           }
         ]
       },
-      "summary_text": "各 Outcome 的支持/反驳/中性证据条数对比（正=支持，负=反驳）。",
+      "summary_text": "各 Outcome 的支持/反驳/中性证据条数对比（正=支持，负=反驳；中性为独立细条道）。",
       "integrity": {
-        "numbers_match_result": true,
-        "no_axis_distortion": true,
-        "no_false_precision": true,
-        "colorblind_safe": true
+        "numbers_match_result": "NOT_CHECKED",
+        "no_axis_distortion": "NOT_CHECKED",
+        "no_false_precision": "NOT_CHECKED",
+        "colorblind_safe": "NOT_CHECKED"
       }
     },
     {
@@ -178,8 +225,8 @@
                 "category": 2
               },
               {
-                "id": "S-2026-bastani",
-                "name": "S-2026-bastani",
+                "id": "S-2025-bastani",
+                "name": "S-2025-bastani",
                 "category": 3
               },
               {
@@ -281,7 +328,7 @@
               },
               {
                 "source": "E-004",
-                "target": "S-2026-bastani"
+                "target": "S-2025-bastani"
               },
               {
                 "source": "decision",
@@ -297,7 +344,7 @@
               },
               {
                 "source": "E-005",
-                "target": "S-2026-bastani"
+                "target": "S-2025-bastani"
               },
               {
                 "source": "decision",
@@ -313,7 +360,7 @@
               },
               {
                 "source": "E-006",
-                "target": "S-2026-bastani"
+                "target": "S-2025-bastani"
               },
               {
                 "source": "decision",
@@ -345,10 +392,10 @@
       },
       "summary_text": "决策→结论→证据→来源 的可追溯图谱；点击节点可追踪支持/反驳路径。",
       "integrity": {
-        "numbers_match_result": true,
-        "no_axis_distortion": true,
-        "no_false_precision": true,
-        "colorblind_safe": true
+        "numbers_match_result": "NOT_CHECKED",
+        "no_axis_distortion": "NOT_CHECKED",
+        "no_false_precision": "NOT_CHECKED",
+        "colorblind_safe": "NOT_CHECKED"
       }
     }
   ],
@@ -379,7 +426,8 @@
       },
       "yAxis": {
         "type": "value",
-        "max": 1
+        "max": 1,
+        "min": 0
       },
       "series": [
         {
@@ -411,11 +459,14 @@
         },
         "xAxis": {
           "type": "value",
-          "name": "cost (USD)"
+          "name": "cost (USD)",
+          "min": 0
         },
         "yAxis": {
           "type": "value",
-          "name": "citation support"
+          "name": "citation support",
+          "min": 0,
+          "max": 1
         },
         "series": [
           {
@@ -427,10 +478,10 @@
     },
     "summary_text": "B0-B4 基线在引用支持/无支撑率/反方发现上的对比及质量-成本散点。",
     "integrity": {
-      "numbers_match_result": true,
-      "no_axis_distortion": true,
-      "no_false_precision": true,
-      "colorblind_safe": true
+      "numbers_match_result": "NOT_CHECKED",
+      "no_axis_distortion": "NOT_CHECKED",
+      "no_false_precision": "NOT_CHECKED",
+      "colorblind_safe": "NOT_CHECKED"
     }
   }
 }

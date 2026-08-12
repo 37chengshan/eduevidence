@@ -121,12 +121,14 @@
     },
     "confidence": "Moderate",
     "confidence_breakdown": {
-      "score": 0.577,
-      "evidence_quality": 0.743,
+      "score": 0.559,
+      "evidence_quality": 0.786,
       "consistency": 0.8,
       "directness": 0.429,
       "evidence_count": 7,
-      "count_term": 0.875,
+      "independent_studies": 3,
+      "independent_samples": 3,
+      "count_term": 0.75,
       "conflict_penalty": 0.15,
       "unsupported_penalty": 0.0
     },
@@ -151,7 +153,11 @@
     "exceeds_evidence_boundary": [
       "“AI 编程助手提高学习效果”——超出：直接学习效应证据缺失。",
       "“AI 对所有人有效”——超出：人群与学科不匹配。"
-    ]
+    ],
+    "confidence_score": 0.559,
+    "confidence_policy_version": "2026-08-12.v1",
+    "independent_studies": 3,
+    "independent_samples": 3
   },
   "outcomes": [
     {
@@ -159,78 +165,111 @@
       "support_count": 1,
       "contradict_count": 0,
       "neutral_count": 0,
-      "evidence_ids": ["E-007"]
+      "evidence_ids": [
+        "E-007"
+      ]
     },
     {
       "outcome_type": "retention",
       "support_count": 0,
       "contradict_count": 0,
       "neutral_count": 1,
-      "evidence_ids": ["E-003"]
+      "evidence_ids": [
+        "E-003"
+      ]
     },
     {
       "outcome_type": "independent_problem_solving",
       "support_count": 1,
       "contradict_count": 1,
       "neutral_count": 1,
-      "evidence_ids": ["E-002", "E-004", "E-005"]
+      "evidence_ids": [
+        "E-002",
+        "E-004",
+        "E-005"
+      ]
     },
     {
       "outcome_type": "completion_time",
       "support_count": 1,
       "contradict_count": 0,
       "neutral_count": 0,
-      "evidence_ids": ["E-001"]
+      "evidence_ids": [
+        "E-001"
+      ]
     },
     {
       "outcome_type": "assignment_score",
       "support_count": 1,
       "contradict_count": 0,
       "neutral_count": 0,
-      "evidence_ids": ["E-006"]
+      "evidence_ids": [
+        "E-006"
+      ]
     }
   ],
   "claims": [
     {
       "claim": "AI 编程助手显著提升训练期间的作业完成速度与完成率。",
+      "claim_id": "C-001",
       "outcome_type": "completion_time",
-      "evidence_ids": ["E-001"],
+      "evidence_ids": [
+        "E-001"
+      ],
       "status": "SUPPORTED"
     },
     {
       "claim": "使用 AI 代码生成并未降低人工代码修改任务的表现。",
+      "claim_id": "C-002",
       "outcome_type": "independent_problem_solving",
-      "evidence_ids": ["E-002"],
+      "evidence_ids": [
+        "E-002"
+      ],
       "status": "SUPPORTED"
     },
     {
       "claim": "训练一周后，Codex 组与基线组的保持力差异未达统计显著。",
+      "claim_id": "C-003",
       "outcome_type": "retention",
-      "evidence_ids": ["E-003"],
+      "evidence_ids": [
+        "E-003"
+      ],
       "status": "SUPPORTED"
     },
     {
       "claim": "尽管练习表现更高，无护栏 GPT-4 访问的学生在独立考试中比对照组差 17%。",
+      "claim_id": "C-004",
       "outcome_type": "independent_problem_solving",
-      "evidence_ids": ["E-004"],
+      "evidence_ids": [
+        "E-004"
+      ],
       "status": "SUPPORTED"
     },
     {
       "claim": "AI 辅导工具的护栏设计（提示而非答案、教师知情的提示词）基本消除了负面学习效应。",
+      "claim_id": "C-005",
       "outcome_type": "independent_problem_solving",
-      "evidence_ids": ["E-005"],
+      "evidence_ids": [
+        "E-005"
+      ],
       "status": "SUPPORTED"
     },
     {
       "claim": "练习期间使用 GPT-4 提升任务表现（GPT 基础版 48%、GPT 辅导版 127%）——但该任务表现并未迁移到独立考试成绩。",
+      "claim_id": "C-006",
       "outcome_type": "assignment_score",
-      "evidence_ids": ["E-006"],
+      "evidence_ids": [
+        "E-006"
+      ],
       "status": "SUPPORTED"
     },
     {
       "claim": "ChatGPT 作为形成性反馈工具对学生学术写作技能产生显著正向影响，学生反馈积极。",
+      "claim_id": "C-007",
       "outcome_type": "knowledge_gain",
-      "evidence_ids": ["E-007"],
+      "evidence_ids": [
+        "E-007"
+      ],
       "status": "SUPPORTED"
     }
   ],
@@ -244,9 +283,9 @@
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919"
     },
     {
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "无护栏的生成式 AI 可能损害学习：来自高中数学的证据",
-      "year": 2026,
+      "year": 2025,
       "canonical_url": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
       "authority_level": "tier3_professional_institution",
       "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122"
@@ -277,6 +316,10 @@
       "outcome_measure": "代码编写任务的进度与用时",
       "claim": "AI 编程助手显著提升训练期间的作业完成速度与完成率。",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-KAZEMITABAAR-2023",
+      "sample_id": "SMPL-KAZEMITABAAR-2023-N69",
       "effect": "完成率 1.15 倍、用时 0.57 倍、正确率 1.8 倍",
       "duration": "3_weeks_training",
       "method": "随机分组的受控实验，含即时后测与 1 周保持力测试",
@@ -290,16 +333,18 @@
         "样本量小（69 人）",
         "自定进度环境与课堂教学不同"
       ],
-      "confounders": ["先前编程能力交互"],
+      "confounders": [
+        "先前编程能力交互"
+      ],
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
       "quality_dimensions": {
         "D1_study_design": 2,
-        "D2_sample_quality": 1,
+        "D2_sample_quality": 2,
         "D3_measurement_validity": 2,
         "D4_temporal_strength": 2,
         "D5_directness": 1
       },
-      "quality_score": 8.0,
+      "quality_score": 9.0,
       "evidence_level": "strong",
       "applicability": {
         "learner_match": "部分匹配：新手程序员但年龄更小",
@@ -326,6 +371,10 @@
       "outcome_measure": "训练期间的人工代码修改任务",
       "claim": "使用 AI 代码生成并未降低人工代码修改任务的表现。",
       "direction": "neutral",
+      "relation_to_claim": "neutral",
+      "effect_direction": "null",
+      "study_id": "STUDY-KAZEMITABAAR-2023",
+      "sample_id": "SMPL-KAZEMITABAAR-2023-N69",
       "effect": "两组间无显著差异",
       "duration": "3_weeks_training",
       "method": "受控实验，每次代码编写任务后紧跟代码修改任务",
@@ -337,16 +386,18 @@
         "代码修改并非完整的独立问题解决",
         "非大学人群"
       ],
-      "confounders": ["练习效应"],
+      "confounders": [
+        "练习效应"
+      ],
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
       "quality_dimensions": {
         "D1_study_design": 2,
-        "D2_sample_quality": 1,
+        "D2_sample_quality": 2,
         "D3_measurement_validity": 1,
         "D4_temporal_strength": 1,
         "D5_directness": 1
       },
-      "quality_score": 6.0,
+      "quality_score": 7.0,
       "evidence_level": "moderate",
       "applicability": {
         "learner_match": "部分匹配",
@@ -373,25 +424,33 @@
       "outcome_measure": "训练一周后的保持力后测",
       "claim": "训练一周后，Codex 组与基线组的保持力差异未达统计显著。",
       "direction": "neutral",
+      "relation_to_claim": "neutral",
+      "effect_direction": "null",
+      "study_id": "STUDY-KAZEMITABAAR-2023",
+      "sample_id": "SMPL-KAZEMITABAAR-2023-N69",
       "effect": "Codex 组略好但未达显著",
       "duration": "3_weeks_training_plus_1_week_retention",
       "method": "含延迟保持力测试的受控实验",
-      "strengths": ["包含延迟测试"],
+      "strengths": [
+        "包含延迟测试"
+      ],
       "limitations": [
         "1 周保持期偏短",
         "样本量小",
         "非大学人群"
       ],
-      "confounders": ["先前能力"],
+      "confounders": [
+        "先前能力"
+      ],
       "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
       "quality_dimensions": {
         "D1_study_design": 2,
-        "D2_sample_quality": 1,
+        "D2_sample_quality": 2,
         "D3_measurement_validity": 2,
         "D4_temporal_strength": 2,
         "D5_directness": 1
       },
-      "quality_score": 8.0,
+      "quality_score": 9.0,
       "evidence_level": "strong",
       "applicability": {
         "learner_match": "部分匹配",
@@ -404,9 +463,9 @@
     },
     {
       "evidence_id": "E-004",
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "无护栏的生成式 AI 可能损害学习：来自高中数学的证据",
-      "year": 2026,
+      "year": 2025,
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
@@ -418,6 +477,10 @@
       "outcome_measure": "练习阶段结束后、无法访问 AI 资源的考试",
       "claim": "尽管练习表现更高，无护栏 GPT-4 访问的学生在独立考试中比对照组差 17%。",
       "direction": "contradict",
+      "relation_to_claim": "contradict",
+      "effect_direction": "negative",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
       "effect": "独立考试低 17%",
       "duration": "课堂学习时段",
       "method": "大规模随机对照试验：练习阶段后闭卷考试",
@@ -430,7 +493,9 @@
         "高中数学而非大学编程",
         "单一国家"
       ],
-      "confounders": ["工具设计差异"],
+      "confounders": [
+        "工具设计差异"
+      ],
       "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
       "quality_dimensions": {
         "D1_study_design": 2,
@@ -452,9 +517,9 @@
     },
     {
       "evidence_id": "E-005",
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "无护栏的生成式 AI 可能损害学习：来自高中数学的证据",
-      "year": 2026,
+      "year": 2025,
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
@@ -466,6 +531,10 @@
       "outcome_measure": "练习阶段结束后、无法访问 AI 资源的考试",
       "claim": "AI 辅导工具的护栏设计（提示而非答案、教师知情的提示词）基本消除了负面学习效应。",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "null",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
       "effect": "负面效应基本消除，未观察到正面效应",
       "duration": "课堂学习时段",
       "method": "三臂大规模随机对照试验",
@@ -477,7 +546,9 @@
         "即使有护栏也未出现正向学习收益",
         "学科不匹配"
       ],
-      "confounders": ["提示工程投入"],
+      "confounders": [
+        "提示工程投入"
+      ],
       "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
       "quality_dimensions": {
         "D1_study_design": 2,
@@ -499,9 +570,9 @@
     },
     {
       "evidence_id": "E-006",
-      "source_id": "S-2026-bastani",
+      "source_id": "S-2025-bastani",
       "title": "无护栏的生成式 AI 可能损害学习：来自高中数学的证据",
-      "year": 2026,
+      "year": 2025,
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
@@ -513,6 +584,10 @@
       "outcome_measure": "学习期间的练习题表现",
       "claim": "练习期间使用 GPT-4 提升任务表现（GPT 基础版 48%、GPT 辅导版 127%）——但该任务表现并未迁移到独立考试成绩。",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-BASTANI-2025",
+      "sample_id": "SMPL-BASTANI-2025-N950",
       "effect": "练习题表现提升 48%-127%",
       "duration": "课堂学习时段",
       "method": "含练习与闭卷考试阶段的随机对照试验",
@@ -520,8 +595,12 @@
         "同一研究对比任务与学习",
         "大样本"
       ],
-      "limitations": ["学科不匹配（数学）"],
-      "confounders": ["任务熟悉度"],
+      "limitations": [
+        "学科不匹配（数学）"
+      ],
+      "confounders": [
+        "任务熟悉度"
+      ],
       "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
       "quality_dimensions": {
         "D1_study_design": 2,
@@ -557,6 +636,10 @@
       "outcome_measure": "前测-后测-延迟测写作测试",
       "claim": "ChatGPT 作为形成性反馈工具对学生学术写作技能产生显著正向影响，学生反馈积极。",
       "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "study_id": "STUDY-MARZUKI-2024",
+      "sample_id": "SMPL-MARZUKI-2024-N72",
       "effect": "写作技能显著正向提升",
       "duration": "6 小时干预",
       "method": "混合方法干预研究：前测/后测/延迟测与焦点小组",
@@ -569,7 +652,9 @@
         "单一机构",
         "精英私立大学"
       ],
-      "confounders": ["知情同意自选偏差"],
+      "confounders": [
+        "知情同意自选偏差"
+      ],
       "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
       "quality_dimensions": {
         "D1_study_design": 1,
@@ -600,11 +685,11 @@
         },
         "randomization": {
           "status": "met",
-          "note": "Kazemitabaar 2023 与 Bastani 2026 采用随机分组。"
+          "note": "Kazemitabaar 2023 与 Bastani 2025 采用随机分组。"
         },
         "pre_test": {
           "status": "met",
-          "note": "Kazemitabaar 2023 有研究前评估；Bastani 2026 测量基线协变量。"
+          "note": "Kazemitabaar 2023 有研究前评估；Bastani 2025 测量基线协变量。"
         },
         "post_test": {
           "status": "met",
@@ -612,7 +697,7 @@
         },
         "retention_test": {
           "status": "partial",
-          "note": "Kazemitabaar 2023 有 1 周保持力；Bastani 2026 无延迟测试；Marzuki 2024 有延迟测试。"
+          "note": "Kazemitabaar 2023 有 1 周保持力；Bastani 2025 无延迟测试；Marzuki 2024 有延迟测试。"
         },
         "transfer_test": {
           "status": "partial",
@@ -620,7 +705,7 @@
         },
         "sample_bias": {
           "status": "met",
-          "note": "Bastani 2026 近 1000 名学生；Kazemitabaar 2023 样本小（69 人）且年龄小。"
+          "note": "Bastani 2025 近 1000 名学生；Kazemitabaar 2023 样本小（69 人）且年龄小。"
         },
         "self_selection": {
           "status": "partial",
@@ -628,7 +713,7 @@
         },
         "measurement_validity": {
           "status": "partial",
-          "note": "练习/任务表现未被等同为学习；独立考试仅 Bastani 2026 具备。"
+          "note": "练习/任务表现未被等同为学习；独立考试仅 Bastani 2025 具备。"
         },
         "confounders": {
           "status": "partial",
@@ -648,7 +733,7 @@
         },
         "ai_usage_policy": {
           "status": "partial",
-          "note": "Bastani 2026 明确对比无护栏与带护栏的使用政策。"
+          "note": "Bastani 2025 明确对比无护栏与带护栏的使用政策。"
         },
         "dropout": {
           "status": "partial",
@@ -658,7 +743,7 @@
       "task_vs_learning_guard": {
         "measured_construct": "练习/任务表现 vs 独立考试",
         "equates_task_with_learning": false,
-        "note": "Bastani 2026 展示了将两者等同的危险：+48-127% 的练习表现与 -17% 的独立考试成绩并存。"
+        "note": "Bastani 2025 展示了将两者等同的危险：+48-127% 的练习表现与 -17% 的独立考试成绩并存。"
       },
       "verdict": "CONCERN",
       "limitations": [
@@ -668,7 +753,7 @@
       ],
       "suggestions": [
         "所有学习效应结论都须以直接的大学层面研究为前提。",
-        "试点设计采用 Bastani 2026 GPT Tutor 式护栏（提示而非答案）。",
+        "试点设计采用 Bastani 2025 GPT Tutor 式护栏（提示而非答案）。",
         "评价方案包含无 AI 迁移任务。"
       ]
     }
@@ -735,7 +820,7 @@
     "reflection_requirement": "学生必须用自己的话解释关键 AI 生成逻辑；每阶段一篇书面反思",
     "assessment": "无 AI 基线测验、试点中期测验、无 AI 迁移任务、代码质量评分、AI 使用自报",
     "risk_control": [
-      "以 Bastani 2026 GPT Tutor 为范本的带护栏使用政策（提示而非答案）",
+      "以 Bastani 2025 GPT Tutor 为范本的带护栏使用政策（提示而非答案）",
       "无 AI 迁移评估防止任务表现收益造成成绩虚高",
       "每周审查使用日志以发现拐杖行为"
     ],
@@ -745,7 +830,11 @@
       "风险指标中 AI 依赖信号超阈值",
       "助教/教师工作量不可持续"
     ],
-    "evidence_alignment": ["E-004", "E-005", "E-006"]
+    "evidence_alignment": [
+      "E-004",
+      "E-005",
+      "E-006"
+    ]
   },
   "evaluation": {
     "research_question": "在大一 C 语言编程课中，相比无 AI 教学，带护栏的 AI 编程助手（仅解释→结构化协作）能否在不增加 AI 依赖的情况下提升独立问题解决能力？",

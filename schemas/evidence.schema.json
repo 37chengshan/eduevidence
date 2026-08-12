@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/evidence.schema.json",
   "title": "EvidenceObject",
-  "description": "Claim-level evidence object. MANDATORY fields: source_id, claim, outcome_type, direction, source_location. Missing any mandatory field marks the object as UNSUPPORTED.",
+  "description": "Claim-level evidence object. MANDATORY fields: source_id, claim, outcome_type, direction, source_location. Missing any mandatory field marks the object as UNSUPPORTED. 新契约字段 relation_to_claim / effect_direction / study_id / sample_id 为可选但推荐；扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["evidence_id", "source_id", "claim", "outcome_type", "direction", "source_location"],
   "properties": {
     "evidence_id": { "type": "string", "examples": ["E-001"] },
@@ -34,7 +34,11 @@
     },
     "outcome_measure": { "type": "string", "examples": ["final_exam_score", "post_test_transfer_task"] },
     "claim": { "type": "string", "description": "The specific claim this evidence supports or contradicts." },
-    "direction": { "type": "string", "enum": ["support", "contradict", "neutral"] },
+    "direction": { "type": "string", "enum": ["support", "contradict", "neutral"], "description": "Legacy direction field, kept for backward compatibility." },
+    "relation_to_claim": { "type": "string", "enum": ["support", "contradict", "neutral"], "description": "新契约字段（P0-05）：该证据与 claim 的关系。优先于 direction 用于置信度一致性计算。" },
+    "effect_direction": { "type": "string", "enum": ["positive", "negative", "null"], "description": "新契约字段（P0-05）：效应方向。" },
+    "study_id": { "type": "string", "description": "新契约字段（P0-05）：所属研究的稳定标识，用于独立研究计数。" },
+    "sample_id": { "type": "string", "description": "新契约字段（P0-05）：所属样本的稳定标识，用于独立样本计数。" },
     "effect": { "type": "string", "examples": ["positive_medium", "null", "negative_small"] },
     "duration": { "type": "string", "examples": ["8_weeks"] },
     "method": { "type": "string", "examples": ["quasi_experimental_pre_post"] },
@@ -65,6 +69,11 @@
       "description": "Match against the target context: learner match, subject match, tool match, usage match, teacher support match."
     },
     "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
-    "status": { "type": "string", "enum": ["SUPPORTED", "UNSUPPORTED", "DOWNGRADE_CONFIDENCE"], "default": "SUPPORTED" }
+    "status": { "type": "string", "enum": ["SUPPORTED", "UNSUPPORTED", "DOWNGRADE_CONFIDENCE"], "default": "SUPPORTED" },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
   }
 }

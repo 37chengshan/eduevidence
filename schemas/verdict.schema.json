@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/verdict.schema.json",
   "title": "EducationVerdict",
-  "description": "Output of the Evidence Tribunal: what the evidence supports, cannot support, and the recommended action. Decision is one of ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE (expressed here as adopt|pilot|reject|insufficient_evidence).",
+  "description": "Output of the Evidence Tribunal: what the evidence supports, cannot support, and the recommended action. Decision is one of ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE (expressed here as adopt|pilot|reject|insufficient_evidence). confidence 由 scripts/compute_confidence.py 确定性计算并覆盖模型值；confidence_score 是规则化指数（0-1），不是概率。扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["decision_question", "recommended_action", "confidence"],
   "properties": {
     "decision_question": { "type": "string" },
@@ -22,16 +22,35 @@
     "risk_effect": { "type": ["string", "null"] },
     "applicability": { "type": "object", "additionalProperties": true },
     "confidence": { "type": "string", "enum": ["High", "Moderate", "Low", "Insufficient"] },
+    "confidence_score": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1,
+      "description": "规则化置信度指数（0-1），由 compute_confidence.py 覆盖模型值。不是概率，禁止宣传为百分比。"
+    },
+    "confidence_policy_version": { "type": "string", "description": "确定性置信度策略版本号（如 2026-08-12.v1）。" },
+    "independent_studies": { "type": ["integer", "null"], "minimum": 0, "description": "独立研究数（按 study_id/source_id 去重）。" },
+    "independent_samples": { "type": ["integer", "null"], "minimum": 0, "description": "独立样本数（按 sample_id 去重）。" },
     "confidence_breakdown": {
       "type": "object",
       "additionalProperties": true,
-      "description": "Rule-based components: evidence_quality, consistency, directness, evidence_count, conflict_penalty, unsupported_penalty."
+      "description": "Rule-based components: evidence_quality, consistency, directness, evidence_count, independent_studies, independent_samples, conflict_penalty, unsupported_penalty."
     },
+    "raw_model_confidence": {
+      "type": ["string", "null"],
+      "description": "模型原始 confidence 输出（被确定性值覆盖前的值，仅供审计比对）。"
+    },
+    "raw_model_confidence_breakdown": { "type": "object", "additionalProperties": true },
     "what_can_be_claimed": { "type": "array", "items": { "type": "string" } },
     "what_cannot_be_claimed": { "type": "array", "items": { "type": "string" } },
     "missing_evidence": { "type": "array", "items": { "type": "string" } },
     "recommended_action": { "type": "string", "enum": ["adopt", "pilot", "reject", "insufficient_evidence"] },
     "decision_rationale": { "type": "string" },
-    "exceeds_evidence_boundary": { "type": "array", "items": { "type": "string" }, "description": "Conclusions that currently go beyond the evidence boundary." }
+    "exceeds_evidence_boundary": { "type": "array", "items": { "type": "string" }, "description": "Conclusions that currently go beyond the evidence boundary." },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
   }
 }

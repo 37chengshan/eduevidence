@@ -21,12 +21,12 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "data_ref": null,
-      "title": "结果证据概览",
+      "title": "Outcome Evidence Overview",
       "integrity": {
-        "numbers_match_result": true,
-        "no_axis_distortion": true,
-        "no_false_precision": true,
-        "colorblind_safe": true
+        "numbers_match_result": "NOT_CHECKED",
+        "no_axis_distortion": "NOT_CHECKED",
+        "no_false_precision": "NOT_CHECKED",
+        "colorblind_safe": "NOT_CHECKED"
       }
     },
     {
@@ -34,12 +34,12 @@
       "purpose": "interactive_analysis",
       "engine": "echarts",
       "data_ref": null,
-      "title": "主张-证据追溯",
+      "title": "Claim-Evidence Trace",
       "integrity": {
-        "numbers_match_result": true,
-        "no_axis_distortion": true,
-        "no_false_precision": true,
-        "colorblind_safe": true
+        "numbers_match_result": "NOT_CHECKED",
+        "no_axis_distortion": "NOT_CHECKED",
+        "no_false_precision": "NOT_CHECKED",
+        "colorblind_safe": "NOT_CHECKED"
       }
     }
   ],
@@ -74,24 +74,25 @@
       "chart_id": "outcome-comparison",
       "purpose": "statistical_publication",
       "engine": "academic_figure",
-      "caption": "图 1. 各结果类型中支持性证据的数量。来源：EduEvidence result.json。"
+      "caption": "Fig. 1. Counts of supporting / contradicting / neutral evidence per outcome type (grouped bars; publication figure, theme-independent). Source: EduEvidence result.json."
     }
   ],
   "integrity_gate": {
     "status": "PASS",
-    "contract_valid": true,
-    "claims_bound": 7,
+    "contract_valid": "PASS",
+    "claims_bound": "PASS",
     "evidence_bound": 7,
     "sources_resolved": 3,
-    "numbers_match_result": true,
-    "no_axis_distortion": true,
-    "no_false_precision": true,
-    "colorblind_safe": true,
+    "numbers_match_result": "PASS",
+    "bilingual_structure_match": "PASS",
+    "no_false_precision": "PASS",
+    "no_axis_distortion": "NOT_CHECKED",
+    "colorblind_safe": "NOT_CHECKED",
     "langs": [
       "zh",
       "en"
     ],
     "generated_by": "build_report.py",
-    "source": "examples/ai-coding-assistant/result.json + examples/ai-coding-assistant/result.zh.json"
+    "source": "result.json + result.zh.json"
   }
 }

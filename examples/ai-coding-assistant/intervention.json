@@ -37,7 +37,7 @@
   "reflection_requirement": "students must explain key AI-generated logic in their own words; one written reflection per phase",
   "assessment": "no-AI baseline quiz, mid-pilot quiz, no-AI transfer task, code-quality rubric, AI-usage self-report",
   "risk_control": [
-    "guardrailed usage policy modeled on Bastani 2026 GPT Tutor (hints, not answers)",
+    "guardrailed usage policy modeled on Bastani 2025 GPT Tutor (hints, not answers)",
     "no-AI transfer assessment prevents grade inflation from task-performance gains",
     "usage logs reviewed weekly to detect crutch behavior"
   ],

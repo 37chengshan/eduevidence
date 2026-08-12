@@ -70,14 +70,68 @@ def _bar_chart(title: str, names: list[str], values: list[float], palette: list[
         body.append(f'<text x="{x + bw / 2:.1f}" y="{plot_y + plot_h + 16}" text-anchor="middle" '
                     f'font-size="10" fill="#333">{_esc(name)}</text>')
         body.append(f'<text x="{x + bw / 2:.1f}" y="{y - 4:.1f}" text-anchor="middle" font-size="10" '
-                    f'fill="#333">{value:.3f}{_esc(unit)}</text>')
-    for tick in range(0, 5):
-        ty = plot_y + plot_h - (tick / 4) * plot_h
+                    f'fill="#333">{value:.0f}{_esc(unit)}</text>')
+    # 计数图 Y 轴整数刻度（0,1,2,…）；max=1 时只显示 0/1（P0-11）
+    ticks = [0]
+    while ticks[-1] < maxv and len(ticks) < 5:
+        ticks.append(ticks[-1] + 1)
+    if ticks[-1] < maxv:
+        ticks.append(int(maxv))
+    for t in ticks:
+        ty = plot_y + plot_h - (t / maxv) * plot_h
         body.append(f'<line x1="{plot_x - 5}" y1="{ty:.1f}" x2="{plot_x}" y2="{ty:.1f}" stroke="#999"/>')
         body.append(f'<text x="{plot_x - 8}" y="{ty + 3:.1f}" text-anchor="end" font-size="9" '
-                    f'fill="#666">{tick * maxv / 4:.2f}</text>')
+                    f'fill="#666">{t}</text>')
     body.append(f'<text x="{plot_x + plot_w / 2}" y="30" text-anchor="middle" font-size="14" '
                 f'font-weight="700" fill="#111">{_esc(title)}</text>')
+    return _figure_svg(title, caption, "".join(body), h=h)
+
+
+def _grouped_bar_chart(title: str, names: list[str], series: list[dict],
+                       caption: str, palette: list[str], h: int = 300) -> str:
+    """方向分组条形图：每组一个结果类型，内部并列 support / contradict / neutral
+    三根柱（P0-12）。计数轴整数刻度（P0-11）。"""
+    w = 720
+    plot_x, plot_w, plot_y, plot_h = 70, 580, 50, 200
+    maxv = max([1] + [abs(v) for s in series for v in s["data"]])
+    group_w = plot_w / max(1, len(names))
+    n_series = len(series)
+    bar_w = min(34, group_w / (n_series + 1))
+    body = [f'<line x1="{plot_x}" y1="{plot_y + plot_h}" x2="{plot_x + plot_w}" '
+            f'y2="{plot_y + plot_h}" stroke="#333" stroke-width="1"/>']
+    for i, name in enumerate(names):
+        cx = plot_x + group_w * (i + 0.5)
+        body.append(f'<text x="{cx:.1f}" y="{plot_y + plot_h + 16}" text-anchor="middle" '
+                    f'font-size="10" fill="#333">{_esc(name)}</text>')
+        for j, s in enumerate(series):
+            value = s["data"][i] if i < len(s["data"]) else 0
+            bh = (value / maxv) * plot_h
+            x = plot_x + group_w * i + group_w / 2 + bar_w * (j - (n_series - 1) / 2)
+            y = plot_y + plot_h - bh
+            body.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w:.1f}" '
+                        f'height="{max(bh, 1):.1f}" fill="{palette[j % len(palette)]}"/>')
+            if bh > 8:
+                body.append(f'<text x="{x + bar_w / 2:.1f}" y="{y - 3:.1f}" text-anchor="middle" '
+                            f'font-size="9" fill="#333">{value:.0f}</text>')
+    ticks = [0]
+    while ticks[-1] < maxv and len(ticks) < 5:
+        ticks.append(ticks[-1] + 1)
+    if ticks[-1] < maxv:
+        ticks.append(int(maxv))
+    for t in ticks:
+        ty = plot_y + plot_h - (t / maxv) * plot_h
+        body.append(f'<line x1="{plot_x - 5}" y1="{ty:.1f}" x2="{plot_x}" y2="{ty:.1f}" stroke="#999"/>')
+        body.append(f'<text x="{plot_x - 8}" y="{ty + 3:.1f}" text-anchor="end" font-size="9" '
+                    f'fill="#666">{t}</text>')
+    body.append(f'<text x="{plot_x + plot_w / 2}" y="30" text-anchor="middle" font-size="14" '
+                f'font-weight="700" fill="#111">{_esc(title)}</text>')
+    # 图例
+    lx = plot_x
+    for s in series:
+        body.append(f'<rect x="{lx}" y="8" width="10" height="10" '
+                    f'fill="{palette[series.index(s) % len(palette)]}"/>')
+        body.append(f'<text x="{lx + 14}" y="17" font-size="10" fill="#333">{_esc(s["name"])}</text>')
+        lx += 14 + len(s["name"]) * 11 + 18
     return _figure_svg(title, caption, "".join(body), h=h)
 
 
@@ -132,19 +186,54 @@ def build_figure_data(result: dict) -> dict[str, Any]:
     }
 
 
-def render_figures(figure_data: dict, theme: str = "okabe_ito") -> dict[str, str]:
+FIGURE_TITLES = {
+    "zh": {"fig1": "各结果类型的方向证据分布", "fig2": "各基线引用支持精度",
+           "fig3": "质量 vs 成本"},
+    "en": {"fig1": "Direction of evidence by outcome type", "fig2": "Citation support by baseline",
+           "fig3": "Quality vs Cost"},
+}
+
+FIGURE_CAPTIONS = {
+    "zh": {
+        "fig1": "图 1. 各结果类型的支持 / 反驳 / 中性证据条数（分组柱，出版级学术图，不随主题变化）。来源：EduEvidence result.json。",
+        "fig2": "图 2. B0-B4 各基线的引用支持精度。来源：EduEvidence Benchmark v2。",
+        "fig3": "图 3. 各基线的引用支持率与单题成本的对比。",
+    },
+    "en": {
+        "fig1": "Fig. 1. Counts of supporting / contradicting / neutral evidence per outcome type "
+                "(grouped bars; publication figure, theme-independent). Source: EduEvidence result.json.",
+        "fig2": "Fig. 2. Citation support precision per baseline B0-B4. Source: EduEvidence Benchmark v2.",
+        "fig3": "Fig. 3. Citation support rate vs cost per question across baselines.",
+    },
+}
+
+DIR_SERIES = {
+    "zh": [{"name": "支持", "data": "support_count"},
+           {"name": "反驳", "data": "contradict_count"},
+           {"name": "中性", "data": "neutral_count"}],
+    "en": [{"name": "Support", "data": "support_count"},
+           {"name": "Contradict", "data": "contradict_count"},
+           {"name": "Neutral", "data": "neutral_count"}],
+}
+
+
+def render_figures(figure_data: dict, theme: str = "okabe_ito", lang: str = "zh") -> dict[str, str]:
     """Render publication SVG figures from figure_data (pure Python)."""
     palette = {"okabe_ito": OKABE_ITO, "nature": NATURE, "conservative": CONSERVATIVE}[theme]
     figures: dict[str, str] = {}
 
-    # Figure 1: outcome comparison (support counts per outcome)
+    # Figure 1: Outcome × Direction (support / contradict / neutral 三色分组，
+    # 不再只画 support_count；计数轴整数刻度，避免伪精度)
     outcomes = figure_data.get("outcomes", [])
     if outcomes:
-        names = [zh_outcome(o["outcome_type"]) for o in outcomes]
-        support = [o["support_count"] for o in outcomes]
-        figures["outcome-comparison.svg"] = _bar_chart(
-            "各结果类型的支持证据数量", names, support, palette,
-            "图 1. 各结果类型中支持性证据的数量。来源：EduEvidence result.json。")
+        names = [zh_outcome(o["outcome_type"]) if lang == "zh"
+                 else o["outcome_type"] for o in outcomes]
+        series = [{"name": s["name"],
+                   "data": [o.get(s["data"], 0) for o in outcomes]}
+                  for s in DIR_SERIES[lang]]
+        figures["outcome-comparison.svg"] = _grouped_bar_chart(
+            FIGURE_TITLES[lang]["fig1"], names, series,
+            FIGURE_CAPTIONS[lang]["fig1"], palette)
 
     # Figure 2: benchmark citation support
     baselines = figure_data.get("benchmark_baselines", {})
@@ -152,13 +241,13 @@ def render_figures(figure_data: dict, theme: str = "okabe_ito") -> dict[str, str
         names = list(baselines.keys())
         citation = [b.get("citation_support_precision", 0) for b in baselines.values()]
         figures["benchmark-citation-support.svg"] = _bar_chart(
-            "各基线引用支持精度", names, citation, palette,
-            "图 2. B0-B4 各基线的引用支持精度。来源：EduEvidence Benchmark v2。")
+            FIGURE_TITLES[lang]["fig2"], names, citation, palette,
+            FIGURE_CAPTIONS[lang]["fig2"])
         costs = [b.get("usage", {}).get("cost_usd", 0) for b in baselines.values()]
         if len(costs) == len(citation):
             figures["benchmark-quality-cost.svg"] = _scatter_chart(
-                "质量 vs 成本", list(zip(costs, citation)), names, palette,
-                "图 3. 各基线的引用支持率与单题成本的对比。")
+                FIGURE_TITLES[lang]["fig3"], list(zip(costs, citation)), names, palette,
+                FIGURE_CAPTIONS[lang]["fig3"])
     return figures
 
 
@@ -196,13 +285,14 @@ def main() -> int:
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--theme", choices=["okabe_ito", "nature", "conservative"],
                         default="okabe_ito")
+    parser.add_argument("--lang", choices=["zh", "en"], default="zh")
     parser.add_argument("--export-png", action="store_true",
                         help="try matplotlib export to PNG/PDF (optional)")
     args = parser.parse_args()
 
     result = json.loads(Path(args.result).read_text(encoding="utf-8"))
     figure_data = build_figure_data(result)
-    figures = render_figures(figure_data, theme=args.theme)
+    figures = render_figures(figure_data, theme=args.theme, lang=args.lang)
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

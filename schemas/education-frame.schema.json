@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/education-frame.schema.json",
   "title": "EducationResearchFrame",
-  "description": "Structured framing of an education research question. Framing MUST be completed before any final teaching recommendation is generated (EduEvidence EvidenceFlow Protocol, step 1).",
+  "description": "Structured framing of an education research question. Framing MUST be completed before any final teaching recommendation is generated (EduEvidence EvidenceFlow Protocol, step 1). 扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["question", "decision_target"],
   "properties": {
     "question": {
@@ -96,6 +96,11 @@
     },
     "inclusion_criteria": { "type": "array", "items": { "type": "string" } },
     "exclusion_criteria": { "type": "array", "items": { "type": "string" } },
-    "success_condition": { "type": "string", "description": "What would count as a successful outcome for this decision." }
+    "success_condition": { "type": "string", "description": "What would count as a successful outcome for this decision." },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
   }
 }

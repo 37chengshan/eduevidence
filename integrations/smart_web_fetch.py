@@ -20,16 +20,18 @@ from __future__ import annotations
 from typing import Any
 
 from retrieval.fetch import fetch_url
+from retrieval.validate import is_private_url
 
 
 def is_private(url: str) -> bool:
-    """Private/local URLs must never go through third-party cleaning providers."""
-    lowered = url.lower()
-    private_hints = (
-        "localhost", "127.0.0.1", "10.", "192.168.", "172.16.", "file://",
-        "intranet", "login", "signin", "session", "account", "dashboard",
-    )
-    return any(h in lowered for h in private_hints)
+    """Private/local URLs must never go through third-party cleaning providers.
+
+    Host-based judgement (urllib.parse.urlparse + ipaddress): loopback, private,
+    link-local, CGNAT, reserved ranges and local hostnames. URL path content —
+    e.g. a DOI's "10." prefix — never influences the verdict, so
+    https://doi.org/10.1145/... is NOT private. See retrieval.validate.is_private_url.
+    """
+    return is_private_url(url)
 
 
 def smart_fetch(url: str, *, expect_title: str | None = None, timeout: int = 20) -> dict[str, Any]:

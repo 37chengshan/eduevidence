@@ -42,7 +42,7 @@
       ]
     },
     {
-      "target": "S-2026-bastani",
+      "target": "S-2025-bastani",
       "study_design": "large-scale three-arm randomized controlled trial (no AI / GPT Base unguarded / GPT Tutor guardrailed)",
       "audit_items": {
         "control_group": {"status": "met", "note": "No-generative-AI control group present."},
@@ -119,14 +119,14 @@
   ],
   "audit_items": {
     "control_group": {"status": "met", "note": "All three studies include a no-AI or traditional-instruction comparison."},
-    "randomization": {"status": "partial", "note": "Bastani 2026 and Lee 2025 randomized; Marzuki 2024 did not."},
+    "randomization": {"status": "partial", "note": "Bastani 2025 and Lee 2025 randomized; Marzuki 2024 did not."},
     "pre_test": {"status": "met", "note": "Marzuki has pre/post/delayed tests; Bastani and Lee measure baselines."},
     "post_test": {"status": "met", "note": "Immediate outcome measures present in all studies."},
     "retention_test": {"status": "partial", "note": "Only Marzuki 2024 includes a delayed test; Bastani and Lee have none."},
     "transfer_test": {"status": "missing", "note": "No study tests independent no-AI writing in a university context; Bastani's independent exam is the closest analogue but in mathematics."},
     "sample_bias": {"status": "partial", "note": "Bastani is large; Lee is four classes; Marzuki is a single elite private university."},
     "self_selection": {"status": "partial", "note": "Marzuki consent-based; Bastani and Lee randomized."},
-    "measurement_validity": {"status": "partial", "note": "Task performance is separated from independent performance only in Bastani 2026."},
+    "measurement_validity": {"status": "partial", "note": "Task performance is separated from independent performance only in Bastani 2025."},
     "confounders": {"status": "partial", "note": "Novelty effects, tool versions and instructor effects not fully controlled across the set."},
     "instructor_effect": {"status": "partial", "note": "Marzuki single institution; Lee across four classes; Bastani standardized sessions."},
     "novelty_effect": {"status": "partial", "note": "Short interventions in all three studies likely inflate engagement."},
@@ -137,12 +137,12 @@
   "task_vs_learning_guard": {
     "measured_construct": "writing/assignment scores vs independent writing ability",
     "equates_task_with_learning": false,
-    "note": "Writing scores or assignment scores must NOT be equated with independent writing ability. Bastani 2026 shows +48-127% task performance coexisting with -17% independent exam performance; Marzuki's improved writing scores under a ChatGPT-feedback condition carry the same risk of reflecting AI-supported task performance rather than independent writing skill."
+    "note": "Writing scores or assignment scores must NOT be equated with independent writing ability. Bastani 2025 shows +48-127% task performance coexisting with -17% independent exam performance; Marzuki's improved writing scores under a ChatGPT-feedback condition carry the same risk of reflecting AI-supported task performance rather than independent writing skill."
   },
   "verdict": "CONCERN",
   "limitations": [
     "No university-level academic writing RCT measuring independent no-AI writing ability.",
-    "Bastani 2026 is methodologically strong but in high school mathematics; subject directness to university academic writing is low.",
+    "Bastani 2025 is methodologically strong but in high school mathematics; subject directness to university academic writing is low.",
     "Lee 2025 is a high school ESL RCT with no retention or transfer test.",
     "Marzuki 2024 is the only writing-context study but lacks randomization, is single-institution, and has no transfer assessment."
   ],

@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/chart-spec.schema.json",
   "title": "ChartSpec",
-  "description": "Chart declaration used by the Visualization Router (v5 方案 §34, §47). Purpose decides the engine: interactive_analysis -> ECharts, statistical_publication -> Academic Figures, process_or_story -> AntV Infographic, simple_structure -> HTML/CSS/SVG.",
+  "description": "Chart declaration used by the Visualization Router (v5 方案 §34, §47). Purpose decides the engine: interactive_analysis -> ECharts, statistical_publication -> Academic Figures, process_or_story -> AntV Infographic, simple_structure -> HTML/CSS/SVG. 扩展字段一律放在 extensions 内。",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "required": ["chart_id", "purpose", "engine", "data_ref"],
   "properties": {
     "chart_id": { "type": "string", "examples": ["outcome-evidence-overview", "benchmark-a"] },
@@ -26,9 +26,10 @@
     "caption": { "type": "string", "description": "Figure caption; academic figures require captions (v5 方案 §37)." },
     "x_axis": { "type": "string" },
     "y_axis": { "type": "string" },
-    "series": { "type": "array", "items": { "type": "object" } },
+    "series": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
     "statistics": {
       "type": "object",
+      "additionalProperties": false,
       "description": "Only pre-existing statistics from analysis result (v5 方案 §60: never invent p-values).",
       "properties": {
         "has_error_bars": { "type": "boolean" },
@@ -38,6 +39,7 @@
     },
     "integrity": {
       "type": "object",
+      "additionalProperties": false,
       "description": "Per-chart scientific integrity flags (v5 方案 §27).",
       "properties": {
         "numbers_match_result": { "type": "boolean", "default": true },
@@ -46,6 +48,11 @@
         "colorblind_safe": { "type": "boolean", "default": true },
         "summary_text": { "type": "string", "description": "Accessible non-color-only summary." }
       }
+    },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
     }
   }
 }

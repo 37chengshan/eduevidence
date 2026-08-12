@@ -2,6 +2,20 @@
 
 Benchmark 回答两个问题：**方法论有没有用**（EduEvidence 是否优于普通研究 Agent）与**多 Agent 有没有用**（EduEvidence+Agent MCP 是否优于 Single-Agent）。本文档定义第一版评测题目集、基线、消融与指标。
 
+## 零、Simulation 与 Empirical 分层（必须先读）
+
+Benchmark 分两层，**只有第二层可作为性能证据**：
+
+| 层 | 名称 | 数据 | 用途 | 能否作性能证据 |
+|----|------|------|------|----------------|
+| Layer A | Harness Validation | deterministic simulation（`benchmark_v2.py`，固定种子 + 人工预设 profile） | 验证题目集 / evaluator / 报告 / 图表 / 成本字段 / Ablation 管线可运行 | ❌ 不能，产物必须标注 `SIMULATED` |
+| Layer B | Empirical Runs | B0–B4 真实模型调用 | 证明方法论 / 多 Agent 的真实增益 | ✅ 唯一可用证据 |
+
+**Empirical Run 必须记录 run manifest**：模型家族与版本、temperature、工具集、检索 provider、题目版本、时间戳、重复次数（≥3，最好 5）、每次的 token / latency / cost，报告均值 + 方差 / CI。
+
+**指标升级要求（gold-based）**：Citation Support 由独立标注判断 Claim 与 Source excerpt 是否一致；Outcome Separation Accuracy 对照 gold outcome 而非只查枚举；Scope Calibration 对照 gold allowed_scope；Contradiction Discovery 同时报告 precision 与 recall。
+
+
 ## 一、评测题目集（第一版 30 题）
 
 ### 1.1 结构与复杂度分布
