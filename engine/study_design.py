@@ -27,16 +27,17 @@ def validate_design_grounding(project: ProjectWorkspace, design: dict) -> list[s
     Returns a list of error strings (empty == valid).
     """
     errors: list[str] = []
+    # grounding gate first: an empty gap list is a grounding failure with a
+    # clear message, not just a schema minItems violation
+    if not design.get("gap_ids"):
+        return ["gap_ids must be non-empty: no new study design without "
+                "evidence grounding"]
     schema_errors = validate_record("study-design", design)
     if schema_errors:
         errors.extend(schema_errors)
         return errors
 
-    gap_ids = design.get("gap_ids", [])
-    if not gap_ids:
-        errors.append("gap_ids must be non-empty: no new study design without "
-                      "evidence grounding")
-        return errors
+    gap_ids = design["gap_ids"]
 
     # load this project's gaps (all revisions; the gap file records revision)
     gaps_dir = project.path / "gaps"

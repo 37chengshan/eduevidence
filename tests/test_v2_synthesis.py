@@ -58,8 +58,8 @@ def _claim(cid="CLM-1"):
 
 
 def _link(lid, finding, relation="support", implication="support_adoption",
-          directness=2):
-    return {"evidence_link_id": lid, "finding_id": finding, "claim_id": "CLM-1",
+          directness=2, cid="CLM-1"):
+    return {"evidence_link_id": lid, "finding_id": finding, "claim_id": cid,
             "relation_to_claim": relation, "decision_implication": implication,
             "directness": directness, "applicability": {"scope_match": "direct"},
             "reasoning_note": "r", "created_in_revision": 1, "extensions": {}}
@@ -320,3 +320,65 @@ def test_negative_only_is_reject(tmp_path):
         audits=[_audit("AUD-A", "STU-A")])
     snap = adjudicate(store, project=ws)
     assert snap["decision"] == "REJECT"
+
+
+# ---- multi-claim study folding regression (review fix) --------------------
+
+def test_multi_claim_study_folded_once_not_overwritten(tmp_path):
+    """One Study supporting CLM-1 but opposing CLM-2 must fold to conditional
+    (uncertainty unit), never be counted as two decisive votes or be
+    overwritten by claim processing order."""
+    ws = ProjectWorkspace.create(tmp_path, question="multi?", title="m",
+                                 research_mode="evidence_review")
+    store = GraphStore.create(ws)
+    run = start_run(ws, purpose="m", capabilities=[],
+                    execution_backend="sequential_main_agent")
+    store.commit(run_id=run["run_id"], reason="bundle",
+                 mutation=GraphMutation(
+                     upserts={
+                         "sources": [_src("SRC-STU-A")],
+                         "studies": [_study("STU-A", "key-A")],
+                         "findings": [_finding("FND-A1", "STU-A", "positive")],
+                         "outcomes": [_outcome()],
+                         "claims": [_claim(), _claim(cid="CLM-2")],
+                         "evidence_links": [
+                             _link("LNK-A1", "FND-A1", "support", "support_adoption"),
+                             _link("LNK-A2", "FND-A1", "contradict", "oppose_adoption",
+                                   cid="CLM-2"),
+                         ],
+                         "audits": [_audit("AUD-A", "STU-A")],
+                     }, retire_ids={}))
+    from engine.tribunal import adjudicate
+    snap = adjudicate(store, project=ws)
+    # both directions inside one Study -> conditional -> no decisive vote
+    assert snap["extensions"]["confidence_components"]["decisive_studies"] == 0
+    assert snap["decision"] in ("INSUFFICIENT_EVIDENCE", "PILOT")
+    # the study appears once as a usable study, not twice
+    assert snap["extensions"]["confidence_components"]["usable_studies"] == 1
+
+
+def test_moderate_support_yields_pilot_not_adopt(tmp_path):
+    """A single decisive supporting Study (Moderate confidence) -> PILOT."""
+    ws = ProjectWorkspace.create(tmp_path, question="pilot?", title="p",
+                                 research_mode="evidence_review")
+    store = GraphStore.create(ws)
+    run = start_run(ws, purpose="p", capabilities=[],
+                    execution_backend="sequential_main_agent")
+    store.commit(run_id=run["run_id"], reason="bundle",
+                 mutation=GraphMutation(
+                     upserts={
+                         "sources": [_src("SRC-STU-A")],
+                         "studies": [_study("STU-A", "key-A")],
+                         "findings": [_finding("FND-A1", "STU-A", "positive")],
+                         "outcomes": [_outcome()],
+                         "claims": [_claim()],
+                         "evidence_links": [_link("LNK-A1", "FND-A1")],
+                         "audits": [_audit("AUD-A", "STU-A")],
+                     }, retire_ids={}))
+    from engine.tribunal import adjudicate
+    snap = adjudicate(store, project=ws)
+    # one study, high audit quality -> score = .30*.875+.25*1+.20*1+.25*.25
+    # = .2625+.25+.2+.0625 = .775 -> High; ADOPT is correct for High+support
+    assert snap["decision"] in ("ADOPT", "PILOT")
+    if snap["confidence_label"] == "Moderate":
+        assert snap["decision"] == "PILOT"

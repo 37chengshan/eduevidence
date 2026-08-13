@@ -119,59 +119,104 @@ def _latest_audits(store: GraphStore) -> dict[str, dict]:
     return latest
 
 
+def _study_implication(implications: list[str]) -> str:
+    """Collapse all active links of one Study into one decision relation.
+
+    support-only → support_adoption; oppose-only → oppose_adoption;
+    any conditional or both directions → conditional; neutral-only → neutral.
+    This is Study-level folding: every Study is folded exactly once across
+    ALL its links, so a multi-claim Study can never vote twice or be
+    overwritten by a later Claim.
+    """
+    if not implications:
+        return "neutral"
+    support = any(i == "support_adoption" for i in implications)
+    oppose = any(i == "oppose_adoption" for i in implications)
+    conditional = any(i == "conditional" for i in implications)
+    if conditional or (support and oppose):
+        return "conditional"
+    if support:
+        return "support_adoption"
+    if oppose:
+        return "oppose_adoption"
+    return "neutral"
+
+
 def _confidence(store: GraphStore, syntheses: tuple[ClaimSynthesis, ...]) -> dict:
-    """Deterministic confidence over decisive usable independent studies."""
+    """Deterministic confidence over usable independent studies.
+
+    Each usable Study (valid source provenance, resolved identity, latest
+    audit != fail) is folded exactly once across ALL its links, independent
+    of Claim: support_adoption / oppose_adoption are decisive votes,
+    conditional counts as a critical-uncertainty unit, neutral is ignored.
+
+        quality_term     = mean over usable studies of
+                           (design+sample+measurement+temporal) / 8
+        consistency_term = majority proportion over decisive relations
+        directness_term  = mean across studies of (mean link directness / 2)
+        count_term       = min(1.0, usable_independent_studies / 4)
+        conflict_penalty = 0.15 only when independent support_adoption AND
+                           oppose_adoption studies both exist
+        uncertainty      = min(0.20, 0.05 * critical_uncertainty_units)
+
+    Directness is not double-counted (quality reads only the four audit
+    dimensions). The score is an auditable internal index, never a
+    probability.
+    """
     usable = _usable_studies(store)
     audits = _latest_audits(store)
     findings = {f["finding_id"]: f for f in store.read_table("findings")}
     links = store.read_table("evidence_links")
-    claim_ids = {c["claim_id"] for c in store.read_table("claims")}
+
+    # group links per study (one fold per study across all claims)
+    study_link_map: dict[str, list[dict]] = {}
+    for link in links:
+        fnd = findings.get(link["finding_id"])
+        if fnd is not None:
+            study_link_map.setdefault(fnd["study_id"], []).append(link)
 
     decisive: dict[str, str] = {}  # study_id -> support_adoption|oppose_adoption
+    usable_studies: list[str] = []
     quality_sum = 0.0
     directness_sum = 0.0
     directness_count = 0
-    study_count = 0
     critical_uncertainty_units = 0
 
-    for syn in syntheses:
-        for sid in syn.study_ids:
-            if sid not in usable:
-                continue
-            audit = audits.get(sid)
-            if audit is None or audit.get("overall_status") == "fail":
-                continue
-            relation = _study_relation(store, syn, sid, findings, links)
-            if relation in ("support_adoption", "oppose_adoption"):
-                decisive[sid] = relation
-            elif relation == "conditional":
-                critical_uncertainty_units += 1
-            study_count += 1
-            if audit is not None:
-                quality_sum += (
-                    audit.get("design_quality", 0) + audit.get("sample_quality", 0)
-                    + audit.get("measurement_validity", 0)
-                    + audit.get("temporal_strength", 0)) / 8.0
-            dirs = [int(l.get("directness", 0)) for l in links
-                    if l["claim_id"] in claim_ids
-                    and findings.get(l["finding_id"], {}).get("study_id") == sid]
-            if dirs:
-                directness_sum += sum(dirs) / len(dirs) / 2.0
-                directness_count += 1
+    for sid, study in sorted(usable.items()):
+        audit = audits.get(sid)
+        if audit is None or audit.get("overall_status") == "fail":
+            continue
+        usable_studies.append(sid)
+        impls = [decision_implication(l) for l in study_link_map.get(sid, [])]
+        relation = _study_implication(impls)
+        if relation in ("support_adoption", "oppose_adoption"):
+            decisive[sid] = relation
+        elif relation == "conditional":
+            critical_uncertainty_units += 1
+        quality_sum += (
+            audit.get("design_quality", 0) + audit.get("sample_quality", 0)
+            + audit.get("measurement_validity", 0)
+            + audit.get("temporal_strength", 0)) / 8.0
+        dirs = [int(l.get("directness", 0)) for l in study_link_map.get(sid, [])]
+        if dirs:
+            directness_sum += sum(dirs) / len(dirs) / 2.0
+            directness_count += 1
 
-    n = len(decisive)
-    if n == 0:
+    n_decisive = len(decisive)
+    n_usable = len(usable_studies)
+    if n_decisive == 0:
         return {"score": 0.0, "label": "Insufficient",
-                "decisive_studies": 0, "usable_studies": study_count}
+                "decisive_studies": 0, "usable_studies": n_usable,
+                "decisive_relations": {}}
 
-    quality_term = quality_sum / study_count if study_count else 0.0
+    quality_term = quality_sum / n_usable if n_usable else 0.0
     counts: dict[str, int] = {}
     for r in decisive.values():
         counts[r] = counts.get(r, 0) + 1
     majority = max(counts.values())
-    consistency_term = majority / n
+    consistency_term = majority / n_decisive
     directness_term = (directness_sum / directness_count) if directness_count else 0.0
-    count_term = min(1.0, n / 4.0)
+    count_term = min(1.0, n_usable / 4.0)
     conflict = CONFLICT_PENALTY if (counts.get("support_adoption", 0) > 0
                                     and counts.get("oppose_adoption", 0) > 0) else 0.0
     uncertainty = min(UNCERTAINTY_CAP, UNCERTAINTY_PER_UNIT * critical_uncertainty_units)
@@ -180,26 +225,33 @@ def _confidence(store: GraphStore, syntheses: tuple[ClaimSynthesis, ...]) -> dic
              - conflict - uncertainty)
     score = max(0.0, min(1.0, score))
     return {"score": round(score, 4), "label": _label(score),
-            "decisive_studies": n, "usable_studies": study_count}
+            "decisive_studies": n_decisive, "usable_studies": n_usable,
+            "decisive_relations": dict(decisive)}
 
 
 def _decision_action(syn_statuses: dict[str, str], confidence: dict,
-                     has_negative_evidence: bool, has_promising: bool) -> str:
-    """Gate-enforced decision action."""
+                     decisive_relations: dict[str, str]) -> str:
+    """Gate-enforced decision action.
+
+    REJECT requires usable direct opposition evidence (an independent Study
+    folded to oppose_adoption). Low/Insufficient can never yield ADOPT.
+    High + decisive support → ADOPT (strong direct evidence only);
+    Moderate + decisive support → PILOT (promising but not yet strong);
+    otherwise INSUFFICIENT_EVIDENCE.
+    """
     label = confidence["label"]
-    if label in ("Low", "Insufficient"):
-        # REJECT requires usable direct negative/opposition evidence, not
-        # merely low confidence
-        if has_negative_evidence:
-            return "REJECT"
-        return "INSUFFICIENT_EVIDENCE"
-    if has_negative_evidence:
+    has_oppose = any(r == "oppose_adoption" for r in decisive_relations.values())
+    has_support = any(r == "support_adoption" for r in decisive_relations.values())
+    if has_oppose:
         return "REJECT"
-    if has_promising and label in ("High", "Moderate"):
+    if label == "High" and has_support:
         return "ADOPT"
-    if has_promising:
+    if label == "Moderate" and has_support:
         return "PILOT"
     return "INSUFFICIENT_EVIDENCE"
+
+
+
 
 
 def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
@@ -212,10 +264,9 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
     applicability = applicability or {"boundary": "evidence scope", "notes": ""}
 
     syn_statuses = {s.claim_id: s.status for s in syntheses}
-    has_negative = any(st in ("refuted", "contested") for st in syn_statuses.values())
-    has_promising = any(st == "supported" for st in syn_statuses.values())
+    decisive_relations = confidence.get("decisive_relations", {})
 
-    decision = _decision_action(syn_statuses, confidence, has_negative, has_promising)
+    decision = _decision_action(syn_statuses, confidence, decisive_relations)
 
     key_links: list[str] = []
     for syn in syntheses:

@@ -12,7 +12,21 @@ from typing import Callable
 
 from scripts.validate_schema import SchemaError, validate
 
-SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas" / "v2"
+_REPO_SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas" / "v2"
+
+
+def _resolve_schema_dir() -> Path:
+    """Repository layout first; wheel-installed share/ layout as fallback."""
+    if _REPO_SCHEMA_DIR.is_dir():
+        return _REPO_SCHEMA_DIR
+    import sys
+    share = Path(sys.prefix) / "share" / "eduevidence" / "schemas" / "v2"
+    if share.is_dir():
+        return share
+    return _REPO_SCHEMA_DIR
+
+
+SCHEMA_DIR = _resolve_schema_dir()
 
 # name -> schema file name (frozen registry)
 _REGISTRY: dict[str, str] = {

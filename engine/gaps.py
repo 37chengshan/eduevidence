@@ -41,27 +41,25 @@ def derive_gaps(*, store: GraphStore,
     findings = store.read_table("findings")
     outcomes = {o["outcome_id"]: o for o in store.read_table("outcomes")}
     covered_types: set[str] = set()
-    covered_names: set[str] = set()
     for f in findings:
         o = outcomes.get(f["outcome_id"])
         if o:
             covered_types.add(o.get("outcome_type", ""))
-            covered_names.add(o.get("name", ""))
-    covered = covered_types | covered_names
 
     claims = store.read_table("claims")
     claim_ids = [c["claim_id"] for c in claims]
-    outcome_ids = list(outcomes.keys())
 
     gaps: list[dict] = []
     rev = store.active_revision()
 
-    def add(gap_type: str, priority: str, reasoning: str, related: list[str] | None = None):
+    def add(gap_type: str, priority: str, reasoning: str,
+            related_claims: list[str] | None = None,
+            related_outcomes: list[str] | None = None):
         gaps.append({
             "gap_id": new_local_id("GAP", {g["gap_id"] for g in gaps}),
             "gap_type": gap_type,
-            "related_claim_ids": related or claim_ids,
-            "related_outcome_ids": outcome_ids,
+            "related_claim_ids": related_claims or [],
+            "related_outcome_ids": related_outcomes or [],
             "priority": priority,
             "reasoning": reasoning,
             "status": "open",
@@ -69,54 +67,81 @@ def derive_gaps(*, store: GraphStore,
             "extensions": {},
         })
 
-    # requested outcomes not covered at all
-    for req in requested:
+    def _req_kind(req) -> tuple[str, str]:
+        """Classify a requested outcome: retention | transfer |
+        task_performance | learning | other. Type-aware: names are matched
+        only within the outcome's declared type, never type-blind."""
         if isinstance(req, dict):
-            req_name = req.get("name", "")
-            req_type = req.get("outcome_type", "")
+            req_name = str(req.get("name", "")).lower()
+            req_type = str(req.get("outcome_type", "")).lower()
         else:
-            req_name, req_type = str(req), ""
-        if req_name and req_name not in covered:
-            if req_type in _RETENTION_TYPES or req_name.lower() in _RETENTION_TYPES:
-                add("missing_retention", "high",
-                    f"frame requests retention outcome {req_name!r} but the graph "
-                    f"has no retention measurement")
-            elif req_type in _TRANSFER_TYPES or req_name.lower() in _TRANSFER_TYPES:
-                add("missing_transfer", "high",
-                    f"frame requests transfer outcome {req_name!r} but the graph "
-                    f"has no transfer measurement")
-            elif req_type in _TASK_PERFORMANCE or req_name.lower() in _TASK_PERFORMANCE:
-                add("missing_outcome", "medium",
-                    f"frame requests task-performance outcome {req_name!r} without "
-                    f"covering learning; task performance is not learning (RULE 3)")
-            else:
-                add("missing_outcome", "medium",
-                    f"frame requests outcome {req_name!r} with no covering finding")
+            req_name, req_type = str(req).lower(), ""
+        if req_type in _RETENTION_TYPES or req_name in _RETENTION_TYPES:
+            return "retention", req.get("name", "") if isinstance(req, dict) else str(req)
+        if req_type in _TRANSFER_TYPES or req_name in _TRANSFER_TYPES:
+            return "transfer", req.get("name", "") if isinstance(req, dict) else str(req)
+        if req_type in _TASK_PERFORMANCE or req_name in _TASK_PERFORMANCE:
+            return "task_performance", req.get("name", "") if isinstance(req, dict) else str(req)
+        if req_type in _LEARNING or req_name in _LEARNING:
+            return "learning", req.get("name", "") if isinstance(req, dict) else str(req)
+        return "other", req.get("name", "") if isinstance(req, dict) else str(req)
 
-    # retention/transfer explicitly requested but only task performance covered
-    wants_retention = any(
-        (isinstance(r, dict) and r.get("outcome_type") in _RETENTION_TYPES)
-        or (isinstance(r, str) and r.lower() in _RETENTION_TYPES) for r in requested)
-    wants_transfer = any(
-        (isinstance(r, dict) and r.get("outcome_type") in _TRANSFER_TYPES)
-        or (isinstance(r, str) and r.lower() in _TRANSFER_TYPES) for r in requested)
-    has_task_perf_only = bool(covered_types & _TASK_PERFORMANCE) and not (
-        covered_types & (_LEARNING | _RETENTION_TYPES))
-    if wants_retention and has_task_perf_only:
-        add("missing_retention", "high",
-            "graph covers task performance only; retention remains unmeasured — "
-            "task performance does not imply retention (RULE 3)")
-    if wants_transfer and has_task_perf_only:
-        add("missing_transfer", "high",
-            "graph covers task performance only; transfer remains unmeasured — "
-            "AI-assisted performance does not imply no-AI transfer (RULE 3)")
+    _RETENTION_COVER = _RETENTION_TYPES
+    _TRANSFER_COVER = _TRANSFER_TYPES
+    def covered_for_kind(kind: str) -> bool:
+        if kind == "retention":
+            return bool(covered_types & _RETENTION_COVER)
+        if kind == "transfer":
+            return bool(covered_types & _TRANSFER_COVER)
+        if kind == "task_performance":
+            return bool(covered_types & _TASK_PERFORMANCE)
+        if kind == "learning":
+            return bool(covered_types & _LEARNING)
+        return False
+
+    # one pass per requested outcome; each gap emitted exactly once
+    seen: set[tuple[str, str]] = set()
+    for req in requested:
+        kind, label = _req_kind(req)
+        if not label:
+            continue
+        key = (kind, label)
+        if key in seen:
+            continue
+        seen.add(key)
+        if covered_for_kind(kind):
+            continue
+        if kind == "retention":
+            add("missing_retention", "high",
+                f"frame requests retention outcome {label!r} but the graph has "
+                f"no retention-type measurement; task-performance coverage does "
+                f"not count (RULE 3)")
+        elif kind == "transfer":
+            add("missing_transfer", "high",
+                f"frame requests transfer outcome {label!r} but the graph has "
+                f"no transfer-type measurement; AI-assisted task performance "
+                f"does not count (RULE 3)")
+        elif kind == "task_performance":
+            add("missing_outcome", "medium",
+                f"frame requests task-performance outcome {label!r} with no "
+                f"covering finding")
+        elif kind == "learning":
+            add("missing_outcome", "medium",
+                f"frame requests learning outcome {label!r} with no covering "
+                f"learning finding; task performance is not learning (RULE 3)")
+        else:
+            add("missing_outcome", "medium",
+                f"frame requests outcome {label!r} with no covering finding")
+    claim_outcomes = {c["claim_id"]: c.get("primary_outcome_ids", [])
+                      for c in claims}
 
     # contradiction gaps
     for syn in syntheses or ():
         if syn.status == "contested":
             add("unresolved_conflict", "high",
                 f"claim {syn.claim_id} has independent contradictory studies "
-                f"({', '.join(syn.study_ids)})", [syn.claim_id])
+                f"({', '.join(syn.study_ids)})", [syn.claim_id],
+                claim_outcomes.get(syn.claim_id, []))
 
     # methodology weakness / insufficient independence
     if syntheses:
@@ -124,7 +149,8 @@ def derive_gaps(*, store: GraphStore,
             if syn.status == "insufficient" and len(syn.study_ids) < 2:
                 add("insufficient_sample_independence", "medium",
                     f"claim {syn.claim_id} rests on fewer than two independent "
-                    f"studies", [syn.claim_id])
+                    f"studies", [syn.claim_id],
+                    claim_outcomes.get(syn.claim_id, []))
 
     # validate each gap
     for g in gaps:

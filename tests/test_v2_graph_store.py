@@ -329,3 +329,31 @@ def test_upsert_replaces_and_retire_removes(tmp_path):
         mutation=GraphMutation(upserts={}, retire_ids={"sources": ["SRC-bbbbbbbb"]}))
     assert store.get("sources", "SRC-bbbbbbbb") is None
     assert len(store.read_table("sources")) == 1
+
+
+def test_mirror_write_failure_rolls_back_head(tmp_path, monkeypatch):
+    """If project.json mirror update fails after HEAD advanced, HEAD rolls
+    back: the caller never sees a failure for a landed commit."""
+    ws = _ws(tmp_path)
+    store = GraphStore.create(ws)
+    run = _run(ws)
+    from engine.project import ProjectWorkspace as PW
+    original = PW.update_manifest
+
+    def failing_update(self, **changes):
+        if changes.get("graph_revision") == 1:
+            raise OSError("simulated mirror write failure")
+        return original(self, **changes)
+
+    monkeypatch.setattr(PW, "update_manifest", failing_update)
+    with pytest.raises(OSError):
+        store.commit(run_id=run["run_id"], reason="x", mutation=_valid_bundle())
+    # HEAD rolled back; the orphan rev dir is ignored by readers
+    assert _head_revision(ws) == 0
+    assert store.active_revision() == 0
+    # repair path: a later successful commit works from revision 0
+    monkeypatch.setattr(PW, "update_manifest", original)
+    rev = store.commit(run_id=run["run_id"], reason="retry",
+                       mutation=_valid_bundle())
+    assert rev.revision == 1
+    assert ws.current_revision() == 1

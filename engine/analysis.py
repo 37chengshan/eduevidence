@@ -250,6 +250,49 @@ def record_external_analysis(project: ProjectWorkspace, *, plan: dict,
     return run
 
 
+def save_analysis_run(project: ProjectWorkspace, run: dict) -> Path:
+    """Persist an AnalysisRun under analyses/ (atomic; never rewritten)."""
+    errors = validate_record("analysis-run", run)
+    if errors:
+        raise ValueError(f"invalid analysis run: {errors}")
+    path = project.path / "analyses" / f"{run['analysis_run_id']}.json"
+    if path.exists():
+        raise FileExistsError(f"analysis run already exists: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(__import__("json").dumps(run, ensure_ascii=False, indent=2) + "\n",
+                   encoding="utf-8")
+    tmp.replace(path)
+    return path
+
+
+def mark_analysis_validated(project: ProjectWorkspace, run_id: str) -> dict:
+    """Promote a persisted AnalysisRun to `validated`.
+
+    `validated` is the ONLY status that closes the Full Research Cycle gate
+    in engine/update.py (ANALYSIS_INVALID otherwise). A human or automated
+    review gate calls this after checking the run's outputs.
+    """
+    path = project.path / "analyses" / f"{run_id}.json"
+    if not path.is_file():
+        raise FileNotFoundError(f"analysis run {run_id} not persisted under {path}")
+    run = json.loads(path.read_text(encoding="utf-8"))
+    if run.get("status") not in ("completed", "validated"):
+        raise ValueError(
+            f"cannot validate analysis run {run_id} with status "
+            f"{run.get('status')!r}; only completed runs may be validated"
+        )
+    run["status"] = "validated"
+    errors = validate_record("analysis-run", run)
+    if errors:
+        raise ValueError(f"invalid validated run: {errors}")
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n",
+                   encoding="utf-8")
+    tmp.replace(path)
+    return run
+
+
 def capability_unavailable(capability_id: str, plan: dict) -> AnalysisCapabilityResult:
     """Honest degradation for undiscovered advanced capabilities."""
     return AnalysisCapabilityResult(

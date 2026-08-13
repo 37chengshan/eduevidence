@@ -189,3 +189,40 @@ def test_library_never_writes_project_files(tmp_path):
     assert (lib_rev_dir / "findings.jsonl").is_file()
     assert (proj_rev_dir / "findings.jsonl").is_file()
     assert json.loads((proj_rev_dir / "findings.jsonl").read_text().strip())["extensions"]["origin"]
+
+
+def test_import_multi_source_study_transitively_imports_all_sources(tmp_path):
+    """A Study citing SRC-A+SRC-B imported with source_ids=[SRC-A] must pull
+    SRC-B transitively instead of failing cross-entity validation."""
+    lib = ResearchLibrary.open(tmp_path)
+    lib.add_verified_bundle(
+        sources=[_src("SRC-lib1", "https://doi.org/10.0000/lib1"),
+                 _src("SRC-lib2", "https://doi.org/10.0000/lib2")],
+        studies=[_study()], findings=[], audits=[])
+    # rewrite the study to cite both sources
+    from engine.graph_store import GraphStore
+    ws = _project(tmp_path)
+    lib.import_snapshot(project=ws, source_ids=["SRC-lib1"],
+                        run_id=_run(ws)["run_id"])
+    store = GraphStore.create(ws)
+    # study STU-lib1 cites only SRC-lib1 in this fixture; simulate the
+    # multi-source case directly in the library revision via a second study
+    lib2 = ResearchLibrary.open(tmp_path)
+    ws2 = _project(tmp_path)
+    # add a study citing both
+    lib2.add_verified_bundle(
+        sources=[_src("SRC-lib1", "https://doi.org/10.0000/lib1"),
+                 _src("SRC-lib2", "https://doi.org/10.0000/lib2")],
+        studies=[{"study_id": "STU-multi", "source_ids": ["SRC-lib1", "SRC-lib2"],
+                  "study_design": "RCT", "population": "u", "sample_ids": ["S1"],
+                  "sample_size": 50, "intervention": "AI", "comparison": "none",
+                  "independence_key": "k-multi", "identity_status": "resolved",
+                  "extensions": {}}],
+        findings=[], audits=[])
+    lib2.import_snapshot(project=ws2, source_ids=["SRC-lib1"],
+                         run_id=_run(ws2)["run_id"])
+    store2 = GraphStore.create(ws2)
+    src_ids = {s["source_id"] for s in store2.read_table("sources")}
+    assert {"SRC-lib1", "SRC-lib2"} <= src_ids
+    assert any(s["study_id"] == "STU-multi" for s in store2.read_table("studies"))
+    assert store2.validate() == []

@@ -134,6 +134,37 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
         report["preserved_ids"].append(src_id)
     source_ids = {s["source_id"] for s in sources}
 
+    def _study_source_refs(ev: dict) -> list[str]:
+        """Resolve a V1 evidence's source reference; never silently empty.
+
+        An unknown/missing source_id gets an explicit placeholder Source
+        (validation_status=failed, project origin) so provenance stays
+        visible instead of being dropped.
+        """
+        sid = ev.get("source_id")
+        if sid and sid in source_ids:
+            return [sid]
+        placeholder_id = new_local_id("SRC", {s["source_id"] for s in sources})
+        sources.append({
+            "source_id": placeholder_id,
+            "origin": "project",
+            "source_type": "legacy_unresolved",
+            "canonical_locator": f"project://{ws.project_id}/legacy-source/{placeholder_id}",
+            "validation_status": "failed",
+            "content_hash": None,
+            "extensions": {"v1_legacy": True,
+                           "v1_original_source_id": sid,
+                           "v1_evidence_id": ev.get("evidence_id")},
+        })
+        source_ids.add(placeholder_id)
+        report["generated_ids"].append(placeholder_id)
+        warnings.append(
+            f"evidence {ev.get('evidence_id')} references unknown source "
+            f"{sid!r}; created placeholder Source {placeholder_id} "
+            f"(validation_status=failed)"
+        )
+        return [placeholder_id]
+
     # ---- studies ---------------------------------------------------------
     # V1 Evidence Objects carry study_id; group by it. Missing study_id gets
     # an explicit unresolved placeholder Study (one per evidence object).
@@ -151,10 +182,9 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
         else:
             legacy_count += 1
             legacy_id = new_local_id("STU", used_ids)
-            used_ids.add(legacy_id)
             studies.append({
                 "study_id": legacy_id,
-                "source_ids": [ev.get("source_id")] if ev.get("source_id") in source_ids else [],
+                "source_ids": _study_source_refs(ev),
                 "study_design": (ev.get("study_type") or "unknown").lower(),
                 "population": ev.get("population") or ev.get("education_level") or "unknown",
                 "sample_ids": [ev.get("sample_id")] if ev.get("sample_id") else [],
@@ -176,7 +206,7 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
         first = evs[0]
         studies.append({
             "study_id": vid,
-            "source_ids": [first.get("source_id")] if first.get("source_id") in source_ids else [],
+            "source_ids": _study_source_refs(first),
             "study_design": (first.get("study_type") or "unknown").lower(),
             "population": first.get("population") or first.get("education_level") or "unknown",
             "sample_ids": [first.get("sample_id")] if first.get("sample_id") else [],
@@ -223,9 +253,8 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
         if study_id not in study_ids:
             # a V1 study_id with no study row (should not happen) -> placeholder
             sid = new_local_id("STU", used_ids)
-            used_ids.add(sid)
             studies.append({
-                "study_id": sid, "source_ids": [],
+                "study_id": sid, "source_ids": _study_source_refs(ev),
                 "study_design": "unknown", "population": "unknown",
                 "sample_ids": [], "sample_size": None, "intervention": None,
                 "comparison": None, "independence_key": f"v1-missing:{ev['evidence_id']}",
@@ -245,13 +274,15 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
             "timepoint": None,
             "effect_direction": _map_effect_direction(ev.get("effect_direction")),
             "effect_estimate": None,
-            "raw_result_text": ev.get("claim") or "",
-            "source_locator": ev.get("source_location") or "",
+            "raw_result_text": ev.get("claim") or "unavailable",
+            "source_locator": ev.get("source_location") or "unavailable",
             "extensions": {"v1_legacy": True},
         })
         claim_id = claim_by_evidence.get(ev["evidence_id"], f"CLM-{ev['evidence_id']}")
         link_id = f"LNK-{ev['evidence_id']}"
+
         links.append({
+
             "evidence_link_id": link_id,
             "finding_id": fnd_id,
             "claim_id": claim_id,
@@ -266,7 +297,34 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
         })
 
     # ---- claims ----------------------------------------------------------
+    # Emit claims from the V1 claim records (preserving their text and
+    # evidence bindings); evidence-derived rows only for unmapped evidence.
     claims: list[dict] = []
+    emitted_claim_ids: set[str] = set()
+
+    for c in data.get("claims", []):
+        cid = c.get("claim_id") or new_local_id("CLM", set())
+        if cid in emitted_claim_ids:
+            continue
+        emitted_claim_ids.add(cid)
+        eids = c.get("evidence_ids") or []
+        outcome_ids = []
+        for eid in eids:
+            ev = next((e for e in data.get("evidence", [])
+                       if e.get("evidence_id") == eid), None)
+            if ev is not None:
+                outcome_ids.append(
+                    f"OUT-{_v1_outcome_type(ev.get('outcome_type') or 'learning')}-{eid}")
+        claims.append({
+            "claim_id": cid,
+            "text": c.get("claim") or "unavailable",
+            "claim_type": "effectiveness",
+            "primary_outcome_ids": outcome_ids,
+            "scope": "legacy V1 migration",
+            "created_in_revision": 1,
+            "status": "active",
+            "extensions": {"v1_legacy": True},
+        })
     for ev in data.get("evidence", []):
         cid = claim_by_evidence.get(ev["evidence_id"])
         if cid is None:
@@ -275,16 +333,17 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
             warnings.append(
                 f"evidence {ev['evidence_id']} has no V1 claim; generated Claim {cid}"
             )
-        claims.append({
-            "claim_id": cid,
-            "text": ev.get("claim") or "",
-            "claim_type": "effectiveness",
-            "primary_outcome_ids": [f"OUT-{_v1_outcome_type(ev.get('outcome_type') or 'learning')}-{ev['evidence_id']}"],
-            "scope": "legacy V1 migration",
-            "created_in_revision": 1,
-            "status": "active",
-            "extensions": {"v1_legacy": True},
-        })
+            claims.append({
+                "claim_id": cid,
+                "text": ev.get("claim") or "unavailable",
+                "claim_type": "effectiveness",
+                "primary_outcome_ids": [
+                    f"OUT-{_v1_outcome_type(ev.get('outcome_type') or 'learning')}-{ev['evidence_id']}"],
+                "scope": "legacy V1 migration",
+                "created_in_revision": 1,
+                "status": "active",
+                "extensions": {"v1_legacy": True},
+            })
 
     # ---- audits ----------------------------------------------------------
     audits: list[dict] = []

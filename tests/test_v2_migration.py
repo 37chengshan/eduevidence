@@ -132,3 +132,60 @@ def test_legacy_evidence_without_study_gets_explicit_unresolved_study(tmp_path):
     assert report["unresolved_studies"]
     assert any("legacy" in w.lower() or "unresolved" in w.lower()
                for w in report["warnings"])
+
+
+# ---- review-fix regressions ----------------------------------------------
+
+def test_v1_claim_text_preserved_for_multi_evidence_claims(tmp_path):
+    pack = _pack_copy(tmp_path)
+    data = json.loads((pack / "result.json").read_text(encoding="utf-8"))
+    eids = [e["evidence_id"] for e in data["evidence"][:2]]
+    data["claims"].append({
+        "claim_id": "C-MULTI", "claim": "THE REAL MULTI-EVIDENCE CLAIM",
+        "outcome_type": "learning", "evidence_ids": eids, "status": "SUPPORTED",
+    })
+    (pack / "result.json").write_text(json.dumps(data), encoding="utf-8")
+    result = migrate_v1_pack(pack, home=tmp_path)
+    store, _ = _project_graph(result.project_id, tmp_path)
+    claims = {c["claim_id"]: c for c in store.read_table("claims")}
+    assert claims["C-MULTI"]["text"] == "THE REAL MULTI-EVIDENCE CLAIM"
+    assert len(claims["C-MULTI"]["primary_outcome_ids"]) == 2
+
+
+def test_migration_tolerates_missing_claim_text(tmp_path):
+    pack = _pack_copy(tmp_path)
+    data = json.loads((pack / "result.json").read_text(encoding="utf-8"))
+    ev = dict(data["evidence"][0])
+    del ev["claim"]
+    del ev["source_location"]
+    data["evidence"].append(ev)
+    (pack / "result.json").write_text(json.dumps(data), encoding="utf-8")
+    result = migrate_v1_pack(pack, home=tmp_path)  # must not raise
+    store, _ = _project_graph(result.project_id, tmp_path)
+    fnd = next(f for f in store.read_table("findings")
+               if f["finding_id"] == f"FND-{ev['evidence_id']}")
+    assert fnd["raw_result_text"] == "unavailable"
+    assert fnd["source_locator"] == "unavailable"
+
+
+def test_migration_unknown_source_gets_explicit_placeholder(tmp_path):
+    pack = _pack_copy(tmp_path)
+    data = json.loads((pack / "result.json").read_text(encoding="utf-8"))
+    ev = dict(data["evidence"][0])
+    ev["evidence_id"] = "E-UNKNOWN-SRC"
+    ev["source_id"] = "S-NO-SUCH-SOURCE"
+    del ev["study_id"]  # legacy path: no study identity
+    data["evidence"].append(ev)
+    (pack / "result.json").write_text(json.dumps(data), encoding="utf-8")
+    result = migrate_v1_pack(pack, home=tmp_path)
+    store, _ = _project_graph(result.project_id, tmp_path)
+    placeholders = [s for s in store.read_table("sources")
+                    if s["validation_status"] == "failed"
+                    and (s.get("extensions") or {}).get("v1_original_source_id") == "S-NO-SUCH-SOURCE"]
+    assert placeholders, "expected an explicit failed placeholder Source"
+    # the study still references it (no empty source_ids after minItems fix)
+    studies = {s["study_id"]: s for s in store.read_table("studies")}
+    target = next(s for s in studies.values() if s["independence_key"].startswith("legacy:"))
+    assert target["source_ids"]
+    report = json.loads(result.migration_report_path.read_text(encoding="utf-8"))
+    assert any("unknown source" in w for w in report["warnings"])

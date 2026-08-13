@@ -28,9 +28,15 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-q"
 
-# wheel 分发 CLI（eduevidence_cli）+ engine 包（V2 命令依赖）；Skill 本体
-# （SKILL.md + skill/ + references/ + schemas/ + scripts/ + retrieval/ +
-# integrations/ + visualization/ + assets/）由 install.sh 或源码包完整分发。
+# wheel 自包含 CLI：eduevidence_cli + engine + scripts（V1/V2 命令实现与
+# validate_schema）+ schemas 数据文件（data-files 安装到 share/eduevidence/，
+# engine.contracts / orchestrator 按回退路径解析）。Skill 本体（SKILL.md +
+# skill/ + references/ + retrieval/ + integrations/ + visualization/ +
+# assets/）由 install.sh 或源码包完整分发。
 [tool.setuptools]
 py-modules = ["eduevidence_cli"]
-packages = ["engine"]
+packages = ["engine", "scripts"]
+
+[tool.setuptools.data-files]
+"share/eduevidence/schemas" = ["schemas/*.json"]
+"share/eduevidence/schemas/v2" = ["schemas/v2/*.json"]

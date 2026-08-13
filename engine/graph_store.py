@@ -244,16 +244,28 @@ class GraphStore:
             # 5. atomically promote: .tmp-<run> -> rev-00000N
             rev_dir = self._revision_dir(next_rev)
             if rev_dir.exists():
-                raise FileExistsError(
-                    f"refusing to rewrite existing revision directory {rev_dir}"
-                )
+                # an orphan occupying the next revision number (not reached
+                # by HEAD) is inactive: remove it and retake the number
+                if self.active_revision() == before_rev:
+                    import shutil
+                    shutil.rmtree(rev_dir)
+                else:
+                    raise FileExistsError(
+                        f"refusing to rewrite existing revision directory {rev_dir}"
+                    )
             os.replace(tmp_dir, rev_dir)
+
 
             # 6. atomically switch HEAD
             _atomic_write_text(self.head_path, str(next_rev))
 
-            # 7. atomically mirror into project.json
-            self.project.update_manifest(graph_revision=next_rev)
+            # 7. atomically mirror into project.json; on failure roll HEAD
+            # back so the caller never sees a failure for a landed commit
+            try:
+                self.project.update_manifest(graph_revision=next_rev)
+            except Exception:
+                _atomic_write_text(self.head_path, str(before_rev))
+                raise
         except Exception:
             # never leave a half-promoted state behind
             if tmp_dir.exists():

@@ -8,6 +8,7 @@ changes an existing Project's conclusions — only an explicit import/sync
 advances the Project graph.
 """
 
+import hashlib
 import json
 import os
 from datetime import datetime, timezone
@@ -150,12 +151,21 @@ class ResearchLibrary:
         on the live library.
         """
         snapshot = self._read_snapshot(self.active_revision())
-        sources = [s for s in snapshot["sources"] if s["source_id"] in set(source_ids)]
-        if len(sources) != len(set(source_ids)):
-            missing = set(source_ids) - {s["source_id"] for s in sources}
+        requested_ids = set(source_ids)
+        sources = [s for s in snapshot["sources"] if s["source_id"] in requested_ids]
+        if len(sources) != len(requested_ids):
+            missing = requested_ids - {s["source_id"] for s in sources}
             raise ValueError(f"library has no sources for: {sorted(missing)}")
         src_ids = {s["source_id"] for s in sources}
+        # a Study citing multiple sources must import them all (transitive
+        # closure) so cross-entity validation never sees a dangling reference
         studies = [s for s in snapshot["studies"] if set(s["source_ids"]) & src_ids]
+        for s in studies:
+            extra = set(s["source_ids"]) - src_ids
+            if extra:
+                sources.extend(
+                    src for src in snapshot["sources"] if src["source_id"] in extra)
+                src_ids.update(extra)
         study_ids = {s["study_id"] for s in studies}
         findings = [f for f in snapshot["findings"] if f["study_id"] in study_ids]
         audits = [a for a in snapshot["audits"] if a["study_id"] in study_ids]
@@ -163,19 +173,19 @@ class ResearchLibrary:
         lib_rev = self.active_revision()
 
         # origin metadata per table: record library revision + entity id so the
-        # Project never depends on the live library
         def stamp(table: str, rec: dict) -> dict:
             out = dict(rec)
             ext = dict(out.get("extensions") or {})
             ext["origin"] = {
                 "library_revision": lib_rev,
                 "library_entity_id": out[_TABLE_ID_KEY[table]],
-                "content_hash": None,
+                "content_hash": hashlib.sha256(
+                    json.dumps(out, sort_keys=True, separators=(",", ":"))
+                    .encode("utf-8")).hexdigest(),
                 "imported_at": _now_iso(),
             }
             out["extensions"] = ext
             return out
-
         store = GraphStore.create(project)
         existing_outcomes = {o["outcome_id"] for o in store.read_table("outcomes")}
         outcomes: list[dict] = []

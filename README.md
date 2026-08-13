@@ -289,32 +289,36 @@ The repository is a complete **Skill package**: `SKILL.md` is the entry point; e
 ```text
 EduEvidence/  (= one Skill package)
 │
-├─ SKILL.md                  ← Skill entry: When to Use / Inputs / 10-step Workflow / Output Contract
+├─ SKILL.md                  ← Skill entry: When to Use / Inputs / Workflow / Output Contract
 │
 ├─ Skill core (required to run)
-│  ├─ skill/agents/          8 role protocols (Planner / Retriever / Analyst / Skeptic /
-│  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer)
-│  ├─ references/            9 education methodology documents (evidence quality / skeptic /
+│  ├─ engine/                V2 Research Engine (Project Workspace / immutable Evidence
+│  │                         Graph / Library / synthesis / tribunal / study design /
+│  │                         datasets / analysis / projections / migration)
+│  ├─ skill/agents/          role protocols (capability execution profiles)
+│  ├─ references/            11 education methodology documents (evidence quality / skeptic /
 │  │                         tribunal policy / intervention design…)
-│  ├─ schemas/               13 JSON Schema data contracts (validation gates per step)
-│  ├─ scripts/               17 deterministic logic scripts (scoring / matrix / audit / confidence / orchestrator / startup probe)
+│  ├─ schemas/               V1 contracts + schemas/v2/ (19 V2 JSON Schema contracts)
+│  ├─ scripts/               deterministic logic scripts (scoring / matrix / audit /
+│  │                         confidence / orchestrator / startup probe / V2 CLI)
 │  ├─ retrieval/             Search & fetch layer (fetch / validate / dedupe / failures)
 │  ├─ integrations/          Agent MCP enhancement layer + Smart Web Fetch integration
-│  └─ visualization/         Presentation layer (ECharts / infographics / academic figures / bilingual HTML composer)
+│  └─ visualization/         Presentation layer (ECharts / infographics / academic figures /
+│                            bilingual HTML composer + V2 project surfaces)
 │
 ├─ Quality assurance
-│  ├─ tests/                 pytest test matrix (50 cases)
-│  └─ benchmarks/            30 questions + 10 gold annotations + B0–B4 evaluation framework
+│  ├─ tests/                 pytest test matrix (V1 + V2, ~430 cases)
+│  └─ benchmarks/            V1 questions + benchmarks/v2/ (graph/contract metrics)
 │
 └─ Demos & distribution
-   ├─ examples/              3 complete Research & Decision Packs (incl. bilingual HTML reports)
+   ├─ examples/              Research & Decision Packs + full-research-cycle-fixture (synthetic)
    ├─ docs/                  architecture / methodology / benchmark / demo / reproducibility
    ├─ install.sh             one-click install (local / multi-agent Skill) + self-check
-   ├─ pyproject.toml         packaging metadata (core has zero third-party deps)
+   ├─ pyproject.toml         packaging metadata (wheel ships CLI + engine; stdlib-only core)
    └─ README(.en).md         bilingual docs
 ```
 
-> Skill-package principle: the **minimal runtime set is `SKILL.md + skill/ + references/ + schemas/ + scripts/`**; `retrieval/`, `integrations/`, `visualization/` are the execution/presentation layers that make the Skill actually runnable; `tests/`, `benchmarks/`, `examples/`, `docs/` provide credibility and onboarding — none of them affect the Skill body itself.
+> Skill-package principle: the **minimal runtime set is `SKILL.md + engine/ + skill/ + references/ + schemas/ + scripts/`**; `retrieval/`, `integrations/`, `visualization/` are the execution/presentation layers that make the Skill actually runnable; `tests/`, `benchmarks/`, `examples/`, `docs/` provide credibility and onboarding — none of them affect the Skill body itself.
 
 ### SCP / Platform Native Mode
 

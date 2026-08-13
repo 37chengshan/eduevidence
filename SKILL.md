@@ -236,7 +236,7 @@ After confirmation, execute fully automatically, produce HTML + Markdown, then o
 - **All three choices required**: mode, CLI+models, style. Defaults when omitted (A / omp scan result / claude) with a note.
 - After confirmation, **no more per-stage questions** — run fully automatically to Present (step 10).
 - depth=deep and mode A: Cross-Model Review (mode 2, §8.5) enabled by default unless the user explicitly wants the same model only.
-- Final deliverables: `EduEvidence_Report.html` + `RESEARCH.md` (Markdown) + browser open + 3-5 sentence result summary.
+- Final deliverables: `EduEvidence_Report.html` (single-file bilingual report) + Markdown research pack (agent-authored from the projection) + browser open + 3-5 sentence result summary.
 
 ## 6 Workflow Overview
 
@@ -464,7 +464,7 @@ Structured data artifacts (Schema-validated per step):
 Presentation (same data, two views):
   EduEvidence_Report.html  single-file offline bilingual (Visual Brief + Full Report,
                            5-7 dynamic chapters, one of five styles at generation time)
-  RESEARCH.md              Markdown research pack
+  RESEARCH.md              Markdown research pack (agent-authored projection view)
 ```
 
 Every structured artifact (Frame / Evidence / Methodology / Verdict / Intervention / Evaluation) must pass its JSON Schema (`schemas/*.schema.json`); verify with `scripts/validate_schema.py`.

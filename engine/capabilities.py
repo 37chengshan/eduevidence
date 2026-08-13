@@ -83,7 +83,7 @@ _register("data_validation", input_contracts=("dataset-asset",),
           scientific_gate="provenance/hash/missingness before analysis")
 _register("data_analysis", input_contracts=("dataset-manifest", "analysis-plan"),
           output_contracts=("analysis-run",), deterministic_local=True,
-          scientific_gate="never fabricate p-values; ANALAYSIS_CAPABILITY_UNAVAILABLE")
+          scientific_gate="never fabricate p-values; ANALYSIS_CAPABILITY_UNAVAILABLE")
 _register("intervention_design", input_contracts=("decision-snapshot",),
           output_contracts=("intervention",), deterministic_local=False)
 _register("evaluation_design", input_contracts=("decision-snapshot",),

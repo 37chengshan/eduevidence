@@ -27,10 +27,17 @@ def _load_latest_snapshot(project: ProjectWorkspace,
         if p.is_file():
             return json.loads(p.read_text(encoding="utf-8"))
         return None
-    snaps = sorted(decisions.glob("DEC-*.json"))
+    snaps = []
+    for p in decisions.glob("DEC-*.json"):
+        try:
+            rec = json.loads(p.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        snaps.append(rec)
     if not snaps:
         return None
-    return json.loads(snaps[-1].read_text(encoding="utf-8"))
+    # latest by created_at, never by filename (DEC ids are random hex)
+    return max(snaps, key=lambda r: r.get("created_at", ""))
 
 
 def _load_gaps(project: ProjectWorkspace) -> list[dict]:
@@ -58,7 +65,7 @@ def build_report_projection(project: ProjectWorkspace, *,
                             decision_snapshot_id: str | None = None) -> dict:
     """Project the active (or named) graph revision into a report view."""
     store = GraphStore.create(project)
-    revision = graph_revision or store.active_revision()
+    revision = graph_revision if graph_revision is not None else store.active_revision()
     if revision != store.active_revision():
         raise ValueError(
             f"projection of historical revision {revision} not yet supported; "

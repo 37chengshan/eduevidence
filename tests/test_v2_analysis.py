@@ -135,3 +135,24 @@ def test_privacy_block_fails_run(tmp_path):
     run = run_native_descriptive(ws, plan)
     assert run["status"] == "failed"
     assert "privacy_block" in run["outputs"]
+
+
+# ---- validated promotion (review fix) ------------------------------------
+
+def test_analysis_run_validation_path(tmp_path):
+    """Engine-produced runs must be promotable to validated via an explicit
+    gate (the Full Research Cycle commit requires validated)."""
+    from engine.analysis import save_analysis_run, mark_analysis_validated
+    ws = _ws(tmp_path)
+    asset = _asset(ws, tmp_path, [["S1", "50", "60", "A"]])
+    plan = _plan(ws, dataset_ids=[asset["dataset_id"]])
+    run = run_native_descriptive(ws, plan)
+    assert run["status"] == "completed"  # engine never self-validates
+    path = save_analysis_run(ws, run)
+    assert path.is_file()
+    validated = mark_analysis_validated(ws, run["analysis_run_id"])
+    assert validated["status"] == "validated"
+    # cannot validate twice through a bogus path
+    import pytest
+    with pytest.raises(FileNotFoundError):
+        mark_analysis_validated(ws, "ANL-missing")

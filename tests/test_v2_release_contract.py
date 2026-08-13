@@ -70,7 +70,7 @@ def test_skill_payload_includes_engine():
 
 def test_wheel_metadata_includes_engine_package():
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert 'packages = ["engine"]' in pyproject
+    assert 'packages = ["engine", "scripts"]' in pyproject
 
 
 def test_copied_payload_imports_engine_without_source_repo(tmp_path):

@@ -172,6 +172,27 @@ class Validator:
                     self.validate(val, additional, f"{path}.{key}")
 
         if isinstance(value, list):
+            if "minItems" in schema and len(value) < schema["minItems"]:
+                raise SchemaError(
+                    f"{path}: expected at least {schema['minItems']} items, "
+                    f"got {len(value)}")
+            if "maxItems" in schema and len(value) > schema["maxItems"]:
+                raise SchemaError(
+                    f"{path}: expected at most {schema['maxItems']} items, "
+                    f"got {len(value)}")
+            if schema.get("uniqueItems") is True:
+                seen: list = []
+                for item in value:
+                    try:
+                        normalized = item if not isinstance(item, (dict, list)) \
+                            else json.dumps(item, sort_keys=True, separators=(",", ":"))
+                    except (TypeError, ValueError):
+                        normalized = repr(item)
+                    if normalized in seen:
+                        raise SchemaError(
+                            f"{path}: array items must be unique, duplicate "
+                            f"found: {item!r}")
+                    seen.append(normalized)
             items = schema.get("items")
             if items:
                 for i, item in enumerate(value):

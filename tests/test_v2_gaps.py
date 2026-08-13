@@ -68,7 +68,7 @@ def test_frame_retention_transfer_gaps_detected(tmp_path):
     assert "missing_transfer" in types
     # the task-performance Finding does not cover retention/transfer
     ret_gap = next(g for g in gaps if g["gap_type"] == "missing_retention")
-    assert "no retention measurement" in ret_gap["reasoning"].lower()
+    assert "no retention-type measurement" in ret_gap["reasoning"].lower()
     assert all(g["derived_from_graph_revision"] == 1 for g in gaps)
 
 
@@ -81,7 +81,8 @@ def test_gaps_are_schema_valid(tmp_path):
         assert validate_record("knowledge-gap", g) == []
         assert g["gap_id"].startswith("GAP-")
         assert g["status"] == "open"
-        assert g["related_outcome_ids"] == ["OUT-1"]
+        # frame-level gaps carry no claim binding: related ids stay empty
+        assert g["related_outcome_ids"] == []
 
 
 def test_task_performance_only_flag_no_false_learning_claim(tmp_path):

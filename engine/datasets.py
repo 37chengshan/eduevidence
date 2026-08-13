@@ -92,13 +92,22 @@ def ingest_dataset(project: ProjectWorkspace, *, design_id: str,
 
     content_hash = _sha256(source_path)
 
-    # dedupe by hash inside this project
+    # dedupe by hash inside this project; a stricter classification request
+    # must never silently rebind to a weaker stored classification
     raw_dir = project.path / "datasets" / "raw"
     for existing in sorted(raw_dir.glob("DAT-*")):
         manifest = existing / "manifest.json"
         if manifest.is_file():
             rec = json.loads(manifest.read_text(encoding="utf-8"))
             if rec.get("content_hash") == content_hash:
+                stored = rec.get("privacy_classification")
+                order = ("public", "internal", "confidential", "restricted")
+                if order.index(classification) > order.index(stored):
+                    raise ValueError(
+                        f"dataset {content_hash[:10]}… already stored with "
+                        f"weaker classification {stored!r}; re-ingesting as "
+                        f"{classification!r} is refused"
+                    )
                 return rec
 
     dataset_id = new_local_id("DAT", {
@@ -126,7 +135,11 @@ def ingest_dataset(project: ProjectWorkspace, *, design_id: str,
         "consent_metadata": privacy.get("consent_metadata"),
         "deidentification_status": privacy.get("deidentification_status", "not_done"),
         "created_at": _now_iso(),
-        "extensions": {"missingness": profile["missingness"]},
+        "extensions": {
+            "missingness": profile["missingness"],
+            "deidentification_required": bool(
+                privacy.get("deidentification_required", False)),
+        },
     }
     errors = validate_dataset_asset(project, asset)
     if errors:

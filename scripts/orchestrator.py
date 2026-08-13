@@ -308,8 +308,14 @@ def schema_gate(ws: RunWorkspace, stage: str) -> dict[str, Any]:
 
     from validate_schema import SchemaError, Validator
 
+    schemas_dir = ROOT / "schemas"
+    if not (schemas_dir / schema_name).is_file():
+        share_dir = Path(sys.prefix) / "share" / "eduevidence" / "schemas"
+        if (share_dir / schema_name).is_file():
+            schemas_dir = share_dir
+
     try:
-        schema = json.loads((ROOT / "schemas" / schema_name).read_text(encoding="utf-8"))
+        schema = json.loads((schemas_dir / schema_name).read_text(encoding="utf-8"))
     except OSError:
         return {"passed": False, "stage": stage, "artifact": artifact,
                 "schema": schema_name, "issues": [f"schema file {schema_name} not found"]}
@@ -319,8 +325,10 @@ def schema_gate(ws: RunWorkspace, stage: str) -> dict[str, Any]:
         return {"passed": False, "stage": stage, "artifact": artifact,
                 "schema": schema_name, "issues": [f"{artifact} missing or empty"]}
 
-    validator = Validator(schema, base_dir=(ROOT / "schemas"))
     issues = []
+    validator = Validator(schema, base_dir=schemas_dir)
+
+
     for idx, record in enumerate(records):
         try:
             validator.validate(record, schema, f"{artifact}[{idx}]")
@@ -872,15 +880,23 @@ def _cmd_study(args) -> int:
     from engine.project import ProjectWorkspace
     from engine.ids import new_local_id
     ws = ProjectWorkspace.open(_home(args), args.project)
+    question = getattr(args, "question", None) or "grounded study"
     design = {
         "design_id": new_local_id("DSN", set()),
         "gap_ids": args.gap,
-        "research_question": "grounded study",
-        "design_type": "rct",
-        "population": "", "sampling_plan": "", "intervention": None,
-        "comparison": None, "outcomes": [], "measures": [],
-        "timepoints": [], "assignment_strategy": "", "confounder_plan": "",
-        "analysis_requirements": [], "success_criteria": [],
+        "research_question": question,
+        "design_type": getattr(args, "design_type", "rct") or "rct",
+        "population": getattr(args, "population", "") or "unspecified",
+        "sampling_plan": getattr(args, "sampling", "") or "unspecified",
+        "intervention": getattr(args, "intervention", None),
+        "comparison": getattr(args, "comparison", None),
+        "outcomes": [getattr(args, "outcome", "outcome")] if getattr(args, "outcome", None) else ["outcome"],
+        "measures": [getattr(args, "measure", "measure")] if getattr(args, "measure", None) else ["measure"],
+        "timepoints": ["post"],
+        "assignment_strategy": getattr(args, "assignment", "") or "unspecified",
+        "confounder_plan": "",
+        "analysis_requirements": ["descriptive_statistics"],
+        "success_criteria": [],
         "stop_conditions": [],
         "ethics_flags": {"human_subjects": True, "sensitive_data": False,
                          "minors_involved": False, "consent_status": "unknown",
@@ -1031,8 +1047,19 @@ def main(argv: list[str] | None = None) -> int:
     p_study.add_argument("action", choices=["design"])
     p_study.add_argument("--project", required=True)
     p_study.add_argument("--gap", action="append", default=[], help="GAP-xxx ids")
+    p_study.add_argument("--question", default=None, help="research question")
+    p_study.add_argument("--design-type", default="rct",
+                         choices=["rct", "cluster_rct", "quasi_experimental",
+                                  "pre_post", "observational", "survey",
+                                  "qualitative", "mixed_methods"])
+    p_study.add_argument("--population", default=None)
+    p_study.add_argument("--sampling", default=None)
+    p_study.add_argument("--intervention", default=None)
+    p_study.add_argument("--comparison", default=None)
+    p_study.add_argument("--outcome", default=None)
+    p_study.add_argument("--measure", default=None)
+    p_study.add_argument("--assignment", default=None)
     p_study.add_argument("--home", default=None)
-    p_study.set_defaults(func=_cmd_study)
 
     p_data = sub.add_parser("data", help="V2 dataset ingest")
     p_data.add_argument("action", choices=["ingest"])
@@ -1069,7 +1096,12 @@ def main(argv: list[str] | None = None) -> int:
     p_migrate.set_defaults(func=_cmd_migrate)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except FileNotFoundError as exc:
+        # V2 project lookups fail cleanly like V1 (ERROR + exit 2)
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":
