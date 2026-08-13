@@ -6,8 +6,8 @@
 {"id": "F06", "category": "university_site", "url": "https://ctl.columbia.edu/resources-and-technology/", "expect_title": "Resources and Technology", "notes": "大学教学中心"}
 {"id": "F07", "category": "government_org", "url": "https://www.ies.ed.gov/ncee/wwc/", "expect_title": "What Works Clearinghouse", "notes": "政府教育证据机构"}
 {"id": "F08", "category": "international_org", "url": "https://www.oecd.org/education/", "expect_title": "Education at OECD", "notes": "国际组织教育页"}
-{"id": "F09", "category": "chinese_web", "url": "https://www.moe.gov.cn/jyb_xwfb/", "expect_title": "中华人民共和国教育部", "notes": "中文政府网站"}
-{"id": "F10", "category": "chinese_web", "url": "https://news.tsinghua.edu.cn/", "expect_title": "清华新闻网", "notes": "中文大学网站"}
+{"id": "F09", "category": "generic_org", "url": "https://www.moe.gov.cn/jyb_xwfb/", "expect_title": "MOE China Education News", "notes": "government education site (fetch capability sample)"}
+{"id": "F10", "category": "generic_org", "url": "https://news.tsinghua.edu.cn/", "expect_title": "Tsinghua University News", "notes": "university news site (fetch capability sample)"}
 {"id": "F11", "category": "professional_institution", "url": "https://www.chronicle.com/", "expect_title": "The Chronicle of Higher Education", "notes": "专业机构新闻站（可能付费墙）"}
 {"id": "F12", "category": "professional_institution", "url": "https://er.educause.edu/", "expect_title": "Educause Review", "notes": "教育技术专业机构"}
 {"id": "F13", "category": "long_page", "url": "https://educationhub.blog.gov.uk/higher-education/", "expect_title": "Higher Education", "notes": "长页面博客"}

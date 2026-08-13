@@ -152,8 +152,8 @@
       "clean_size": 3000,
       "compression_ratio": 0.9666666666666667,
       "id": "F09",
-      "category": "chinese_web",
-      "expect_title": "中华人民共和国教育部"
+      "category": "generic_org",
+      "expect_title": "MOE China Education News"
     },
     {
       "url": "https://news.tsinghua.edu.cn/",
@@ -169,8 +169,8 @@
       "clean_size": 3000,
       "compression_ratio": 0.9666666666666667,
       "id": "F10",
-      "category": "chinese_web",
-      "expect_title": "清华新闻网"
+      "category": "generic_org",
+      "expect_title": "Tsinghua University News"
     },
     {
       "url": "https://www.chronicle.com/",
