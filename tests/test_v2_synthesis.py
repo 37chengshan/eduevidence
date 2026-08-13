@@ -382,3 +382,32 @@ def test_moderate_support_yields_pilot_not_adopt(tmp_path):
     assert snap["decision"] in ("ADOPT", "PILOT")
     if snap["confidence_label"] == "Moderate":
         assert snap["decision"] == "PILOT"
+
+
+def test_same_independence_key_not_double_voted(tmp_path):
+    """Two Studies sharing an independence_key count as ONE independent vote."""
+    ws = ProjectWorkspace.create(tmp_path, question="dedupe?", title="d",
+                                 research_mode="evidence_review")
+    store = GraphStore.create(ws)
+    run = start_run(ws, purpose="d", capabilities=[],
+                    execution_backend="sequential_main_agent")
+    store.commit(run_id=run["run_id"], reason="bundle",
+                 mutation=GraphMutation(
+                     upserts={
+                         "sources": [_src("SRC-STU-A"), _src("SRC-STU-B")],
+                         "studies": [_study("STU-A", "same-key"),
+                                     _study("STU-B", "same-key")],
+                         "findings": [_finding("FND-A1", "STU-A", "positive"),
+                                      _finding("FND-B1", "STU-B", "positive")],
+                         "outcomes": [_outcome()],
+                         "claims": [_claim()],
+                         "evidence_links": [_link("LNK-A1", "FND-A1"),
+                                            _link("LNK-B1", "FND-B1")],
+                         "audits": [_audit("AUD-A", "STU-A"), _audit("AUD-B", "STU-B")],
+                     }, retire_ids={}))
+    syn = synthesize_claim(store, "CLM-1")
+    # status derives from the single independent vote; the duplicated study
+    # is flagged as unresolved rather than silently counted twice
+    assert syn.status == "supported"
+    assert len(syn.independent_sample_keys) == 1
+    assert any("independence_key" in u for u in syn.unresolved_conflicts)

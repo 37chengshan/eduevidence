@@ -143,10 +143,12 @@ def run_native_descriptive(project: ProjectWorkspace, plan: dict) -> dict:
             if 0 < len(counts) <= 10:
                 group_counts[c] = counts
 
-        # descriptive statistics
+        # descriptive statistics: ONLY for columns whose type is fully
+        # 'number'; a mixed column (some non-numeric cells) is marked
+        # explicitly instead of silently summarizing the numeric subset
         desc: dict[str, dict] = {}
         for c, vals in numeric_cols.items():
-            if vals:
+            if types.get(c) == "number" and vals:
                 desc[c] = {
                     "count": len(vals),
                     "mean": round(statistics.fmean(vals), 4),

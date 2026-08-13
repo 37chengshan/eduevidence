@@ -256,7 +256,13 @@ class ResearchLibrary:
             if lib_content != proj_content:
                 diff["changed"].append(eid)
         for table in LIBRARY_TABLES:
-            for eid in proj_by_table[table]:
-                if eid not in lib_entities:
+            for eid, rec in proj_by_table[table].items():
+                if eid in lib_entities:
+                    continue
+                # only entities imported FROM this library may be reported
+                # removed; project-local entities are never "removed" by a
+                # library diff
+                origin = ((rec.get("extensions") or {}).get("origin") or {})
+                if origin.get("library_revision") is not None:
                     diff["removed"].append(eid)
         return diff

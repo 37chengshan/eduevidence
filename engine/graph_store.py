@@ -195,11 +195,12 @@ class GraphStore:
         # 2. per-entity schema validation
         for table, rows in after_snapshot.items():
             schema = _TABLE_SCHEMA[table]
+            id_key = _TABLE_ID_KEY[table]
             for row in rows:
                 errors = validate_record(schema, row)
                 if errors:
                     raise ValueError(
-                        f"commit rejected: {table} {row.get('id', '?')} "
+                        f"commit rejected: {table} {row.get(id_key, '?')} "
                         f"fails schema: {'; '.join(errors)}"
                     )
 
@@ -239,6 +240,11 @@ class GraphStore:
                 "created_at": _now_iso(),
                 "extensions": {},
             }
+            manifest_errors = validate_record("graph-revision", manifest)
+            if manifest_errors:
+                raise ValueError(
+                    f"commit rejected: revision manifest invalid: "
+                    f"{'; '.join(manifest_errors)}")
             _write_json(tmp_dir / "manifest.json", manifest)
 
             # 5. atomically promote: .tmp-<run> -> rev-00000N

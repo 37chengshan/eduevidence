@@ -66,6 +66,16 @@ def load_schema(name: str) -> dict:
     return _cache[name]
 
 
+def reload_schemas() -> None:
+    """Drop the schema cache so later loads re-read schema files.
+
+    Needed after schema files change at runtime (e.g. tests that mutate a
+    schema to prove briefs are schema-derived). Use this instead of reaching
+    into the private `_cache`.
+    """
+    _cache.clear()
+
+
 def validate_record(name: str, record: dict) -> list[str]:
     """Validate `record` against the named V2 schema.
 

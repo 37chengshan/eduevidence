@@ -138,6 +138,11 @@ local_setup() {
 
     # 1. 检查 Python >= 3.10
     if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
+        if [ "$DRY_RUN" -eq 1 ]; then
+            echo "    [dry-run] Python 版本检查将失败：未找到 ${PYTHON_BIN}（需要 3.10+）"
+            echo "    [dry-run] 预览结束（本环境不会真正安装）"
+            exit 0
+        fi
         echo "ERROR: 未找到 ${PYTHON_BIN}，请先安装 Python 3.10+ (https://www.python.org/downloads/)" >&2
         exit 1
     fi
@@ -145,6 +150,11 @@ local_setup() {
     PY_MAJOR="${PY_VERSION%%.*}"
     PY_MINOR="${PY_VERSION#*.}"
     if [ "$PY_MAJOR" -lt 3 ] || { [ "$PY_MAJOR" -eq 3 ] && [ "$PY_MINOR" -lt 10 ]; }; then
+        if [ "$DRY_RUN" -eq 1 ]; then
+            echo "    [dry-run] Python 版本检查将失败：需要 3.10+，当前 $PY_VERSION"
+            echo "    [dry-run] 预览结束（本环境不会真正安装）"
+            exit 0
+        fi
         echo "ERROR: 需要 Python 3.10+，当前 $PY_VERSION" >&2
         exit 1
     fi

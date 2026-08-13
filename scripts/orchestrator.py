@@ -40,6 +40,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -995,29 +996,29 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--approve-agent-mcp", action="store_true",
                        help="record agent-mcp approval in the manifest")
     p_run.add_argument("--dry-run", action="store_true", help="initialize only, do not advance")
-    p_run.add_argument("--runs-dir", default=str(ROOT / "runs"),
+    p_run.add_argument("--runs-dir", default=os.environ.get("EDUEVIDENCE_RUNS_DIR", str(ROOT / "runs")),
                        help="directory holding run workspaces (default: <repo>/runs)")
     p_run.set_defaults(func=_cmd_run)
 
     p_resume = sub.add_parser("resume", help="continue a run from its state.json")
     p_resume.add_argument("--run-id", required=True)
     p_resume.add_argument("--demo-pack", default=None, type=Path)
-    p_resume.add_argument("--runs-dir", default=str(ROOT / "runs"))
+    p_resume.add_argument("--runs-dir", default=os.environ.get("EDUEVIDENCE_RUNS_DIR", str(ROOT / "runs")))
     p_resume.set_defaults(func=_cmd_resume)
 
     p_status = sub.add_parser("status", help="show run state")
     p_status.add_argument("--run-id", required=True)
-    p_status.add_argument("--runs-dir", default=str(ROOT / "runs"))
+    p_status.add_argument("--runs-dir", default=os.environ.get("EDUEVIDENCE_RUNS_DIR", str(ROOT / "runs")))
     p_status.set_defaults(func=_cmd_status)
 
     p_list = sub.add_parser("list", help="list runs")
-    p_list.add_argument("--runs-dir", default=str(ROOT / "runs"))
+    p_list.add_argument("--runs-dir", default=os.environ.get("EDUEVIDENCE_RUNS_DIR", str(ROOT / "runs")))
     p_list.set_defaults(func=_cmd_list)
 
     p_gate = sub.add_parser("gate", help="run the Pre-Verdict Gate over a run")
     p_gate.add_argument("--run-id", required=True)
     p_gate.add_argument("--require-final", action="store_true")
-    p_gate.add_argument("--runs-dir", default=str(ROOT / "runs"))
+    p_gate.add_argument("--runs-dir", default=os.environ.get("EDUEVIDENCE_RUNS_DIR", str(ROOT / "runs")))
     p_gate.set_defaults(func=_cmd_gate)
 
     # ---- V2 project-scoped commands ------------------------------------

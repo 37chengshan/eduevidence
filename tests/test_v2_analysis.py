@@ -156,3 +156,21 @@ def test_analysis_run_validation_path(tmp_path):
     import pytest
     with pytest.raises(FileNotFoundError):
         mark_analysis_validated(ws, "ANL-missing")
+
+
+def test_mixed_column_not_summarized_as_numeric(tmp_path):
+    """A column with some non-numeric cells is typed string and must NOT
+    silently emit descriptive statistics over its numeric subset."""
+    ws = _ws(tmp_path)
+    src = tmp_path / "mixed.csv"
+    src.write_text("student,score\nS1,high\nS2,90\nS3,80\n", encoding="utf-8")
+    from engine.datasets import ingest_dataset
+    asset = ingest_dataset(ws, design_id="DSN-1", source_path=src,
+                           privacy={"classification": "internal",
+                                    "deidentification_status": "done",
+                                    "consent_metadata": None})
+    plan = _plan(ws, dataset_ids=[asset["dataset_id"]])
+    run = run_native_descriptive(ws, plan)
+    out = run["outputs"][asset["dataset_id"]]
+    assert out["types"]["score"] == "string"
+    assert "score" not in out["descriptive_statistics"]

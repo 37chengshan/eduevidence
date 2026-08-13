@@ -162,7 +162,7 @@ def test_required_fields_are_schema_derived_not_hardcoded():
     import tempfile
 
     import engine.contracts as contracts
-    contracts._cache.clear()
+    contracts.reload_schemas()
     sch_path = schema_path("finding")
     original = sch_path.read_text(encoding="utf-8")
     sch = json.loads(original)
@@ -182,4 +182,4 @@ def test_required_fields_are_schema_derived_not_hardcoded():
         assert "REQUIRED" in brief
     finally:
         sch_path.write_text(original, encoding="utf-8")
-        contracts._cache.clear()
+        contracts.reload_schemas()

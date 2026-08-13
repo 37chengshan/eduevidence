@@ -156,6 +156,7 @@ def test_migration_tolerates_missing_claim_text(tmp_path):
     pack = _pack_copy(tmp_path)
     data = json.loads((pack / "result.json").read_text(encoding="utf-8"))
     ev = dict(data["evidence"][0])
+    ev["evidence_id"] = "E-NO-TEXT"
     del ev["claim"]
     del ev["source_location"]
     data["evidence"].append(ev)

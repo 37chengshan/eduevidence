@@ -104,6 +104,7 @@ def synthesize_claim(store: GraphStore, claim_id: str) -> ClaimSynthesis:
     neutral_link_ids: list[str] = []
     unresolved: list[str] = []
 
+    seen_keys: set[str] = set()
     for sid, links_for_study in sorted(study_links.items()):
         study = usable_studies[sid]
         independent_samples.add(study["independence_key"])
@@ -114,13 +115,22 @@ def synthesize_claim(store: GraphStore, claim_id: str) -> ClaimSynthesis:
         has_conditional = any(i == "conditional" for i in implications)
         if has_conditional:
             unresolved.append(f"{sid}: conditional implication")
-        if has_support and not has_contradict:
+        # independent-study votes: two Studies sharing an independence_key
+        # are one independent unit — only the first votes
+        key = study["independence_key"]
+        is_first_with_key = key not in seen_keys
+        seen_keys.add(key)
+        if has_support and not has_contradict and is_first_with_key:
             support_votes.append(sid)
-        elif has_contradict and not has_support:
+        elif has_contradict and not has_support and is_first_with_key:
             oppose_votes.append(sid)
         elif has_support and has_contradict:
             # within-study conflict is a real unresolved conflict, not a vote
             unresolved.append(f"{sid}: within-study support+contradict links")
+        elif not is_first_with_key:
+            unresolved.append(
+                f"{sid}: shares independence_key {key!r} with another study; "
+                f"not counted as an independent vote")
         else:
             neutral_only.append(sid)
         study_ids.append(sid)
