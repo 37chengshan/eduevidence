@@ -6,7 +6,7 @@
   "platform": "Intern Discovery（书生科学发现平台）SCP 广场",
   "skill": {
     "name": "eduevidence",
-    "version": "3.0.0-dev",
+    "version": "3.0.0",
     "entry": "SKILL.md（上传包内复制为 skill.md，内容一致，无需改名）",
     "one_line": "把“是否采用某种教学方式 / AI 教学工具”从经验判断转化为可追溯、可验证的证据决策流程",
     "required_materials": [
@@ -113,7 +113,7 @@
       "upload_to": "src/pyproject.toml",
       "required": true,
       "type": "file",
-      "description": "包名 eduevidence v3.0.0-dev，MIT，requires-python >=3.10；pytest 配置 testpaths=tests、addopts=-q。"
+      "description": "包名 eduevidence v3.0.0，MIT，requires-python >=3.10；pytest 配置 testpaths=tests、addopts=-q。"
     },
     {
       "id": "install-script",
@@ -140,7 +140,7 @@
       "upload_to": "README.md, README.en.md",
       "required": true,
       "type": "file",
-      "description": "README.md（中文入口，指向 README.en.md 英文版）：项目定位、双模式、证据图/项目工作区、快速安装、Skill 安装、示例报告。"
+      "description": "README.md（仓库实为英文入口）与 README.en.md（中文版）：项目定位、双模式、证据图/项目工作区、快速安装、Skill 安装、示例报告。"
     },
     {
       "id": "examples",

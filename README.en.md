@@ -224,7 +224,7 @@ EduEvidence 强制区分 20 类 Outcome（`references/outcome-taxonomy.md`）：
 
 ## Benchmark
 
-第一版 30 个教育研究问题（`benchmarks/questions.jsonl`），S×10 / M×10 / L×10；其中 15 题为主域"高校 AI 辅助教学"，10 题含人工金标注（`benchmarks/annotations/`）。
+第一版 30 个教育研究问题（`benchmarks/questions.jsonl`），S×10 / M×10 / L×10；其中 15 题为主域"高校 AI 辅助教学"，30 题全部含人工金标注（`benchmarks/annotations/gold-Q01..Q30`）。
 
 基线设计：
 
@@ -289,15 +289,15 @@ EduEvidence/  （= 一个 Skill 包）
 │  ├─ skill/agents/          8 个角色协议（Planner / Retriever / Analyst / Skeptic /
 │  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer）
 │  ├─ references/            11 个教育方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计…）
-│  ├─ schemas/               13 个 JSON Schema 数据契约（每步输出的校验门）
+│  ├─ schemas/               33 个 JSON Schema 数据契约（13 顶层 + 17 v2 + 3 v3，每步输出的校验门）
 │  ├─ scripts/               17 个确定性逻辑脚本（评分 / 矩阵 / 审计 / 置信度 / Orchestrator / 启动探测）
 │  ├─ retrieval/             检索与抓取层（fetch / validate / dedupe / failures）
 │  ├─ integrations/          Agent MCP 增强层 + Smart Web Fetch 集成
 │  └─ visualization/         结果呈现层（ECharts / 信息图 / 学术图 / 双语 HTML Composer）
 │
 ├─ 质量保障
-│  ├─ tests/                 pytest 测试矩阵（50 个用例）
-│  └─ benchmarks/            30 题 + 10 题金标注 + B0–B4 评测框架
+│  ├─ tests/                 pytest 测试矩阵（610 个用例，56 个文件）
+│  └─ benchmarks/            30 题 + 30 份金标注 + B0–B4 评测框架
 │
 └─ 演示与分发
    ├─ examples/              3 个完整 Research & Decision Pack（含双语 HTML 报告）

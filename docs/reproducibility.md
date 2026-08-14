@@ -1,6 +1,6 @@
 # EduEvidence 复现指南
 
-本指南确保任何人在全新环境中都能复现 EduEvidence 的校验、测试与 Benchmark 结果。全部命令以仓库根目录 `/Users/cc/edu`（即 pyproject.toml 所在目录）为工作目录执行。
+本指南确保任何人在全新环境中都能复现 EduEvidence 的校验、测试与 Benchmark 结果。全部命令以仓库根目录 `<repo-root>`（即 pyproject.toml 所在目录）为工作目录执行。
 
 ## 〇、V2 Research Engine 复现
 
@@ -20,7 +20,7 @@
 ### 1.1 创建虚拟环境（推荐）
 
 ```bash
-cd /Users/cc/edu
+cd <repo-root>
 python3.11 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 ```

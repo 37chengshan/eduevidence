@@ -15,9 +15,9 @@ mkdir -p "$UPLOAD"
 # skill.md (competition-required name; content identical to SKILL.md)
 cp "$ROOT/SKILL.md" "$UPLOAD/skill.md"
 
-# source tree (src/)
+# tests (required by checklist and UPLOAD-README)
 mkdir -p "$UPLOAD/src"
-for d in engine scripts retrieval integrations schemas skill references visualization packaging; do
+for d in engine scripts retrieval integrations schemas skill references visualization; do
   rsync -a --exclude-from=<(printf "%s\n" "${EXCLUDE[@]}") "$ROOT/$d" "$UPLOAD/src/"
 done
 for f in eduevidence_cli.py install.sh pyproject.toml; do
@@ -32,14 +32,20 @@ cp -r "$ROOT/examples" "$UPLOAD/examples"
 cp -r "$ROOT/docs" "$UPLOAD/docs"
 cp -r "$ROOT/benchmarks" "$UPLOAD/benchmarks"
 cp -r "$ROOT/assets" "$UPLOAD/assets"
+cp -r "$ROOT/tests" "$UPLOAD/tests"
 cp "$ROOT/CHANGELOG.md" "$UPLOAD/CHANGELOG.md"
 cp "$ROOT/packaging/UPLOAD-README.md" "$UPLOAD/UPLOAD-README.md"
+cp "$ROOT/packaging/scp-manifest.json" "$UPLOAD/scp-manifest.json"
+cp "$ROOT/packaging/upload-layout.md" "$UPLOAD/upload-layout.md"
 
 # exclude leaks again
 find "$UPLOAD" -name "__pycache__" -type d -prune -exec rm -rf {} + 2>/dev/null || true
 find "$UPLOAD" -name "*.pyc" -delete 2>/dev/null || true
 find "$UPLOAD" -name ".DS_Store" -delete 2>/dev/null || true
 rm -f "$UPLOAD/docs/competition-brief.md"
+rm -rf "$UPLOAD/docs/superpowers"
+rm -rf "$UPLOAD/examples/ai-coding-assistant/reports-5themes_副本"
+rm -rf "$UPLOAD/benchmarks/baselines"
 
 echo "==> Upload folder ready at $UPLOAD"
 du -sh "$UPLOAD"

@@ -6,7 +6,7 @@
 
 1. **比赛三件套齐全**：`skill.md`（必须）、源码（必须，统一放入 `src/`）、展示材料（建议，`assets/` + 演示文档）。
 2. **与仓库的映射关系**：仓库内文件一律不更名、不移动；上传目录是按文件复制（或打 tar.gz 后解压）得到的新布局。仓库 `SKILL.md` 即参赛 skill.md，上传时复制为 `skill.md`（内容一致）。
-3. **零泄漏**：`.venv/`、`.git/`、`.pytest_cache/`、`__pycache__/`、`build/`、`dist/`、`*.egg-info/`、`.DS_Store`、`docs/competition-brief.md` 一律不进上传目录。
+3. **零泄漏**：`.venv/`、`.git/`、`.pytest_cache/`、`__pycache__/`、`build/`、`dist/`、`*.egg-info/`、`.DS_Store`、`runs/`（本地运行产物）、`upload/`、`docs/competition-brief.md` 一律不进上传目录。
 
 ## 二、布局总览
 
@@ -31,8 +31,8 @@ upload/
 ├── tests/                      # 测试（56 个 test_*.py + conftest.py）
 ├── assets/                     # 展示图片（top-banner / multi-agent-research / tribunal-workflow）
 ├── LICENSE                     # MIT 许可证
-├── README.md                   # 项目说明（中文入口）
-├── README.en.md                # 项目说明（英文版）
+├── README.md                   # 项目说明（英文，仓库实为英文）
+├── README.en.md                # 项目说明（中文版）
 ├── UPLOAD-README.md            # 给评审/上架方的本说明（从 packaging/ 复制）
 ├── scp-manifest.json           # 上架清单（从 packaging/ 复制）
 └── upload-layout.md            # 本文档（从 packaging/ 复制）

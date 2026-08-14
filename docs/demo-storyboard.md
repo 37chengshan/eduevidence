@@ -103,7 +103,7 @@
 
 | 产物 | 路径 | 验证命令 |
 |------|------|----------|
-| 单文件离线报告 | `examples/ai-coding-assistant/EduEvidence_Report.html`（59.5KB） | 浏览器直接打开，断网可读 |
+| 单文件离线报告 | `examples/ai-coding-assistant/EduEvidence_Report.html`（≈491KB，单文件离线） | 浏览器直接打开，断网可读 |
 | 可视化决策记录 | `examples/ai-coding-assistant/report_spec.json` | 完整性门 status=PASS |
 | ECharts 规格 | `examples/ai-coding-assistant/chart_specs.json` | charts=2 + benchmark 面板 |
 | AntV 信息图 | `examples/ai-coding-assistant/infographics.json` | workflow/tribunal/intervention/evaluation 4 张 SVG |

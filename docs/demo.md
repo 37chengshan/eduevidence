@@ -12,7 +12,7 @@ Demo 的核心叙事：**"能更快完成作业"≠"编程学得更好"**。EduE
 
 ### 高光 1：Completion Speed↑ ≠ Programming Learning↑
 
-检索命中多篇研究：允许 Copilot 的实验组完成作业更快（completion_time 显著下降），但**同一批学生在无 AI 环境下的独立编程成绩没有提升甚至下降**。画面呈现：左侧时间轴（作业完成快 40%），右侧学习结果（retention/transfer 平或负）——一升一平的对照是全场第一印象。
+检索命中多篇研究：允许 Copilot 的实验组完成作业更快（completion_time 显著下降），但**同一批学生在无 AI 环境下的独立编程成绩没有提升甚至下降**。画面呈现：左侧时间轴（作业完成快 35%（p<0.05）），右侧学习结果（retention/transfer 平或负）——一升一平的对照是全场第一印象。
 
 ### 高光 2：Immediate vs Retention vs Transfer
 

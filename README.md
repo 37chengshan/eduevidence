@@ -307,7 +307,7 @@ EduEvidence/  (= one Skill package)
 │                            bilingual HTML composer + V2 project surfaces)
 │
 ├─ Quality assurance
-│  ├─ tests/                 pytest test matrix (V1 + V2, ~430 cases)
+│  ├─ tests/                 pytest test matrix (V1+V2+V3, 610 cases)
 │  └─ benchmarks/            V1 questions + benchmarks/v2/ (graph/contract metrics)
 │
 └─ Demos & distribution

@@ -2,9 +2,9 @@
 
 所有显著变更均记录于此。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)；版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
-## [3.0.0-dev] — 2026-08-14
+## [3.0.0] — 2026-08-14
 
-> v3 开发基线（`engine/versions.py` → `ENGINE_VERSION = "3.0.0-dev"`）。v3 三大方向：**可信度收口**（每个结论收紧到可追溯、可反驳、可审计）、**实证 Benchmark**（Layer B 真实模型运行）、**闭环能力**（PILOT → 真实数据 → 再裁决）。
+> v3 正式版（`engine/versions.py` → `ENGINE_VERSION = "3.0.0"`）。v3 三大方向：**可信度收口**（每个结论收紧到可追溯、可反驳、可审计）、**实证 Benchmark**（Layer B 真实模型运行）、**闭环能力**（PILOT → 真实数据 → 再裁决）。
 
 ### 可信度收口（Credibility Tightening）
 
@@ -34,4 +34,4 @@
 
 - **HTML 报告可访问性与诚实性小修**（6.1–6.5，保持视觉风格）（`d54d23a`）。
 - **文档统一**：Canonical Protocol 9 步（6+3）、Schema 13 个、方法论文档 11 篇、V2 contracts 17 个等数字口径修正（`5b0e886`、`907cd11`）。
-- **版本基线**：`3.0.0-dev`（`715fae7`）。
+- **版本基线**：`3.0.0`（`715fae7` 起 3.0.0-dev，`ee7ae79` 正式化）。
