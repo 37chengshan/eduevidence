@@ -29,7 +29,7 @@
       "id": "skill-agents",
       "name": "Skill 角色协议",
       "path": "skill/",
-      "upload_to": "src/skill/",
+      "upload_to": "skill/",
       "required": true,
       "type": "dir",
       "description": "8 个角色协议（skill/agents/）：Education Planner / Evidence Retriever / Evidence Analyst / Skeptic / Method Reviewer / Evidence Judge / Intervention Designer / Evaluation Designer，是 Skill 的多智能体编排说明。"
@@ -38,7 +38,7 @@
       "id": "references",
       "name": "方法论文档",
       "path": "references/",
-      "upload_to": "src/references/",
+      "upload_to": "references/",
       "required": true,
       "type": "dir",
       "description": "11 个教育研究方法论文档（retrieval-protocol / skeptic-protocol / methodology-audit / tribunal-policy / evidence-quality / outcome-taxonomy 等），构成检索、反驳、审计、裁决的规则底座。"
@@ -47,7 +47,7 @@
       "id": "schemas",
       "name": "数据契约（JSON Schema）",
       "path": "schemas/",
-      "upload_to": "src/schemas/",
+      "upload_to": "schemas/",
       "required": true,
       "type": "dir",
       "description": "33 个 JSON Schema（schemas/ + schemas/v2/ + schemas/v3/）：evidence、verdict、intervention、graph-revision、study-design、pilot-outcome、run-manifest 等，保证引擎输出的结构化与可验证。"
@@ -56,7 +56,7 @@
       "id": "scripts",
       "name": "确定性逻辑脚本",
       "path": "scripts/",
-      "upload_to": "src/scripts/",
+      "upload_to": "scripts/",
       "required": true,
       "type": "dir",
       "description": "21 个 Python 脚本：orchestrator（CLI 主实现）、evidence_score / evidence_matrix / compute_confidence / claim_audit / pre_verdict_gate / complexity_gate（评分与裁决门）、validate_schema、render_report_html（5 主题双语报告渲染）、benchmark 系列。"
@@ -65,7 +65,7 @@
       "id": "engine",
       "name": "研究引擎核心",
       "path": "engine/",
-      "upload_to": "src/engine/",
+      "upload_to": "engine/",
       "required": true,
       "type": "dir",
       "description": "27 个 Python 模块：Evidence Review / Graph Store（版本化证据图）/ Meta Synthesis / Tribunal / Knowledge Gap / Study Design / Dataset & Analysis / Projection / Mode Router（Evidence Review 与 Full Research Cycle 双模式）。"
@@ -74,7 +74,7 @@
       "id": "retrieval",
       "name": "检索与抓取层",
       "path": "retrieval/",
-      "upload_to": "src/retrieval/",
+      "upload_to": "retrieval/",
       "required": true,
       "type": "dir",
       "description": "fetch / validate / dedupe / source / failures：本地确定性检索层；Search 为宿主能力，snippet 必须经 Fetch + Validate 才能成为 SUPPORTED Evidence（RULE 2）。"
@@ -83,7 +83,7 @@
       "id": "integrations",
       "name": "集成层",
       "path": "integrations/",
-      "upload_to": "src/integrations/",
+      "upload_to": "integrations/",
       "required": true,
       "type": "dir",
       "description": "agent_mcp.py（Agent MCP 增强模式）与 smart_web_fetch.py（Smart Web Fetch 集成）；Native Core 仅用 Python 标准库，不强制依赖 MCP。"
@@ -92,7 +92,7 @@
       "id": "visualization",
       "name": "HTML 渲染器",
       "path": "visualization/",
-      "upload_to": "src/visualization/",
+      "upload_to": "visualization/",
       "required": true,
       "type": "dir",
       "description": "visualization/eduevidence-report/：5 主题（claude/academic/datalab/datalab-dark/presentation）中英双语报告渲染器。"
@@ -101,7 +101,7 @@
       "id": "cli-entry",
       "name": "CLI 入口",
       "path": "eduevidence_cli.py",
-      "upload_to": "src/eduevidence_cli.py",
+      "upload_to": "eduevidence_cli.py",
       "required": true,
       "type": "file",
       "description": "console-script shim：eduevidence run/resume/status/list/gate，转发到 scripts/orchestrator.py。"
@@ -110,7 +110,7 @@
       "id": "pyproject",
       "name": "打包与元数据",
       "path": "pyproject.toml",
-      "upload_to": "src/pyproject.toml",
+      "upload_to": "pyproject.toml",
       "required": true,
       "type": "file",
       "description": "包名 eduevidence v3.0.0，MIT，requires-python >=3.10；pytest 配置 testpaths=tests、addopts=-q。"
@@ -119,7 +119,7 @@
       "id": "install-script",
       "name": "一键安装脚本",
       "path": "install.sh",
-      "upload_to": "src/install.sh",
+      "upload_to": "install.sh",
       "required": true,
       "type": "file",
       "description": "bash install.sh（venv+依赖+自检+测试，默认 --dev）/ --skill（交互式安装为 Agent Skill，支持 11 种宿主）/ --list-hosts / --dry-run；支持 curl 远程执行。"

@@ -13,7 +13,7 @@
 ```text
 upload/
 ├── skill.md                    # ← 仓库 SKILL.md 的副本（内容一致；比赛材料表要求的文件名）
-├── src/                        # 项目源码（比赛要求“项目源码 必须提交”）
+├── engine/ scripts/ retrieval/ integrations/ schemas/ skill/ references/ visualization/   # 项目源码（平铺，比赛要求“项目源码 必须提交”）
 │   ├── engine/                 #   研究引擎核心（27 模块：证据综述/证据图/综合/裁决/缺口/研究设计）
 │   ├── scripts/                #   确定性脚本（21 个：评分/矩阵/置信度/门控/渲染/基准）
 │   ├── retrieval/              #   检索与抓取层（fetch/validate/dedupe/failures）
@@ -66,4 +66,4 @@ upload/
 
 ## 五、替代方案（保持仓库原样）
 
-若平台对 `skill.md` 文件名无强制要求，也可按仓库原样打包（根目录 `SKILL.md` + 各目录平铺），此时 `upload/` 即仓库剔除排除项后的完整拷贝。本文档建议的 `src/` 归拢仅为让“源码必须提交”在评审眼中更清晰，两者内容完全等价。
+若平台对 `skill.md` 文件名无强制要求，也可按仓库原样打包（根目录 `SKILL.md` + 各目录平铺），此时 `upload/` 即仓库剔除排除项后的完整拷贝。本布局采用“标准 skill 仓库”平铺形态：skill.md 与资源目录同在根目录，评审按 skill 结构直接可读。
