@@ -83,8 +83,8 @@ def test_create_makes_exact_directory_layout(tmp_path):
     )}
     assert leaves == {
         "analyses", "datasets/manifests", "datasets/processed", "datasets/raw",
-        "decisions", "gaps", "graph/revisions", "projections", "reports",
-        "runs", "study-designs",
+        "decisions", "gaps", "graph/revisions", "pilots", "projections",
+        "reports", "runs", "study-designs",
     }
 
 

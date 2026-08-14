@@ -10,7 +10,7 @@ Local entity prefixes are frozen in the V2 design:
     PRJ Project  RUN Run  SRC Source  STU Study  FND Finding  OUT Outcome
     CLM Claim    LNK EvidenceLink  AUD MethodologyAudit  GAP KnowledgeGap
     DSN StudyDesign  DAT DatasetAsset  APL AnalysisPlan  ANL AnalysisRun
-    DEC DecisionSnapshot  PIL PilotRun
+    DEC DecisionSnapshot  PIL PilotRun  SYN LibrarySynthesis
 
 Interpretive entities (Claim, EvidenceLink, KnowledgeGap, DecisionSnapshot)
 keep stable Project-local IDs across edits; version/revision metadata records
@@ -23,7 +23,7 @@ import secrets
 
 _LOCAL_PREFIXES = frozenset({
     "SRC", "STU", "FND", "OUT", "CLM", "LNK", "AUD", "GAP",
-    "DSN", "DAT", "APL", "ANL", "DEC", "PIL",
+    "DSN", "DAT", "APL", "ANL", "DEC", "PIL", "SYN",
 })
 
 

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/v3/synthesis.schema.json",
+  "title": "LibrarySynthesis",
+  "description": "Cross-project synthesis over the Shared Research Library (v3): aggregates verified facts (sources/studies/findings/audits) from one immutable library revision into an outcome-level overview. Interpretive summary only - it never rewrites library state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "synthesis_id",
+    "library_revision",
+    "generated_at",
+    "independent_studies",
+    "source_count",
+    "outcomes",
+    "extensions"
+  ],
+  "properties": {
+    "synthesis_id": {
+      "type": "string",
+      "pattern": "^SYN-[0-9a-f]{8}$"
+    },
+    "library_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "independent_studies": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "outcome_token",
+          "positive_findings",
+          "negative_findings",
+          "null_findings",
+          "study_keys"
+        ],
+        "properties": {
+          "outcome_token": {
+            "type": "string"
+          },
+          "positive_findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "negative_findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "null_findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "study_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

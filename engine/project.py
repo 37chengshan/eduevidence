@@ -30,6 +30,7 @@ _SUBDIRS = (
     "projections",
     "reports",
     "runs",
+    "pilots",
 )
 
 _MANIFEST_NAME = "project.json"
