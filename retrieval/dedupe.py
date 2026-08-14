@@ -95,6 +95,13 @@ def dedupe_sources(sources: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
         kept = _merge_sources(hit, src)
         if kept is src:
             unique[unique.index(hit)] = src
+            # The replaced entry's keys may still point at the stale object; a
+            # later source hitting any of them would crash (ValueError) or
+            # silently mis-merge. Repoint them at the kept source too.
+            for name in ("doi", "url", "title", "hash"):
+                key = _source_keys(hit)[name]
+                if key:
+                    indexes[name][key] = src
         for name in ("doi", "url", "title", "hash"):
             key = keys[name]
             if key:
