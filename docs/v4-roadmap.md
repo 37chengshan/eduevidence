@@ -41,7 +41,7 @@
 | ID | 项目 | 优先级 | 状态 |
 |----|------|:---:|:---:|
 | E1 | Native Core 零第三方依赖（Python stdlib only，不要求 MCP/daemon） | P0 | 已实施 |
-| E2 | Schema 契约体系 33 个（V1 13 + V2 17 + V3 3）+ 零依赖校验器 | P0 | 已实施 |
+| E2 | Schema 契约体系 37 个（V1 13 + V2 17 + V3 3 + V4 4）+ 零依赖校验器 | P0 | 已实施 |
 | E3 | GitHub Actions CI 三作业并行：test / schema-smoke / upload-build | P0 | 已实施 |
 | E4 | 确定性 HTML/图表构建 + 生成物一致性 diff（chart_specs / infographics / figures） | P1 | 已实施 |
 | E5 | 上传包自动构建（packaging/make_upload.sh）+ SKILL.md 一致性 + 零泄漏检查 | P0 | 已实施 |
