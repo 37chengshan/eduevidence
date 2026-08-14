@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/v3/pilot-outcome.schema.json",
+  "title": "PilotOutcomeRecord",
+  "description": "Decision-to-Outcome Loop record (v3): a PilotRun bound to a DecisionSnapshot that carries outcome data through import -> analysis -> re-adjudication. PII columns are forbidden by anon_policy; student data stays local.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pilot_id",
+    "project_id",
+    "decision_snapshot_id",
+    "title",
+    "start_date",
+    "end_date",
+    "conditions",
+    "sample_size",
+    "design_id",
+    "anon_policy",
+    "outcome_columns",
+    "status",
+    "created_at",
+    "extensions"
+  ],
+  "properties": {
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^PIL-[0-9a-f]{8}$"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "decision_snapshot_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sample_size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "design_id": {
+      "type": "string",
+      "description": "Study design the pilot implements"
+    },
+    "anon_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "no_pii_columns",
+        "note"
+      ],
+      "properties": {
+        "no_pii_columns": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "outcome_columns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Outcome Taxonomy tokens measured by the pilot"
+    },
+    "dataset_asset_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "analysis_run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "registered",
+        "data_imported",
+        "analyzed",
+        "adjudicated"
+      ]
+    },
+    "redecide": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "new_decision_snapshot_id": {
+          "type": "string"
+        },
+        "graph_revision": {
+          "type": "integer"
+        },
+        "diff": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
