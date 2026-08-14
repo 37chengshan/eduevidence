@@ -96,6 +96,8 @@ def _check_pointer(entry: dict, field: str) -> None:
             f"domain {entry['id']!r}: {field} file missing: {target}")
     node: Any = json.loads(target.read_text(encoding="utf-8"))
     for part in pointer.strip("/").split("/"):
+        # RFC 6901 unescaping: ~1 -> "/", ~0 -> "~" (P2-9)
+        part = part.replace("~1", "/").replace("~0", "~")
         if not isinstance(node, dict) or part not in node:
             raise ValueError(
                 f"domain {entry['id']!r}: {field} pointer {pointer!r} "

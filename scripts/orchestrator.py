@@ -869,7 +869,7 @@ def _cmd_benchmark_judge(args) -> int:
     if args.action == "run":
         return bj.main(["run", "--run", args.run, "--out", args.out, "--limit", str(args.limit)])
     if args.action == "report":
-        return bj.main(["report", "--out", args.out])
+        return bj.main(["report", "--out", args.report])
     return 2
 
 

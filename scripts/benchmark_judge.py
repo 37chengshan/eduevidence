@@ -242,7 +242,10 @@ def _per_baseline_means(per_attempt: list[dict[str, Any]]) -> dict[str, dict[str
         for dim in JUDGE_DIMS:
             values = [r["judge"].get(dim) for r in rows]
             values = [v for v in values if isinstance(v, (int, float))]
-            entry: dict[str, Any] = {"mean": round(_mean(values), 4), "n": len(values)}
+            # n=0 -> mean None (report renders "-"), never a misleading 0.0 (P2-4)
+            entry: dict[str, Any] = {
+                "mean": round(_mean(values), 4) if values else None,
+                "n": len(values)}
             if values:
                 entry["min"] = min(values)
                 entry["max"] = max(values)
@@ -269,10 +272,14 @@ def run_judge(*, run_dir: Path, annotations_dir: Path, questions: list[dict],
     for entry in manifest.get("attempts", []):
         if entry.get("status") != "completed":
             continue  # failed/budget_stopped attempts have no response to judge
-        aid = entry["attempt_id"]
+        # tolerant field access: a malformed manifest row must degrade to
+        # failed, never KeyError the whole run (review P2-3)
+        aid = entry.get("attempt_id") or "unknown"
         row: dict[str, Any] = {
-            "attempt_id": aid, "question_id": entry["question_id"],
-            "baseline": entry["baseline"], "attempt": entry["attempt"],
+            "attempt_id": aid,
+            "question_id": entry.get("question_id"),
+            "baseline": entry.get("baseline"),
+            "attempt": entry.get("attempt"),
             "status": "completed", "error": None, "judge": None, "usage": None,
         }
         if limit is not None and limit > 0 and judged >= limit:

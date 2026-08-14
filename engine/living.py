@@ -94,7 +94,9 @@ def _evidence_hash(packet: dict) -> str:
     """Canonical content hash of a caller-supplied evidence record.
 
     Independent of dict key order; two identical records always hash equal,
-    which is what makes repeat refresh idempotent.
+    which is what makes repeat refresh idempotent. Records must be
+    JSON-serializable; note that 100 vs 100.0 hash differently (byte-level
+    idempotency only, documented in the module docstring).
     """
     canonical = json.dumps(packet, sort_keys=True,
                            separators=(",", ":"), ensure_ascii=False)
