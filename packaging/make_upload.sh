@@ -14,7 +14,7 @@ mkdir -p "$UPLOAD"
 cp "$ROOT/SKILL.md" "$UPLOAD/SKILL.md"
 
 # 2) skill resource dirs at the root (flat skill layout)
-for d in engine scripts retrieval integrations schemas skill references visualization packaging; do
+for d in engine domains scripts retrieval integrations schemas skill references visualization packaging; do
   rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store"} "$ROOT/$d" "$UPLOAD/"
 done
 for f in eduevidence_cli.py install.sh pyproject.toml; do
