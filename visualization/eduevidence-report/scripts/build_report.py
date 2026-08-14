@@ -227,11 +227,31 @@ UI_ZH = {
     "header_generated": "生成时间",
     "header_evidence_suffix": " 条",
     "header_sources_suffix": " 个",
-    "footer_schema": "Schema PASS",
-    "footer_claims": "Claim Binding PASS",
-    "footer_numbers": "Numeric Consistency PASS",
-    "footer_bilingual": "Bilingual Structure PASS",
-    "footer": "EduEvidence 证据报告 · {schema} · {claims} · {numbers} · {bilingual} · 单文件离线可打开 · 数据源：result.json",
+    "footer_schema": "Schema",
+    "footer_claims": "Claim Binding",
+    "footer_numbers": "Numeric Consistency",
+    "footer_bilingual": "Bilingual Structure",
+    "footer_no_false_precision": "无伪精度",
+    "footer_no_axis_distortion": "坐标轴无失真",
+    "footer_colorblind_safe": "色盲安全",
+    "footer": "EduEvidence 证据报告 · {integrity} · 单文件离线可打开 · 数据源：result.json",
+    "matrix_search_label": "筛选 / 搜索证据",
+    "matrix_dir_filter": "按效应方向筛选",
+    "matrix_outcome_filter": "按结果类型筛选",
+    "svg_balance_title": "各结果类型证据效应分布",
+    "svg_balance_desc": "各结果类型的正向 / 负向 / 零效应证据条数（基于 effect_direction，不等同于 Claim 是否被支持）。",
+    "svg_figure1_title": "各结果类型效应方向分布（出版级学术图）",
+    "svg_figure1_desc": "各结果类型的正向 / 负向 / 零效应证据条数；计数轴整数刻度，不随主题变化。来源：EduEvidence result.json。",
+    "svg_benchmark_title": "基准对比：各基线引用支持精度",
+    "svg_benchmark_desc": "各基线的引用支持精度（Citation support precision）对比；无基准数据时不绘制。",
+    "svg_workflow_title": "EvidenceFlow 协议流程",
+    "svg_workflow_desc": "从问题框架、检索、抓取验证、证据抽取、反方质疑、方法审计、裁决到适用性与干预评价的完整流程。",
+    "svg_tribunal_title": "证据裁决信息图",
+    "svg_tribunal_desc": "可以主张与不可主张的证据 ID 与建议决策徽章；完整主张文本见下方裁决卡片。",
+    "svg_intervention_title": "教学干预时间线",
+    "svg_intervention_desc": "各试点阶段的短名称与活动数量；完整 AI 使用规则见阶段说明块。",
+    "svg_evaluation_title": "评价设计流程",
+    "svg_evaluation_desc": "基线、后测、保持测试与迁移测试的评价流程；完整指标与分析计划见评估章节。",
     "raw_tag_title": "原始标识",
     "summary_tag_support": "支持",
     "summary_tag_contradict": "反驳",
@@ -382,11 +402,31 @@ UI_EN = {
     "header_generated": "generated at",
     "header_evidence_suffix": "",
     "header_sources_suffix": "",
-    "footer_schema": "Schema PASS",
-    "footer_claims": "Claim Binding PASS",
-    "footer_numbers": "Numeric Consistency PASS",
-    "footer_bilingual": "Bilingual Structure PASS",
-    "footer": "EduEvidence Evidence Report · {schema} · {claims} · {numbers} · {bilingual} · single-file offline · source: result.json",
+    "footer_schema": "Schema",
+    "footer_claims": "Claim Binding",
+    "footer_numbers": "Numeric Consistency",
+    "footer_bilingual": "Bilingual Structure",
+    "footer_no_false_precision": "False Precision",
+    "footer_no_axis_distortion": "Axis Distortion",
+    "footer_colorblind_safe": "Colorblind Safe",
+    "footer": "EduEvidence Evidence Report · {integrity} · single-file offline · source: result.json",
+    "matrix_search_label": "Filter / search evidence",
+    "matrix_dir_filter": "Filter by effect direction",
+    "matrix_outcome_filter": "Filter by outcome type",
+    "svg_balance_title": "Outcome evidence effect balance",
+    "svg_balance_desc": "Positive / negative / null effect counts per outcome (based on effect_direction, not claim support).",
+    "svg_figure1_title": "Effect direction by outcome type (publication figure)",
+    "svg_figure1_desc": "Counts of positive / negative / null effects per outcome type with an integer count axis, theme-independent. Source: EduEvidence result.json.",
+    "svg_benchmark_title": "Benchmark: citation support precision by baseline",
+    "svg_benchmark_desc": "Citation support precision per baseline; not drawn when no baseline data exists.",
+    "svg_workflow_title": "EvidenceFlow Protocol",
+    "svg_workflow_desc": "Research flow from framing, retrieval, fetch/verify, extraction, challenge, method audit and adjudication to applicability and intervention evaluation.",
+    "svg_tribunal_title": "Evidence Tribunal infographic",
+    "svg_tribunal_desc": "Evidence IDs for claims that can and cannot be claimed, plus the recommended action badge; full claim text is in the tribunal cards below.",
+    "svg_intervention_title": "Teaching intervention timeline",
+    "svg_intervention_desc": "Short phase names and activity counts; full AI usage rules are in the phase blocks.",
+    "svg_evaluation_title": "Evaluation design flow",
+    "svg_evaluation_desc": "Evaluation flow across baseline, post test, retention and transfer; full metrics and analysis plan are in the evaluation section.",
     "raw_tag_title": "raw id",
     "summary_tag_support": "Support",
     "summary_tag_contradict": "Contradict",
@@ -431,6 +471,35 @@ def esc(text: Any) -> str:
     return html.escape(str(text if text is not None else ""))
 
 
+def _svg_a11y(svg: str, title: str, desc: str) -> str:
+    """6.5: 为嵌入的 SVG 注入双语 <title>/<desc>，并把 aria-label 换成 UI 字典文案。
+
+    title/desc 由调用方按当前语言从 UI_ZH / UI_EN 取；aria-label 已存在时覆盖，
+    不存在时补上，保证英文模式下不残留中文 aria-label。
+    """
+    if not svg:
+        return svg
+    title_html = esc(title)
+    desc_html = esc(desc)
+    block = f"<title>{title_html}</title><desc>{desc_html}</desc>"
+    if re.search(r"<title>", svg, flags=re.S):
+        svg = re.sub(r"<title>.*?</title>", f"<title>{title_html}</title>", svg,
+                     count=1, flags=re.S)
+    else:
+        m = re.match(r"<svg\b[^>]*>", svg, flags=re.S)
+        if not m:
+            return svg
+        svg = svg[:m.end()] + block + svg[m.end():]
+    if re.search(r'aria-label="', svg):
+        svg = re.sub(r'aria-label="[^"]*"', f'aria-label="{title_html}"', svg, count=1)
+    else:
+        m = re.match(r"<svg\b[^>]*>", svg, flags=re.S)
+        if m:
+            tag = m.group(0)
+            svg = svg[:m.start()] + tag[:-1] + f' aria-label="{title_html}">' + svg[m.end():]
+    return svg
+
+
 def resolve_theme(requested: str | None, interactive: bool | None = None,
                   input_fn=input) -> str:
     """Resolve the generation-time visual system without blocking automation."""
@@ -456,13 +525,21 @@ def resolve_theme(requested: str | None, interactive: bool | None = None,
 
 
 def safe_http_url(value: Any) -> str:
-    """Return only verifiable http(s) locations for clickable report links."""
+    """Return only verifiable link locations for clickable report links.
+
+    Scheme whitelist (6.5): http / https / doi. javascript:, data:, file:
+    and any other scheme is dropped so unsafe links are never rendered.
+    """
     text = str(value or "").strip()
     try:
         parsed = urlparse(text)
     except ValueError:
         return ""
-    return text if parsed.scheme in ("http", "https") and parsed.netloc else ""
+    if parsed.scheme in ("http", "https") and parsed.netloc:
+        return text
+    if parsed.scheme == "doi" and text:
+        return text
+    return ""
 
 
 def excerpt_text(value: Any, max_chars: int = 260) -> tuple[str, bool]:
@@ -768,6 +845,30 @@ def compute_integrity(result_en: dict, result_zh: dict, charts_en: dict,
     }
 
 
+# Integrity footer: 字段 -> UI 文案键。字段缺失时跳过（只显示已有项）。
+INTEGRITY_FOOTER_FIELDS = (
+    ("contract_valid", "footer_schema"),
+    ("claims_bound", "footer_claims"),
+    ("numbers_match_result", "footer_numbers"),
+    ("bilingual_structure_match", "footer_bilingual"),
+    ("no_false_precision", "footer_no_false_precision"),
+    ("no_axis_distortion", "footer_no_axis_distortion"),
+    ("colorblind_safe", "footer_colorblind_safe"),
+)
+
+
+def integrity_footer_text(integrity: dict, ui: dict) -> str:
+    """6.4: footer 从 compute_integrity 的实际字段逐项取值（PASS/FAIL/NOT_CHECKED），
+    不再用一句模糊的「数据一致性校验：通过」覆盖未执行的检查。"""
+    parts = []
+    for key, label_key in INTEGRITY_FOOTER_FIELDS:
+        status = integrity.get(key)
+        if status is None:
+            continue
+        parts.append(f"{ui[label_key]} {status}")
+    return " · ".join(parts)
+
+
 # ---------------------------------------------------------------------------
 # 3. report_spec.json — visualization decision record (§47)
 # ---------------------------------------------------------------------------
@@ -875,9 +976,12 @@ def exec_summary_html(result: dict, lang: str, ui: dict) -> str:
 # 4. Static renderers (deterministic, zero-dependency fallbacks §28)
 # ---------------------------------------------------------------------------
 
-def diverging_bar_svg(option: dict, width: int = 720, height: int = 300) -> str:
+def diverging_bar_svg(option: dict, width: int = 720, height: int = 300,
+                    lang: str = "zh", ui: dict | None = None) -> str:
     """真 diverging 静态图（P0-10）：support 从中心向右、contradict 从中心向左，
-    neutral 走独立的细条道（第二网格），三系列互不覆盖。计数轴整数刻度（P0-11）。"""
+    neutral 走独立的细条道（第二网格），三系列互不覆盖。计数轴整数刻度（P0-11）。
+    6.5: aria-label / title / desc 从 UI 字典按语言取。"""
+    ui = ui or UI_ZH
     cats = option.get("yAxis", [{}])[0].get("data", []) if isinstance(option.get("yAxis"), list) \
         else option.get("yAxis", {}).get("data", [])
     series = option.get("series", [])
@@ -950,21 +1054,24 @@ def diverging_bar_svg(option: dict, width: int = 720, height: int = 300) -> str:
         parts.append(f'<rect x="{lx}" y="14" width="10" height="10" fill="{color}"/>')
         parts.append(f'<text x="{lx + 14}" y="23" font-size="10" fill="#333">{esc(s.get("name", ""))}</text>')
         lx += 14 + len(s.get("name", "")) * 11 + 18
-    return f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" ' \
-           f'role="img" aria-label="Support / Contradict / Neutral evidence counts by outcome">' \
-           f'{"".join(parts)}</svg>'
+    svg = f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" ' \
+           f'role="img">{"".join(parts)}</svg>'
+    return _svg_a11y(svg, ui["svg_balance_title"], ui["svg_balance_desc"])
 
 
 def grouped_bar_svg(option: dict, width: int = 720, height: int = 260,
-                    note: str = "") -> str:
+                    note: str = "", lang: str = "zh", ui: dict | None = None) -> str:
+    ui = ui or UI_ZH
     cats = option.get("xAxis", {}).get("data", [])
     series = option.get("series", [])
     parts = [f'<rect x="0" y="0" width="{width}" height="{height}" fill="#FFFFFF"/>']
     if not cats:
         parts.append(f'<text x="{width / 2}" y="{height / 2}" text-anchor="middle" '
                      f'font-size="12" fill="#666">{esc(note)}</text>')
-        return (f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" '
-                f'role="img">{"".join(parts)}</svg>')
+        return _svg_a11y(
+            f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" '
+            f'role="img">{"".join(parts)}</svg>',
+            ui["svg_benchmark_title"], ui["svg_benchmark_desc"])
     left, right, top, bottom = 60, 30, 36, 40
     plot_w, plot_h = width - left - right, height - top - bottom
     group_w = plot_w / len(cats)
@@ -994,8 +1101,9 @@ def grouped_bar_svg(option: dict, width: int = 720, height: int = 260,
         parts.append(f'<rect x="{lx}" y="8" width="10" height="10" fill="{color}"/>')
         parts.append(f'<text x="{lx + 14}" y="17" font-size="10" fill="#333">{esc(s.get("name", ""))}</text>')
         lx += 14 + len(s.get("name", "")) * 11 + 18
-    return f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" ' \
+    svg = f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" ' \
            f'role="img">{"".join(parts)}</svg>'
+    return _svg_a11y(svg, ui["svg_benchmark_title"], ui["svg_benchmark_desc"])
 
 
 def trace_tree_html(result: dict, lang: str, ui: dict) -> str:
@@ -1011,8 +1119,10 @@ def trace_tree_html(result: dict, lang: str, ui: dict) -> str:
             if not ev:
                 continue
             src = sources.get(ev.get("source_id") or "")
-            src_cell = (f'<a href="{esc(src.get("canonical_url") or src.get("source_location"))}">'
-                        f'{esc(src.get("source_id"))}</a>' if src else
+            src_url = safe_http_url(src.get("canonical_url") or src.get("source_location"))
+            src_cell = (f'<a href="{esc(src_url)}">'
+                        f'{esc(src.get("source_id"))}</a>' if src_url else
+                        f'<code>{esc(src.get("source_id"))}</code>' if src else
                         f'<span class="dir neu">{esc(ui["trace_no_source"])}</span>')
             rows.append(
                 f'<div class="trace-row trace-evidence">'
@@ -1178,10 +1288,11 @@ def render_outcomes(result: dict, chart: dict | None, figure_svg: str, lang: str
     if not viz["outcome_evidence_balance"]["render"]:
         return separation + table
     static = (f'<div class="visual-surface" data-visual="outcome-evidence-balance">'
-              f'{diverging_bar_svg(chart.get("option", {}))}'
+              f'{diverging_bar_svg(chart.get("option", {}), lang=lang, ui=ui)}'
               f'<p class="chart-interpretation"><strong>{esc(ui["what_this_means"])}{esc(ui["colon"])}</strong>'
               f'{esc(chart.get("summary_text") or "")}</p></div>') if chart else ""
-    figure = (f'<figure class="academic-figure" data-visual="outcome-evidence-balance">{figure_svg}'
+    figure = (f'<figure class="academic-figure" data-visual="outcome-evidence-balance">'
+              f'{_svg_a11y(figure_svg, ui["svg_figure1_title"], ui["svg_figure1_desc"])}'
               f'<figcaption>{esc(ui["figure1_caption"])}</figcaption></figure>') if figure_svg else ""
     return separation + table + static + figure
 
@@ -1210,15 +1321,15 @@ def render_matrix(result: dict, lang: str, ui: dict) -> str:
     return ("<details class='matrix-controls'><summary>" + esc(ui["matrix_filter"]) + "</summary>"
             "<div class='matrix-tools'><input id='matrix-search-"
             + lang + "' type='search' placeholder='"
-            + esc(ui["matrix_search_ph"]) + "' aria-label='" + esc(ui["matrix_search_ph"]) + "'>"
+            + esc(ui["matrix_search_ph"]) + "' aria-label='" + esc(ui["matrix_search_label"]) + "'>"
             "<select id='matrix-direction-"
-            + lang + "' aria-label='direction'><option value=''>"
+            + lang + "' aria-label='" + esc(ui["matrix_dir_filter"]) + "'><option value=''>"
             + esc(ui["matrix_all_dir"]) + "</option>"
             "<option value='support'>" + esc(label(lang, "dir", "support")) + "</option>"
             "<option value='contradict'>" + esc(label(lang, "dir", "contradict")) + "</option>"
             "<option value='neutral'>" + esc(label(lang, "dir", "neutral")) + "</option></select>"
             "<select id='matrix-outcome-"
-            + lang + "' aria-label='outcome'><option value=''>"
+            + lang + "' aria-label='" + esc(ui["matrix_outcome_filter"]) + "'><option value=''>"
             + esc(ui["matrix_all_outcome"]) + "</option>"
             + "".join(f"<option value='{esc(o)}'>{esc(label(lang, 'outcome', o))}</option>" for o in outcomes)
             + "</select></div></details>"
@@ -1349,13 +1460,13 @@ def render_matrix_visual(result: dict, lang: str, ui: dict, instance: str = "bri
     suffix = f"{instance}-{lang}"
     controls = ("<div class='matrix-controls'><div class='matrix-tools'><input id='matrix-search-" + suffix
                 + "' type='search' placeholder='" + esc(ui["matrix_search_ph"]) + "' aria-label='"
-                + esc(ui["matrix_search_ph"]) + "'><select id='matrix-direction-" + suffix
-                + "' aria-label='" + esc(ui["matrix_all_dir"]) + "'><option value=''>"
+                + esc(ui["matrix_search_label"]) + "'><select id='matrix-direction-" + suffix
+                + "' aria-label='" + esc(ui["matrix_dir_filter"]) + "'><option value=''>"
                 + esc(ui["matrix_all_dir"]) + "</option><option value='positive'>"
                 + esc(ui["effect_positive"]) + "</option><option value='negative'>"
                 + esc(ui["effect_negative"]) + "</option><option value='null'>"
                 + esc(ui["effect_null"]) + "</option></select><select id='matrix-outcome-" + suffix
-                + "' aria-label='" + esc(ui["matrix_all_outcome"]) + "'><option value=''>"
+                + "' aria-label='" + esc(ui["matrix_outcome_filter"]) + "'><option value=''>"
                 + esc(ui["matrix_all_outcome"]) + "</option>"
                 + "".join(f"<option value='{esc(o)}'>{esc(label(lang, 'outcome', o))}</option>" for o in outcomes)
                 + "</select></div></div>")
@@ -1415,9 +1526,13 @@ def render_tribunal_visual(result: dict, workflow_svg: str, tribunal_svg: str, l
                f'{esc(label(lang, "confidence", decision.get("confidence", "")))}</p>')
     supporting_visuals = ""
     if workflow_svg:
-        supporting_visuals += f'<details class="supporting-visual"><summary>{esc(ui["tribunal_flow"])}</summary>{workflow_svg}</details>'
+        supporting_visuals += (f'<details class="supporting-visual">'
+                               f'<summary>{esc(ui["tribunal_flow"])}</summary>'
+                               f'{_svg_a11y(workflow_svg, ui["svg_workflow_title"], ui["svg_workflow_desc"])}</details>')
     if tribunal_svg:
-        supporting_visuals += f'<details class="supporting-visual"><summary>{esc(ui["tribunal_figure"])}</summary>{tribunal_svg}</details>'
+        supporting_visuals += (f'<details class="supporting-visual">'
+                               f'<summary>{esc(ui["tribunal_figure"])}</summary>'
+                               f'{_svg_a11y(tribunal_svg, ui["svg_tribunal_title"], ui["svg_tribunal_desc"])}</details>')
     return (f'<div class="evidence-tribunal" data-visual="evidence-tribunal-grid">{summary}'
             f'<div class="tribunal-grid">{"".join(cards)}</div>{supporting_visuals}</div>')
 
@@ -1502,9 +1617,9 @@ def render_tribunal(result: dict, workflow_svg: str, tribunal_svg: str, lang: st
         lines.append(f"<h3>{esc(ui['tribunal_missing'])}</h3><ul>"
                      + "".join(f"<li>{esc(m)}</li>" for m in decision["missing_evidence"]) + "</ul>")
     lines.append(f"<h3>{esc(ui['tribunal_flow'])}</h3>")
-    lines.append(workflow_svg)
+    lines.append(_svg_a11y(workflow_svg, ui["svg_workflow_title"], ui["svg_workflow_desc"]))
     lines.append(f"<h3>{esc(ui['tribunal_figure'])}</h3>")
-    lines.append(tribunal_svg)
+    lines.append(_svg_a11y(tribunal_svg, ui["svg_tribunal_title"], ui["svg_tribunal_desc"]))
     return "\n".join(lines)
 
 
@@ -1621,7 +1736,7 @@ def render_intervention(result: dict, svg: str, lang: str, ui: dict) -> str:
         lis = "".join(f"<li>{esc(s)}</li>" for s in intervention["stop_conditions"])
         lines.append(f"<h3>{esc(ui['intervention_stop'])}</h3><ul>{lis}</ul>")
     lines.append(f"<h3>{esc(ui['intervention_timeline'])}</h3>")
-    lines.append(svg)
+    lines.append(_svg_a11y(svg, ui["svg_intervention_title"], ui["svg_intervention_desc"]))
     return "\n".join(lines)
 
 
@@ -1647,7 +1762,7 @@ def render_evaluation(result: dict, svg: str, lang: str, ui: dict) -> str:
     if evaluation.get("analysis_plan"):
         lines.append(f"<p><strong>{esc(ui['evaluation_plan'])}{esc(ui['colon'])}</strong>{esc(evaluation['analysis_plan'])}</p>")
     lines.append(f"<h3>{esc(ui['evaluation_figure'])}</h3>")
-    lines.append(svg)
+    lines.append(_svg_a11y(svg, ui["svg_evaluation_title"], ui["svg_evaluation_desc"]))
     return "\n".join(lines)
 
 
@@ -1655,7 +1770,8 @@ def render_benchmark(charts: dict, lang: str, ui: dict) -> str:
     panel = charts.get("benchmark") or {}
     if not panel:
         return f"<p>{esc(ui['benchmark_note'])}</p>"
-    static = grouped_bar_svg(panel.get("option", {}), note=ui["benchmark_note"])
+    static = grouped_bar_svg(panel.get("option", {}), note=ui["benchmark_note"],
+                               lang=lang, ui=ui)
     return static + f"<p class='chart-summary'>{esc(panel.get('summary_text', ''))}</p>"
 
 
@@ -2265,7 +2381,7 @@ def render_outcomes_brief(result: dict, chart: dict | None, lang: str, ui: dict,
     if not viz.get("outcome_evidence_balance", {}).get("render") or not chart:
         return separation
     visual = (f'<div class="visual-surface brief-chart" data-visual="outcome-evidence-balance">'
-              f'{diverging_bar_svg(chart.get("option", {}))}'
+              f'{diverging_bar_svg(chart.get("option", {}), lang=lang, ui=ui)}'
               f'<p class="chart-interpretation"><strong>{esc(ui["what_this_means"])}{esc(ui["colon"])}</strong>'
               f'{esc(chart.get("summary_text") or "")}</p></div>')
     return separation + visual
@@ -2291,7 +2407,7 @@ def render_brief_sources(result: dict, lang: str, ui: dict, limit: int = 4) -> s
 
 
 def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: dict,
-                figures: dict, viz: dict, theme: str) -> str:
+                figures: dict, viz: dict, theme: str, integrity: dict | None = None) -> str:
     decision = result.get("decision", {})
     meta = result.get("meta", {})
     question = meta.get("question") or decision.get("decision_question") or "EduEvidence Report"
@@ -2325,8 +2441,8 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
     full_report = render_full_report(result, lang, ui, charts, infographics, figures, viz)
     toc = render_full_toc(result, lang, ui)
 
-    footer = ui['footer'].format(schema=ui['footer_schema'], claims=ui['footer_claims'],
-                                 numbers=ui['footer_numbers'], bilingual=ui['footer_bilingual'])
+    integrity_text = integrity_footer_text(integrity or {}, ui)
+    footer = ui['footer'].format(integrity=integrity_text)
     return f"""<div class="report-shell" data-lang-body="{lang}">
 <header class="report-header">
 <div class="report-brand-row"><span class="report-brand">EduEvidence</span><span class="generated-theme-chip">{esc(THEME_DISPLAY[theme])}</span></div>
@@ -2349,10 +2465,12 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
 def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: dict,
                 infographics_zh: dict, infographics_en: dict, figures_zh: dict,
                 figures_en: dict, theme: str, viz: dict,
-                result_sha256: str = "") -> str:
+                result_sha256: str = "", integrity: dict | None = None) -> str:
     # Theme is fixed at generation time; language remains switchable in the HTML.
-    body_zh = render_body(result_zh, "zh", UI_ZH, charts_zh, infographics_zh, figures_zh, viz, theme)
-    body_en = render_body(result_en, "en", UI_EN, charts_en, infographics_en, figures_en, viz, theme)
+    body_zh = render_body(result_zh, "zh", UI_ZH, charts_zh, infographics_zh, figures_zh, viz, theme,
+                          integrity=integrity)
+    body_en = render_body(result_en, "en", UI_EN, charts_en, infographics_en, figures_en, viz, theme,
+                          integrity=integrity)
     hash_meta = (f'<meta name="eduevidence-result-sha256" content="{esc(result_sha256)}">\n'
                  if result_sha256 else "")
 
@@ -2800,7 +2918,8 @@ def main() -> int:
     result_sha256 = file_sha256(result_path)
     html_text = render_html(result_en, result_zh, charts_zh, charts_en,
                             infographics_zh, infographics_en, figures_zh, figures_en,
-                            theme, viz_decisions, result_sha256=result_sha256)
+                            theme, viz_decisions, result_sha256=result_sha256,
+                            integrity=integrity)
 
     if args.vendor_echarts:
         echarts_js = Path(args.vendor_echarts).read_text(encoding="utf-8")
