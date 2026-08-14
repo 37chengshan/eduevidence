@@ -4,8 +4,8 @@
 
 ## 一、总体原则
 
-1. **比赛三件套齐全**：`skill.md`（必须）、源码（必须，统一放入 `src/`）、展示材料（建议，`assets/` + 演示文档）。
-2. **与仓库的映射关系**：仓库内文件一律不更名、不移动；上传目录是按文件复制（或打 tar.gz 后解压）得到的新布局。仓库 `SKILL.md` 即参赛 skill.md，上传时复制为 `skill.md`（内容一致）。
+1. **比赛三件套齐全**：`SKILL.md`（必须，根目录 Skill 文档，按项目决定只保留大写形式）、源码（必须，平铺目录）、展示材料（建议，`assets/` + 演示文档）。
+2. **与仓库的映射关系**：仓库内文件一律不更名、不移动；上传目录是按文件复制得到的新布局。仓库 `SKILL.md` 即参赛 Skill 文档，上传时原样保留大写 `SKILL.md`（项目决定；若平台强制要求小写文件名，复制一份为 `skill.md` 即可，内容一致）。
 3. **零泄漏**：`.venv/`、`.git/`、`.pytest_cache/`、`__pycache__/`、`build/`、`dist/`、`*.egg-info/`、`.DS_Store`、`runs/`（本地运行产物）、`upload/`、`docs/competition-brief.md` 一律不进上传目录。
 
 ## 二、布局总览
@@ -42,7 +42,7 @@ upload/
 
 | 上传项 | 来源（仓库路径） | 必须 | 说明 |
 |---|---|:---:|---|
-| `skill.md` | `SKILL.md` | ✅ | 参赛 skill.md。头部 YAML 含 name/description；正文含 9 步 Workflow 与输出契约。仓库内原名不改，上传副本命名为 skill.md |
+| `SKILL.md` | `SKILL.md` | ✅ | 参赛 Skill 文档。头部 YAML 含 name/description；正文含 9 步 Workflow 与输出契约。根目录大写形式（项目决定；平台强制小写时复制为 skill.md） |
 | `src/` | 见上方树 | ✅ | 源码整体放入 src/，与根目录元数据（LICENSE/README）分离，目录清爽 |
 | `examples/` | `examples/` | ✅ | 4 个示例完整复制，含报告 HTML 与 reports-5themes/ 预览 |
 | `docs/` | `docs/`（剔除 competition-brief.md） | ✅ | 架构/方法论/安装指南/Demo/基准/可复现性/失败矩阵/项目评审/全量运行发现 |
@@ -61,8 +61,8 @@ upload/
    - LICENSE 存在（√）；README 存在（√）；examples 完整（√ 4 个）；
    - 测试可跑：`python3 -m pytest -q` 或 `.venv/bin/python -m pytest -q`（上架前在干净环境执行一次）；
    - 无 `.venv/`、`.git/` 及其他排除项泄漏。
-3. 可选：将 `upload/` 打为 `eduevidence-skill-submission.tar.gz`（仓库 `dist/` 已有历史包，上架前请按本布局重新生成，确保含最新 `skill.md` 与 `src/`）。
-4. 若平台接受单文件上传：上传 `skill.md` 与源码压缩包即可；若接受目录：直接上传 `upload/`。
+3. 可选：将 `upload/` 打为 `eduevidence-skill-submission-v4.0.0.tar.gz`（上架前按本布局生成，确保含最新 `SKILL.md` 与平铺源码）。
+4. 若平台接受单文件上传：上传 `SKILL.md` 与源码压缩包即可；若接受目录：直接上传 `upload/`。
 
 ## 五、替代方案（保持仓库原样）
 
