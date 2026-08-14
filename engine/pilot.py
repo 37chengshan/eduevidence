@@ -246,6 +246,14 @@ def redecide(project: ProjectWorkspace, pilot_id: str, *,
         raise ValueError(
             f"pilot {pilot_id} status {pilot['status']!r}; import data (and ideally "
             "link an analysis) before re-adjudication")
+    # Idempotency guard (final review P1-3): a pilot that already produced a
+    # new DecisionSnapshot must never be re-adjudicated — a retry after a
+    # partial failure would silently duplicate pilot evidence in the graph.
+    if pilot.get("redecide") is not None:
+        raise ValueError(
+            f"pilot {pilot_id} already adjudicated into "
+            f"{pilot['redecide']['new_decision_snapshot_id']}; refusing re-entry "
+            "(create a new pilot for a new cycle)")
 
     store = GraphStore(project)
     claims = {c["claim_id"]: c for c in store.read_table("claims")}
@@ -324,20 +332,31 @@ def redecide(project: ProjectWorkspace, pilot_id: str, *,
         run_id=new_run_id(), reason=f"pilot outcomes re-adjudication: {pilot_id}",
         mutation=mutation)
 
-    store.repair_head_mirror()
-    syntheses = synthesize_project(store)
-    snapshot = adjudicate(
-        store, project=project, claim_syntheses=syntheses,
-        policy_versions={"confidence": CONFIDENCE_POLICY_VERSION,
-                         "methodology": METHODOLOGY_POLICY_VERSION,
-                         "source_validation": SOURCE_VALIDATION_POLICY_VERSION})
-    path = save_decision_snapshot(project, snapshot)
+    try:
+        store.repair_head_mirror()
+        syntheses = synthesize_project(store)
+        snapshot = adjudicate(
+            store, project=project, claim_syntheses=syntheses,
+            policy_versions={"confidence": CONFIDENCE_POLICY_VERSION,
+                             "methodology": METHODOLOGY_POLICY_VERSION,
+                             "source_validation": SOURCE_VALIDATION_POLICY_VERSION})
+        path = save_decision_snapshot(project, snapshot)
 
-    previous = None
-    prev_path = project.path / "decisions" / f"{pilot['decision_snapshot_id']}.json"
-    if prev_path.is_file():
-        previous = json.loads(prev_path.read_text(encoding="utf-8"))
-    diff = decision_diff(previous, snapshot)
+        previous = None
+        prev_path = project.path / "decisions" / f"{pilot['decision_snapshot_id']}.json"
+        if prev_path.is_file():
+            previous = json.loads(prev_path.read_text(encoding="utf-8"))
+        diff = decision_diff(previous, snapshot)
+    except Exception as exc:  # noqa: BLE001 - graph committed, mark failure for diagnosis
+        # The graph revision is already committed; never let the pilot record
+        # claim success. Record the failure so the state machine is
+        # diagnosable and a human can recover (P1-3).
+        pilot.setdefault("extensions", {})["redecide_failed"] = {
+            "graph_revision": revision.revision,
+            "error": str(exc),
+        }
+        _save_pilot(project, pilot)
+        raise
 
     pilot["redecide"] = {
         "new_decision_snapshot_id": snapshot["decision_snapshot_id"],

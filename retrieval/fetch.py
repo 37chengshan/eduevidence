@@ -27,6 +27,7 @@ import re
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from typing import Any, Callable
@@ -242,7 +243,7 @@ def _build_candidate(
     expect_title: str | None,
 ) -> "FetchResult":
     """Turn one raw provider response into a validated FetchResult candidate."""
-    ok = status < 400 and bool(body.strip())
+    ok = status is not None and status < 400 and bool(body.strip())
     clean = _clean_for_provider(provider, body) if ok else ""
     cand = FetchResult(
         original_url=original_url,
@@ -337,9 +338,23 @@ def fetch_url(
     private content.
     """
     result = FetchResult(original_url=url, fetched_at=datetime.now(timezone.utc).isoformat())
-    # Private URLs are handled locally only (no third-party cleaning providers).
+    # Scheme whitelist: refuse non-http(s) BEFORE any read attempt (P1-2) —
+    # urllib would happily read file:// with its default handlers.
+    if urlparse(url).scheme.lower() not in ("http", "https"):
+        result.fetch_status = "FETCH_FAILED"
+        result.validation = {
+            "passed": False,
+            "checks": {"scheme_allowed": False, "http_success": False},
+            "issues": [f"unsupported URL scheme: {urlparse(url).scheme!r} (only http/https)"],
+        }
+        return result.to_dict()
+    # Private URLs are handled locally only (no third-party cleaning providers):
+    # the chain is trimmed so jina_reader/markdown_new never receive private
+    # content (P1-1, invariant stated in LOCAL_PROVIDERS).
     chain = FETCH_PROVIDERS if use_smart_fetch else ("builtin", "raw_html")
     original_private = is_private_url(url)
+    if original_private:
+        chain = tuple(p for p in chain if p in LOCAL_PROVIDERS)
     best_partial: FetchResult | None = None
 
     for provider in chain:

@@ -265,7 +265,7 @@ def _now_iso() -> str:
 
 def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                   out_dir: Path, driver_name: str, budget_tokens: int | None,
-                  temperature: float = 0.0) -> dict[str, Any]:
+                  temperature: float = 0.0, resume: bool = False) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     driver = make_driver(driver_name)
     if not driver.available():
@@ -302,14 +302,36 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
 
     total_tokens = 0
     budget_stopped = False
+    import re as _re
+    # --resume: reuse previously completed attempts (their response artifacts
+    # live in out_dir); only unfinished attempts are re-run.
+    done_ids: set[str] = set()
+    if resume and out_dir.is_dir():
+        import json as _json
+        for art in out_dir.glob("*.response.json"):
+            try:
+                data = _json.loads(art.read_text(encoding="utf-8"))
+            except (OSError, _json.JSONDecodeError):
+                continue
+            aid = data.get("attempt_id")
+            if aid and (out_dir / art.name).is_file():
+                done_ids.add(aid)
+        if done_ids:
+            print(f"resume: {len(done_ids)} attempt(s) already present, skipping")
     for question in questions:
         if budget_stopped:
             break
+        if not _re.fullmatch(r"[A-Za-z0-9_-]+", question.get("id", "")):
+            raise ValueError(
+                f"question id {question.get('id')!r} contains unsafe characters "
+                "(P2-14: ids are used in artifact filenames)")
         for baseline in baselines:
             for attempt in range(1, repeats + 1):
                 if budget_stopped:
                     break
                 attempt_id = f"{question['id']}-{baseline}-a{attempt}"
+                if attempt_id in done_ids:
+                    continue
                 started = _now_iso()
                 entry: dict[str, Any] = {
                     "attempt_id": attempt_id,
@@ -347,7 +369,8 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                         "usage": usage,
                     }, ensure_ascii=False, indent=2), encoding="utf-8")
                     entry["artifacts"] = [artifact.name]
-                except (urllib.error.URLError, OSError, ValueError, KeyError) as exc:
+                except (urllib.error.URLError, OSError, ValueError, KeyError,
+                        subprocess.TimeoutExpired) as exc:  # P2-1: a hung model call must not kill the whole run
                     entry.update({"status": "failed", "error": str(exc),
                                   "finished_at": _now_iso()})
                 manifest["attempts"].append(entry)
@@ -358,9 +381,32 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                                          f"{total_tokens} tokens.")
                     break
 
+    if budget_stopped:
+        # P2-2: record remaining attempts as budget_stopped so the report can
+        # distinguish "stopped by budget" from "never scheduled".
+        for question in questions:
+            if any(a["question_id"] == question["id"] for a in manifest["attempts"]):
+                continue
+            for baseline in baselines:
+                for attempt in range(1, repeats + 1):
+                    manifest["attempts"].append({
+                        "attempt_id": f"{question['id']}-{baseline}-a{attempt}",
+                        "question_id": question["id"],
+                        "baseline": baseline,
+                        "attempt": attempt,
+                        "status": "budget_stopped",
+                        "error": "budget exhausted",
+                        "started_at": _now_iso(),
+                        "finished_at": _now_iso(),
+                        "prompt_tokens": None, "completion_tokens": None,
+                        "latency_s": None, "cost_usd": None, "artifacts": [],
+                    })
+
     manifest_path = out_dir / "manifest.json"
-    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-                             encoding="utf-8")
+    tmp = out_dir / "manifest.json.tmp"
+    tmp.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                   encoding="utf-8")
+    tmp.replace(manifest_path)  # atomic write (P2-4)
     _validate_manifest(manifest_path)
     print(f"wrote {manifest_path} (attempts={len(manifest['attempts'])}, "
           f"mode={manifest['run_mode']}, total_tokens~{total_tokens})")
@@ -368,10 +414,14 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
 
 
 def _questions_version() -> str:
+    import subprocess as _sp
+
+    repo = Path(__file__).resolve().parent.parent
     try:
-        out = os.popen("git -C . rev-parse --short HEAD 2>/dev/null").read().strip()
-        return out or "unknown"
-    except Exception:  # noqa: BLE001
+        proc = _sp.run(["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
+                       capture_output=True, text=True, timeout=10)
+        return proc.stdout.strip() or "unknown"
+    except Exception:  # noqa: BLE001 - version lookup must never fail a run
         return "unknown"
 
 
@@ -405,7 +455,8 @@ def _cmd_run(args: argparse.Namespace) -> int:
                                                        [q["id"] for q in questions])],
         baselines=baselines, repeats=args.repeats,
         out_dir=Path(args.out), driver_name=args.driver,
-        budget_tokens=args.budget_tokens, temperature=args.temperature)
+        budget_tokens=args.budget_tokens, temperature=args.temperature,
+        resume=args.resume)
     return 0
 
 
@@ -434,6 +485,8 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--out", required=True)
     p_run.add_argument("--budget-tokens", type=int, default=DEFAULT_BUDGET_TOKENS)
     p_run.add_argument("--temperature", type=float, default=0.0)
+    p_run.add_argument("--resume", action="store_true",
+                       help="skip attempts whose response artifacts already exist in --out")
     p_run.set_defaults(func=_cmd_run)
 
     p_eval = sub.add_parser("eval", help="evaluate a run against gold annotations")

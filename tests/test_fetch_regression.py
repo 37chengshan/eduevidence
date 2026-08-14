@@ -194,3 +194,34 @@ def test_all_providers_http_error_returns_failed(monkeypatch):
     assert result["fetch_status"] == "FETCH_FAILED"
     assert result["validation"]["passed"] is False
     assert len(result["fallback_chain"]) == len(FETCH_PROVIDERS)
+
+
+# ------------------------------------------- P1-1/P1-2 security gates
+
+
+def test_private_url_never_reaches_third_party_providers(monkeypatch):
+    # P1-1: a private original URL must be fetched only by local providers;
+    # jina_reader / markdown_new (third-party) must never be invoked.
+    calls = []
+
+    def _r(url, provider):
+        calls.append(provider)
+        return 200, GOOD_BODY, url
+
+    _chain(monkeypatch, {name: (lambda u, p=name: _r(u, p)) for name in FETCH_PROVIDERS})
+    result = fetch_url("http://127.0.0.1:8080/internal")
+    assert all(p in ("builtin", "defuddle", "raw_html") for p in calls), calls
+    assert "jina_reader" not in calls and "markdown_new" not in calls
+
+
+def test_non_http_scheme_refused_before_read(monkeypatch):
+    # P1-2: file:// etc. must be refused before any read attempt — urllib would
+    # happily read local files with its default handlers.
+    def boom(*a, **k):
+        raise AssertionError("must not attempt to read non-http scheme")
+
+    monkeypatch.setattr(fetch_mod, "_http_get", boom)
+    result = fetch_url("file:///etc/passwd")
+    assert result["fetch_status"] == "FETCH_FAILED"
+    assert result["validation"]["passed"] is False
+    assert result["validation"]["checks"]["scheme_allowed"] is False
