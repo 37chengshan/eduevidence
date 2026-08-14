@@ -53,6 +53,7 @@ for _p in (str(ROOT), str(ROOT / "scripts")):
 from run_workspace import (RESOURCE_POLICY_VERSION, STAGES, RunWorkspace,  # noqa: E402
                            load_json, load_jsonl, next_run_id, save_jsonl)
 from pre_verdict_gate import apply_enforcement, evaluate_workspace  # noqa: E402
+from engine.versions import ENGINE_VERSION  # noqa: E402
 
 DEPTH_ALIASES = {"quick": "S", "standard": "M", "deep": "L"}
 DEPTHS = ("S", "M", "L")
@@ -486,7 +487,7 @@ def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, An
     return {
         "meta": {
             "skill": "eduevidence",
-            "version": manifest.get("skill_version", "1.0.0"),
+            "version": manifest.get("skill_version") or ENGINE_VERSION,
             "generated_at": _utc_now(),
             "mode": mode,
             "question": frame.get("question", manifest.get("question", "")),

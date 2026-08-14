@@ -5,18 +5,41 @@
   "description": "Validated result.json contract (总体实施计划 §27). Produced by the EduEvidence research core, consumed by the visualization layer. The report layer may choose HOW to present but must never change this data. claims 每条必须携带 claim_id（C-001 格式，Claim-Evidence Contract）。扩展字段一律放在各对象 extensions 内。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["meta", "research_frame", "decision", "evidence"],
+  "required": [
+    "meta",
+    "research_frame",
+    "decision",
+    "evidence"
+  ],
   "properties": {
     "meta": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["skill"],
+      "required": [
+        "skill"
+      ],
       "properties": {
-        "skill": { "type": "string", "const": "eduevidence" },
-        "version": { "type": "string" },
-        "generated_at": { "type": "string", "format": "date-time" },
-        "mode": { "type": "string", "enum": ["platform_native", "agent_mcp_enhanced"] },
-        "question": { "type": "string" }
+        "skill": {
+          "type": "string",
+          "const": "eduevidence"
+        },
+        "version": {
+          "type": "string"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "platform_native",
+            "agent_mcp_enhanced"
+          ]
+        },
+        "question": {
+          "type": "string"
+        }
       }
     },
     "execution": {
@@ -24,26 +47,78 @@
       "additionalProperties": false,
       "description": "How this result was produced: complexity grade, agent topology, token/cost usage.",
       "properties": {
-        "complexity": { "type": "string", "enum": ["S", "M", "L"] },
-        "mode": { "type": "string", "enum": ["platform_native", "agent_mcp_enhanced"] },
-        "agents": { "type": "array", "items": { "type": "string" } },
+        "complexity": {
+          "type": "string",
+          "enum": [
+            "S",
+            "M",
+            "L"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "platform_native",
+            "agent_mcp_enhanced"
+          ]
+        },
+        "agents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "usage": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["measurement_status"],
+          "required": [
+            "measurement_status"
+          ],
           "description": "Token/cost usage. Unknown values are null with measurement_status=NOT_CAPTURED; never fabricate 0 as a real measurement (P1-3).",
           "properties": {
-            "measurement_status": { "type": "string", "enum": ["NOT_CAPTURED"], "description": "NOT_CAPTURED: usage was not measured by the pipeline." },
-            "input_tokens": { "type": ["integer", "null"] },
-            "output_tokens": { "type": ["integer", "null"] },
-            "cost_usd": { "type": ["number", "null"] },
-            "latency_s": { "type": ["number", "null"] }
+            "measurement_status": {
+              "type": "string",
+              "enum": [
+                "NOT_CAPTURED"
+              ],
+              "description": "NOT_CAPTURED: usage was not measured by the pipeline."
+            },
+            "input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "latency_s": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
           }
         }
       }
     },
-    "research_frame": { "type": "object", "description": "EducationResearchFrame (see education-frame.schema.json)." },
-    "decision": { "type": "object", "description": "EducationVerdict (see verdict.schema.json)." },
+    "research_frame": {
+      "type": "object",
+      "description": "EducationResearchFrame (see education-frame.schema.json)."
+    },
+    "decision": {
+      "type": "object",
+      "description": "EducationVerdict (see verdict.schema.json)."
+    },
     "outcomes": {
       "type": "array",
       "description": "Outcome-level aggregation: per outcome type, effect_direction counts (positive/negative/null) and evidence ids.",
@@ -51,11 +126,24 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "outcome_type": { "type": "string" },
-          "positive_count": { "type": "integer" },
-          "negative_count": { "type": "integer" },
-          "null_count": { "type": "integer" },
-          "evidence_ids": { "type": "array", "items": { "type": "string" } }
+          "outcome_type": {
+            "type": "string"
+          },
+          "positive_count": {
+            "type": "integer"
+          },
+          "negative_count": {
+            "type": "integer"
+          },
+          "null_count": {
+            "type": "integer"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       }
     },
@@ -65,36 +153,104 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["claim_id"],
+        "required": [
+          "claim_id"
+        ],
         "properties": {
-          "claim_id": { "type": "string", "pattern": "^C-[0-9]{3}$", "examples": ["C-001"] },
-          "claim": { "type": "string" },
-          "outcome_type": { "type": "string" },
-          "evidence_ids": { "type": "array", "items": { "type": "string" } },
-          "status": { "type": "string", "enum": ["SUPPORTED", "UNSUPPORTED", "DOWNGRADE_CONFIDENCE", "CONTRADICT"] }
+          "claim_id": {
+            "type": "string",
+            "pattern": "^C-[0-9]{3}$",
+            "examples": [
+              "C-001"
+            ]
+          },
+          "claim": {
+            "type": "string"
+          },
+          "outcome_type": {
+            "type": "string"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "SUPPORTED",
+              "UNSUPPORTED",
+              "DOWNGRADE_CONFIDENCE",
+              "CONTRADICT"
+            ]
+          }
         }
       }
     },
     "sources": {
       "type": "array",
       "description": "Source Objects (see source.schema.json).",
-      "items": { "$ref": "source.schema.json" }
+      "items": {
+        "$ref": "source.schema.json"
+      }
     },
-    "evidence": { "type": "array", "description": "Evidence Objects (see evidence.schema.json)." },
-    "methodology_reviews": { "type": "array", "description": "MethodologyAudit objects (see methodology.schema.json)." },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "evidence_id",
+          "source_id",
+          "outcome_type",
+          "direction"
+        ]
+      },
+      "description": "Evidence rows (projection of evidence.schema.json; stage-level gate enforces the full contract)."
+    },
+    "methodology_reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "verdict"
+        ]
+      }
+    },
     "conflicts": {
       "type": "array",
       "description": "Conflict analysis entries (why studies disagree).",
-      "items": { "type": "object", "additionalProperties": true }
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     },
-    "applicability": { "type": "object", "additionalProperties": true },
-    "intervention": { "type": "object", "description": "TeachingIntervention (see intervention.schema.json)." },
-    "evaluation": { "type": "object", "description": "EvaluationPlan (see evaluation.schema.json)." },
-    "benchmark": { "type": "object", "additionalProperties": true, "description": "Benchmark metrics for this result (optional)." },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "intervention": {
+      "type": "object",
+      "description": "TeachingIntervention (see intervention.schema.json)."
+    },
+    "evaluation": {
+      "type": "object",
+      "description": "EvaluationPlan (see evaluation.schema.json)."
+    },
+    "benchmark": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Benchmark metrics for this result (optional)."
+    },
     "outcome_mapping": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["entries", "declared_without_evidence"],
+      "required": [
+        "entries",
+        "declared_without_evidence"
+      ],
       "description": "Frame-declared vs evidence-covered outcome map (OPEN-2): every outcome type seen in frame or evidence, with directional counts and an explicit status. Entries never mix support/contradict/neutral.",
       "properties": {
         "entries": {
@@ -102,19 +258,56 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["outcome_type", "status", "support_count", "contradict_count", "neutral_count", "evidence_ids"],
+            "required": [
+              "outcome_type",
+              "status",
+              "support_count",
+              "contradict_count",
+              "neutral_count",
+              "evidence_ids"
+            ],
             "properties": {
-              "outcome_type": { "type": "string" },
-              "declared_in_frame": { "type": "boolean" },
-              "status": { "type": "string", "enum": ["supported", "contested", "contradicted", "null_evidence_only", "no_evidence"] },
-              "support_count": { "type": "integer" },
-              "contradict_count": { "type": "integer" },
-              "neutral_count": { "type": "integer" },
-              "evidence_ids": { "type": "array", "items": { "type": "string" } }
+              "outcome_type": {
+                "type": "string"
+              },
+              "declared_in_frame": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "supported",
+                  "contested",
+                  "contradicted",
+                  "null_evidence_only",
+                  "no_evidence"
+                ]
+              },
+              "support_count": {
+                "type": "integer"
+              },
+              "contradict_count": {
+                "type": "integer"
+              },
+              "neutral_count": {
+                "type": "integer"
+              },
+              "evidence_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
-        "declared_without_evidence": { "type": "array", "items": { "type": "string" }, "description": "Frame-declared outcomes that no evidence covers — the evidence gaps a decision must disclose." }
+        "declared_without_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Frame-declared outcomes that no evidence covers — the evidence gaps a decision must disclose."
+        }
       }
     },
     "provenance": {
@@ -122,9 +315,17 @@
       "additionalProperties": false,
       "description": "Fetch/search provenance (Smart Web Fetch v3 §6): sources must carry fetch provenance.",
       "properties": {
-        "search_provider": { "type": "string" },
-        "fetched_at": { "type": "string", "format": "date-time" },
-        "fetch_summary": { "type": "object", "additionalProperties": true }
+        "search_provider": {
+          "type": "string"
+        },
+        "fetched_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fetch_summary": {
+          "type": "object",
+          "additionalProperties": true
+        }
       }
     },
     "report_outline": {

@@ -5,18 +5,40 @@
   "description": "Methodological audit of one study (or the overall evidence base). The highest-priority rule: task performance must NOT be automatically equated with learning effect. 扩展字段一律放在 extensions 内。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["target", "verdict", "audit_items", "task_vs_learning_guard", "limitations", "suggestions"],
+  "required": [
+    "target",
+    "verdict",
+    "audit_items",
+    "task_vs_learning_guard",
+    "limitations",
+    "suggestions"
+  ],
   "properties": {
-    "target": { "type": "string", "description": "evidence_id or source_id being audited, or 'overall'." },
+    "target": {
+      "type": "string",
+      "description": "evidence_id or source_id being audited, or 'overall'."
+    },
     "audit_items": {
       "type": "object",
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["status"],
+        "required": [
+          "status"
+        ],
         "properties": {
-          "status": { "type": "string", "enum": ["met", "partial", "missing", "not_applicable"] },
-          "note": { "type": "string" }
+          "status": {
+            "type": "string",
+            "enum": [
+              "met",
+              "partial",
+              "missing",
+              "not_applicable"
+            ]
+          },
+          "note": {
+            "type": "string"
+          }
         }
       },
       "description": "Keys: control_group, randomization, pre_test, post_test, retention_test, transfer_test, sample_bias, self_selection, measurement_validity, confounders, instructor_effect, novelty_effect, tool_version_effect, ai_usage_policy, dropout."
@@ -25,18 +47,56 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "measured_construct": { "type": "string", "examples": ["task_completion", "learning_outcome"] },
-        "equates_task_with_learning": { "type": "boolean" },
-        "note": { "type": "string" }
+        "measured_construct": {
+          "type": "string",
+          "examples": [
+            "task_completion",
+            "learning_outcome"
+          ]
+        },
+        "equates_task_with_learning": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string"
+        }
       }
     },
-    "verdict": { "type": "string", "enum": ["PASS", "CONCERN", "FAIL"] },
-    "limitations": { "type": "array", "items": { "type": "string" } },
-    "suggestions": { "type": "array", "items": { "type": "string" } },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "CONCERN",
+        "FAIL"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "extensions": {
       "type": "object",
       "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
       "additionalProperties": true
+    },
+    "study_audits": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Per-study methodology audits (method-reviewer output for multi-study reviews).",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }

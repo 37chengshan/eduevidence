@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from evidence_semantics import effect_direction
+from engine.versions import ENGINE_VERSION
 
 OUTCOME_ORDER = [
     "knowledge_gain", "concept_understanding", "retention", "transfer",
@@ -249,7 +250,7 @@ def build_result(pack_dir: Path, *, mode: str = "platform_native") -> dict[str, 
     result = {
         "meta": {
             "skill": "eduevidence",
-            "version": "1.0.0",
+            "version": ENGINE_VERSION,
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "mode": mode,
             "question": frame.get("question", ""),
