@@ -222,7 +222,7 @@ def _validate(library: dict[str, Any], schema_path: Path = SCHEMA_PATH) -> None:
     validator.validate(library, schema, "$")
 
 
-def build() -> tuple[dict[str, Any], int]:
+def build(generated_at: str | None = None) -> tuple[dict[str, Any], int]:
     gold = _gold_entries()
     examples = _example_entries()
     raw = gold + examples
@@ -231,7 +231,7 @@ def build() -> tuple[dict[str, Any], int]:
     library: dict[str, Any] = {
         "library_id": LIBRARY_ID,
         "version": LIBRARY_VERSION,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": (generated_at or datetime.now(timezone.utc).isoformat()),
         "entries": entries,
         "coverage_note": (
             "内置证据库：由 30 份金标准标注（benchmarks/annotations/gold-Q01..Q30 的 "
@@ -251,9 +251,11 @@ def build() -> tuple[dict[str, Any], int]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build the builtin evidence library (v4).")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT, help="output JSON path")
+    parser.add_argument("--generated-at", default=None,
+                        help="fixed ISO timestamp for reproducibility (tests pass a constant)")
     args = parser.parse_args(argv)
 
-    library, merged = build()
+    library, merged = build(generated_at=args.generated_at)
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(library, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

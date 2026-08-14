@@ -34,8 +34,11 @@ MIN_ENTRIES = 100
 
 
 def _run_build() -> subprocess.CompletedProcess:
+    # Deterministic timestamp keeps the committed artifact byte-stable so the
+    # test run never dirties the working tree (review finding).
     return subprocess.run(
-        [sys.executable, str(BUILD_SCRIPT)],
+        [sys.executable, str(BUILD_SCRIPT), "--generated-at",
+         "2026-08-14T00:00:00+00:00"],
         capture_output=True,
         text=True,
         cwd=str(ROOT),
