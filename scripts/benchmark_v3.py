@@ -305,6 +305,7 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
     # --resume: reuse previously completed attempts (their response artifacts
     # live in out_dir); only unfinished attempts are re-run.
     done_ids: set[str] = set()
+    resumed: dict[str, dict[str, Any]] = {}
     if resume and out_dir.is_dir():
         import json as _json
         for art in out_dir.glob("*.response.json"):
@@ -315,6 +316,7 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
             aid = data.get("attempt_id")
             if aid and (out_dir / art.name).is_file():
                 done_ids.add(aid)
+                resumed[aid] = data
         if done_ids:
             print(f"resume: {len(done_ids)} attempt(s) already present, skipping")
     for question in questions:
@@ -330,6 +332,27 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                     break
                 attempt_id = f"{question['id']}-{baseline}-a{attempt}"
                 if attempt_id in done_ids:
+                    # Re-register resumed attempts in the manifest (status +
+                    # usage read back from their artifact) so eval/report see
+                    # the complete run.
+                    art = out_dir / f"{attempt_id}.response.json"
+                    data = resumed.get(attempt_id, {})
+                    usage = data.get("usage") or {}
+                    manifest["attempts"].append({
+                        "attempt_id": attempt_id,
+                        "question_id": question["id"],
+                        "baseline": baseline,
+                        "attempt": attempt,
+                        "status": "completed",
+                        "error": None,
+                        "started_at": _now_iso(),
+                        "finished_at": _now_iso(),
+                        "prompt_tokens": usage.get("prompt_tokens"),
+                        "completion_tokens": usage.get("completion_tokens"),
+                        "latency_s": usage.get("latency_s"),
+                        "cost_usd": None,
+                        "artifacts": [art.name] if art.is_file() else [],
+                    })
                     continue
                 started = _now_iso()
                 entry: dict[str, Any] = {
@@ -501,7 +524,7 @@ def main(argv: list[str] | None = None) -> int:
     p_report.set_defaults(func=_cmd_report)
 
     args = parser.parse_args(argv)
-    if args.driver is None:
+    if args.command == "run" and getattr(args, "driver", None) is None:
         if ApiDriver().available():
             args.driver = "api"
         elif CliDriver().available():

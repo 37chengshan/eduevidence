@@ -1,0 +1,1111 @@
+{
+  "run_id": "run-20260814-031601",
+  "run_mode": "empirical",
+  "environment": {
+    "driver": "cli",
+    "model_family": "deepseek-v4-flash",
+    "model_version": "deepseek-v4-flash",
+    "temperature": 0.0,
+    "tools": [
+      "host agent tools"
+    ],
+    "search_provider": "host_tools",
+    "agent_mcp_used": false
+  },
+  "per_baseline": {
+    "B2_standard_agent": {
+      "metrics": {
+        "outcome_separation_accuracy": {
+          "mean": 0.8667,
+          "ci95": 0.1237,
+          "n": 30
+        },
+        "decision_calibration": {
+          "mean": 0.5667,
+          "ci95": 0.1804,
+          "n": 30
+        },
+        "contradiction_recall": {
+          "mean": 0.5167,
+          "ci95": 0.1196,
+          "n": 30
+        },
+        "contradiction_precision": {
+          "mean": 0.2297,
+          "ci95": 0.0675,
+          "n": 30
+        },
+        "citation_support_recall": {
+          "mean": 0.6,
+          "ci95": 0.1278,
+          "n": 30
+        },
+        "scope_calibration": {
+          "mean": 0.6333,
+          "ci95": 0.1754,
+          "n": 30
+        }
+      },
+      "n": 30,
+      "total_cost_usd": 0.0
+    },
+    "B3_eduevidence_single": {
+      "metrics": {
+        "outcome_separation_accuracy": {
+          "mean": 0.9667,
+          "ci95": 0.0653,
+          "n": 30
+        },
+        "decision_calibration": {
+          "mean": 0.6,
+          "ci95": 0.1783,
+          "n": 30
+        },
+        "contradiction_recall": {
+          "mean": 0.5,
+          "ci95": 0.141,
+          "n": 30
+        },
+        "contradiction_precision": {
+          "mean": 0.3511,
+          "ci95": 0.1062,
+          "n": 30
+        },
+        "citation_support_recall": {
+          "mean": 0.5,
+          "ci95": 0.1486,
+          "n": 30
+        },
+        "scope_calibration": {
+          "mean": 1.0,
+          "ci95": 0.0,
+          "n": 30
+        }
+      },
+      "n": 30,
+      "total_cost_usd": 0.0
+    }
+  },
+  "per_attempt": [
+    {
+      "attempt_id": "Q01-B2_standard_agent-a1",
+      "question_id": "Q01",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.125,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q01-B2_standard_agent-a2",
+      "question_id": "Q01",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.2308,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q01-B2_standard_agent-a3",
+      "question_id": "Q01",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.0769,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q01-B3_eduevidence_single-a1",
+      "question_id": "Q01",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q01-B3_eduevidence_single-a2",
+      "question_id": "Q01",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.75,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "insufficient_evidence",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q01-B3_eduevidence_single-a3",
+      "question_id": "Q01",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.2,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q02-B2_standard_agent-a1",
+      "question_id": "Q02",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 0.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.2857,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q02-B2_standard_agent-a2",
+      "question_id": "Q02",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.1,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q02-B2_standard_agent-a3",
+      "question_id": "Q02",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 0.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.1429,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q02-B3_eduevidence_single-a1",
+      "question_id": "Q02",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "insufficient_evidence",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q02-B3_eduevidence_single-a2",
+      "question_id": "Q02",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q02-B3_eduevidence_single-a3",
+      "question_id": "Q02",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q03-B2_standard_agent-a1",
+      "question_id": "Q03",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.1429,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q03-B2_standard_agent-a2",
+      "question_id": "Q03",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.25,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q03-B2_standard_agent-a3",
+      "question_id": "Q03",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q03-B3_eduevidence_single-a1",
+      "question_id": "Q03",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q03-B3_eduevidence_single-a2",
+      "question_id": "Q03",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.75,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q03-B3_eduevidence_single-a3",
+      "question_id": "Q03",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q04-B2_standard_agent-a1",
+      "question_id": "Q04",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 0.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q04-B2_standard_agent-a2",
+      "question_id": "Q04",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 0.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q04-B2_standard_agent-a3",
+      "question_id": "Q04",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.1667,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q04-B3_eduevidence_single-a1",
+      "question_id": "Q04",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q04-B3_eduevidence_single-a2",
+      "question_id": "Q04",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 0.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q04-B3_eduevidence_single-a3",
+      "question_id": "Q04",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.75,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "insufficient_evidence",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q05-B2_standard_agent-a1",
+      "question_id": "Q05",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.1667,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q05-B2_standard_agent-a2",
+      "question_id": "Q05",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.4,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q05-B2_standard_agent-a3",
+      "question_id": "Q05",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q05-B3_eduevidence_single-a1",
+      "question_id": "Q05",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.4,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "insufficient_evidence",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q05-B3_eduevidence_single-a2",
+      "question_id": "Q05",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q05-B3_eduevidence_single-a3",
+      "question_id": "Q05",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.25,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q06-B2_standard_agent-a1",
+      "question_id": "Q06",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.75,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q06-B2_standard_agent-a2",
+      "question_id": "Q06",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q06-B2_standard_agent-a3",
+      "question_id": "Q06",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.6,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q06-B3_eduevidence_single-a1",
+      "question_id": "Q06",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.75,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "insufficient_evidence",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q06-B3_eduevidence_single-a2",
+      "question_id": "Q06",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "insufficient_evidence",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q06-B3_eduevidence_single-a3",
+      "question_id": "Q06",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "insufficient_evidence",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q07-B2_standard_agent-a1",
+      "question_id": "Q07",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.2857,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q07-B2_standard_agent-a2",
+      "question_id": "Q07",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.5,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q07-B2_standard_agent-a3",
+      "question_id": "Q07",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.25,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q07-B3_eduevidence_single-a1",
+      "question_id": "Q07",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.25,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q07-B3_eduevidence_single-a2",
+      "question_id": "Q07",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.5,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q07-B3_eduevidence_single-a3",
+      "question_id": "Q07",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.5,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q08-B2_standard_agent-a1",
+      "question_id": "Q08",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q08-B2_standard_agent-a2",
+      "question_id": "Q08",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q08-B2_standard_agent-a3",
+      "question_id": "Q08",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.1667,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q08-B3_eduevidence_single-a1",
+      "question_id": "Q08",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q08-B3_eduevidence_single-a2",
+      "question_id": "Q08",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.5,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q08-B3_eduevidence_single-a3",
+      "question_id": "Q08",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.0,
+        "contradiction_precision": 0.0,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q09-B2_standard_agent-a1",
+      "question_id": "Q09",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q09-B2_standard_agent-a2",
+      "question_id": "Q09",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q09-B2_standard_agent-a3",
+      "question_id": "Q09",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.3333,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q09-B3_eduevidence_single-a1",
+      "question_id": "Q09",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.5,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q09-B3_eduevidence_single-a2",
+      "question_id": "Q09",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.25,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q09-B3_eduevidence_single-a3",
+      "question_id": "Q09",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 0.5,
+        "contradiction_precision": 0.75,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q10-B2_standard_agent-a1",
+      "question_id": "Q10",
+      "baseline": "B2_standard_agent",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.1667,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q10-B2_standard_agent-a2",
+      "question_id": "Q10",
+      "baseline": "B2_standard_agent",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.25,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q10-B2_standard_agent-a3",
+      "question_id": "Q10",
+      "baseline": "B2_standard_agent",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.5,
+        "citation_support_recall": 1.0,
+        "scope_calibration": 0.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q10-B3_eduevidence_single-a1",
+      "question_id": "Q10",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 0.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.5,
+        "citation_support_recall": 0.0,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "adopt",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q10-B3_eduevidence_single-a2",
+      "question_id": "Q10",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 2,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 0.6,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    },
+    {
+      "attempt_id": "Q10-B3_eduevidence_single-a3",
+      "question_id": "Q10",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 3,
+      "status": "completed",
+      "metrics": {
+        "outcome_separation_accuracy": 1.0,
+        "decision_calibration": 1.0,
+        "contradiction_recall": 1.0,
+        "contradiction_precision": 1.0,
+        "citation_support_recall": 0.5,
+        "scope_calibration": 1.0
+      },
+      "detected_action": "pilot",
+      "cost_usd": null
+    }
+  ]
+}

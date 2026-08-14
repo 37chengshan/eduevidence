@@ -13,12 +13,17 @@
     "部分研究显示对高先验知识学生的间隔效应减弱",
     "间隔复习的依从性与自我管理难度可能稀释课堂效果"
   ],
-  "correct_outcome_types": ["retention"],
+  "correct_outcome_types": [
+    "retention"
+  ],
   "allowed_scope": "仅限知识保留/记忆类结局，不扩展到问题解决或成绩等级",
   "known_methodological_limitations": [
     "保留率测量时点（即时/延迟）差异影响结论",
     "实验常为人工强加间隔，与现实学习节奏不符",
     "缺少对学习内容与测验形式的标准控制"
   ],
-  "expected_decision_range": ["adopt"]
+  "expected_decision_range": [
+    "adopt",
+    "pilot"
+  ]
 }
