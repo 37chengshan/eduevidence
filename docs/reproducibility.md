@@ -57,7 +57,7 @@ python scripts/validate_schema.py \
   --data examples/ai-coding-assistant/evidence.jsonl
 ```
 
-- `--schema`：指定六类 Schema 之一（education-frame / evidence / methodology / verdict / intervention / evaluation）；
+- `--schema`：指定任一顶层 Schema（schemas/ 下 13 个契约，如 education-frame / evidence / methodology / verdict / intervention / evaluation / report-result 等）；
 - `--data`：指定要校验的 JSON 或 JSONL 数据文件；
 - 主 Demo 示例数据位于 `examples/ai-coding-assistant/evidence.jsonl`，验证通过时应输出每条 evidence 的校验状态与 SUPPORTED/UNSUPPORTED 统计；
 - 合格线：**校验通过率 100%**，任一条未通过即非零退出码。

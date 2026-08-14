@@ -10,7 +10,7 @@ EduEvidence 是一个**教育证据决策 Scientific Skill**：把"是否采用�
 Skill 本体结构：
 
 ```text
-SKILL.md             Skill 入口（When to Use / 10 步 Workflow / 输出契约）
+SKILL.md             Skill 入口（When to Use / 9 步 Workflow / 输出契约）
 skill/agents/        8 角色协议（Planner / Retriever / Analyst / Skeptic / …）
 references/          9 个教育方法论文档
 schemas/             13 个 JSON Schema 数据契约

@@ -298,7 +298,7 @@ EduEvidence/  (= one Skill package)
 │  ├─ skill/agents/          role protocols (capability execution profiles)
 │  ├─ references/            11 education methodology documents (evidence quality / skeptic /
 │  │                         tribunal policy / intervention design…)
-│  ├─ schemas/               V1 contracts + schemas/v2/ (19 V2 JSON Schema contracts)
+│  ├─ schemas/               V1 + v2/v3 contracts (13 top-level + 17 v2 + v3 pilot/synthesis/run-manifest)
 │  ├─ scripts/               deterministic logic scripts (scoring / matrix / audit /
 │  │                         confidence / orchestrator / startup probe / V2 CLI)
 │  ├─ retrieval/             Search & fetch layer (fetch / validate / dedupe / failures)

@@ -288,7 +288,7 @@ EduEvidence/  （= 一个 Skill 包）
 ├─ Skill 本体（运行必需）
 │  ├─ skill/agents/          8 个角色协议（Planner / Retriever / Analyst / Skeptic /
 │  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer）
-│  ├─ references/            9 个教育方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计…）
+│  ├─ references/            11 个教育方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计…）
 │  ├─ schemas/               13 个 JSON Schema 数据契约（每步输出的校验门）
 │  ├─ scripts/               17 个确定性逻辑脚本（评分 / 矩阵 / 审计 / 置信度 / Orchestrator / 启动探测）
 │  ├─ retrieval/             检索与抓取层（fetch / validate / dedupe / failures）
