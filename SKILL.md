@@ -92,6 +92,22 @@ Static agent files become capability execution profiles: a fixed 8-role
 topology is NOT required for every deep run; roles map to capabilities as
 needed.
 
+### 1.3 v3 capabilities (added in 3.0.0)
+
+- **Decision-to-Outcome Loop**: a PILOT decision is not terminal. The CLI
+  closes the loop — `eduevidence pilot register|import|analyze-link|redecide`:
+  register a PilotRun bound to a DecisionSnapshot, import anonymized outcome
+  data (PII columns are refused), link the analysis, then fold pilot evidence
+  into a new graph revision and re-adjudicate, producing a new DecisionSnapshot
+  plus a machine-readable diff. Student data stays local.
+- **Empirical Benchmark (Layer B)**: `eduevidence benchmark run|eval|report`
+  runs B0–B4 baselines with real model calls and gold-annotated evaluation
+  (30 questions, Q01–Q30); every run records a full manifest (model,
+  temperature, tools, usage, cost) and SIMULATED runs are never presented as
+  model performance.
+- **Cross-project synthesis**: `eduevidence synthesize` aggregates the Shared
+  Research Library's verified facts into an outcome-level overview.
+
 ## 2 When to Use
 
 EduEvidence addresses **any teaching/education decision that needs evidence**: whether to adopt a teaching method, tool, or AI intervention; how to introduce it; for whom it works; and how to verify its effect. Typical scenarios include (not limited to):
@@ -523,8 +539,9 @@ EduEvidence is a **teaching-decision aid**, not a replacement for teachers' or i
 
 - Methodology documents (`references/`): education-framing / outcome-taxonomy / evidence-quality / methodology-audit / skeptic-protocol / tribunal-policy / applicability-policy / intervention-design / evaluation-design / retrieval-protocol / source-validity
 - Data contracts (`schemas/`): education-frame / source / fetch-result / evidence / cross-model-review / methodology / verdict / intervention / evaluation / report-result
-- Deterministic logic (`scripts/`): validate_schema / evidence_score / evidence_matrix / claim_audit / compute_confidence / benchmark / render_report
-- Docs (`docs/`): architecture / methodology / benchmark / demo / reproducibility / install-guide / open-source-references
+- Deterministic logic (`scripts/`): validate_schema / evidence_score / evidence_matrix / claim_audit / compute_confidence / benchmark_v3 / benchmark_evaluator / render_report
+- Docs (`docs/`): architecture / methodology / benchmark / demo / reproducibility / install-guide / open-source-references / V3_REVIEW_2026-08-14
+- Engine v3 modules (`engine/`): pilot (Decision-to-Outcome Loop) / meta_synthesis (cross-project synthesis) / tribunal / library / graph_store
 - Real-research anchor examples (`examples/`):
   - Kazemitabaar et al. (2023, CHI) — AI Code Generators on Novice Learners: task completion ↑ 1.15×, correctness ↑ 1.8×, but one-week retention showed no significant difference → **task performance ≠ retention/learning**
   - Marzuki et al. (2024, Smart Learn. Environ.) — ChatGPT formative feedback positively affected undergraduate academic writing → writing-scenario supporting evidence
