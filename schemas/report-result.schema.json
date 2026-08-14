@@ -75,7 +75,11 @@
         }
       }
     },
-    "sources": { "type": "array", "description": "Source Objects (see source.schema.json)." },
+    "sources": {
+      "type": "array",
+      "description": "Source Objects (see source.schema.json).",
+      "items": { "$ref": "source.schema.json" }
+    },
     "evidence": { "type": "array", "description": "Evidence Objects (see evidence.schema.json)." },
     "methodology_reviews": { "type": "array", "description": "MethodologyAudit objects (see methodology.schema.json)." },
     "conflicts": {
@@ -122,6 +126,16 @@
         "fetched_at": { "type": "string", "format": "date-time" },
         "fetch_summary": { "type": "object", "additionalProperties": true }
       }
+    },
+    "report_outline": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional chapter outline consumed by the report builder; the builder falls back to a safe six-chapter layout when absent."
+    },
+    "report_structure": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Legacy alias of report_outline accepted for compatibility."
     }
   }
 }
