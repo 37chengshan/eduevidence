@@ -794,6 +794,69 @@ def main_gate(argv: list[str] | None = None) -> int:
     return gate_main(argv)
 
 
+
+# ---- V3 command handlers -----------------------------------------------
+
+def _cmd_pilot(args) -> int:
+    from engine.project import ProjectWorkspace
+    from engine.pilot import import_outcomes, link_analysis, redecide, register_pilot
+    home = _home(args)
+    ws = ProjectWorkspace.open(home, args.project)
+    if args.action == "register":
+        pilot = register_pilot(
+            ws, decision_snapshot_id=args.decision, title=args.title,
+            start_date=args.start, end_date=args.end,
+            conditions=args.condition, sample_size=args.sample,
+            design_id=args.design,
+            anon_policy={"no_pii_columns": True, "note": "CLI default: PII columns refused"},
+            outcome_columns=args.outcome)
+        print(pilot["pilot_id"])
+        return 0
+    if args.action == "import":
+        import_outcomes(
+            ws, args.pilot, source_path=args.file,
+            privacy={"classification": args.privacy, "deidentification_status": "done"})
+        print("imported", args.file, "->", args.pilot)
+        return 0
+    if args.action == "analyze-link":
+        link_analysis(ws, args.pilot, analysis_run_id=args.analysis)
+        print("linked analysis", args.analysis)
+        return 0
+    if args.action == "redecide":
+        result = redecide(
+            ws, args.pilot, claim_id=args.claim, outcome_token=args.outcome,
+            measure=args.measure, effect_direction=args.effect,
+            raw_result_text=args.result_text, relation_to_claim=args.relation,
+            effect_estimate=({"value": args.effect_value} if args.effect_value is not None else None))
+        print("new decision:", result["snapshot"]["decision_snapshot_id"],
+              result["snapshot"]["decision"], result["snapshot"]["confidence_label"])
+        print("diff:", json.dumps(result["diff"], ensure_ascii=False)[:300])
+        return 0
+    return 2
+
+def _cmd_synthesize(args) -> int:
+    from engine.library import ResearchLibrary
+    from engine.meta_synthesis import save_synthesis, synthesize_library
+    home = _home(args)
+    lib = ResearchLibrary.open(home)
+    syn = synthesize_library(lib)
+    out_dir = home / "syntheses" if args.out is None else args.out
+    path = save_synthesis(syn, out_dir)
+    print(f"wrote {path} (revision {syn['library_revision']}, studies {syn['independent_studies']})")
+    return 0
+
+def _cmd_benchmark(args) -> int:
+    import benchmark_v3 as bv3
+    if args.action == "run":
+        return bv3.main(["run", "--baselines", args.baselines, "--questions", args.questions,
+                         "--repeats", str(args.repeats), "--driver", args.driver,
+                         "--out", args.out, "--budget-tokens", str(args.budget)])
+    if args.action == "eval":
+        return bv3.main(["eval", "--run", args.run, "--annotations", args.annotations])
+    if args.action == "report":
+        return bv3.main(["report", "--run", args.run, "--out", args.report])
+    return 2
+
 # ---- V2 command handlers --------------------------------------------------
 
 def _home(args) -> "object":
@@ -1091,6 +1154,49 @@ def main(argv: list[str] | None = None) -> int:
                           choices=["claude", "academic", "datalab", "datalab-dark", "presentation"])
     p_report.add_argument("--home", default=None)
     p_report.set_defaults(func=_cmd_report)
+
+
+    p_pilot = sub.add_parser("pilot", help="V3 Decision-to-Outcome Loop")
+    p_pilot.add_argument("action", choices=["register", "import", "analyze-link", "redecide"])
+    p_pilot.add_argument("--project", required=True)
+    p_pilot.add_argument("--decision", default=None, help="decision snapshot id (register)")
+    p_pilot.add_argument("--title", default=None, help="pilot title (register)")
+    p_pilot.add_argument("--start", default=None, help="start ISO date-time (register)")
+    p_pilot.add_argument("--end", default=None, help="end ISO date-time (register)")
+    p_pilot.add_argument("--condition", action="append", default=[], help="implementation condition (register)")
+    p_pilot.add_argument("--sample", type=int, default=None, help="sample size (register)")
+    p_pilot.add_argument("--design", default=None, help="study design id (register)")
+    p_pilot.add_argument("--outcome", action="append", default=[], help="outcome taxonomy token")
+    p_pilot.add_argument("--pilot", default=None, help="pilot id (import/analyze-link/redecide)")
+    p_pilot.add_argument("--file", type=Path, default=None, help="outcome CSV (import)")
+    p_pilot.add_argument("--privacy", default="internal", choices=["public", "internal", "confidential", "restricted"])
+    p_pilot.add_argument("--analysis", default=None, help="analysis run id (analyze-link)")
+    p_pilot.add_argument("--claim", default=None, help="claim id (redecide)")
+    p_pilot.add_argument("--measure", default=None, help="finding measure (redecide)")
+    p_pilot.add_argument("--effect", default="positive", choices=["positive", "negative", "null"])
+    p_pilot.add_argument("--result-text", default=None, help="raw result text (redecide)")
+    p_pilot.add_argument("--relation", default="support", choices=["support", "contradict", "neutral"])
+    p_pilot.add_argument("--effect-value", type=float, default=None)
+    p_pilot.add_argument("--home", default=None)
+    p_pilot.set_defaults(func=_cmd_pilot)
+
+    p_syn = sub.add_parser("synthesize", help="V3 cross-project library synthesis")
+    p_syn.add_argument("--home", default=None)
+    p_syn.add_argument("--out", default=None, type=Path)
+    p_syn.set_defaults(func=_cmd_synthesize)
+
+    p_bench = sub.add_parser("benchmark", help="V3 Layer B empirical benchmark")
+    p_bench.add_argument("action", choices=["run", "eval", "report"])
+    p_bench.add_argument("--baselines", default="B2_standard_agent,B3_eduevidence_single")
+    p_bench.add_argument("--questions", default="benchmarks/questions.jsonl")
+    p_bench.add_argument("--repeats", type=int, default=3)
+    p_bench.add_argument("--driver", default="sim", choices=["api", "sim"])
+    p_bench.add_argument("--out", default="benchmarks/empirical/run-001")
+    p_bench.add_argument("--budget", type=int, default=1000000)
+    p_bench.add_argument("--run", default=None, help="run dir (eval/report)")
+    p_bench.add_argument("--annotations", default="benchmarks/annotations")
+    p_bench.add_argument("--report", default="benchmarks/empirical/v3-report.md")
+    p_bench.set_defaults(func=_cmd_benchmark)
 
     p_migrate = sub.add_parser("migrate-v1", help="import a V1 pack into a V2 project")
     p_migrate.add_argument("--pack", required=True, type=Path)
