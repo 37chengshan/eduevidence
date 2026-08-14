@@ -1,6 +1,6 @@
 # EduEvidence Demo 分镜 / 录屏脚本
 
-> 对应 `docs/demo.md`（180s 叙事结构）。画面元素全部锚定
+> 对应 `docs/demo.md`（核心 180s 叙事 + 可选扩展幕 X/Y，合计约 250s）。画面元素全部锚定
 > `examples/ai-coding-assistant/EduEvidence_Report.html` 的真实 Section / 元素。
 > 录屏准备：Chrome 打开 `file://…/examples/ai-coding-assistant/EduEvidence_Report.html`，
 > 窗口宽度 ≥1280，缩放 100%，主题默认 `claude`。
@@ -19,6 +19,8 @@
 | 135-155s | 行动方案 | 09 Intervention + 10 Evaluation | 高光 5：PILOT 阶段化 |
 | 155-170s | 信息图收束 | 04/09/10 内嵌 SVG | 设计语言统一 |
 | 170-180s | 主题 + 收尾 | 头部生成主题徽标（claude）+ 12 Sources | 生成前选定主题、溯源完整 |
+| 180-220s | 幕 X：Decision-to-Outcome 闭环 | CLI（`eduevidence pilot …`）+ `pilots/` + `decisions/` | 决策 → 试点 → 数据 → 再裁决，闭环可追溯 |
+| 220-250s | 幕 Y：实证 Benchmark | `benchmarks/empirical/run-empirical-01/` + `v3-report.md` | Layer B 真实执行，SIMULATED / EMPIRICAL 明确区分 |
 
 ---
 
@@ -70,6 +72,30 @@
 - **操作**：快速滚动展示 3 张信息图；回到头部，指出当前主题为生成前选择的 `claude`（`claude`[Light] / `academic`[Light] / `datalab`[Light] / `datalab-dark`[Dark] / `presentation`[Dark] 五选一，最终 HTML 不提供主题切换，五种主题以 `reports-5themes/` 独立文件预览）；滚动到 12，展示来源表与 Fetch 溯源。
 - **旁白**："研究流程、裁决、干预、评价全部有统一风格的信息图，离线可用、不依赖任何 CDN。主题在生成前从五种中选定，最终 HTML 只保留中英文切换。最后是来源与抓取溯源——每条证据的来源、获取方式、时间都可查。"
 - **验证点**：4 张信息图内嵌 SVG 渲染正常；头部仅中英文切换（无主题切换 UI）、主题徽标显示生成时选定的主题；12 节来源表 3 行 + Fetch 溯源表头完整。
+
+## 分镜 8（3:00-3:40）幕 X：Decision-to-Outcome 闭环（可选扩展）
+
+> 本幕起画面切换到终端 + 文件视图（脱离 HTML 报告）：锚定 `eduevidence pilot` CLI 输出
+> 与项目工作区 `~/.eduevidence/projects/PRJ-…/pilots/PIL-*.json`、`decisions/*.json`。
+
+- **画面**：终端（`pilot register / import / redecide` 输出）+ `pilots/PIL-*.json` 与 `decisions/*.json` 双栏对照。
+- **操作**：
+  1. 回到报告头部 01 决策卡，指出 `PILOT`——闭环的起点正是这张 DecisionSnapshot；
+  2. 运行 `eduevidence pilot register --decision <snapshot_id> --title "C 语言 8 周试点" --start … --end … --condition guardrailed --sample 60 --design <design_id> --outcome independent_problem_solving --outcome retention` → 输出新 `PIL-…`；打开 `pilots/PIL-*.json`，指向 `decision_snapshot_id` 与 `status: "registered"`；
+  3. 运行 `eduevidence pilot import --pilot PIL-… --file outcomes.csv`：先演示含 `姓名/学号` 列的 CSV 被 PII 门拒绝（报错 `PII columns detected and refused`），再导入去标识化 CSV → 输出 `imported …`，`status` → `data_imported`（可选：`analyze-link` → `analyzed`）；
+  4. 运行 `eduevidence pilot redecide --pilot PIL-… --claim <claim_id> --outcome transfer --measure … --effect … --relation …` → 终端打印 `new decision: <DEC-…> <action> <confidence>` 与 `diff:` 片段；打开 `decisions/` 下的新 DecisionSnapshot 与 `pilots/PIL-*.json` 的 `redecide` 块，指出 action / confidence 的变化即 diff 的内容。
+- **旁白**："PILOT 不是终点，而是下一轮证据的起点。决策快照注册成试点；试点产出 CSV 结果，PII 列在导入口就被拒绝，学生数据留在本地；分析结果回流证据图、提交新图版本，裁决器重跑一遍，输出一张带机器可读 diff 的新决策快照——action 变了还是置信度变了，一比对就知道。这就是 Decision-to-Outcome 闭环：从决策出发，回到决策。"
+- **验证点**：`pilots/PIL-*.json` 与 `decisions/*.json` 路径锚定；状态机按 `registered → data_imported → analyzed → adjudicated` 流转；PII 列（name/student/学号/姓名/email/…）被拒报错可见；redecide 后 `decisions/` 出现新快照、`pilots/` 记录 `redecide.diff` 含 action/confidence 变化；`schemas/v3/pilot-outcome.schema.json` 校验通过。
+
+## 分镜 9（3:40-4:10）幕 Y：实证 Benchmark（Layer B，可选扩展）
+
+- **画面**：`benchmarks/empirical/run-empirical-01/` 目录（manifest + per-attempt JSON）→ `benchmarks/empirical/v3-report.md`。
+- **操作**：
+  1. 打开 run 目录的 `manifest.json`，指向 `run_mode: "empirical"`、`environment`（`model_family`（deepseek-v4-flash，经 omp 执行）/ `model_version` / `temperature` / `tools` / `search_provider` / `driver`）与 `baselines`、`repeats`（≥3），逐次 token / latency / cost 在 `attempts` 里；
+  2. 打开 `v3-report.md`：先让观众看到顶部模式横幅（EMPIRICAL，非 SIMULATED），再指向指标表（每格 `均值±95% CI`，带 `n` 列）；
+  3. 指向报告脚注中 SIMULATED 的声明，读一句"Layer A 是固定种子的确定性模拟，只能验证管线可运行，不能当性能证据"。
+- **旁白**："Benchmark 分两层：Layer A 是确定性模拟，产物必须标注 SIMULATED，只能验证框架可运行；Layer B 才是性能证据——本场演示用 omp 驱动 deepseek-v4-flash 真实执行，每次运行记录模型家族、版本、温度、工具集、检索 provider，重复 ≥3 次，指标按均值±95% CI 报告。页面上所有数字就是 v3-report.md 的原样输出，我们不做任何夸大。"
+- **验证点**：manifest 含 `run_mode=empirical` + 环境（模型家族/版本、temperature、tools、search_provider、driver）+ `baselines` + `repeats≥3` + `attempts` 逐次 token/latency/cost；`v3-report.md` 顶部横幅明确 EMPIRICAL、脚注明确 SIMULATED 不得作为性能证据；指标表为 `mean±CI95` 且带 `n`；演示台词与报告数字完全一致（不新增、不修饰）。
 
 ---
 
