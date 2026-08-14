@@ -250,25 +250,27 @@ After confirmation, execute fully automatically, produce HTML + Markdown, then o
 ### Execution rules
 
 - **All three choices required**: mode, CLI+models, style. Defaults when omitted (A / omp scan result / claude) with a note.
-- After confirmation, **no more per-stage questions** — run fully automatically to Present (step 10).
+- After confirmation, **no more per-stage questions** — run fully automatically to Present (reporting step).
 - depth=deep and mode A: Cross-Model Review (mode 2, §8.5) enabled by default unless the user explicitly wants the same model only.
 - Final deliverables: `EduEvidence_Report.html` (single-file bilingual report) + Markdown research pack (agent-authored from the projection) + browser open + 3-5 sentence result summary.
 
 ## 6 Workflow Overview
 
-Execute strictly in these 10 steps; **each step's output must pass Schema validation before the next step**. Resource discovery (Chapter 7) and execution backend selection (Chapter 8) happen between steps 1–2; the Confirmation Gate (Chapter 9) completes before any delegation.
+Execute strictly in these 9 protocol steps (Research Core 6 + Decision Extension 3, canonical definition in docs/architecture.md); **each step's output must pass Schema validation before the next step**. Resource discovery (Chapter 7) and execution backend selection (Chapter 8) happen between steps 1–2; the Confirmation Gate (Chapter 9) completes before any delegation.
 
 ```text
 1. Frame          Build the EducationResearchFrame (question/learner/course/intervention/comparison/outcomes/scope/inclusion-exclusion)
-2. Retrieve       Retrieve literature & evidence (support + independent counter-evidence, RULE 4; details: retrieval-protocol.md)
-3. Fetch          Fetch full/verifiable source content (snippet ≠ content, RULE 2)
-4. Validate       Validate source & content (source validity, fetch completeness, Schema; criteria: source-validity.md)
-5. Extract        Extract claim-level evidence (Evidence Object bound to Outcome)
-6. Challenge      Skeptic protocol (fixed 9 checks)
-7. Audit          Method Reviewer methodology audit (15-item checklist)
-8. Adjudicate     Evidence Tribunal (must pass Pre-Verdict Gate first, Chapter 11)
-9. Design         Applicability + intervention design + evaluation plan (For whom / minimum viable pilot / Evaluation Plan)
-10. Present       Render the single-file bilingual HTML report + infographics + academic figures
+2. Retrieve       Retrieve literature & evidence; Fetch full/verifiable content; Validate source & content (snippet ≠ content, RULE 2; details: retrieval-protocol.md / source-validity.md)
+3. Extract        Extract claim-level evidence (Evidence Object bound to Outcome)
+4. Challenge      Skeptic protocol (fixed 9 checks)
+5. Audit          Method Reviewer methodology audit (15-item checklist)
+6. Adjudicate     Evidence Tribunal (must pass Pre-Verdict Gate first, Chapter 11)
+7. Applicability  Applicability + intervention design + evaluation plan (For whom / minimum viable pilot / Evaluation Plan)
+8. Intervene      Intervention design (minimum viable pilot + AI usage rules + stop conditions)
+9. Evaluate       Evaluation plan (indicators + success threshold)
+
+Reporting step (not counted in the 9-step protocol):
+Present         Render the single-file bilingual HTML report + infographics + academic figures
 ```
 
 **Hard rule: Search snippet ≠ Evidence.** Retrieve results are candidate leads only; Extract is allowed only after Fetch (real source content) and Validate (source & content checks pass).
@@ -288,7 +290,7 @@ Design       → intervention.schema.json / evaluation.schema.json
 Present      → report-result.schema.json (overall contract)
 ```
 
-### Presentation (step 10)
+### Presentation (reporting step)
 
 After research produces `result.json`, deterministic adapters render it into the user-facing layer (`visualization/eduevidence-report/`):
 

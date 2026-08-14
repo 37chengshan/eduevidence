@@ -34,6 +34,22 @@ python3 scripts/benchmark_v3.py report --run benchmarks/empirical/run-empirical-
 ```
 
 
+
+## 2.1 首轮实证结果（v3.0.0，2026-08-14）
+
+- 执行：Q01–Q10（S/M/L 混合）× B2/B3 × 3 次重复 = 60 attempts，deepseek-v4-flash（经子代理并行），0 失败；run manifest 见 benchmarks/empirical/run-empirical-01/manifest.json（schemas/v3/run-manifest.schema.json 契约）。
+- 指标为 gold-based 启发式（method: heuristic，均值±95% CI；outcome separation = gold 覆盖率；中文回答经结果词映射公平计分）。
+
+| 指标 | B2 standard agent (n=30) | B3 EduEvidence (n=30) |
+|---|---|---|
+| outcome separation (gold recall) | 0.867 ± 0.124 | **0.967 ± 0.065** |
+| decision calibration | 0.567 ± 0.180 | 0.600 ± 0.178 |
+| contradiction recall | 0.517 ± 0.120 | 0.500 ± 0.141 |
+| contradiction precision | 0.230 ± 0.068 | **0.351 ± 0.106** |
+| citation recall | 0.600 ± 0.128 | 0.500 ± 0.149 |
+| scope calibration | 0.633 ± 0.175 | **1.000 ± 0.000** |
+
+**解读（诚实口径）**：B3 的优势集中在"证据纪律"维度——scope 边界声明 100%（B2 63%）、gold outcome 识别率更高、反方证据更精确；两者决策动作与反方检出率接近，citation recall 受引用风格影响无显著差异。该结果支持"教育证据协议提升结论纪律"的主张，不宣称任何"奇迹性能"。结果受模型（deepseek-v4-flash）、题目集与启发式评估方法限制；B3 vs B4 与 30 题全覆盖留待后续。
 ## 一、评测题目集（第一版 30 题）
 
 ### 1.1 结构与复杂度分布
