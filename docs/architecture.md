@@ -163,7 +163,8 @@ edu/
 │   └── agent-mcp-approval.schema.json
 ├── engine/                 # Research Engine 内核（Project / Run / Revision /
 │                           # DecisionSnapshot、Evidence Graph、tribunal / synthesis /
-│                           # gaps / study-design / datasets / analysis / projections）
+│                           # gaps / study-design / datasets / analysis / projections、
+│                           # v3: pilot 决策闭环 / meta_synthesis 跨项目综述）
 ├── scripts/                # 工具脚本（validate_schema / pre_verdict_gate /
 │                           # compute_confidence / orchestrator / benchmark /
 │                           # render_report 等确定性逻辑）
