@@ -47,6 +47,28 @@ def _load_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def _derive_source_from_evidence(ev: dict[str, Any]) -> dict[str, Any] | None:
+    """Honest source fallback (review P1-2): a real DOI in the location
+    yields tier1; otherwise the lowest authority is assumed and the record
+    is flagged source_metadata_incomplete. Never fabricates a canonical URL."""
+    from retrieval.source import parse_doi_from_url  # noqa: PLC0415
+
+    loc = (ev.get("source_location") or "").strip()
+    if not loc:
+        return None
+    doi = parse_doi_from_url(loc)
+    authority = "tier1_paper_doi" if doi else "tier5_general_web"
+    return {
+        "source_id": ev.get("source_id", ""),
+        "title": ev.get("title", ""),
+        "year": ev.get("year"),
+        "canonical_url": loc,
+        "authority_level": authority,
+        "source_location": loc,
+        "extensions": {"source_metadata_incomplete": not doi},
+    }
+
+
 NOT_CAPTURED_USAGE: dict[str, Any] = {
     "measurement_status": "NOT_CAPTURED",
     "input_tokens": None,
@@ -210,16 +232,9 @@ def build_result(pack_dir: Path, *, mode: str = "platform_native") -> dict[str, 
         for ev in evidence:
             sid = ev.get("source_id", "")
             if sid and sid not in seen:
-                seen[sid] = {
-                    "source_id": sid,
-                    "title": ev.get("title", ""),
-                    "year": ev.get("year"),
-                    "canonical_url": ev.get("source_location", ""),
-                    "authority_level": "tier1_paper_doi"
-                    if (ev.get("source_location", "") or "").startswith(("https://doi.org", "https://doi.org/", "http://doi.org"))
-                    else "tier3_professional_institution",
-                    "source_location": ev.get("source_location", ""),
-                }
+                derived = _derive_source_from_evidence(ev)
+                if derived is not None:
+                    seen[sid] = derived
         sources = list(seen.values())
 
     decision = verdict

@@ -343,7 +343,13 @@ def schema_gate(ws: RunWorkspace, stage: str) -> dict[str, Any]:
 
 
 def derive_sources_from_evidence(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Deterministic source registry derived from evidence records (demo/test mode)."""
+    """Deterministic source registry derived from evidence records (demo/test mode).
+
+    Honest fallback (review P1-2): authority comes from a real DOI parsed out
+    of the location, otherwise tier5 + source_metadata_incomplete. Never
+    fabricates a canonical URL from an id.
+    """
+    from build_result import _derive_source_from_evidence
     from retrieval.source import make_source
 
     seen: dict[str, dict[str, Any]] = {}
@@ -352,18 +358,20 @@ def derive_sources_from_evidence(evidence: list[dict[str, Any]]) -> list[dict[st
         if not sid or sid in seen:
             continue
         loc = ev.get("source_location", "") or ""
-        authority = ("tier1_paper_doi" if loc.startswith(("https://doi.org", "http://doi.org"))
-                     else "tier3_professional_institution")
-        seen[sid] = make_source(
-            source_id=sid,
-            title=ev.get("title", sid),
-            canonical_url=loc or f"https://doi.org/{sid}",
-            authority_level=authority,
-            year=ev.get("year"),
-        )
-        if not seen[sid].get("fetch"):
+        if loc:
+            derived = _derive_source_from_evidence(ev)
+            if derived is not None:
+                seen[sid] = make_source(
+                    source_id=sid,
+                    title=ev.get("title", sid),
+                    canonical_url=loc,
+                    authority_level=derived["authority_level"],
+                    year=ev.get("year"),
+                )
+                seen[sid].setdefault("extensions", {})["source_metadata_incomplete"] =                     derived["extensions"]["source_metadata_incomplete"]
+        if not seen.get(sid, {}).get("fetch"):
             # fetchProvenance requires fetch_status; an empty dict is schema-invalid
-            seen[sid].pop("fetch", None)
+            seen.get(sid, {}).pop("fetch", None)
     return list(seen.values())
 
 
