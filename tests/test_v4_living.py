@@ -328,3 +328,25 @@ def test_refresh_missing_subscription(project, decision):
     # well-formed but absent id -> FileNotFoundError
     with pytest.raises(FileNotFoundError, match="subscription not found"):
         refresh(project, "SUB-00000000", new_evidence=[])
+
+
+def test_set_subscription_status_rejects_invalid(project, decision):
+    from engine.living import create_subscription, set_subscription_status
+    sub = create_subscription(project, decision_snapshot_id=decision["decision_snapshot_id"],
+                              query_terms=["retention"])
+    with pytest.raises(ValueError, match="active|paused"):
+        set_subscription_status(project, sub["subscription_id"], "frozen")
+    ok = set_subscription_status(project, sub["subscription_id"], "paused")
+    assert ok["status"] == "paused"
+
+
+def test_refresh_retriever_exception_is_propagated(project, decision):
+    from engine.living import create_subscription, refresh
+    sub = create_subscription(project, decision_snapshot_id=decision["decision_snapshot_id"],
+                              query_terms=["retention"])
+
+    def boom(subscription):
+        raise RuntimeError("retriever backend down")
+
+    with pytest.raises(RuntimeError, match="retriever backend down"):
+        refresh(project, sub["subscription_id"], retriever=boom)

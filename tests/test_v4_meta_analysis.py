@@ -442,3 +442,31 @@ def test_i2_clamped_when_q_below_df_near_homogeneous():
     schema = _json.loads(Path(__file__).resolve().parent.parent.joinpath(
         'schemas/v4/meta-analysis.schema.json').read_text(encoding='utf-8'))
     Validator(schema).validate(full, schema, '$')
+
+
+def test_run_meta_analysis_rejects_unknown_pooling():
+    evidence = [
+        {"evidence_id": "E-1", "study_id": "STU-1", "outcome_id": "OUT-x",
+         "sample_size": 50, "effect_estimate": {"value": 0.5, "raw_text": "d=0.5"}},
+        {"evidence_id": "E-2", "study_id": "STU-2", "outcome_id": "OUT-x",
+         "sample_size": 50, "effect_estimate": {"value": 0.3, "raw_text": "d=0.3"}},
+    ]
+    with pytest.raises(ValueError, match="pooling"):
+        run_meta_analysis(evidence, pooling="bogus")
+
+
+def test_meta_analysis_schema_rejects_tampered_output():
+    evidence = [
+        {"evidence_id": "E-1", "study_id": "STU-1", "outcome_id": "OUT-x",
+         "sample_size": 50, "effect_estimate": {"value": 0.5, "raw_text": "d=0.5"}},
+        {"evidence_id": "E-2", "study_id": "STU-2", "outcome_id": "OUT-x",
+         "sample_size": 50, "effect_estimate": {"value": 0.3, "raw_text": "d=0.3"}},
+    ]
+    full = run_meta_analysis(evidence)
+    full["tampered_field"] = True
+    import json as _json
+    from validate_schema import Validator, SchemaError
+    schema = _json.loads(Path(__file__).resolve().parent.parent.joinpath(
+        'schemas/v4/meta-analysis.schema.json').read_text(encoding='utf-8'))
+    with pytest.raises(SchemaError):
+        Validator(schema).validate(full, schema, '$')

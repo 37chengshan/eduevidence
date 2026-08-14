@@ -24,6 +24,25 @@ PILOT 决策 → 真实数据 → 分析 → 图更新 → 再裁决 → 新决�
 5. **再裁决**：tribunal 基于含试点证据的新修订重新裁决，产出新
    DecisionSnapshot 与机器可读 diff，旧决策保留完整追溯链。
 
+## 二·补 v4 文献订阅与漂移（engine/living.py）
+
+v4 把活证据从"试点数据回填"扩展到"**文献级持续监控**"：
+
+1. **订阅决策**：`eduevidence living subscribe --decision <DEC> --term <检索词>`
+   将某个 DecisionSnapshot 与其检索式绑定（`schemas/v4/living-subscription.schema.json`）。
+2. **增量刷新**：`eduevidence living refresh --subscription <SUB>` 注入新证据
+   （人工/agent 提供 evidence JSONL，或 retriever 适配器对接真实检索层）；
+   新证据按内容 hash 幂等去重后**单次图修订**提交。
+3. **漂移报告**：tribunal 重裁决后产出 `project/living/drift/<DRF>.json`
+   （`schemas/v4/drift-report.schema.json`）：新旧决策 diff + 新证据摘要 +
+   **建议动作 confirmed / changed / needs_review**。引擎**绝不自动改判**——
+   改判必须由人走再裁决门。
+4. **失败可恢复**：若刷新中途失败（图已提交但订阅未记账），重试同一证据
+   会按图内实体幂等跳过并恢复 hash 记账（review P1-1）。
+
+数据流：DecisionSnapshot + 订阅 → 增量证据 → 图 revision n+1 → 漂移报告 →
+人决策（改判/维持/补充检索）。
+
 ## 三、跨项目活证据
 
 - **Shared Research Library**：经核验的外部事实以不可变快照导入，事实可复用、
