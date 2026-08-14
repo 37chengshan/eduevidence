@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v4/living-subscription.schema.json",
+  "title": "LivingEvidenceSubscription",
+  "description": "A living-evidence watch (v4): binds a revision-bound DecisionSnapshot to a question and query terms, so refresh() can fold newly discovered evidence into the graph and emit drift reports. Subscriptions are durable project records under living/subscriptions/.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subscription_id",
+    "decision_snapshot_id",
+    "question",
+    "query_terms",
+    "status",
+    "created_at",
+    "extensions"
+  ],
+  "properties": {
+    "subscription_id": {
+      "type": "string",
+      "pattern": "^SUB-"
+    },
+    "decision_snapshot_id": {
+      "type": "string",
+      "pattern": "^DEC-"
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "query_terms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Refresh state: last_snapshot_id / last_drift_id / last_refreshed_at / from_graph_revision / to_graph_revision / ingested_evidence_hashes."
+    }
+  }
+}

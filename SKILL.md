@@ -107,6 +107,28 @@ needed.
 - **Cross-project synthesis**: `eduevidence synthesize` aggregates the Shared
   Research Library's verified facts into an outcome-level overview.
 
+### 1.4 v4 capabilities (added in 4.0.0)
+
+- **Domain registry (EvidenceCore)**: `eduevidence domain list|select|check`
+  — the 9-step protocol is domain-general; `domains/education` (registered,
+  zero new logic paths) and `domains/policy` (policy analysis: decision_object /
+  intervention / population / stakeholders; 5 outcome tokens; 12-item quality
+  checklist) are the first two domain packages.
+- **Evidence synthesis**: `engine/meta_analysis.py` pools effect sizes
+  (fixed + random effects, I²), `engine/bias.py` runs Egger regression and
+  fail-safe N, `engine/robustness.py` labels decisions robust/fragile via
+  leave-one-study-out.
+- **Living Evidence**: `eduevidence living subscribe|refresh|status` — a
+  DecisionSnapshot subscribes to query terms; new evidence folds into a new
+  graph revision and produces a drift report (confirmed / changed /
+  needs_review); the engine never auto-overturns a decision.
+- **Built-in evidence library + offline preliminary verdict**:
+  `benchmarks/evidence-library.json` (230 entries) supports a conservative
+  preliminary verdict (never ADOPT) when no retrieval capability is available.
+- **LLM judge evaluation**: `eduevidence benchmark-judge run|report` scores
+  benchmark responses on a 5-dimension rubric, reported alongside the
+  heuristic metrics (same-family-model independence limitation disclosed).
+
 ## 2 When to Use
 
 EduEvidence addresses **any education decision that needs evidence** — teaching methods, curriculum, assessment, learning interventions, and AI teaching tools alike: whether to adopt something, how to introduce it, for whom it works, and how to verify its effect. AI tools are one application domain among many; the protocol is education-general. Typical scenarios include (not limited to):

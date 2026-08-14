@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v4/drift-report.schema.json",
+  "title": "DriftReport",
+  "description": "One living-evidence refresh outcome (v4): how the graph revision and adjudication moved between the tracked DecisionSnapshot and the fresh one, which new evidence entered the graph, and a suggested_action for a human reviewer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "drift_id",
+    "subscription_id",
+    "from_revision",
+    "to_revision",
+    "generated_at",
+    "new_evidence_ids",
+    "summary",
+    "suggested_action",
+    "extensions"
+  ],
+  "properties": {
+    "drift_id": {
+      "type": "string",
+      "pattern": "^DRF-"
+    },
+    "subscription_id": {
+      "type": "string",
+      "pattern": "^SUB-"
+    },
+    "from_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "to_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "new_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "suggested_action": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "changed",
+        "needs_review"
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Carries the machine-readable decision_diff plus evidence hashes committed by this refresh."
+    }
+  }
+}

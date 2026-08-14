@@ -1,0 +1,109 @@
+{
+  "domain": "policy",
+  "name_zh": "政策证据质量 12 项清单",
+  "description": "评估一项政策证据（研究/综述）在政策决策意义上的质量。每项 status 枚举：met / partial / missing / not_applicable。配套方法学短文见 domains/policy/references/。",
+  "items": [
+    {
+      "id": "evidence_level",
+      "label_zh": "证据等级",
+      "question_zh": "证据是否来自系统综述、RCT 或高质量准实验？证据等级是否明确标注？",
+      "references": [
+        "evidence-hierarchy.md"
+      ]
+    },
+    {
+      "id": "causal_identification",
+      "label_zh": "因果识别",
+      "question_zh": "是否明确识别因果效应而非仅相关？识别策略（RCT/自然实验/DID/断点/IV）是否可信？",
+      "references": [
+        "causal-identification.md"
+      ]
+    },
+    {
+      "id": "external_validity",
+      "label_zh": "外部效度",
+      "question_zh": "结果能否推广到目标辖区与人群？情境差异（制度/文化/时间）是否被讨论？",
+      "references": [
+        "evidence-hierarchy.md"
+      ]
+    },
+    {
+      "id": "cost_evidence",
+      "label_zh": "成本证据",
+      "question_zh": "是否报告政策成本（财政/实施/机会成本）？是否有成本-效果或成本-收益分析？",
+      "references": [
+        "cost-evidence.md"
+      ]
+    },
+    {
+      "id": "stakeholder_representation",
+      "label_zh": "利益相关者代表",
+      "question_zh": "受益者、受损者与实施者的观点是否被代表，而非仅决策者视角？",
+      "references": [
+        "equity.md"
+      ]
+    },
+    {
+      "id": "implementation_evidence",
+      "label_zh": "实施证据",
+      "question_zh": "是否包含实施过程证据（保真度/覆盖率/实施能力/抵制）？",
+      "references": [
+        "implementation-evidence.md"
+      ]
+    },
+    {
+      "id": "equity_analysis",
+      "label_zh": "公平性分析",
+      "question_zh": "政策对不同群体的分布效应是否被分析（含弱势群体）？",
+      "references": [
+        "equity.md"
+      ]
+    },
+    {
+      "id": "effect_size_reported",
+      "label_zh": "效应量报告",
+      "question_zh": "是否报告效应量与置信区间，而非仅报告统计显著性？",
+      "references": [
+        "causal-identification.md"
+      ]
+    },
+    {
+      "id": "uncertainty_quantified",
+      "label_zh": "不确定性量化",
+      "question_zh": "不确定性是否被量化（敏感性分析/置信区间/情景）？",
+      "references": [
+        "cost-evidence.md"
+      ]
+    },
+    {
+      "id": "comparator_clarity",
+      "label_zh": "对照与反事实清晰",
+      "question_zh": "对照组/反事实是否明确（政策前后、无政策地区）？",
+      "references": [
+        "causal-identification.md"
+      ]
+    },
+    {
+      "id": "publication_bias_risk",
+      "label_zh": "发表偏倚风险",
+      "question_zh": "是否考虑发表偏倚与选择性报告？",
+      "references": [
+        "evidence-hierarchy.md"
+      ]
+    },
+    {
+      "id": "generalizability_claims",
+      "label_zh": "可推广性声明",
+      "question_zh": "结论外推的边界是否如实声明（不夸大适用范围）？",
+      "references": [
+        "implementation-evidence.md"
+      ]
+    }
+  ],
+  "statuses": [
+    "met",
+    "partial",
+    "missing",
+    "not_applicable"
+  ]
+}

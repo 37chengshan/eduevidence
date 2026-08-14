@@ -299,6 +299,9 @@ EduEvidence/  (= one Skill package)
 │  ├─ references/            11 education methodology documents (evidence quality / skeptic /
 │  │                         tribunal policy / intervention design…)
 │  ├─ schemas/               V1 + v2/v3 contracts (13 top-level + 17 v2 + v3 pilot/synthesis/run-manifest)
+│  ├─ domains/               v4 domain registry (manifest.json) + per-domain packages
+│  │                         (education: registration-only; policy: frame schema /
+│  │                         outcome taxonomy / methodology checklist / references)
 │  ├─ scripts/               deterministic logic scripts (scoring / matrix / audit /
 │  │                         confidence / orchestrator / startup probe / V2 CLI)
 │  ├─ retrieval/             Search & fetch layer (fetch / validate / dedupe / failures)
@@ -319,6 +322,30 @@ EduEvidence/  (= one Skill package)
 ```
 
 > Skill-package principle: the **minimal runtime set is `SKILL.md + engine/ + skill/ + references/ + schemas/ + scripts/`**; `retrieval/`, `integrations/`, `visualization/` are the execution/presentation layers that make the Skill actually runnable; `tests/`, `benchmarks/`, `examples/`, `docs/` provide credibility and onboarding — none of them affect the Skill body itself.
+
+### v4 Domain Registry (EvidenceCore)
+
+The first step of the **EvidenceCore** abstraction: a `domains/` registry
+(`domains/manifest.json`) plus per-domain packages, consumed by
+`engine/evidencecore.py` (`list_domains()` / `load_domain()` /
+`validate_frame()`).
+
+- **education** is a **registration-only domain**: it points at the existing
+  contracts — `schemas/education-frame.schema.json` (frame),
+  the 20-token outcome taxonomy from `schemas/evidence.schema.json` (four
+  categories per `engine/pilot.py` `_OUTCOME_CATEGORY`), the 15-item
+  methodology checklist from `skill/agents/method-reviewer.md`,
+  `benchmarks/annotations` (golds) and `references/`. It **adds no new logic
+  path** — no new schema, no new validator, no new methodology.
+- **policy** is the first self-contained domain: its own frame schema
+  (`decision_object` / `intervention` / `population` / `stakeholders` /
+  `outcomes` / `context` / `scope` — deliberately **not** education's
+  `learner` / `course`), a 5-token policy outcome taxonomy, a 12-item policy
+  evidence-quality checklist and 5 methodology notes in
+  `domains/policy/references/`.
+- **Domain select is handled by the main agent via CLI** — the engine layer
+  never picks a domain itself; `load_domain(domain_id)` only validates that
+  the requested domain's contracts exist.
 
 ### SCP / Platform Native Mode
 

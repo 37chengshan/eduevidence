@@ -804,6 +804,75 @@ def main_gate(argv: list[str] | None = None) -> int:
 
 
 
+
+# ---- V4 command handlers -----------------------------------------------
+
+def _cmd_domain(args) -> int:
+    from engine.evidencecore import list_domains, load_domain
+    if args.action == "list":
+        for d in list_domains():
+            print(d["id"], "|", d["description"][:80])
+        return 0
+    if args.action == "select":
+        domain = load_domain(args.domain)
+        print(f"selected domain: {domain['id']} (frame_schema={domain['frame_schema']})")
+        return 0
+    if args.action == "check":
+        domain = load_domain(args.domain)
+        from engine.contracts import load_schema
+        try:
+            import json as _json
+            _json.load(open(domain['frame_schema']))
+            print(f"domain {domain['id']}: contracts OK (frame schema loads)")
+            return 0
+        except Exception as exc:
+            print(f"ERROR: domain {domain['id']} contract broken: {exc}", file=sys.stderr)
+            return 1
+    return 2
+
+def _cmd_living(args) -> int:
+    from engine.project import ProjectWorkspace
+    from engine.living import create_subscription, refresh, set_subscription_status
+    home = _home(args)
+    ws = ProjectWorkspace.open(home, args.project)
+    if args.action == "subscribe":
+        sub = create_subscription(
+            ws, decision_snapshot_id=args.decision,
+            query_terms=args.term or [])
+        print(sub["subscription_id"])
+        return 0
+    if args.action == "refresh":
+        result = refresh(
+            ws, args.subscription,
+            new_evidence=args.evidence_file and [dict(json.loads(l)) for l in open(args.evidence_file) if l.strip()] or None,
+            retriever=None)
+        drift = result["drift"]
+        print(f"drift {drift['drift_id']}: rev {drift['from_revision']}->{drift['to_revision']} | "
+              f"suggested_action={drift['suggested_action']}")
+        print(drift.get("summary", ""))
+        return 0
+    if args.action == "status":
+        from pathlib import Path as _P
+        import json as _json
+        p = ws.path / "living" / "subscriptions" / f"{args.subscription}.json"
+        if not p.is_file():
+            print(f"ERROR: subscription not found: {args.subscription}", file=sys.stderr)
+            return 2
+        sub = _json.loads(p.read_text(encoding="utf-8"))
+        print(f"{sub['subscription_id']} | status={sub['status']} | "
+              f"decision={sub['decision_snapshot_id']} | terms={sub['query_terms']}")
+        return 0
+    return 2
+
+def _cmd_benchmark_judge(args) -> int:
+    import benchmark_judge as bj
+    if args.action == "run":
+        return bj.main(["run", "--run", args.run, "--out", args.out, "--limit", str(args.limit)])
+    if args.action == "report":
+        return bj.main(["report", "--out", args.out])
+    return 2
+
+
 # ---- V3 command handlers -----------------------------------------------
 
 def _cmd_pilot(args) -> int:
@@ -1207,6 +1276,30 @@ def main(argv: list[str] | None = None) -> int:
     p_bench.add_argument("--annotations", default="benchmarks/annotations")
     p_bench.add_argument("--report", default="benchmarks/empirical/v3-report.md")
     p_bench.set_defaults(func=_cmd_benchmark)
+
+
+    p_domain = sub.add_parser("domain", help="V4 domain registry (EvidenceCore)")
+    p_domain.add_argument("action", choices=["list", "select", "check"])
+    p_domain.add_argument("--domain", default=None, help="domain id (select/check)")
+    p_domain.set_defaults(func=_cmd_domain)
+
+    p_living = sub.add_parser("living", help="V4 Living Evidence (subscribe/refresh/status)")
+    p_living.add_argument("action", choices=["subscribe", "refresh", "status"])
+    p_living.add_argument("--project", required=True)
+    p_living.add_argument("--decision", default=None, help="decision snapshot id (subscribe)")
+    p_living.add_argument("--term", action="append", default=[], help="query term (subscribe)")
+    p_living.add_argument("--subscription", default=None, help="subscription id (refresh/status)")
+    p_living.add_argument("--evidence-file", default=None, type=Path, help="new evidence JSONL (refresh)")
+    p_living.add_argument("--home", default=None)
+    p_living.set_defaults(func=_cmd_living)
+
+    p_judge = sub.add_parser("benchmark-judge", help="V4 LLM judge evaluation")
+    p_judge.add_argument("action", choices=["run", "report"])
+    p_judge.add_argument("--run", default="benchmarks/empirical/run-empirical-01")
+    p_judge.add_argument("--out", default="benchmarks/empirical/judge-evaluation.json")
+    p_judge.add_argument("--report", default="benchmarks/empirical/judge-report.md")
+    p_judge.add_argument("--limit", type=int, default=60)
+    p_judge.set_defaults(func=_cmd_benchmark_judge)
 
     p_migrate = sub.add_parser("migrate-v1", help="import a V1 pack into a V2 project")
     p_migrate.add_argument("--pack", required=True, type=Path)

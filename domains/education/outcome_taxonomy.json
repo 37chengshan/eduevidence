@@ -1,0 +1,127 @@
+{
+  "domain": "education",
+  "source": {
+    "tokens": "schemas/evidence.schema.json -> outcome_type enum（20 token）",
+    "categories": "engine/pilot.py -> _OUTCOME_CATEGORY（learning/task_performance/process/risk 四类）"
+  },
+  "categories": {
+    "learning": {
+      "name_zh": "学习效果",
+      "description_zh": "指向学习本身的持久改变：知识、理解、保持与迁移。任务完成表现不能自动等价为学习效果。"
+    },
+    "task_performance": {
+      "name_zh": "任务表现",
+      "description_zh": "任务完成的质量与效率（完成时间/准确率/代码质量/作业成绩），不等于学习效果。"
+    },
+    "process": {
+      "name_zh": "学习过程",
+      "description_zh": "过程性变量：参与、动机、认知负荷、求助行为与元认知。"
+    },
+    "risk": {
+      "name_zh": "风险",
+      "description_zh": "干预（如 AI 工具）可能带来的风险与负面结果：依赖、过度依赖、努力减少、迁移受损、诚信风险、虚假信心。"
+    }
+  },
+  "tokens": [
+    {
+      "id": "knowledge_gain",
+      "category": "learning",
+      "description_zh": "知识获得：知识量的增加（测验得分提升）"
+    },
+    {
+      "id": "concept_understanding",
+      "category": "learning",
+      "description_zh": "概念理解：对核心概念的深层理解"
+    },
+    {
+      "id": "retention",
+      "category": "learning",
+      "description_zh": "保持：延迟测试后仍能保持所学"
+    },
+    {
+      "id": "transfer",
+      "category": "learning",
+      "description_zh": "迁移：迁移到新情境/新问题"
+    },
+    {
+      "id": "independent_problem_solving",
+      "category": "learning",
+      "description_zh": "独立解题：无支持下独立解决问题"
+    },
+    {
+      "id": "completion_time",
+      "category": "task_performance",
+      "description_zh": "完成时间：任务完成速度"
+    },
+    {
+      "id": "accuracy",
+      "category": "task_performance",
+      "description_zh": "准确率：任务完成正确率"
+    },
+    {
+      "id": "code_quality",
+      "category": "task_performance",
+      "description_zh": "代码质量：代码可读性/结构/缺陷密度"
+    },
+    {
+      "id": "assignment_score",
+      "category": "task_performance",
+      "description_zh": "作业成绩：作业/测验得分"
+    },
+    {
+      "id": "engagement",
+      "category": "process",
+      "description_zh": "参与度：课堂/任务参与程度"
+    },
+    {
+      "id": "motivation",
+      "category": "process",
+      "description_zh": "动机：学习动机与自我效能"
+    },
+    {
+      "id": "cognitive_load",
+      "category": "process",
+      "description_zh": "认知负荷：任务过程中的认知负荷体验"
+    },
+    {
+      "id": "help_seeking",
+      "category": "process",
+      "description_zh": "求助行为：求助模式（对 AI/教师/同伴）"
+    },
+    {
+      "id": "metacognition",
+      "category": "process",
+      "description_zh": "元认知：元认知监控与学习策略"
+    },
+    {
+      "id": "ai_dependency",
+      "category": "risk",
+      "description_zh": "AI 依赖：对 AI 工具的依赖程度"
+    },
+    {
+      "id": "over_reliance",
+      "category": "risk",
+      "description_zh": "过度依赖：过度依赖 AI 完成任务"
+    },
+    {
+      "id": "reduced_effort",
+      "category": "risk",
+      "description_zh": "努力减少：学习投入/努力下降"
+    },
+    {
+      "id": "reduced_transfer",
+      "category": "risk",
+      "description_zh": "迁移受损：迁移能力受损"
+    },
+    {
+      "id": "academic_integrity_risk",
+      "category": "risk",
+      "description_zh": "学术诚信风险：抄袭/作弊等诚信风险"
+    },
+    {
+      "id": "false_confidence",
+      "category": "risk",
+      "description_zh": "虚假信心：未掌握却过度自信"
+    }
+  ]
+}

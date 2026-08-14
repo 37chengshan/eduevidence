@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/domains/policy/frame.schema.json",
+  "title": "PolicyAnalysisFrame",
+  "description": "Structured framing of a policy analysis question (v4 policy domain). 政策分析框架：decision_object / intervention / population / stakeholders / outcomes / context / scope。刻意不使用 education-frame 的 learner/course 概念。扩展字段一律放在 extensions 内。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "question",
+    "decision_object",
+    "intervention",
+    "population",
+    "outcomes"
+  ],
+  "properties": {
+    "question": {
+      "type": "string",
+      "minLength": 5,
+      "description": "政策分析问题，如 '是否应在公立高中全面推行无手机课堂政策？'"
+    },
+    "decision_object": {
+      "type": "string",
+      "enum": [
+        "adopt",
+        "modify",
+        "terminate",
+        "maintain",
+        "evaluate_impact"
+      ],
+      "description": "待决策的政策对象与动作：采纳 / 修改 / 终止 / 维持 / 评估影响。"
+    },
+    "intervention": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "待评估的政策干预本身（不是教学干预）。",
+      "properties": {
+        "policy_name": {
+          "type": "string",
+          "examples": [
+            "classroom_phone_ban"
+          ]
+        },
+        "policy_type": {
+          "type": "string",
+          "enum": [
+            "regulation",
+            "subsidy",
+            "tax_incentive",
+            "mandate",
+            "information_campaign",
+            "nudge",
+            "institutional_reform",
+            "other"
+          ]
+        },
+        "jurisdiction": {
+          "type": "string",
+          "examples": [
+            "public_high_schools",
+            "province_scope"
+          ]
+        },
+        "mechanism": {
+          "type": "string",
+          "description": "政策的作用机制/传导路径。"
+        },
+        "duration": {
+          "type": "string",
+          "examples": [
+            "3_years"
+          ]
+        },
+        "intensity": {
+          "type": "string",
+          "examples": [
+            "full_prohibition",
+            "partial"
+          ]
+        }
+      }
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "政策针对的人群（不是 'learner' 学习者概念）。",
+      "properties": {
+        "target_group": {
+          "type": "string",
+          "examples": [
+            "public_high_school_students"
+          ]
+        },
+        "excluded_groups": {
+          "type": "string"
+        },
+        "scale": {
+          "type": "string",
+          "examples": [
+            "district_wide",
+            "national"
+          ]
+        }
+      }
+    },
+    "stakeholders": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "利益相关者：决策者、受益者、受影响方、实施者。",
+      "properties": {
+        "decision_maker": {
+          "type": "string",
+          "examples": [
+            "school_board",
+            "education_bureau"
+          ]
+        },
+        "beneficiaries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "affected_parties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "implementers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "政策结果（policy outcome taxonomy 五类）。",
+      "properties": {
+        "primary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "policy_effectiveness",
+              "cost_effectiveness",
+              "equity",
+              "feasibility",
+              "implementation_risk"
+            ]
+          }
+        },
+        "secondary": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "政策情境：制度环境、历史沿革、政治条件。",
+      "properties": {
+        "policy_environment": {
+          "type": "string",
+          "examples": [
+            "provincial_education_budget_constraint"
+          ]
+        },
+        "prior_policy_history": {
+          "type": "string"
+        },
+        "political_conditions": {
+          "type": "string"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "证据检索范围：时间窗、地理、证据类型。",
+      "properties": {
+        "time_range": {
+          "type": "string",
+          "examples": [
+            "2015-2025"
+          ]
+        },
+        "geography": {
+          "type": "string",
+          "examples": [
+            "CN",
+            "worldwide"
+          ]
+        },
+        "evidence_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "comparison": {
+      "type": "string",
+      "description": "对照/反事实条件，如 '无政策地区'、'政策实施前'。"
+    },
+    "inclusion_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exclusion_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "success_condition": {
+      "type": "string",
+      "description": "什么算这项决策的成功结果。"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "结构化扩展字段的统一容器。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
+      "additionalProperties": true
+    }
+  }
+}

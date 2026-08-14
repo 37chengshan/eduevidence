@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/v4/meta-analysis.schema.json",
+  "title": "MetaAnalysisV4",
+  "description": "v4 quantitative evidence synthesis (meta-analysis) contract: fixed/random effect-size pooling with heterogeneity statistics (Q, I2, tau2), publication-bias diagnostics (Egger regression, Rosenthal fail-safe N), leave-one-out robustness and a final robust/fragile label. Produced by engine/meta_analysis.run_meta_analysis; interpretive output only, never rewrites library state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta_analysis_id", "outcome_id", "generated_at", "k",
+    "pooled_fixed", "pooled_random", "Q", "df", "I2", "tau2",
+    "egger", "fail_safe_n", "leave_one_out", "label", "studies"
+  ],
+  "properties": {
+    "meta_analysis_id": { "type": "string", "pattern": "^MA-" },
+    "outcome_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "k": { "type": "integer", "minimum": 0 },
+    "pooled_fixed": { "$ref": "#/definitions/pooled" },
+    "pooled_random": { "$ref": "#/definitions/pooled" },
+    "Q": { "type": "number", "minimum": 0 },
+    "df": { "type": "integer", "minimum": 0 },
+    "I2": { "type": "number", "minimum": 0, "maximum": 100 },
+    "tau2": { "type": "number", "minimum": 0 },
+    "egger": { "$ref": "#/definitions/egger" },
+    "fail_safe_n": { "$ref": "#/definitions/fail_safe_n" },
+    "leave_one_out": { "$ref": "#/definitions/leave_one_out" },
+    "label": { "type": "string", "enum": ["robust", "fragile"] },
+    "studies": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/study_row" }
+    },
+    "not_extractable": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/not_extractable_row" }
+    }
+  },
+  "definitions": {
+    "pooled": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "k", "d", "se", "ci_low", "ci_high", "z", "p_value"],
+      "properties": {
+        "method": { "type": "string", "enum": ["fixed_effect", "random_effect"] },
+        "k": { "type": "integer", "minimum": 0 },
+        "d": { "type": "number" },
+        "se": { "type": "number", "minimum": 0 },
+        "ci_low": { "type": "number" },
+        "ci_high": { "type": "number" },
+        "z": { "type": "number" },
+        "p_value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "weights": { "type": "array", "items": { "type": "number" } },
+        "sum_w": { "type": "number", "minimum": 0 },
+        "tau2": { "type": "number", "minimum": 0 },
+        "Q": { "type": "number", "minimum": 0 },
+        "df": { "type": "integer", "minimum": 0 },
+        "I2": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "study_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["study_id", "outcome_id", "d", "se", "n"],
+      "properties": {
+        "study_id": { "type": "string", "minLength": 1 },
+        "outcome_id": { "type": "string", "minLength": 1 },
+        "d": { "type": "number" },
+        "se": { "type": "number", "minimum": 0 },
+        "n": { "type": ["integer", "null"], "minimum": 0 },
+        "not_extractable": { "type": "boolean" },
+        "reason": { "type": ["string", "null"] }
+      }
+    },
+    "not_extractable_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["study_id", "outcome_id", "d", "se", "n", "not_extractable", "reason"],
+      "properties": {
+        "study_id": { "type": "string", "minLength": 1 },
+        "outcome_id": { "type": "string", "minLength": 1 },
+        "d": { "type": ["number", "null"] },
+        "se": { "type": ["number", "null"] },
+        "n": { "type": ["integer", "null"], "minimum": 0 },
+        "not_extractable": { "type": "boolean", "const": true },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "egger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applicable"],
+      "properties": {
+        "applicable": { "type": "boolean" },
+        "reason": { "type": "string" },
+        "k": { "type": "integer", "minimum": 0 },
+        "intercept": { "type": "number" },
+        "se_intercept": { "type": "number", "minimum": 0 },
+        "slope": { "type": "number" },
+        "t": { "type": "number" },
+        "p_value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "significant": { "type": "boolean" },
+        "bias_detected": { "type": "boolean" }
+      }
+    },
+    "fail_safe_n": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "k", "sum_z", "n_fail_safe", "tolerates_5"],
+      "properties": {
+        "method": { "type": "string", "enum": ["rosenthal"] },
+        "k": { "type": "integer", "minimum": 0 },
+        "sum_z": { "type": "number" },
+        "z_crit": { "type": "number", "minimum": 0 },
+        "z_crit_squared": { "type": "number", "minimum": 0 },
+        "n_fail_safe": { "type": "number", "minimum": 0 },
+        "tolerates_5": { "type": "boolean" }
+      }
+    },
+    "leave_one_out": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method", "k", "full_pooled", "iterations",
+        "n_direction_flips", "n_ci_crossings", "n_decision_changes"
+      ],
+      "properties": {
+        "method": { "type": "string", "enum": ["leave_one_out"] },
+        "k": { "type": "integer", "minimum": 0 },
+        "full_pooled": { "$ref": "#/definitions/pooled" },
+        "iterations": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/loo_iteration" }
+        },
+        "n_direction_flips": { "type": "integer", "minimum": 0 },
+        "n_ci_crossings": { "type": "integer", "minimum": 0 },
+        "n_decision_changes": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "loo_iteration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["removed_study_id", "pooled", "direction_flip", "ci_crosses_zero", "decision_changed"],
+      "properties": {
+        "removed_study_id": { "type": "string", "minLength": 1 },
+        "removed_index": { "type": "integer", "minimum": 0 },
+        "pooled": { "$ref": "#/definitions/pooled" },
+        "direction_flip": { "type": "boolean" },
+        "ci_crosses_zero": { "type": "boolean" },
+        "decision_changed": { "type": "boolean" }
+      }
+    }
+  }
+}

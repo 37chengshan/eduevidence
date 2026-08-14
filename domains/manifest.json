@@ -1,0 +1,26 @@
+{
+  "version": "4.0.0-dev",
+  "description": "EduEvidence v4 领域注册表（EvidenceCore 抽象第一步）。每个条目声明一个领域的契约：frame_schema（框架 schema）、outcome_taxonomy（结果分类）、methodology_checklist（方法学清单）、golds_dir（金标目录）与 references_dir（参考文献目录）。education 为“指向现有契约”的注册域，不新增任何逻辑路径；policy 为 v4 首个自带契约的独立领域。domain select（领域选择）由主 agent 接 CLI 完成，引擎层不自行选择领域。",
+  "domains": [
+    {
+      "id": "education",
+      "name": "education",
+      "description": "教育研究领域（注册域，零逻辑路径）：框架复用 schemas/education-frame.schema.json（EducationResearchFrame），结果分类复用 evidence.schema.json 的 20 个 outcome_type token 并按 engine/pilot.py _OUTCOME_CATEGORY 归为四类，方法学清单复用 skill/agents/method-reviewer.md 的 15 项审查清单。",
+      "frame_schema": "schemas/education-frame.schema.json",
+      "outcome_taxonomy": "domains/education/outcome_taxonomy.json",
+      "methodology_checklist": "domains/education/manifest.json#/methodology_checklist",
+      "golds_dir": "benchmarks/annotations",
+      "references_dir": "references"
+    },
+    {
+      "id": "policy",
+      "name": "policy",
+      "description": "政策分析领域（v4 首个自带契约的独立领域）：政策分析框架（decision_object/intervention/population/stakeholders/outcomes/context/scope，不含 education-frame 的 learner/course 概念）、5 类政策结果分类（policy_effectiveness/cost_effectiveness/equity/feasibility/implementation_risk）与 12 项政策证据质量清单。",
+      "frame_schema": "domains/policy/frame.schema.json",
+      "outcome_taxonomy": "domains/policy/outcome_taxonomy.json",
+      "methodology_checklist": "domains/policy/methodology_checklist.json",
+      "golds_dir": null,
+      "references_dir": "domains/policy/references"
+    }
+  ]
+}

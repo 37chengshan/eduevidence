@@ -1,0 +1,10 @@
+{
+  "domain": "policy",
+  "name": "policy（政策分析）",
+  "description": "政策分析领域（v4 首个自带契约的独立领域）。政策分析框架关注 decision_object/intervention/population/stakeholders/outcomes/context/scope，刻意不使用 education-frame 的 learner/course 概念。结果分类 5 类、方法学清单 12 项，配套 5 篇政策证据方法学短文（domains/policy/references/）。",
+  "frame_schema": "domains/policy/frame.schema.json",
+  "outcome_taxonomy": "domains/policy/outcome_taxonomy.json",
+  "methodology_checklist": "domains/policy/methodology_checklist.json",
+  "golds_dir": null,
+  "references_dir": "domains/policy/references"
+}

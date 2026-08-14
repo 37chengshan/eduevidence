@@ -1,0 +1,53 @@
+{
+  "domain": "policy",
+  "source": "v4 policy domain 自建契约（domains/policy/outcome_taxonomy.json）",
+  "categories": {
+    "effectiveness": {
+      "name_zh": "效果",
+      "description_zh": "政策效果类结果。"
+    },
+    "cost": {
+      "name_zh": "成本",
+      "description_zh": "成本与资源配置类结果。"
+    },
+    "equity": {
+      "name_zh": "公平",
+      "description_zh": "公平与分配类结果。"
+    },
+    "feasibility": {
+      "name_zh": "可行性",
+      "description_zh": "实施可行性类结果。"
+    },
+    "risk": {
+      "name_zh": "风险",
+      "description_zh": "实施与执行风险类结果。"
+    }
+  },
+  "tokens": [
+    {
+      "id": "policy_effectiveness",
+      "category": "effectiveness",
+      "description_zh": "政策有效性：政策在真实情境中实现既定目标的因果效果（直接效果与净效果）。"
+    },
+    {
+      "id": "cost_effectiveness",
+      "category": "cost",
+      "description_zh": "成本效益：单位财政/资源投入所实现的效果（成本-效果分析、成本-收益分析）。"
+    },
+    {
+      "id": "equity",
+      "category": "equity",
+      "description_zh": "公平性：政策收益与成本在不同群体间的分配，尤其弱势群体是否受益或受损。"
+    },
+    {
+      "id": "feasibility",
+      "category": "feasibility",
+      "description_zh": "可行性：在给定制度、资源与政治约束下政策可实施的程度。"
+    },
+    {
+      "id": "implementation_risk",
+      "category": "risk",
+      "description_zh": "实施风险：政策落地过程中的执行风险（抵制、腐败、能力缺口、意外后果）。"
+    }
+  ]
+}

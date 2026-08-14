@@ -1,0 +1,183 @@
+{
+  "domain": "education",
+  "name": "education（教育研究）",
+  "description": "education 域只是“指向现有契约”的注册：不新增任何逻辑路径，不引入新 schema / 新校验器 / 新方法学。引擎层 load_domain('education') 只做契约存在性校验；领域选择由主 agent 接 CLI 完成。",
+  "contracts_source": {
+    "frame_schema": "schemas/education-frame.schema.json（EducationResearchFrame，顶层 additionalProperties:false，required: question/decision_target）",
+    "outcome_taxonomy": "20 token 取自 schemas/evidence.schema.json 的 outcome_type enum；四类映射参考 engine/pilot.py _OUTCOME_CATEGORY",
+    "methodology_checklist": "15 项取自 skill/agents/method-reviewer.md；每项 status 枚举 met/partial/missing/not_applicable",
+    "golds_dir": "benchmarks/annotations（30 条人工金标 gold-Q*.json）",
+    "references_dir": "references（11 篇教育证据方法学文档）"
+  },
+  "frame_schema": "schemas/education-frame.schema.json",
+  "outcome_taxonomy": "domains/education/outcome_taxonomy.json",
+  "methodology_checklist": [
+    {
+      "id": "control_group",
+      "label_zh": "有无对照",
+      "description_zh": "是否设置对照/控制条件",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "randomization",
+      "label_zh": "是否随机",
+      "description_zh": "被试/班级是否随机分配",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "pre_test",
+      "label_zh": "有无前测",
+      "description_zh": "是否测量干预前基线",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "post_test",
+      "label_zh": "有无后测",
+      "description_zh": "是否测量干预后即时结果",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "retention_test",
+      "label_zh": "有无延迟/保持测试",
+      "description_zh": "是否有延迟保持测量",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "transfer_test",
+      "label_zh": "有无迁移测试",
+      "description_zh": "是否有迁移/新情境测量",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "sample_bias",
+      "label_zh": "样本偏差",
+      "description_zh": "样本是否具有代表性/存在偏差",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "self_selection",
+      "label_zh": "自选择",
+      "description_zh": "被试是否自选进入条件组",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "measurement_validity",
+      "label_zh": "测量效度",
+      "description_zh": "测量工具是否有效测量目标构念",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "confounders",
+      "label_zh": "混杂变量",
+      "description_zh": "是否识别并控制混杂变量",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "instructor_effect",
+      "label_zh": "教师效应",
+      "description_zh": "教师/授课者差异是否被控制",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "novelty_effect",
+      "label_zh": "新奇效应",
+      "description_zh": "干预新奇性是否影响结果",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "tool_version_effect",
+      "label_zh": "工具版本效应",
+      "description_zh": "AI 工具版本/配置是否明确固定",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "ai_usage_policy",
+      "label_zh": "AI 使用规则是否明确",
+      "description_zh": "AI 使用边界是否在研究中明确定义",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    {
+      "id": "dropout",
+      "label_zh": "流失率",
+      "description_zh": "流失率是否报告并处理",
+      "statuses": [
+        "met",
+        "partial",
+        "missing",
+        "not_applicable"
+      ]
+    }
+  ],
+  "golds_dir": "benchmarks/annotations",
+  "references_dir": "references"
+}
