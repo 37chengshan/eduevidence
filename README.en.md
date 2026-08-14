@@ -238,7 +238,7 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 
 核心指标：Citation Support Precision / Unsupported Claim Rate / Contradiction Discovery Rate / Outcome Separation Accuracy / Scope Calibration / Intervention Evidence Alignment。详见 `docs/benchmark.md`。
 
-> ⚠️ 当前 `benchmarks/results/` 为 **harness validation（deterministic simulation）**，仅证明评测框架可运行，不是真实模型性能。真实 B2 vs B3 实证运行结果上线前不会用于效果宣称。
+> ⚠️ `benchmarks/results/` 仍为 **harness validation（deterministic simulation，标注 SIMULATED）**，仅证明评测框架可运行，不是真实模型性能。**首轮 Layer B 实证运行已启动**（B2 vs B3，10 题 × 3 次，`omp` 驱动 `deepseek-v4-flash`——见 `benchmarks/empirical/run-empirical-01`，报告见 `benchmarks/empirical/v3-report.md`）。指标为 gold-based 启发式（`method: heuristic`），结果仍受模型与题目集限制，运行结果复核前不作定论性效果宣称。
 
 ## Example: AI Coding Assistant
 
@@ -397,7 +397,7 @@ pytest
 
 **待做（尚未完成，不做已完成宣称）：**
 
-- [ ] **Empirical Benchmark** —— B2 vs B3（方法论价值）与 B3 vs B4（Agent MCP 价值）的真实模型运行，含重复运行、方差报告与 gold annotation / 独立评审计分（见 `docs/benchmark.md`）。
+- [ ] **Empirical Benchmark** —— 首轮已启动（B2 vs B3，10 题 × 3 次，`omp` / `deepseek-v4-flash`，→ `benchmarks/empirical/v3-report.md`）；30 题全覆盖、**B3 vs B4**、重复运行、方差报告与 gold annotation / 独立评审计分仍在计划中（见 `docs/benchmark.md`）。
 - [ ] **HTML 可访问性** —— 语言切换同步 `<html lang>`、theme/lang 按钮 `aria-pressed`、表格筛选控件 label、SVG 图双语 title/desc、source link 安全 scheme 白名单。
 - [ ] **纵向决策闭环** —— 打通 **PILOT → 真实数据 → 再裁决**：试点结果回填项目证据图，产出更新后的决策（Full Research Cycle 端到端真实数据跑通）。
 

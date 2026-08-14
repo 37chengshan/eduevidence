@@ -15,6 +15,24 @@ Benchmark 分两层，**只有第二层可作为性能证据**：
 
 **指标升级要求（gold-based）**：Citation Support 由独立标注判断 Claim 与 Source excerpt 是否一致；Outcome Separation Accuracy 对照 gold outcome 而非只查枚举；Scope Calibration 对照 gold allowed_scope；Contradiction Discovery 同时报告 precision 与 recall。
 
+### 2.0 实证执行现状（Layer B，v3.0.0）
+
+- **首轮实证运行已启动**：`benchmarks/empirical/run-empirical-01/`（driver=`cli`（omp）、model=`deepseek-v4-flash`），运行 **B2 vs B3**，10 题 × 3 次（`--ids` 指定题目子集）；产物含 run manifest（`manifest.json`，契约 `schemas/v3/run-manifest.schema.json`，`run_mode=empirical`）、逐次 `*.response.json`、`evaluation.json` 与 `v3-report.md`。
+- **指标为 gold-based 启发式**：由 `scripts/benchmark_v3.py` + `scripts/benchmark_evaluator.py` 对照 `benchmarks/annotations/gold-*.json` 自动计算（Outcome Separation 用 Jaccard、Contradiction 用 token-overlap recall/precision、Citation Support 用来源提及 recall 等），每条指标标注 `method: heuristic`，均值按 95% CI 报告。启发式匹配存在噪声，结果仅作方向性参考；独立 judge / 人工复核属后续工作，报告不得作过度宣称。
+- **Rerun 命令**：
+
+```bash
+python3 scripts/benchmark_v3.py run \
+    --baselines B2_standard_agent,B3_eduevidence_single \
+    --questions benchmarks/questions.jsonl \
+    --ids Q01,Q02,Q03,Q04,Q05,Q06,Q07,Q08,Q09,Q10 \
+    --repeats 3 --driver cli \
+    --out benchmarks/empirical/run-empirical-01
+python3 scripts/benchmark_v3.py eval --run benchmarks/empirical/run-empirical-01
+python3 scripts/benchmark_v3.py report --run benchmarks/empirical/run-empirical-01 \
+    --out benchmarks/empirical/v3-report.md
+```
+
 
 ## 一、评测题目集（第一版 30 题）
 

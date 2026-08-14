@@ -244,7 +244,7 @@ B4 EduEvidence + Agent MCP      ← demonstrates the value of multi-agent enhanc
 
 Key metrics: Citation Support Precision / Unsupported Claim Rate / Contradiction Discovery Rate / Outcome Separation Accuracy / Scope Calibration / Intervention Evidence Alignment. See `docs/benchmark.md`.
 
-> ⚠️ `benchmarks/results/` is currently **harness validation (deterministic simulation)** — it proves the evaluation framework runs, not real model performance. No effectiveness claims will be made until real B2 vs B3 empirical runs are published.
+> ⚠️ `benchmarks/results/` is **harness validation (deterministic simulation, marked SIMULATED)** — it proves the evaluation framework runs, not real model performance. The **first round of Layer B empirical runs has been launched** (B2 vs B3, 10 questions × 3 repeats, `omp` driver with `deepseek-v4-flash` — see `benchmarks/empirical/run-empirical-01`, report at `benchmarks/empirical/v3-report.md`). Metrics are gold-based heuristics (`method: heuristic`); results remain limited by the model and question set, so no definitive effectiveness claim is made until the runs are reviewed.
 
 ## Example: AI Coding Assistant
 
@@ -413,9 +413,10 @@ pytest
 
 **Planned — not yet done, and not claimed as done:**
 
-- [ ] **Empirical Benchmark** — real-model runs for **B2 vs B3** (methodology value) and
-  **B3 vs B4** (Agent MCP value), with repeated runs, variance reporting, and
-  gold-annotation / independent-judge scoring (see `docs/benchmark.md`).
+- [ ] **Empirical Benchmark** — first round **launched** (B2 vs B3, 10 questions × 3
+  repeats, `omp` / `deepseek-v4-flash` → `benchmarks/empirical/v3-report.md`);
+  full 30-question coverage, **B3 vs B4**, variance reporting, and
+  gold-annotation / independent-judge scoring still planned (see `docs/benchmark.md`).
 - [ ] **HTML accessibility** — sync `<html lang>` on language switch, `aria-pressed` on
   theme/lang buttons, labeled table filter controls, bilingual `title`/`desc` on SVG
   figures, and a safe URL scheme allowlist for source links.
