@@ -1199,7 +1199,8 @@ def main(argv: list[str] | None = None) -> int:
     p_bench.add_argument("--baselines", default="B2_standard_agent,B3_eduevidence_single")
     p_bench.add_argument("--questions", default="benchmarks/questions.jsonl")
     p_bench.add_argument("--repeats", type=int, default=3)
-    p_bench.add_argument("--driver", default="sim", choices=["api", "sim"])
+    p_bench.add_argument("--driver", default=None, choices=["api", "cli", "sim"],
+                         help="api | cli (omp) | sim (harness validation only); default: auto (api > cli > sim)")
     p_bench.add_argument("--out", default="benchmarks/empirical/run-001")
     p_bench.add_argument("--budget", type=int, default=1000000)
     p_bench.add_argument("--run", default=None, help="run dir (eval/report)")
@@ -1218,6 +1219,11 @@ def main(argv: list[str] | None = None) -> int:
         return args.func(args)
     except FileNotFoundError as exc:
         # V2 project lookups fail cleanly like V1 (ERROR + exit 2)
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+    except (ValueError, RuntimeError) as exc:
+        # v3 command handlers (pilot/synthesize/benchmark) validate inputs and
+        # raise ValueError on contract violations; surface cleanly (P2-9).
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 

@@ -22,7 +22,6 @@ from engine.datasets import analysis_blocked_by_privacy, derive_csv_profile, ing
 from engine.graph_store import GraphMutation, GraphStore
 from engine.ids import new_local_id, new_run_id
 from engine.project import ProjectWorkspace
-from engine.semantics import claim_relation
 from engine.synthesis import synthesize_project
 from engine.tribunal import adjudicate, decision_diff, save_decision_snapshot
 from engine.versions import (

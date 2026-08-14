@@ -277,6 +277,10 @@ def report_from_run(run_dir: Path, manifest: dict[str, Any], out_path: Path) -> 
 
     mode = summary.get("run_mode", "unknown")
     env = summary.get("environment", {}) or {}
+    attempts = manifest.get("attempts", [])
+    n_failed = sum(1 for a in attempts if a.get("status") == "failed")
+    n_budget = sum(1 for a in attempts if a.get("status") == "budget_stopped")
+    notes = manifest.get("notes") or ""
     lines = [
         "# EduEvidence Benchmark Report (v3)",
         "",
@@ -286,6 +290,9 @@ def report_from_run(run_dir: Path, manifest: dict[str, Any], out_path: Path) -> 
         f"({env.get('model_version')}) | temperature: {env.get('temperature')}",
         f"- tools: {', '.join(env.get('tools') or []) or 'none'} | "
         f"search_provider: {env.get('search_provider')} | agent_mcp_used: {env.get('agent_mcp_used')}",
+        f"- attempts: {len(attempts)} total | failed: {n_failed} | budget_stopped: {n_budget}",
+        f"- notes: {notes or 'none'}",
+        "- cost: usage not metered by the cli/api driver (reported as 0.0 = NOT CAPTURED, not free)",
         "",
         "| Baseline | n | outcome_sep | decision_cal | contra_recall | contra_precision | citation_recall | scope_cal | cost_usd |",
         "|---|---|---|---|---|---|---|---|---|",

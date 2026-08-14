@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from engine.ids import new_local_id
-from engine.library import LIBRARY_TABLES, ResearchLibrary
+from engine.library import ResearchLibrary
 from scripts.validate_schema import SchemaError, validate
 
 _SYNTHESIS_SCHEMA = (Path(__file__).resolve().parent.parent / "schemas" / "v3"
@@ -46,7 +46,7 @@ def synthesize_library(library: ResearchLibrary) -> dict:
     """Build a LibrarySynthesis over the library's ACTIVE revision."""
     findings = library.read_table("findings")
     studies = {s["study_id"]: s for s in library.read_table("studies")}
-    sources = library.read_table("sources")
+    sources = {s["source_id"]: s for s in library.read_table("sources")}
     audits = _latest_audits(library.read_table("audits"))
 
     by_outcome: dict[str, dict[str, Any]] = {}
@@ -56,8 +56,18 @@ def synthesize_library(library: ResearchLibrary) -> dict:
         study = studies.get(fnd.get("study_id"))
         if study is None:
             continue
+        # Usability filter aligned with engine/tribunal._usable_studies (P2-11):
+        # unresolved identity, no validated source, or no passing audit -> not usable.
+        if study.get("identity_status") == "unresolved":
+            continue
+        if not any(
+            sid in sources and sources[sid].get("validation_status")
+            in ("valid", "accepted_partial")
+            for sid in study.get("source_ids", [])
+        ):
+            continue
         audit = audits.get(fnd["study_id"])
-        if audit is not None and audit.get("overall_status") == "fail":
+        if audit is None or audit.get("overall_status") == "fail":
             continue
         token = _outcome_token(fnd.get("outcome_id", ""))
         row = by_outcome.setdefault(token, {

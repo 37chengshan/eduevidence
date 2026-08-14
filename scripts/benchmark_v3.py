@@ -46,7 +46,6 @@ BASELINES = (
     "B0_direct_llm", "B1_search_llm", "B2_standard_agent",
     "B3_eduevidence_single", "B4_eduevidence_agent_mcp",
 )
-LEVEL_N_CLAIMS = {"S": 2, "M": 3, "L": 4}
 DEFAULT_BUDGET_TOKENS = 1_000_000
 
 # ---------------------------------------------------------------- prompts
