@@ -1,0 +1,30 @@
+{
+  "id": "Q25",
+  "key_claims": [
+    "AI Tutor对不同基础学生成绩与动机影响不均",
+    "求助行为向工具倾斜可能削弱求助技能",
+    "需分层辅导与适时退出机制"
+  ],
+  "key_supporting_sources": [
+    "AI Tutor分层效果研究",
+    "工具依赖与退出机制研究"
+  ],
+  "known_contradictions": [
+    "基础薄弱学生可能从AI Tutor获益最大",
+    "退出机制效果缺乏直接证据"
+  ],
+  "correct_outcome_types": [
+    "assignment_score",
+    "motivation",
+    "help_seeking",
+    "ai_dependency"
+  ],
+  "allowed_scope": "仅限高数与编程课程情境，跨学科需验证",
+  "known_methodological_limitations": [
+    "基础分层标准不一",
+    "依赖测量工具缺乏共识"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

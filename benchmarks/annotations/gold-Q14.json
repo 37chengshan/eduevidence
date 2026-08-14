@@ -1,0 +1,28 @@
+{
+  "id": "Q14",
+  "key_claims": [
+    "AI直接生成答案加快任务速度但降低长期保持",
+    "AI形成性反馈可在保持速度的同时保护长期保持",
+    "反馈形式决定保持-速度权衡"
+  ],
+  "key_supporting_sources": [
+    "AI反馈形式对比的受控实验",
+    "形成性反馈与保持的元分析"
+  ],
+  "known_contradictions": [
+    "部分研究显示直接答案对高先验学生保持无显著损害",
+    "形成性反馈的成本与实施难度限制推广"
+  ],
+  "correct_outcome_types": [
+    "completion_time",
+    "retention"
+  ],
+  "allowed_scope": "仅限任务完成时间与数周内保持的权衡，不扩展到技能迁移",
+  "known_methodological_limitations": [
+    "保持窗口多为 1-4 周，缺少学期级追踪",
+    "任务类型局限"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

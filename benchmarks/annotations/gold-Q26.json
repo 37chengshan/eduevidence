@@ -1,0 +1,30 @@
+{
+  "id": "Q26",
+  "key_claims": [
+    "混合式教学改革在多学科中知识获取与参与度总体正向",
+    "任务完成时间与动机效应存在学科异质性",
+    "跨课程推广需分层评估"
+  ],
+  "key_supporting_sources": [
+    "混合式教学元分析",
+    "多学科混合式改革对比研究"
+  ],
+  "known_contradictions": [
+    "部分学科未见参与度提升",
+    "翻转成分比例调节效果"
+  ],
+  "correct_outcome_types": [
+    "knowledge_gain",
+    "engagement",
+    "completion_time",
+    "motivation"
+  ],
+  "allowed_scope": "仅限已纳入研究的多学科范围，跨课程推广需新证据",
+  "known_methodological_limitations": [
+    "改革为整体干预难以归因",
+    "学科间评估标准不一致"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

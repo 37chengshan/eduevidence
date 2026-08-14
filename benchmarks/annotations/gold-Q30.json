@@ -1,0 +1,30 @@
+{
+  "id": "Q30",
+  "key_claims": [
+    "自适应测验提升低能力学生成绩与参与",
+    "高能力学生收益不明显且可能增加焦虑",
+    "需分群体使用策略与成绩应用边界"
+  ],
+  "key_supporting_sources": [
+    "自适应测验系统研究",
+    "考试焦虑与测验机制研究"
+  ],
+  "known_contradictions": [
+    "部分研究显示自适应测验对所有学生成绩无显著差异",
+    "题项选择策略影响动机"
+  ],
+  "correct_outcome_types": [
+    "assignment_score",
+    "motivation",
+    "completion_time",
+    "engagement"
+  ],
+  "allowed_scope": "仅限测验成绩与行为指标，不扩展到学习能力判定",
+  "known_methodological_limitations": [
+    "系统算法差异难以控制",
+    "焦虑测量自评为主"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Q24",
+  "key_claims": [
+    "直接生成答案提升速度但可能损害保持与迁移",
+    "错误解释提升元认知但增加认知负荷",
+    "形成性评价在三类反馈中保持-迁移平衡最优"
+  ],
+  "key_supporting_sources": [
+    "AI反馈形式三臂对比研究",
+    "反馈与元认知文献"
+  ],
+  "known_contradictions": [
+    "反馈效果受课程与先验水平调节",
+    "错误解释对高先验学生可能冗余"
+  ],
+  "correct_outcome_types": [
+    "retention",
+    "transfer",
+    "metacognition",
+    "cognitive_load"
+  ],
+  "allowed_scope": "仅限所测课程的反馈形式对比，推广需多课程复现",
+  "known_methodological_limitations": [
+    "三臂对照样本量要求高",
+    "跨课程效应可能不同"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

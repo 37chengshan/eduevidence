@@ -1,0 +1,29 @@
+{
+  "id": "Q15",
+  "key_claims": [
+    "带AI完成的项目作业质量评分显著上升",
+    "同一群体闭卷独立解题表现下降",
+    "作业质量与独立能力解耦，需分离报告"
+  ],
+  "key_supporting_sources": [
+    "AI 辅助项目作业评分的受控研究",
+    "课程级 AI 开放前后对比研究"
+  ],
+  "known_contradictions": [
+    "部分课程未观察到独立解题下降",
+    "评分上升可能来自评分标准对AI风格输出的偏好"
+  ],
+  "correct_outcome_types": [
+    "assignment_score",
+    "reduced_transfer"
+  ],
+  "allowed_scope": "仅限项目作业评分与闭卷独立解题表现，不扩展到长期学习效果",
+  "known_methodological_limitations": [
+    "缺少随机对照",
+    "作业评分可能存在AI痕迹偏差"
+  ],
+  "expected_decision_range": [
+    "pilot",
+    "insufficient_evidence"
+  ]
+}

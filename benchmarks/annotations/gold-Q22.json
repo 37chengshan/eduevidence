@@ -1,0 +1,30 @@
+{
+  "id": "Q22",
+  "key_claims": [
+    "AI写作助手对不同写作水平学生影响各异",
+    "独立写作能力、原创性、动机与虚假自信需分别评估",
+    "需差异化使用策略"
+  ],
+  "key_supporting_sources": [
+    "写作教育AI分层研究",
+    "AI辅助写作的原创性分析"
+  ],
+  "known_contradictions": [
+    "低水平写作者可能受益于脚手架式辅助",
+    "虚假自信测量与写作自我效能混淆"
+  ],
+  "correct_outcome_types": [
+    "independent_problem_solving",
+    "academic_integrity_risk",
+    "motivation",
+    "false_confidence"
+  ],
+  "allowed_scope": "仅限大学写作课程，跨课程推广需新证据",
+  "known_methodological_limitations": [
+    "写作水平分层标准不一",
+    "长期追踪缺失"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

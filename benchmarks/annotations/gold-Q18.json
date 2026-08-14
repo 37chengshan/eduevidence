@@ -1,0 +1,29 @@
+{
+  "id": "Q18",
+  "key_claims": [
+    "双编码理论支持视频加文本增强记忆",
+    "认知负荷理论提示冗余信息降低保持",
+    "模态冗余与学习者经验交互"
+  ],
+  "key_supporting_sources": [
+    "多媒体学习双编码研究",
+    "冗余效应实验研究"
+  ],
+  "known_contradictions": [
+    "高先验学习者对冗余不敏感",
+    "材料复杂度调节冗余效应"
+  ],
+  "correct_outcome_types": [
+    "retention",
+    "cognitive_load"
+  ],
+  "allowed_scope": "仅限多媒体材料的即时与短期保持，不扩展到深层理解",
+  "known_methodological_limitations": [
+    "实验室情境生态效度有限",
+    "学习者先验水平控制不足"
+  ],
+  "expected_decision_range": [
+    "insufficient_evidence",
+    "pilot"
+  ]
+}

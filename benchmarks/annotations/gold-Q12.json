@@ -1,0 +1,29 @@
+{
+  "id": "Q12",
+  "key_claims": [
+    "AI写作助手提升写作流畅度与篇幅但可能降低文本原创性",
+    "脱离工具后独立写作能力可能受损",
+    "使用方式决定效果方向：改写辅助 vs 代写"
+  ],
+  "key_supporting_sources": [
+    "Warschauer et al. (2023) 生成式AI与写作教育综述",
+    "对AI辅助写作原创性的文本分析研究"
+  ],
+  "known_contradictions": [
+    "低水平写作者可能从脚手架式使用中获益",
+    "原创性下降部分来自引用与改写规范缺失而非能力下降"
+  ],
+  "correct_outcome_types": [
+    "independent_problem_solving",
+    "academic_integrity_risk"
+  ],
+  "allowed_scope": "仅限大学写作课程中 AI 写作助手对独立写作与原创性的影响，不扩展到创造性写作",
+  "known_methodological_limitations": [
+    "原创性测量依赖检测工具，存在误报",
+    "基线写作水平控制不足"
+  ],
+  "expected_decision_range": [
+    "pilot",
+    "reject"
+  ]
+}

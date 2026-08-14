@@ -1,0 +1,28 @@
+{
+  "id": "Q11",
+  "key_claims": [
+    "AI编程助手显著缩短新手学生的任务完成时间",
+    "AI编程助手可能增加新手认知负荷并削弱独立调试能力",
+    "任务完成速度提升不等于编程能力提升"
+  ],
+  "key_supporting_sources": [
+    "Peng et al. (2023) Copilot 对任务完成时间的受控实验",
+    "对AI辅助编程认知负荷的准实验研究"
+  ],
+  "known_contradictions": [
+    "部分研究未发现完成时间的显著差异",
+    "认知负荷与依赖效应随任务复杂度与经验水平变化"
+  ],
+  "correct_outcome_types": [
+    "completion_time",
+    "cognitive_load"
+  ],
+  "allowed_scope": "仅限任务完成时间与即时认知负荷，不扩展到长期编程能力或迁移",
+  "known_methodological_limitations": [
+    "任务复杂度与经验水平异质性未充分控制",
+    "认知负荷多为主观量表测量"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

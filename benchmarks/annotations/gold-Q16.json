@@ -1,0 +1,28 @@
+{
+  "id": "Q16",
+  "key_claims": [
+    "多项元分析支持项目式学习提升知识获取与参与度",
+    "若干课堂实地研究显示与传统教学无显著差异",
+    "实施质量调节效应显著"
+  ],
+  "key_supporting_sources": [
+    "项目式学习元分析",
+    "课堂实地对比研究"
+  ],
+  "known_contradictions": [
+    "实地研究效应量普遍小于实验室元分析",
+    "课程时长与教师培训影响结果"
+  ],
+  "correct_outcome_types": [
+    "knowledge_gain",
+    "engagement"
+  ],
+  "allowed_scope": "仅限课程内知识获取与参与度，不扩展到跨课程迁移",
+  "known_methodological_limitations": [
+    "元分析发表偏倚",
+    "实地研究混杂因素多"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

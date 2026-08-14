@@ -1,0 +1,28 @@
+{
+  "id": "Q13",
+  "key_claims": [
+    "大样本准实验显示AI Tutor显著提升期末成绩",
+    "小样本质性研究显示学生出现工具依赖",
+    "成绩提升与依赖风险并存，需区分"
+  ],
+  "key_supporting_sources": [
+    "大样本 AI Tutor 准实验研究",
+    "AI 辅导工具依赖的质性研究"
+  ],
+  "known_contradictions": [
+    "成绩提升在部分课程未复制",
+    "依赖测量缺乏统一量表"
+  ],
+  "correct_outcome_types": [
+    "assignment_score",
+    "ai_dependency"
+  ],
+  "allowed_scope": "仅限高数课程期末成绩与即时依赖表现，不扩展到长期自学能力",
+  "known_methodological_limitations": [
+    "准实验无随机分组",
+    "质性样本小、推广受限"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

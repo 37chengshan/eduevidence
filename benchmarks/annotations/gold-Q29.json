@@ -1,0 +1,31 @@
+{
+  "id": "Q29",
+  "key_claims": [
+    "AI辅助形成性评价提升答题准确性与动机",
+    "个性化反馈与风险预警可能改善元认知",
+    "学术诚信风险与自动化偏差需监控"
+  ],
+  "key_supporting_sources": [
+    "AI形成性评价试点研究",
+    "学习分析预警系统研究"
+  ],
+  "known_contradictions": [
+    "反馈过度自动化可能降低师生互动",
+    "预警误报损害信任"
+  ],
+  "correct_outcome_types": [
+    "accuracy",
+    "motivation",
+    "metacognition",
+    "cognitive_load",
+    "academic_integrity_risk"
+  ],
+  "allowed_scope": "仅限已试点学科，全面推广需多学科证据",
+  "known_methodological_limitations": [
+    "系统整体评估难以分离组件效应",
+    "诚信风险测量依赖检测工具"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

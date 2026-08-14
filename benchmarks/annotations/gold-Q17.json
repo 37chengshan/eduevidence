@@ -1,0 +1,28 @@
+{
+  "id": "Q17",
+  "key_claims": [
+    "高水平学生从同伴教学的概念理解中显著受益",
+    "低水平学生在小组互动中认知负荷上升",
+    "收益分配不均，需分组策略"
+  ],
+  "key_supporting_sources": [
+    "同伴教学分组对比研究",
+    "认知负荷视角的同伴互动研究"
+  ],
+  "known_contradictions": [
+    "部分研究显示低水平学生亦有收益",
+    "小组构成与任务结构调节效果"
+  ],
+  "correct_outcome_types": [
+    "concept_understanding",
+    "cognitive_load"
+  ],
+  "allowed_scope": "仅限课堂同伴教学对概念理解的影响，不扩展到长期保持",
+  "known_methodological_limitations": [
+    "水平划分标准不一",
+    "认知负荷测量主观"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

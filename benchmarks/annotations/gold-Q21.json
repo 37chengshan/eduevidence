@@ -1,0 +1,30 @@
+{
+  "id": "Q21",
+  "key_claims": [
+    "全面整合AI编程助手需分离代码质量、独立解题、迁移与依赖四个维度",
+    "新手与进阶学生影响方向可能相反",
+    "需护栏设计与独立评测"
+  ],
+  "key_supporting_sources": [
+    "Bastani et al. (2025) 预注册RCT",
+    "编程教育AI整合综述"
+  ],
+  "known_contradictions": [
+    "进阶学生可能从AI加速中获益更多",
+    "依赖效应在学期末可能减弱"
+  ],
+  "correct_outcome_types": [
+    "code_quality",
+    "independent_problem_solving",
+    "transfer",
+    "ai_dependency"
+  ],
+  "allowed_scope": "仅限大学程序设计课程情境，跨课程推广需新证据",
+  "known_methodological_limitations": [
+    "课程时长与AI接触量影响结论",
+    "独立评测设计难度高"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

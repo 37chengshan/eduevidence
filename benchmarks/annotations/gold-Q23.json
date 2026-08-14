@@ -1,0 +1,30 @@
+{
+  "id": "Q23",
+  "key_claims": [
+    "全校开放AI工具对参与度、求助行为、努力投入与迁移的影响存在群体异质性",
+    "求助行为从教师转向AI可能削弱求助技能",
+    "需分群体监测与政策配套"
+  ],
+  "key_supporting_sources": [
+    "全校级AI政策实施研究",
+    "求助行为与AI依赖研究"
+  ],
+  "known_contradictions": [
+    "部分专业学生努力投入未下降",
+    "参与度提升与学习效果提升混淆"
+  ],
+  "correct_outcome_types": [
+    "engagement",
+    "help_seeking",
+    "reduced_effort",
+    "reduced_transfer"
+  ],
+  "allowed_scope": "仅限同一学校生态内，跨校推广需谨慎",
+  "known_methodological_limitations": [
+    "全校政策难以随机化",
+    "努力投入测量依赖自报"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

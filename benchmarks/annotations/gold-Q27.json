@@ -1,0 +1,30 @@
+{
+  "id": "Q27",
+  "key_claims": [
+    "自我调节学习干预提升元认知与动机",
+    "独立解题与长期迁移效果证据较弱",
+    "不同学习风格群体收益不均"
+  ],
+  "key_supporting_sources": [
+    "自我调节学习干预元分析",
+    "元认知训练纵向研究"
+  ],
+  "known_contradictions": [
+    "干预剂量与效果非线性",
+    "部分群体迁移效果未复制"
+  ],
+  "correct_outcome_types": [
+    "metacognition",
+    "motivation",
+    "independent_problem_solving",
+    "transfer"
+  ],
+  "allowed_scope": "仅限嵌入课程的干预情境，独立干预推广需验证",
+  "known_methodological_limitations": [
+    "元认知测量主观",
+    "迁移测量缺乏长期窗口"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

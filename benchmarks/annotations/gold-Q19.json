@@ -1,0 +1,28 @@
+{
+  "id": "Q19",
+  "key_claims": [
+    "即时反馈显著提高下一轮答题准确率",
+    "刷分重试行为可能削弱元认知发展",
+    "反馈设计需防刷分机制"
+  ],
+  "key_supporting_sources": [
+    "自动评分即时反馈实验",
+    "答题行为与元认知研究"
+  ],
+  "known_contradictions": [
+    "部分研究显示即时反馈对高能力学生无额外收益",
+    "重试次数与学习收益呈倒U关系"
+  ],
+  "correct_outcome_types": [
+    "accuracy",
+    "metacognition"
+  ],
+  "allowed_scope": "仅限当堂测验准确率与重试行为，不扩展到长期学习策略",
+  "known_methodological_limitations": [
+    "刷分行为难以随机化",
+    "元认知测量间接"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

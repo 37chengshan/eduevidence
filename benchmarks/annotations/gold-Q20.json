@@ -1,0 +1,28 @@
+{
+  "id": "Q20",
+  "key_claims": [
+    "高频形成性小测验提高短期知识保持",
+    "高频测验增加考试焦虑并可能降低动机",
+    "频度-焦虑权衡需平衡"
+  ],
+  "key_supporting_sources": [
+    "测验效应研究",
+    "考试焦虑与形成性评价研究"
+  ],
+  "known_contradictions": [
+    "低焦虑学生从高频测验中持续获益",
+    "测验反馈质量比频度更重要"
+  ],
+  "correct_outcome_types": [
+    "retention",
+    "motivation"
+  ],
+  "allowed_scope": "仅限课程内短期保持与动机变化，不扩展到学业成绩",
+  "known_methodological_limitations": [
+    "焦虑测量依赖自评",
+    "测验频度与内容难度混杂"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "Q28",
+  "key_claims": [
+    "认知负荷管理策略降低复杂问题中的认知负荷",
+    "对低先验学生概念理解改善更显著",
+    "样例先行对高先验学生可能冗余"
+  ],
+  "key_supporting_sources": [
+    "认知负荷理论实验研究",
+    "样例效应与先验知识研究"
+  ],
+  "known_contradictions": [
+    "切分任务对高先验学生效果不显著",
+    "策略组合效应缺乏直接比较"
+  ],
+  "correct_outcome_types": [
+    "concept_understanding",
+    "cognitive_load",
+    "retention"
+  ],
+  "allowed_scope": "仅限复杂问题解决情境，简单任务推广无依据",
+  "known_methodological_limitations": [
+    "实验室任务生态效度",
+    "先验水平测量不一致"
+  ],
+  "expected_decision_range": [
+    "pilot"
+  ]
+}
