@@ -12,7 +12,7 @@ Skill 本体结构：
 ```text
 SKILL.md             Skill 入口（When to Use / 9 步 Workflow / 输出契约）
 skill/agents/        8 角色协议（Planner / Retriever / Analyst / Skeptic / …）
-references/          9 个教育方法论文档
+references/          11 个教育方法论文档
 schemas/             13 个 JSON Schema 数据契约
 scripts/             确定性逻辑脚本（评分 / 审计 / 置信度 / 报告渲染）
 retrieval/           检索与抓取层（fetch / validate / dedupe）
@@ -72,6 +72,28 @@ python3 scripts/validate_schema.py --schema schemas/evidence.schema.json \
 python3 visualization/eduevidence-report/scripts/build_report.py \
     --result examples/ai-coding-assistant/result.json \
     --out /tmp/eduevidence-smoke.html
+
+# 4. 运行全量测试（610+ 用例）
+python3 -m pytest -q
+```
+
+## 3.5 v3 命令速查（CLI）
+
+```bash
+eduevidence pilot register --project <PRJ> --decision <DEC> --title <T> \
+    --start <ISO> --end <ISO> --condition <C> --sample <N> --design <DSN> \
+    --outcome <token>          # 注册试点（绑定决策快照）
+eduevidence pilot import --project <PRJ> --pilot <PIL> --file out.csv \
+    --privacy internal         # 导入结果数据（PII 列被拒）
+eduevidence pilot redecide --project <PRJ> --pilot <PIL> --claim <CLM> \
+    --outcome <token> --effect positive --result-text "..." \
+    --relation support         # 图更新 + 再裁决 + diff
+eduevidence synthesize --home <HOME>            # 跨项目库综述
+eduevidence benchmark run --baselines B2_standard_agent,B3_eduevidence_single \
+    --repeats 3 --driver cli --out benchmarks/empirical/run-001
+eduevidence benchmark eval --run benchmarks/empirical/run-001
+eduevidence benchmark report --run benchmarks/empirical/run-001 \
+    --report benchmarks/empirical/v3-report.md
 ```
 
 ## 4. 通用提示词（你的 Agent 不在内置列表时）
