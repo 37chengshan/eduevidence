@@ -13,7 +13,7 @@ Skill 本体结构：
 SKILL.md             Skill 入口（When to Use / 9 步 Workflow / 输出契约）
 skill/agents/        8 角色协议（Planner / Retriever / Analyst / Skeptic / …）
 references/          11 个教育方法论文档
-schemas/             13 个 JSON Schema 数据契约
+schemas/             33 个 JSON Schema 数据契约（13 顶层 + 17 v2 + 3 v3）
 scripts/             确定性逻辑脚本（评分 / 审计 / 置信度 / 报告渲染）
 retrieval/           检索与抓取层（fetch / validate / dedupe）
 integrations/        Agent MCP 增强层 + Smart Web Fetch 集成
