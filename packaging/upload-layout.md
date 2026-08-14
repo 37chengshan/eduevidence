@@ -12,7 +12,7 @@
 
 ```text
 upload/
-├── skill.md                    # ← 仓库 SKILL.md 的副本（内容一致；比赛材料表要求的文件名）
+├── SKILL.md                    # ← Skill 文档（仓库 SKILL.md，根目录唯一保留形式）
 ├── engine/ scripts/ retrieval/ integrations/ schemas/ skill/ references/ visualization/   # 项目源码（平铺，比赛要求“项目源码 必须提交”）
 │   ├── engine/                 #   研究引擎核心（27 模块：证据综述/证据图/综合/裁决/缺口/研究设计）
 │   ├── scripts/                #   确定性脚本（21 个：评分/矩阵/置信度/门控/渲染/基准）

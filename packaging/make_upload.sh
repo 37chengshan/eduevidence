@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
-# make_upload.sh - build the competition upload/ folder as a FLAT SKILL package
-# mirroring the previous dist/eduevidence-submission layout: SKILL.md AND
-# skill.md both live at the root (identical content), resource dirs flat.
+# make_upload.sh - build the competition upload/ folder as a FLAT SKILL package.
+# Only the UPPERCASE SKILL.md is kept at the root (per project decision); the
+# layout mirrors the previous dist/eduevidence-submission structure.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-UPLOAD="$ROOT/upload"
+UPLOAD="${UPLOAD_DIR:-$ROOT/upload}"
 
 echo "==> Building flat skill upload folder at $UPLOAD"
 rm -rf "$UPLOAD"
 mkdir -p "$UPLOAD"
 
-# 1) skill.md AND SKILL.md at the root (previous submission had both;
-#    competition requires a skill.md file)
-cp "$ROOT/SKILL.md" "$UPLOAD/skill.md"
+# 1) SKILL.md at the root (competition skill document, uppercase only)
 cp "$ROOT/SKILL.md" "$UPLOAD/SKILL.md"
 
-# 2) skill resource dirs at the root (flat skill layout, as before)
+# 2) skill resource dirs at the root (flat skill layout)
 for d in engine scripts retrieval integrations schemas skill references visualization packaging; do
   rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store"} "$ROOT/$d" "$UPLOAD/"
 done

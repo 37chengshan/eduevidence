@@ -20,10 +20,10 @@
       "id": "skill-md",
       "name": "Skill 本体（skill.md）",
       "path": "SKILL.md",
-      "upload_to": "skill.md",
+      "upload_to": "SKILL.md",
       "required": true,
       "type": "file",
-      "description": "参赛 skill.md：头部 YAML 含 name: eduevidence 与 description；正文含 When to Use / 9 步 Workflow / 输出契约 / 能力路由（第 7 章 Resource Discovery）。仓库内保持原名 SKILL.md，上传包中复制为 skill.md 以满足比赛文件要求。"
+      "description": "参赛 SKILL.md：头部 YAML 含 name: eduevidence 与 description；正文含 When to Use / 9 步 Workflow / 输出契约 / 能力路由（第 7 章 Resource Discovery）。仓库内与上传包均保留 SKILL.md（根目录）。"
     },
     {
       "id": "skill-agents",
