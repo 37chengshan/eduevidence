@@ -1,0 +1,270 @@
+{
+  "manifest_version": "1.0",
+  "project": "EduEvidence（教育证据决策 Research Engine Skill）",
+  "repo": "https://github.com/37chengshan/eduevidence",
+  "competition": "书生国智科探挑战赛 · 自由赛道（赛道六）AI for Social Science",
+  "platform": "Intern Discovery（书生科学发现平台）SCP 广场",
+  "skill": {
+    "name": "eduevidence",
+    "version": "3.0.0-dev",
+    "entry": "SKILL.md（上传包内复制为 skill.md，内容一致，无需改名）",
+    "one_line": "把“是否采用某种教学方式 / AI 教学工具”从经验判断转化为可追溯、可验证的证据决策流程",
+    "required_materials": [
+      "skill.md 文件（必须）",
+      "项目源码（必须）",
+      "展示材料 PPT/视频/可视化图片（可选，建议）"
+    ]
+  },
+  "items": [
+    {
+      "id": "skill-md",
+      "name": "Skill 本体（skill.md）",
+      "path": "SKILL.md",
+      "upload_to": "skill.md",
+      "required": true,
+      "type": "file",
+      "description": "参赛 skill.md：头部 YAML 含 name: eduevidence 与 description；正文含 When to Use / 9 步 Workflow / 输出契约 / 能力路由（第 7 章 Resource Discovery）。仓库内保持原名 SKILL.md，上传包中复制为 skill.md 以满足比赛文件要求。"
+    },
+    {
+      "id": "skill-agents",
+      "name": "Skill 角色协议",
+      "path": "skill/",
+      "upload_to": "src/skill/",
+      "required": true,
+      "type": "dir",
+      "description": "8 个角色协议（skill/agents/）：Education Planner / Evidence Retriever / Evidence Analyst / Skeptic / Method Reviewer / Evidence Judge / Intervention Designer / Evaluation Designer，是 Skill 的多智能体编排说明。"
+    },
+    {
+      "id": "references",
+      "name": "方法论文档",
+      "path": "references/",
+      "upload_to": "src/references/",
+      "required": true,
+      "type": "dir",
+      "description": "11 个教育研究方法论文档（retrieval-protocol / skeptic-protocol / methodology-audit / tribunal-policy / evidence-quality / outcome-taxonomy 等），构成检索、反驳、审计、裁决的规则底座。"
+    },
+    {
+      "id": "schemas",
+      "name": "数据契约（JSON Schema）",
+      "path": "schemas/",
+      "upload_to": "src/schemas/",
+      "required": true,
+      "type": "dir",
+      "description": "33 个 JSON Schema（schemas/ + schemas/v2/ + schemas/v3/）：evidence、verdict、intervention、graph-revision、study-design、pilot-outcome、run-manifest 等，保证引擎输出的结构化与可验证。"
+    },
+    {
+      "id": "scripts",
+      "name": "确定性逻辑脚本",
+      "path": "scripts/",
+      "upload_to": "src/scripts/",
+      "required": true,
+      "type": "dir",
+      "description": "21 个 Python 脚本：orchestrator（CLI 主实现）、evidence_score / evidence_matrix / compute_confidence / claim_audit / pre_verdict_gate / complexity_gate（评分与裁决门）、validate_schema、render_report_html（5 主题双语报告渲染）、benchmark 系列。"
+    },
+    {
+      "id": "engine",
+      "name": "研究引擎核心",
+      "path": "engine/",
+      "upload_to": "src/engine/",
+      "required": true,
+      "type": "dir",
+      "description": "27 个 Python 模块：Evidence Review / Graph Store（版本化证据图）/ Meta Synthesis / Tribunal / Knowledge Gap / Study Design / Dataset & Analysis / Projection / Mode Router（Evidence Review 与 Full Research Cycle 双模式）。"
+    },
+    {
+      "id": "retrieval",
+      "name": "检索与抓取层",
+      "path": "retrieval/",
+      "upload_to": "src/retrieval/",
+      "required": true,
+      "type": "dir",
+      "description": "fetch / validate / dedupe / source / failures：本地确定性检索层；Search 为宿主能力，snippet 必须经 Fetch + Validate 才能成为 SUPPORTED Evidence（RULE 2）。"
+    },
+    {
+      "id": "integrations",
+      "name": "集成层",
+      "path": "integrations/",
+      "upload_to": "src/integrations/",
+      "required": true,
+      "type": "dir",
+      "description": "agent_mcp.py（Agent MCP 增强模式）与 smart_web_fetch.py（Smart Web Fetch 集成）；Native Core 仅用 Python 标准库，不强制依赖 MCP。"
+    },
+    {
+      "id": "visualization",
+      "name": "HTML 渲染器",
+      "path": "visualization/",
+      "upload_to": "src/visualization/",
+      "required": true,
+      "type": "dir",
+      "description": "visualization/eduevidence-report/：5 主题（claude/academic/datalab/datalab-dark/presentation）中英双语报告渲染器。"
+    },
+    {
+      "id": "cli-entry",
+      "name": "CLI 入口",
+      "path": "eduevidence_cli.py",
+      "upload_to": "src/eduevidence_cli.py",
+      "required": true,
+      "type": "file",
+      "description": "console-script shim：eduevidence run/resume/status/list/gate，转发到 scripts/orchestrator.py。"
+    },
+    {
+      "id": "pyproject",
+      "name": "打包与元数据",
+      "path": "pyproject.toml",
+      "upload_to": "src/pyproject.toml",
+      "required": true,
+      "type": "file",
+      "description": "包名 eduevidence v3.0.0-dev，MIT，requires-python >=3.10；pytest 配置 testpaths=tests、addopts=-q。"
+    },
+    {
+      "id": "install-script",
+      "name": "一键安装脚本",
+      "path": "install.sh",
+      "upload_to": "src/install.sh",
+      "required": true,
+      "type": "file",
+      "description": "bash install.sh（venv+依赖+自检+测试，默认 --dev）/ --skill（交互式安装为 Agent Skill，支持 11 种宿主）/ --list-hosts / --dry-run；支持 curl 远程执行。"
+    },
+    {
+      "id": "license",
+      "name": "开源许可证",
+      "path": "LICENSE",
+      "upload_to": "LICENSE",
+      "required": true,
+      "type": "file",
+      "description": "MIT License（知识产权归参赛者所有，授权平台展示推广的非独家授权）。"
+    },
+    {
+      "id": "readme",
+      "name": "项目说明",
+      "path": "README.md, README.en.md",
+      "upload_to": "README.md, README.en.md",
+      "required": true,
+      "type": "file",
+      "description": "README.md（中文入口，指向 README.en.md 英文版）：项目定位、双模式、证据图/项目工作区、快速安装、Skill 安装、示例报告。"
+    },
+    {
+      "id": "examples",
+      "name": "示例与演示",
+      "path": "examples/",
+      "upload_to": "examples/",
+      "required": true,
+      "type": "dir",
+      "description": "4 个示例：ai-coding-assistant（含可直接打开的 EduEvidence_Report.html 与 5 主题预览 reports-5themes/）、ai-tutor、ai-writing-assistant、full-research-cycle-fixture（含 README 说明数据为合成数据）。"
+    },
+    {
+      "id": "docs",
+      "name": "文档",
+      "path": "docs/（排除 docs/competition-brief.md）",
+      "upload_to": "docs/",
+      "required": true,
+      "type": "dir",
+      "description": "architecture / methodology / install-guide / demo / demo-storyboard / benchmark / reproducibility / failure-matrix / open-source-references / agent-mcp-enhanced-mode / PROJECT_REVIEW_2026-08-12 / full-run-findings-2026-08-12 等 13 篇。competition-brief.md 为本地留存、不随包上传。"
+    },
+    {
+      "id": "benchmarks",
+      "name": "评测基准",
+      "path": "benchmarks/",
+      "upload_to": "benchmarks/",
+      "required": true,
+      "type": "dir",
+      "description": "V1 questions.jsonl + v2/（合同维度问题集与 README）+ evaluator/v2_graph_metrics.py（确定性软件/合同指标，不评判研究内容正确性）+ empirical / baselines / annotations / fetch / results。"
+    },
+    {
+      "id": "tests",
+      "name": "测试",
+      "path": "tests/",
+      "upload_to": "tests/",
+      "required": true,
+      "type": "dir",
+      "description": "56 个 test_*.py + conftest.py：覆盖 V1/V2/V3 全周期、契约与 schema 校验、检索抓取回归、Agent MCP 门控、报告渲染、benchmark 与发布合同。运行：.venv/bin/python -m pytest -q。"
+    },
+    {
+      "id": "assets",
+      "name": "展示图片",
+      "path": "assets/",
+      "upload_to": "assets/",
+      "required": false,
+      "type": "dir",
+      "description": "top-banner.jpg / multi-agent-research.jpg / tribunal-workflow.jpg，作为展示材料（可视化图片，比赛建议提交）。"
+    },
+    {
+      "id": "demo-materials",
+      "name": "演示材料",
+      "path": "docs/demo.md, docs/demo-storyboard.md, docs/PROJECT_REVIEW_2026-08-12.md, docs/full-run-findings-2026-08-12.md",
+      "upload_to": "docs/（随 docs 上传）",
+      "required": false,
+      "type": "file",
+      "description": "主 Demo 叙事（大一 C 语言课程能否用生成式 AI 编程助手 → PILOT 结论）、180 秒演示分镜表、项目评审与全量运行发现，可支撑 PPT/视频制作。"
+    },
+    {
+      "id": "packaging",
+      "name": "上架包文档",
+      "path": "packaging/",
+      "upload_to": "（上传包根目录）",
+      "required": true,
+      "type": "dir",
+      "description": "本清单 scp-manifest.json、UPLOAD-README.md（评审/上架方说明）、upload-layout.md（上传文件夹布局）。"
+    }
+  ],
+  "checklist": [
+    {
+      "id": "chk-skill-md",
+      "item": "SKILL.md 存在且头部有 name/description",
+      "expectation": "SKILL.md 头部 YAML frontmatter 含 name: eduevidence 与 description（已确认）",
+      "how": "读取 SKILL.md 前 4 行确认 frontmatter 完整闭合",
+      "status": "待上架前人工复核"
+    },
+    {
+      "id": "chk-license",
+      "item": "LICENSE 存在",
+      "expectation": "根目录 LICENSE（MIT，1081 字节）随包上传",
+      "how": "确认 upload/LICENSE 存在",
+      "status": "待上架前人工复核"
+    },
+    {
+      "id": "chk-readme",
+      "item": "README 存在",
+      "expectation": "README.md 与 README.en.md 随包上传",
+      "how": "确认 upload/README.md、upload/README.en.md 存在",
+      "status": "待上架前人工复核"
+    },
+    {
+      "id": "chk-examples",
+      "item": "examples 完整",
+      "expectation": "4 个示例目录齐全，ai-coding-assistant 含 EduEvidence_Report.html 与 reports-5themes/ 预览",
+      "how": "ls examples/ 应有 4 个子目录且报告 HTML 存在",
+      "status": "待上架前人工复核"
+    },
+    {
+      "id": "chk-tests",
+      "item": "测试可跑",
+      "expectation": "56 个测试文件；运行命令 .venv/bin/python -m pytest -q（pyproject 已配置 testpaths=tests、addopts=-q）",
+      "how": "上架前在干净环境执行一次 pytest（本次打包仅记录命令，不运行）",
+      "status": "待上架前人工复核"
+    },
+    {
+      "id": "chk-no-leak",
+      "item": "无 .venv / .git 泄漏",
+      "expectation": "上传包不含 .venv/、.git/、.pytest_cache/、__pycache__/、build/、dist/、*.egg-info/、.DS_Store",
+      "how": "打包后按下方 exclusions 清单核对上传目录",
+      "status": "待上架前人工复核"
+    }
+  ],
+  "exclusions": [
+    ".venv/",
+    ".git/",
+    ".pytest_cache/",
+    "__pycache__/",
+    "*.pyc",
+    "build/",
+    "dist/",
+    "*.egg-info/",
+    ".DS_Store",
+    "docs/competition-brief.md"
+  ],
+  "notes": [
+    "docs/competition-brief.md 为比赛说明本地留存，标注不提交版本库，不随上传包发送。",
+    "仓库内 SKILL.md 无需改名；上传包内复制为 skill.md 以满足比赛材料表对 skill.md 文件名的要求，内容一致。",
+    "展示材料（PPT/视频）未含在本仓库内；现有 docs/demo.md、docs/demo-storyboard.md 与 assets/ 图片可作素材，建议另附正式展示文件。"
+  ]
+}
