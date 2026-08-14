@@ -65,6 +65,28 @@ critical_path: true
 }
 ```
 
+## 输出契约（必须遵守）
+
+你的产物 `final_verdict.json` 必须通过 `schemas/verdict.schema.json` 校验（stage `adjudicate` 的 schema-gate，首次生成即必须合规）。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。
+
+**Required 字段（缺失即校验失败）**：`decision_question`、`recommended_action`、`confidence`。
+
+**枚举值表（禁止自由文本冒充枚举）**：
+
+| 字段 | 枚举值 |
+|---|---|
+| `recommended_action` | `adopt` \| `pilot` \| `reject` \| `insufficient_evidence` |
+| `confidence` | `High` \| `Moderate` \| `Low` \| `Insufficient` |
+
+**类型/语义硬约束（FIX-2 实测违规项 + 确定性置信度规则）**：
+
+- `recommended_action` 只能取 4 态枚举，禁止用自由文本描述决策（如 `"建议小范围试点"` → `pilot`）；
+- `confidence` 只能取 `High` / `Moderate` / `Low` / `Insufficient`，禁止写百分比或自由描述；
+- `confidence_score`（0–1 规则化指数）与 `confidence_breakdown` 由 `scripts/compute_confidence.py` 确定性计算并**覆盖模型值**；`raw_model_confidence` / `raw_model_confidence_breakdown` 只是审计留痕，二者必须是对象/字符串，禁止写 `null`（FIX-1）；
+- `supported_claims` / `uncertain_claims` / `contradicted_claims` / `what_can_be_claimed` / `what_cannot_be_claimed` / `missing_evidence` / `exceeds_evidence_boundary` 必须都是**数组**；
+- `short_term_effect` / `long_term_effect` / `transfer_effect` / `risk_effect` 是字符串或 `null`；
+- `uncertain_claims` 每条标注 `[无直接证据]` 或引用 E-xxx（OPEN-1），不留无证据 ID 的空主张。
+
 ## 红线
 
 - Confidence 必须是规则化计算结果，不由模型自由生成；

@@ -43,6 +43,28 @@ critical_path: true
 }
 ```
 
+## 输出契约（必须遵守）
+
+你的产物 `frame.json` 必须通过 `schemas/education-frame.schema.json` 校验（stage `frame` 的 schema-gate，首次生成即必须合规，不依赖事后修正）。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。
+
+**Required 字段（缺失即校验失败）**：`question`（≥5 字符）、`decision_target`。
+
+**枚举值表（禁止自由文本冒充枚举）**：
+
+| 字段 | 枚举值 |
+|---|---|
+| `decision_target` | `evidence_review` \| `teaching_decision` \| `pilot_design` \| `evaluation_design` |
+| `outcomes.primary[]` | `knowledge_gain` \| `concept_understanding` \| `retention` \| `transfer` \| `independent_problem_solving` \| `completion_time` \| `accuracy` \| `code_quality` \| `assignment_score` \| `engagement` \| `motivation` \| `cognitive_load` \| `help_seeking` \| `metacognition` \| `ai_dependency` \| `over_reliance` \| `reduced_effort` \| `reduced_transfer` \| `academic_integrity_risk` \| `false_confidence` |
+| `context.online_or_offline` | `online` \| `offline` \| `hybrid` |
+
+**类型/格式硬约束（FIX-2 实测违规项，逐条禁止）**：
+
+- `decision_target` 只能取上表 4 个枚举值之一（如 `teaching_decision`），禁止用长文本描述决策目标；
+- `outcomes.primary` / `outcomes.secondary` / `outcomes.risk` 必须是**数组**，primary 逐项用 Outcome Taxonomy 枚举名，禁止用句子代替（如 `["independent_problem_solving"]`，不是 `"提升独立解题能力"`）；
+- `scope.study_types` 必须是**数组**（如 `["rct", "quasi_experimental"]`），禁止写字符串；
+- `inclusion_criteria` / `exclusion_criteria` 必须是**数组**，禁止写字符串；
+- `outcomes.primary` 的枚举必须与 `schemas/evidence.schema.json` 的 `outcome_type` 枚举一致（同一 Outcome Taxonomy），且不得把"任务完成速度"写进 primary（红线）。
+
 ## 红线
 
 - 不允许把"任务完成速度"直接写进 primary learning outcomes——必须用 Outcome Taxonomy 的规范名称；

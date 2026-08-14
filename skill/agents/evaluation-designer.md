@@ -43,6 +43,21 @@ critical_path: false
 }
 ```
 
+## 输出契约（必须遵守）
+
+你的产物 `evaluation.json`（EvaluationPlan）必须通过 `schemas/evaluation.schema.json` 校验（stage `evaluate` 的 schema-gate，首次生成即必须合规）。本 schema 无枚举字段，但类型、required 与数组结构必须严格。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。
+
+**Required 字段（缺失即校验失败）**：`research_question`、`groups`、`analysis_plan`。
+
+**类型/结构硬约束**：
+
+- `groups` 是对象，必须含 `treatment` 与 `comparison` 两个字段；
+- `process_metrics` / `learning_metrics` / `risk_metrics` / `stop_conditions` 必须都是**数组**，禁止逗号拼接字符串；
+- `retention_test` / `transfer_test` 是字符串或 `null`——没有延迟/迁移测试时必须显式写 `null`，禁止缺失字段；
+- `risk_metrics` 必须覆盖 AI 教学风险（如 `ai_dependency`、`academic_integrity_risk`、`false_confidence`，红线要求），缺失即不合格；
+- `analysis_plan` 必须写明统计方法（如基线调整 ANCOVA），且任务表现与学习指标分开报告；
+- `learning_metrics` 不得只含 self-report（红线），至少一项客观/行为指标。
+
 ## 红线
 
 - 只测任务完成速度的评价方案 → 不合格，必须补学习/保持/迁移指标；

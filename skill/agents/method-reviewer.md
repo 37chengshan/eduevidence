@@ -62,6 +62,26 @@ critical_path: true
 }
 ```
 
+## 输出契约（必须遵守）
+
+你的产物 `methodology.json`（每份研究一个 MethodologyAudit）必须通过 `schemas/methodology.schema.json` 校验（stage `audit` 的 schema-gate，首次生成即必须合规）。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。
+
+**Required 字段（缺失即校验失败）**：`target`、`verdict`、`audit_items`、`task_vs_learning_guard`、`limitations`、`suggestions`。
+
+**枚举值表（禁止自由文本冒充枚举）**：
+
+| 字段 | 枚举值 |
+|---|---|
+| `verdict` | `PASS` \| `CONCERN` \| `FAIL` |
+| `audit_items.<key>.status` | `met` \| `partial` \| `missing` \| `not_applicable` |
+
+**类型/结构硬约束**：
+
+- `audit_items` 的 key 取自 15 项审查清单（`control_group` / `randomization` / `pre_test` / `post_test` / `retention_test` / `transfer_test` / `sample_bias` / `self_selection` / `measurement_validity` / `confounders` / `instructor_effect` / `novelty_effect` / `tool_version_effect` / `ai_usage_policy` / `dropout`），每项为 `{"status": <上表枚举>, "note": "..."}` 对象，status 禁止自由文本（如 `"基本满足"`）；
+- `task_vs_learning_guard.measured_construct` 用规范名（如 `task_completion` / `learning_outcome`），`equates_task_with_learning` 必须是 **boolean**（`true` / `false`），禁止字符串；
+- `limitations` / `suggestions` 必须是**数组**，禁止逗号拼接的字符串；
+- `target` 填 evidence_id / source_id 或 `overall`，不自由发挥。
+
 ## 红线
 
 - 不评价研究"是否有名"——只评价设计；

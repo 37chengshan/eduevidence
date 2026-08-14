@@ -60,6 +60,37 @@ critical_path: true
 }
 ```
 
+## 输出契约（必须遵守）
+
+你的产物 `evidence.jsonl`（每行一个 Evidence Object）必须通过 `schemas/evidence.schema.json` 校验（schema v1.1，stage `extract` 的 schema-gate，首次生成即必须合规）。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。缺失任何 mandatory 字段都会使该对象标记为 `UNSUPPORTED`。
+
+**Required 字段（schema v1.1，缺失即 UNSUPPORTED/校验失败）**：`evidence_id`、`source_id`、`study_id`、`sample_id`、`claim_id`、`claim`、`outcome_type`、`relation_to_claim`、`effect_direction`、`source_location`。
+
+**枚举值表（禁止自由文本冒充枚举）**：
+
+| 字段 | 枚举值 |
+|---|---|
+| `study_type` | `rct` \| `quasi_experimental` \| `observational` \| `survey` \| `qualitative` \| `meta_analysis` \| `literature_review` \| `case_study` \| `mixed_methods` |
+| `outcome_type` | `knowledge_gain` \| `concept_understanding` \| `retention` \| `transfer` \| `independent_problem_solving` \| `completion_time` \| `accuracy` \| `code_quality` \| `assignment_score` \| `engagement` \| `motivation` \| `cognitive_load` \| `help_seeking` \| `metacognition` \| `ai_dependency` \| `over_reliance` \| `reduced_effort` \| `reduced_transfer` \| `academic_integrity_risk` \| `false_confidence` |
+| `relation_to_claim` | `support` \| `contradict` \| `neutral` |
+| `effect_direction` | `positive` \| `negative` \| `null` |
+| `decision_relation` | `support_adoption` \| `oppose_adoption` \| `conditional` \| `neutral` |
+| `status` | `SUPPORTED` \| `UNSUPPORTED` \| `DOWNGRADE_CONFIDENCE` \| `CONTRADICT` |
+
+**方向语义（三种方向严格分离，禁止混用）**：
+
+- `relation_to_claim`：该证据支持/反驳某条 claim（Claim Audit 只依据此字段）；
+- `effect_direction`：研究观察到的效应方向（Outcome 可视化/聚合只依据此字段）；
+- `decision_relation`：对最终教学决策的意义（Consistency/Tribunal 依据此字段）；
+- 旧字段 `direction` 已废弃（deprecated），优先使用 `relation_to_claim`，不要再新写。
+
+**类型/格式硬约束（FIX-2 实测违规项，逐条禁止）**：
+
+- `study_type` 只能取上表 9 个枚举值；`"controlled_experiment"` 这类非枚举值一律禁止（→ 映射为 `quasi_experimental`）；
+- `sample_size` 必须是整数或 `null`（≥0），禁止字符串（如 `"123 人"`）；
+- `quality_dimensions` 的 `D1_study_design`–`D5_directness` 各为 0/1/2 整数；
+- `claim_id` 是 schema v1.1 的顶层必填字段（FIX-2 曾因缺失移入 extensions，现已升级为正式字段），每条 evidence 必须绑定 `C-xxx`。
+
 ## 红线
 
 - 强制字段缺失 → status 必须标 `UNSUPPORTED`；

@@ -46,6 +46,26 @@ critical_path: false
 }
 ```
 
+## 输出契约（必须遵守）
+
+你的产物 `intervention.json`（TeachingIntervention）必须通过 `schemas/intervention.schema.json` 校验（stage `intervene` 的 schema-gate，首次生成即必须合规）。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。
+
+**Required 字段（缺失即校验失败）**：`decision`、`target_learners`、`pilot_duration`、`stop_conditions`。
+
+**枚举值表（禁止自由文本冒充枚举）**：
+
+| 字段 | 枚举值 |
+|---|---|
+| `decision` | `adopt` \| `pilot` \| `reject` \| `insufficient_evidence` |
+
+**类型/语义硬约束**：
+
+- `decision` 必须与 Verdict 的 `recommended_action` 同枚举，禁止自由描述（如 `"建议小范围试点"` → `pilot`）；
+- `pilot_duration` 用规范写法（如 `8_weeks`），不用 `"八周"` 等自由文本；
+- `learning_goals` / `risk_control` / `stop_conditions` / `evidence_alignment` 必须都是**数组**；`evidence_alignment` 逐项填 evidence_id（如 `E-004`），证明设计追溯到证据；
+- `phase_1` 至少含 `name` / `activities`（数组）/ `ai_usage_rule` / `outcome_check`，其余 phase 缺省用空对象 `{}`，不要造 schema 外字段；
+- REJECT / INSUFFICIENT EVIDENCE 时**不输出试点设计**（红线），直接说明为何不落地。
+
 ## 红线
 
 - REJECT 或 INSUFFICIENT EVIDENCE 时**不设计试点**，直接说明为何不落地；

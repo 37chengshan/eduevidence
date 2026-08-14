@@ -43,6 +43,28 @@ critical_path: false
 ]
 ```
 
+## 输出契约（必须遵守）
+
+你的产物 `sources.jsonl`（每行一个 Source Object）必须通过 `schemas/source.schema.json` 校验（stage `retrieve` 的 schema-gate，首次生成即必须合规，不依赖 gate 事后修正）。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。
+
+**Required 字段（缺失即校验失败）**：`source_id`、`title`、`canonical_url`（URI）、`authority_level`。
+
+**枚举值表（禁止自由文本冒充枚举）**：
+
+| 字段 | 枚举值 |
+|---|---|
+| `authority_level` | `tier1_paper_doi` \| `tier2_academic_database` \| `tier3_professional_institution` \| `tier4_news_secondary` \| `tier5_general_web` |
+| `source_type` | `paper` \| `journal_article` \| `conference_paper` \| `report` \| `institution_page` \| `dataset` \| `thesis` \| `news` \| `web_page` \| `pdf` \| `other` |
+| `status` | `DISCOVERED` \| `FETCHED` \| `VALID` \| `PARTIAL` \| `FAILED` \| `DUPLICATE` \| `INVALID` |
+
+**类型/格式硬约束（FIX-2 实测违规项，逐条禁止）**：
+
+- `authority_level` 只能取 tier1–tier5 枚举值；`"peer-reviewed conference paper"` 这类自由文本一律禁止，按来源属性映射到对应 tier；
+- `canonical_url` 与 `source_location` 必须是可验证的 **URI/URL**（如 `https://doi.org/10.1145/...`），禁止写 `"Proceedings of ..."` 等非 URL 文本；
+- `year` 是整数或 `null`，禁止字符串；
+- `search_snippet` / `relevance_note` 等 schema 未列出的辅助字段必须放入 `extensions`（如 `"extensions": {"search_snippet": "..."}`），禁止放在顶层；
+- fetch 溯源按 `fetch` 对象填写，`fetch_status` 必填：`FETCH_VALID` \| `FETCH_PARTIAL` \| `FETCH_FAILED`。
+
 ## 红线
 
 - **禁止编造来源**；找不到就写 `NO_RESULT: <检索式>`；

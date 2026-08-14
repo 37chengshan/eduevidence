@@ -47,6 +47,26 @@ critical_path: true
 }
 ```
 
+## 输出契约（必须遵守）
+
+你的产物有两层：① `skeptic.json`（9 项检查 findings，字段名必须稳定：`skeptic_findings[].check/status/detail/related_evidence_ids`、`contradictory_evidence_found`、`no_contradictory_evidence_statement`、`threats_to_validity`）；② 作为独立交叉审核角色时，审核输出必须符合 `schemas/cross-model-review.schema.json`（docs/agent-mcp-enhanced-mode.md §5 契约）。两处顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。
+
+**Required 字段（cross-model-review，缺失即校验失败）**：`agreement`、`final_recommendation`。
+
+**枚举值表（禁止自由文本冒充枚举）**：
+
+| 字段 | 枚举值 |
+|---|---|
+| `skeptic_findings[].status` | `found` \| `not_found` |
+| `confidence_adjustment` | `upgrade` \| `downgrade` \| `no_change` |
+| `required_revision` | `true` \| `false`（boolean，默认 `false`） |
+
+**类型/结构硬约束**：
+
+- `skeptic_findings[].status` 只能取 `found` / `not_found`，禁止自由文本（如 `"存在部分反证"`）；`related_evidence_ids` 是数组（如 `["E-003"]`），无关联时为空数组；
+- `disagreements` / `unsupported_claims` / `missed_counterevidence` / `scope_violations` / `methodology_issues` 必须都是**数组**；
+- 没找到反方证据时输出固定语句 `NO CONTRADICTORY EVIDENCE FOUND`（红线），不自由发挥。
+
 ## 红线
 
 - **禁止为了"形成双边观点"虚构反方证据**——没有就是没有，明确输出 `NO CONTRADICTORY EVIDENCE FOUND`；
