@@ -27,8 +27,10 @@ def _is_number(value: Any) -> bool:
 
 
 def _usable(rows: list[dict]) -> list[dict]:
+    import math as _m
     return [r for r in rows or []
-            if _is_number(r.get("d")) and _is_number(r.get("se")) and r["se"] > 0]
+            if _is_number(r.get("d")) and _is_number(r.get("se")) and r["se"] > 0
+            and _m.isfinite(float(r["d"])) and _m.isfinite(float(r["se"]))]
 
 
 # ---------------------------------------------------------------------------
@@ -131,7 +133,7 @@ def egger_regression(rows: list[dict]) -> dict:
     rss = sum(rr * rr for rr in residuals)
     mse = rss / (k - 2) if k > 2 else 0.0
     se_intercept = math.sqrt(mse * (1.0 / k + x_bar * x_bar / sxx))
-    if se_intercept == 0 or not math.isfinite(se_intercept):
+    if se_intercept == 0 or not math.isfinite(se_intercept):  # perfect fit
         t, p = 0.0, 1.0
     else:
         t = intercept / se_intercept

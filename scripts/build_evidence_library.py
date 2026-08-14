@@ -84,6 +84,29 @@ def _load_questions_meta() -> dict[str, dict[str, Any]]:
     return meta
 
 
+#: Negative-semantics markers: a claim stating harm/deterioration/dependency is
+#: evidence AGAINST adoption (direction=contradict), never support (review P1-1).
+NEGATIVE_MARKERS = ("受损", "下降", "降低", "削弱", "减少", "依赖", "风险",
+                    "危害", "不利于", "更差", "低于", "有害", "负面", "负向",
+                    "退化", "赤字", "损害", "虚增", "侵蚀", "削弱"
+                    "reduce", "harm", "worsen", "depend", "reliance", "risk"
+                    "lower", "worse", "negative"
+                    "reduces", "harms", "damage")
+#: Null-result markers: no-difference evidence is neutral, not a counter-argument.
+NULL_MARKERS = ("无显著差异", "未发现显著", "零结果", "没有显著", "无差异",
+                "no significant", "null", "not significant", "no difference")
+
+
+def _claim_direction(text: str, base: str) -> str:
+    """Per-claim direction: null-result claims are neutral; negative-semantics
+    claims are contradict (they argue AGAINST adoption)."""
+    if any(m in text for m in NULL_MARKERS):
+        return "neutral"
+    if any(m in text for m in NEGATIVE_MARKERS):
+        return "contradict"
+    return base
+
+
 def _gold_entries() -> list[dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     q_meta = _load_questions_meta()
@@ -96,6 +119,7 @@ def _gold_entries() -> list[dict[str, Any]]:
         domain = q_meta.get(qid, {}).get("domain", "unspecified")
         outcomes = gold.get("correct_outcome_types") or ["unspecified"]
         outcome_token = outcomes[0] if outcomes else "unspecified"
+        outcome_tokens = [o for o in outcomes if o != "unspecified"] or [outcome_token]
         expected = list(gold.get("expected_decision_range") or [])
         # Coarse direction rule documented in the module docstring.
         pure_reject = "reject" in expected and "pilot" not in expected
@@ -104,9 +128,11 @@ def _gold_entries() -> list[dict[str, Any]]:
 
         units: list[tuple[str, str, str, str]] = []  # (kind, text, direction, label)
         for i, text in enumerate(gold.get("key_claims") or [], start=1):
-            units.append(("claim", text, claims_direction, f"关键断言 {i}"))
+            units.append(("claim", text, _claim_direction(text, claims_direction),
+                         f"关键断言 {i}"))
         for i, text in enumerate(gold.get("key_supporting_sources") or [], start=1):
-            units.append(("source", text, claims_direction, f"支持来源 {i}"))
+            units.append(("source", text, _claim_direction(text, claims_direction),
+                         f"支持来源 {i}"))
         for i, text in enumerate(gold.get("known_contradictions") or [], start=1):
             units.append(("contra", text, contra_direction, f"已知矛盾 {i}"))
 
@@ -126,6 +152,7 @@ def _gold_entries() -> list[dict[str, Any]]:
                 "title": f"金标准 {qid} {label}",
                 "year": None,
                 "outcome_token": outcome_token,
+                "outcome_tokens": outcome_tokens,
                 "direction": direction,
                 "study_type": "benchmark_annotation",
                 "claim_text": text,
@@ -172,6 +199,7 @@ def _example_entries() -> list[dict[str, Any]]:
                 "title": (ev.get("title") or "").strip() or f"{domain} evidence",
                 "year": ev.get("year"),
                 "outcome_token": ev.get("outcome_type") or "unspecified",
+                "outcome_tokens": [ev.get("outcome_type") or "unspecified"],
                 "direction": direction,
                 "study_type": ev.get("study_type") or "example_workflow",
                 "claim_text": claim,

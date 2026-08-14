@@ -195,6 +195,7 @@ class CliDriver:
                f"--thinking={self.thinking}", "--no-extensions", "--no-skills"]
         if no_tools:
             cmd.append("--no-tools")
+        cmd.append("--")
         cmd.append(prompt)
         t0 = time.monotonic()
         with tempfile.TemporaryDirectory(prefix="eduevidence-bench-") as workdir:

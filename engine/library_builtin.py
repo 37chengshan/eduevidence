@@ -43,7 +43,19 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-LIBRARY_PATH = ROOT / "benchmarks" / "evidence-library.json"
+def _resolve_library_path() -> Path:
+    """Repository layout first; wheel-installed share/ layout as fallback."""
+    repo = ROOT / "benchmarks" / "evidence-library.json"
+    if repo.is_file():
+        return repo
+    import sys
+    share = Path(sys.prefix) / "share" / "eduevidence" / "benchmarks" / "evidence-library.json"
+    if share.is_file():
+        return share
+    return repo
+
+
+LIBRARY_PATH = _resolve_library_path()
 
 # --- matching knobs (conservative) ---
 MATCH_THRESHOLD = 0.30       # min bigram-overlap ratio (intersection / min sizes)
@@ -217,6 +229,10 @@ def preliminary_verdict(question: str, *, top_k: int = 10) -> dict[str, Any]:
     support => pilot, else insufficient_evidence. Never adopt. Never crashes on
     empty/blank questions.
     """
+    try:
+        top_k = int(top_k)
+    except (TypeError, ValueError):
+        top_k = 10
     lib = _read_library()
     question = (question or "").strip()
     q_tokens = _tokenize(question)
@@ -227,7 +243,9 @@ def preliminary_verdict(question: str, *, top_k: int = 10) -> dict[str, Any]:
         e_tokens = _tokenize(_entry_text(entry))
         base = _overlap_tokens(q_tokens, e_tokens)
         shared = len(q_tokens & e_tokens)
-        has_outcome = entry.get("outcome_token") in q_outcomes
+        # multi-outcome entries match when ANY of their tokens is in the question
+        entry_tokens = set(entry.get("outcome_tokens") or [entry.get("outcome_token")])
+        has_outcome = bool(entry_tokens & q_outcomes)
         scored.append((base, shared, has_outcome, entry))
 
     scored.sort(key=lambda t: (-t[0], -t[1], -int(t[2]), t[3].get("entry_id", "")))

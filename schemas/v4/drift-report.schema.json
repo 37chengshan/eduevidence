@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://eduevidence.dev/schemas/v4/drift-report.schema.json",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/v4/drift-report.schema.json",
   "title": "DriftReport",
   "description": "One living-evidence refresh outcome (v4): how the graph revision and adjudication moved between the tracked DecisionSnapshot and the fresh one, which new evidence entered the graph, and a suggested_action for a human reviewer.",
   "type": "object",

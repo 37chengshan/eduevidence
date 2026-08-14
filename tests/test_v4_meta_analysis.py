@@ -389,3 +389,56 @@ def test_empty_and_degenerate_inputs():
     assert one_r["tau2"] == 0.0
     assert leave_one_out([{"study_id": "Z", "outcome_id": "O",
                            "d": 0.3, "se": 0.2}], fixed_effect_pooling) is None
+
+
+def test_i2_clamped_when_q_below_df_near_homogeneous():
+    # P0-1 regression: near-homogeneous data (Q < df, ~40% of real meta-analyses)
+    # must clamp I2 to 0.0 instead of producing a huge negative that violates
+    # the v4 schema (I2 minimum 0).
+    rows = [
+        {"study_id": f"STU-{i}", "outcome_id": "OUT-x", "d": 0.50, "se": 0.20, "n": 50}
+        for i in range(5)
+    ]
+    out = random_effect_pooling(rows)
+    assert out["I2"] == 0.0, out
+    assert 0.0 <= out["I2"] <= 100.0
+    # and the full pipeline output must validate against its own schema
+    full = run_meta_analysis(rows)
+    import json as _json
+    from validate_schema import Validator, SchemaError
+    schema = _json.loads(Path(__file__).resolve().parent.parent.joinpath(
+        'schemas/v4/meta-analysis.schema.json').read_text(encoding='utf-8'))
+    Validator(schema).validate(full, schema, '$')
+
+
+def test_i2_clamped_when_q_below_df_near_homogeneous():
+    # P0-1 regression: near-homogeneous data (Q < df, ~40% of real meta-analyses)
+    # must clamp I2 to 0.0 instead of producing a huge negative that violates
+    # the v4 schema (I2 minimum 0).
+    rows = [
+        {"study_id": f"STU-{i}", "outcome_id": "OUT-x", "d": 0.50, "se": 0.20, "n": 50}
+        for i in range(5)
+    ]
+    out = random_effect_pooling(rows)
+    assert out["I2"] == 0.0, out
+    assert 0.0 <= out["I2"] <= 100.0
+    # near-homogeneous but not identical: Q > 0 and Q < df must also clamp
+    near = [
+        {"study_id": "N1", "outcome_id": "O", "d": 0.500, "se": 0.20},
+        {"study_id": "N2", "outcome_id": "O", "d": 0.501, "se": 0.20},
+        {"study_id": "N3", "outcome_id": "O", "d": 0.499, "se": 0.20},
+    ]
+    near_out = random_effect_pooling(near)
+    assert 0.0 <= near_out["I2"] <= 100.0, near_out
+    # and the full pipeline output must validate against its own schema
+    evidence = [
+        {"evidence_id": f"E-{i}", "study_id": f"STU-{i}", "outcome_id": "OUT-x",
+         "sample_size": 50, "effect_estimate": {"value": 0.50, "raw_text": "d=0.5"}}
+        for i in range(5)
+    ]
+    full = run_meta_analysis(evidence)
+    import json as _json
+    from validate_schema import Validator, SchemaError
+    schema = _json.loads(Path(__file__).resolve().parent.parent.joinpath(
+        'schemas/v4/meta-analysis.schema.json').read_text(encoding='utf-8'))
+    Validator(schema).validate(full, schema, '$')

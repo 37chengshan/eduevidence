@@ -819,10 +819,10 @@ def _cmd_domain(args) -> int:
         return 0
     if args.action == "check":
         domain = load_domain(args.domain)
-        from engine.contracts import load_schema
         try:
             import json as _json
-            _json.load(open(domain['frame_schema']))
+            from pathlib import Path as _P
+            _json.load(open(_P(__file__).resolve().parent.parent / domain["frame_schema"]))
             print(f"domain {domain['id']}: contracts OK (frame schema loads)")
             return 0
         except Exception as exc:
@@ -1315,8 +1315,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     except (ValueError, RuntimeError) as exc:
-        # v3 command handlers (pilot/synthesize/benchmark) validate inputs and
-        # raise ValueError on contract violations; surface cleanly (P2-9).
+        # v3/v4 command handlers validate inputs and raise ValueError on
+        # contract violations; surface cleanly.
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+    except (KeyError, AttributeError, TypeError) as exc:
+        # v4 handlers: unknown domain ids, missing required args etc. must not
+        # leak raw tracebacks (review P2).
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 

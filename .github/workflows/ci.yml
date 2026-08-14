@@ -102,12 +102,14 @@ jobs:
             exit 1
           fi
           # 2) Content canaries from the local-only competition brief.
-          if grep -rIl '科艺融合' upload/ | grep -q .; then
-            echo "::error::local competition brief content leaked into upload/ (科艺融合)"
-            exit 1
-          fi
+          #    (科艺融合 appears in the public v4-roadmap doc, so the canary uses
+          #    brief-exclusive strings only.)
           if grep -rIl '壁仞' upload/ | grep -q .; then
             echo "::error::local competition brief content leaked into upload/ (壁仞)"
+            exit 1
+          fi
+          if grep -rIl 'interndiscovery@pjlab.org.cn' upload/ | grep -q .; then
+            echo "::error::local competition brief content leaked into upload/ (官方邮箱)"
             exit 1
           fi
           echo "zero-leak scan OK"

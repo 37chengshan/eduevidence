@@ -9,6 +9,9 @@
       "title": "金标准 Q01 关键断言 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI编程助手（如GitHub Copilot）可提高新手学生完成编程任务的正确率",
@@ -28,10 +31,13 @@
       "title": "金标准 Q01 关键断言 2",
       "year": null,
       "outcome_token": "accuracy",
-      "direction": "support",
+      "outcome_tokens": [
+        "accuracy"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "Copilot类工具主要减少语法与低级错误，而非逻辑设计错误",
-      "effect_summary": "金标准断言（support）：Copilot类工具主要减少语法与低级错误，而非逻辑设计错误",
+      "effect_summary": "金标准断言（contradict）：Copilot类工具主要减少语法与低级错误，而非逻辑设计错误",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -47,6 +53,9 @@
       "title": "金标准 Q01 已知矛盾 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究未发现对复杂/开放性任务的正确率有显著差异",
@@ -67,6 +76,9 @@
       "title": "金标准 Q01 已知矛盾 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "正确率提升的效应量在不同题目难度下不稳定",
@@ -87,6 +99,9 @@
       "title": "金标准 Q01 支持来源 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "Peng et al. (2023) Copilot on LeetCode 受控实验",
@@ -106,6 +121,9 @@
       "title": "金标准 Q01 支持来源 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "Vasconcelos et al. (2023) 对Copilot使用的受控对比研究",
@@ -125,6 +143,9 @@
       "title": "金标准 Q02 关键断言 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "在写作课程中使用AI写作助手的学生，脱离工具后的独立写作得分低于不使用AI的学生",
@@ -144,6 +165,9 @@
       "title": "金标准 Q02 关键断言 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "AI写作助手的使用与独立写作能力存在负向关联",
@@ -163,6 +187,9 @@
       "title": "金标准 Q02 关键断言 3",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "即时任务表现提升不等同于写作能力增长",
@@ -182,6 +209,9 @@
       "title": "金标准 Q02 已知矛盾 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究认为AI写作助手可作为脚手架提高低水平写作者的基础写作能力",
@@ -202,6 +232,9 @@
       "title": "金标准 Q02 已知矛盾 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "使用方式（改写 vs 代写）不同导致效果方向相反",
@@ -222,6 +255,9 @@
       "title": "金标准 Q02 支持来源 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "Warschauer et al. (2023) 关于生成式AI与写作教育的研究",
@@ -241,6 +277,9 @@
       "title": "金标准 Q02 支持来源 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "对AI辅助写作后撤除工具情境的受控实验",
@@ -260,6 +299,9 @@
       "title": "金标准 Q03 关键断言 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "基于大模型的AI辅导系统可提高大学微积分课程的期末考试成绩",
@@ -279,6 +321,9 @@
       "title": "金标准 Q03 关键断言 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI Tutor的即时个性化反馈是成绩提升的可能机制",
@@ -298,6 +343,9 @@
       "title": "金标准 Q03 关键断言 3",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "效果主要体现为程序性练习熟练而非概念理解",
@@ -317,6 +365,9 @@
       "title": "金标准 Q03 已知矛盾 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示成绩提升仅在中等难度题目上显著",
@@ -337,6 +388,9 @@
       "title": "金标准 Q03 已知矛盾 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "低参与度学生使用AI Tutor后成绩无显著变化甚至下降",
@@ -357,6 +411,9 @@
       "title": "金标准 Q03 支持来源 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "Khanmigo等高数AI辅导工具的中等规模实证评估",
@@ -376,6 +433,9 @@
       "title": "金标准 Q03 支持来源 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "智能辅导系统（ITS）元分析中即时反馈效应的证据",
@@ -395,6 +455,9 @@
       "title": "金标准 Q04 关键断言 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI提供错误步骤解释比直接给出最终答案更能提升学生后续同类题目的解答正确率",
@@ -414,6 +477,9 @@
       "title": "金标准 Q04 关键断言 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "错误解释促进对错误原因的理解，从而增强保持",
@@ -433,6 +499,9 @@
       "title": "金标准 Q04 关键断言 3",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "答案型反馈仅产生短时记忆但迁移弱",
@@ -452,6 +521,9 @@
       "title": "金标准 Q04 已知矛盾 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究发现低水平学生无法利用错误解释，效果反而差于直接答案",
@@ -472,6 +544,9 @@
       "title": "金标准 Q04 已知矛盾 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "解释的详细程度过高可能增加认知负荷降低保持",
@@ -492,6 +567,9 @@
       "title": "金标准 Q04 支持来源 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "反馈干预元分析（Hattie & Timperley 2007）中解释型反馈的证据",
@@ -511,6 +589,9 @@
       "title": "金标准 Q04 支持来源 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI辅导场景下解释型 vs 答案型反馈的对照实验",
@@ -530,6 +611,9 @@
       "title": "金标准 Q05 关键断言 1",
       "year": null,
       "outcome_token": "transfer",
+      "outcome_tokens": [
+        "transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "完成AI辅助编程任务的学生，在无AI情境下独立调试不熟悉代码的成功率低于全程自主完成的学生",
@@ -549,6 +633,9 @@
       "title": "金标准 Q05 关键断言 2",
       "year": null,
       "outcome_token": "transfer",
+      "outcome_tokens": [
+        "transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "AI辅助降低了练习过程中的主动加工，导致技能迁移受损",
@@ -568,6 +655,9 @@
       "title": "金标准 Q05 关键断言 3",
       "year": null,
       "outcome_token": "transfer",
+      "outcome_tokens": [
+        "transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "迁移下降可能与问题解决经验被AI代劳有关",
@@ -587,6 +677,9 @@
       "title": "金标准 Q05 已知矛盾 1",
       "year": null,
       "outcome_token": "transfer",
+      "outcome_tokens": [
+        "transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示AI辅助仅作为反馈工具时不损害甚至提升迁移",
@@ -607,6 +700,9 @@
       "title": "金标准 Q05 已知矛盾 2",
       "year": null,
       "outcome_token": "transfer",
+      "outcome_tokens": [
+        "transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "迁移测试难度与任务相似度不同导致结论不一致",
@@ -627,6 +723,9 @@
       "title": "金标准 Q05 支持来源 1",
       "year": null,
       "outcome_token": "transfer",
+      "outcome_tokens": [
+        "transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "生成式AI对编程学习迁移影响的前瞻性研究",
@@ -646,6 +745,9 @@
       "title": "金标准 Q05 支持来源 2",
       "year": null,
       "outcome_token": "transfer",
+      "outcome_tokens": [
+        "transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "过度依赖与减少主动练习导致迁移受损的证据（Yu & Guo 2023 等）",
@@ -665,6 +767,9 @@
       "title": "金标准 Q06 关键断言 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "翻转课堂相比传统课堂讲授可提高学生两周后对课程知识的保持率",
@@ -684,6 +789,9 @@
       "title": "金标准 Q06 关键断言 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "课堂内主动加工与课下视频预习的组合促进深度编码",
@@ -703,10 +811,13 @@
       "title": "金标准 Q06 关键断言 3",
       "year": null,
       "outcome_token": "retention",
-      "direction": "support",
+      "outcome_tokens": [
+        "retention"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "保持率的提升依赖课堂活动的设计质量",
-      "effect_summary": "金标准断言（support）：保持率的提升依赖课堂活动的设计质量",
+      "effect_summary": "金标准断言（contradict）：保持率的提升依赖课堂活动的设计质量",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -722,6 +833,9 @@
       "title": "金标准 Q06 已知矛盾 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分元分析显示翻转课堂对知识记忆类结局的效应量很小或不显著",
@@ -742,6 +856,9 @@
       "title": "金标准 Q06 已知矛盾 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "不同学科、不同实施质量下效果差异大",
@@ -762,6 +879,9 @@
       "title": "金标准 Q06 支持来源 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "翻转课堂教学效果的元分析（如Van Alten et al. 2019）",
@@ -781,6 +901,9 @@
       "title": "金标准 Q06 支持来源 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "主动学习与记忆保持关系的实验证据",
@@ -800,6 +923,9 @@
       "title": "金标准 Q07 关键断言 1",
       "year": null,
       "outcome_token": "motivation",
+      "outcome_tokens": [
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "案例教学法相比常规讲授可提升学生的学习动机",
@@ -819,6 +945,9 @@
       "title": "金标准 Q07 关键断言 2",
       "year": null,
       "outcome_token": "motivation",
+      "outcome_tokens": [
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "真实情境案例增强感知相关性与情境兴趣",
@@ -838,6 +967,9 @@
       "title": "金标准 Q07 关键断言 3",
       "year": null,
       "outcome_token": "motivation",
+      "outcome_tokens": [
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "动机提升主要体现为情境兴趣而非深层持续动机",
@@ -857,6 +989,9 @@
       "title": "金标准 Q07 已知矛盾 1",
       "year": null,
       "outcome_token": "motivation",
+      "outcome_tokens": [
+        "motivation"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示案例教学增加认知负荷反而降低低基础学生动机",
@@ -877,6 +1012,9 @@
       "title": "金标准 Q07 已知矛盾 2",
       "year": null,
       "outcome_token": "motivation",
+      "outcome_tokens": [
+        "motivation"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "动机测量工具（自陈量表）差异导致结论不稳定",
@@ -897,6 +1035,9 @@
       "title": "金标准 Q07 支持来源 1",
       "year": null,
       "outcome_token": "motivation",
+      "outcome_tokens": [
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "案例教学法对学生学习动机影响的实证研究",
@@ -916,6 +1057,9 @@
       "title": "金标准 Q07 支持来源 2",
       "year": null,
       "outcome_token": "motivation",
+      "outcome_tokens": [
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "情境兴趣理论的干预实验证据",
@@ -935,6 +1079,9 @@
       "title": "金标准 Q08 关键断言 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "间隔重复复习学生的课程知识保留率显著优于考前集中突击学生",
@@ -954,6 +1101,9 @@
       "title": "金标准 Q08 关键断言 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "间隔效应源于提取练习与遗忘再巩固的机制",
@@ -973,6 +1123,9 @@
       "title": "金标准 Q08 关键断言 3",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "间隔间隔长度的最优值受学习材料难度影响",
@@ -992,6 +1145,9 @@
       "title": "金标准 Q08 已知矛盾 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示对高先验知识学生的间隔效应减弱",
@@ -1012,6 +1168,9 @@
       "title": "金标准 Q08 已知矛盾 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "间隔复习的依从性与自我管理难度可能稀释课堂效果",
@@ -1032,6 +1191,9 @@
       "title": "金标准 Q08 支持来源 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "间隔效应研究综述（Cepeda et al. 2006）",
@@ -1051,6 +1213,9 @@
       "title": "金标准 Q08 支持来源 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "应用于课程情境的间隔复习干预实验",
@@ -1070,6 +1235,9 @@
       "title": "金标准 Q09 关键断言 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "使用自我解释策略学习新概念的学生，概念理解测试得分显著高于仅反复阅读的学生",
@@ -1089,6 +1257,9 @@
       "title": "金标准 Q09 关键断言 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "自我解释促进新旧知识联结与错误发现",
@@ -1108,10 +1279,13 @@
       "title": "金标准 Q09 关键断言 3",
       "year": null,
       "outcome_token": "concept_understanding",
-      "direction": "support",
+      "outcome_tokens": [
+        "concept_understanding"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "效果依赖学习者能否产出高质量的解释",
-      "effect_summary": "金标准断言（support）：效果依赖学习者能否产出高质量的解释",
+      "effect_summary": "金标准断言（contradict）：效果依赖学习者能否产出高质量的解释",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1127,6 +1301,9 @@
       "title": "金标准 Q09 已知矛盾 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示低先验知识学生自我解释困难，效果不显著",
@@ -1147,6 +1324,9 @@
       "title": "金标准 Q09 已知矛盾 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "提示方式（引导性 vs 自由性）不同效果方向不同",
@@ -1167,6 +1347,9 @@
       "title": "金标准 Q09 支持来源 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "Chi et al. (1989, 1994) 自我解释效应系列研究",
@@ -1186,6 +1369,9 @@
       "title": "金标准 Q09 支持来源 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "自我解释策略在大学生概念学习中的实证干预",
@@ -1205,6 +1391,9 @@
       "title": "金标准 Q10 关键断言 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "在线测验提供即时对错反馈相比延迟反馈可提高学生当堂测验的答题准确率",
@@ -1224,6 +1413,9 @@
       "title": "金标准 Q10 关键断言 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "即时反馈缩短错误答案在记忆中停留时间",
@@ -1243,6 +1435,9 @@
       "title": "金标准 Q10 关键断言 3",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "准确率提升主要体现在中低难度题目上",
@@ -1262,6 +1457,9 @@
       "title": "金标准 Q10 已知矛盾 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示即时反馈降低学生在后续延迟测验中的表现（依赖反馈线索）",
@@ -1282,6 +1480,9 @@
       "title": "金标准 Q10 已知矛盾 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "高难度题目上即时反馈的效应不显著",
@@ -1302,6 +1503,9 @@
       "title": "金标准 Q10 支持来源 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "即时反馈对课堂测验表现影响的对照研究",
@@ -1321,6 +1525,9 @@
       "title": "金标准 Q10 支持来源 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "学习技术中反馈时机效应的实证证据",
@@ -1340,6 +1547,10 @@
       "title": "金标准 Q11 关键断言 1",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI编程助手显著缩短新手学生的任务完成时间",
@@ -1359,10 +1570,14 @@
       "title": "金标准 Q11 关键断言 2",
       "year": null,
       "outcome_token": "completion_time",
-      "direction": "support",
+      "outcome_tokens": [
+        "completion_time",
+        "cognitive_load"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "AI编程助手可能增加新手认知负荷并削弱独立调试能力",
-      "effect_summary": "金标准断言（support）：AI编程助手可能增加新手认知负荷并削弱独立调试能力",
+      "effect_summary": "金标准断言（contradict）：AI编程助手可能增加新手认知负荷并削弱独立调试能力",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1378,6 +1593,10 @@
       "title": "金标准 Q11 关键断言 3",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "任务完成速度提升不等于编程能力提升",
@@ -1397,6 +1616,10 @@
       "title": "金标准 Q11 已知矛盾 1",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究未发现完成时间的显著差异",
@@ -1417,6 +1640,10 @@
       "title": "金标准 Q11 已知矛盾 2",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "认知负荷与依赖效应随任务复杂度与经验水平变化",
@@ -1437,6 +1664,10 @@
       "title": "金标准 Q11 支持来源 1",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "Peng et al. (2023) Copilot 对任务完成时间的受控实验",
@@ -1456,6 +1687,10 @@
       "title": "金标准 Q11 支持来源 2",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "对AI辅助编程认知负荷的准实验研究",
@@ -1475,10 +1710,14 @@
       "title": "金标准 Q12 关键断言 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
-      "direction": "support",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "AI写作助手提升写作流畅度与篇幅但可能降低文本原创性",
-      "effect_summary": "金标准断言（support）：AI写作助手提升写作流畅度与篇幅但可能降低文本原创性",
+      "effect_summary": "金标准断言（contradict）：AI写作助手提升写作流畅度与篇幅但可能降低文本原创性",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1494,10 +1733,14 @@
       "title": "金标准 Q12 关键断言 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
-      "direction": "support",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "脱离工具后独立写作能力可能受损",
-      "effect_summary": "金标准断言（support）：脱离工具后独立写作能力可能受损",
+      "effect_summary": "金标准断言（contradict）：脱离工具后独立写作能力可能受损",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1513,6 +1756,10 @@
       "title": "金标准 Q12 关键断言 3",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "使用方式决定效果方向：改写辅助 vs 代写",
@@ -1532,6 +1779,10 @@
       "title": "金标准 Q12 已知矛盾 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "低水平写作者可能从脚手架式使用中获益",
@@ -1552,6 +1803,10 @@
       "title": "金标准 Q12 已知矛盾 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "原创性下降部分来自引用与改写规范缺失而非能力下降",
@@ -1572,6 +1827,10 @@
       "title": "金标准 Q12 支持来源 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "Warschauer et al. (2023) 生成式AI与写作教育综述",
@@ -1591,6 +1850,10 @@
       "title": "金标准 Q12 支持来源 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "对AI辅助写作原创性的文本分析研究",
@@ -1610,6 +1873,10 @@
       "title": "金标准 Q13 关键断言 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "大样本准实验显示AI Tutor显著提升期末成绩",
@@ -1629,10 +1896,14 @@
       "title": "金标准 Q13 关键断言 2",
       "year": null,
       "outcome_token": "assignment_score",
-      "direction": "support",
+      "outcome_tokens": [
+        "assignment_score",
+        "ai_dependency"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "小样本质性研究显示学生出现工具依赖",
-      "effect_summary": "金标准断言（support）：小样本质性研究显示学生出现工具依赖",
+      "effect_summary": "金标准断言（contradict）：小样本质性研究显示学生出现工具依赖",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1648,10 +1919,14 @@
       "title": "金标准 Q13 关键断言 3",
       "year": null,
       "outcome_token": "assignment_score",
-      "direction": "support",
+      "outcome_tokens": [
+        "assignment_score",
+        "ai_dependency"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "成绩提升与依赖风险并存，需区分",
-      "effect_summary": "金标准断言（support）：成绩提升与依赖风险并存，需区分",
+      "effect_summary": "金标准断言（contradict）：成绩提升与依赖风险并存，需区分",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1667,6 +1942,10 @@
       "title": "金标准 Q13 已知矛盾 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "ai_dependency"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "成绩提升在部分课程未复制",
@@ -1687,6 +1966,10 @@
       "title": "金标准 Q13 已知矛盾 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "ai_dependency"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "依赖测量缺乏统一量表",
@@ -1707,6 +1990,10 @@
       "title": "金标准 Q13 支持来源 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "大样本 AI Tutor 准实验研究",
@@ -1726,10 +2013,14 @@
       "title": "金标准 Q13 支持来源 2",
       "year": null,
       "outcome_token": "assignment_score",
-      "direction": "support",
+      "outcome_tokens": [
+        "assignment_score",
+        "ai_dependency"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "AI 辅导工具依赖的质性研究",
-      "effect_summary": "支持来源标注（support）：AI 辅导工具依赖的质性研究",
+      "effect_summary": "支持来源标注（contradict）：AI 辅导工具依赖的质性研究",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1745,10 +2036,14 @@
       "title": "金标准 Q14 关键断言 1",
       "year": null,
       "outcome_token": "completion_time",
-      "direction": "support",
+      "outcome_tokens": [
+        "completion_time",
+        "retention"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "AI直接生成答案加快任务速度但降低长期保持",
-      "effect_summary": "金标准断言（support）：AI直接生成答案加快任务速度但降低长期保持",
+      "effect_summary": "金标准断言（contradict）：AI直接生成答案加快任务速度但降低长期保持",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1764,6 +2059,10 @@
       "title": "金标准 Q14 关键断言 2",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI形成性反馈可在保持速度的同时保护长期保持",
@@ -1783,6 +2082,10 @@
       "title": "金标准 Q14 关键断言 3",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "反馈形式决定保持-速度权衡",
@@ -1802,6 +2105,10 @@
       "title": "金标准 Q14 已知矛盾 1",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示直接答案对高先验学生保持无显著损害",
@@ -1822,6 +2129,10 @@
       "title": "金标准 Q14 已知矛盾 2",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "形成性反馈的成本与实施难度限制推广",
@@ -1842,6 +2153,10 @@
       "title": "金标准 Q14 支持来源 1",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI反馈形式对比的受控实验",
@@ -1861,6 +2176,10 @@
       "title": "金标准 Q14 支持来源 2",
       "year": null,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "形成性反馈与保持的元分析",
@@ -1880,6 +2199,10 @@
       "title": "金标准 Q15 关键断言 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "reduced_transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "带AI完成的项目作业质量评分显著上升",
@@ -1899,10 +2222,14 @@
       "title": "金标准 Q15 关键断言 2",
       "year": null,
       "outcome_token": "assignment_score",
-      "direction": "support",
+      "outcome_tokens": [
+        "assignment_score",
+        "reduced_transfer"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "同一群体闭卷独立解题表现下降",
-      "effect_summary": "金标准断言（support）：同一群体闭卷独立解题表现下降",
+      "effect_summary": "金标准断言（contradict）：同一群体闭卷独立解题表现下降",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -1918,6 +2245,10 @@
       "title": "金标准 Q15 关键断言 3",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "reduced_transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "作业质量与独立能力解耦，需分离报告",
@@ -1937,6 +2268,10 @@
       "title": "金标准 Q15 已知矛盾 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "reduced_transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分课程未观察到独立解题下降",
@@ -1957,6 +2292,10 @@
       "title": "金标准 Q15 已知矛盾 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "reduced_transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "评分上升可能来自评分标准对AI风格输出的偏好",
@@ -1977,6 +2316,10 @@
       "title": "金标准 Q15 支持来源 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "reduced_transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI 辅助项目作业评分的受控研究",
@@ -1996,6 +2339,10 @@
       "title": "金标准 Q15 支持来源 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "reduced_transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "课程级 AI 开放前后对比研究",
@@ -2015,6 +2362,10 @@
       "title": "金标准 Q16 关键断言 1",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "多项元分析支持项目式学习提升知识获取与参与度",
@@ -2034,10 +2385,14 @@
       "title": "金标准 Q16 关键断言 2",
       "year": null,
       "outcome_token": "knowledge_gain",
-      "direction": "support",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement"
+      ],
+      "direction": "neutral",
       "study_type": "benchmark_annotation",
       "claim_text": "若干课堂实地研究显示与传统教学无显著差异",
-      "effect_summary": "金标准断言（support）：若干课堂实地研究显示与传统教学无显著差异",
+      "effect_summary": "金标准断言（neutral）：若干课堂实地研究显示与传统教学无显著差异",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -2053,6 +2408,10 @@
       "title": "金标准 Q16 关键断言 3",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "实施质量调节效应显著",
@@ -2072,6 +2431,10 @@
       "title": "金标准 Q16 已知矛盾 1",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "实地研究效应量普遍小于实验室元分析",
@@ -2092,6 +2455,10 @@
       "title": "金标准 Q16 已知矛盾 2",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "课程时长与教师培训影响结果",
@@ -2112,6 +2479,10 @@
       "title": "金标准 Q16 支持来源 1",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "项目式学习元分析",
@@ -2131,6 +2502,10 @@
       "title": "金标准 Q16 支持来源 2",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "课堂实地对比研究",
@@ -2150,6 +2525,10 @@
       "title": "金标准 Q17 关键断言 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "高水平学生从同伴教学的概念理解中显著受益",
@@ -2169,6 +2548,10 @@
       "title": "金标准 Q17 关键断言 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "低水平学生在小组互动中认知负荷上升",
@@ -2188,6 +2571,10 @@
       "title": "金标准 Q17 关键断言 3",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "收益分配不均，需分组策略",
@@ -2207,6 +2594,10 @@
       "title": "金标准 Q17 已知矛盾 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示低水平学生亦有收益",
@@ -2227,6 +2618,10 @@
       "title": "金标准 Q17 已知矛盾 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "小组构成与任务结构调节效果",
@@ -2247,6 +2642,10 @@
       "title": "金标准 Q17 支持来源 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "同伴教学分组对比研究",
@@ -2266,6 +2665,10 @@
       "title": "金标准 Q17 支持来源 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "认知负荷视角的同伴互动研究",
@@ -2285,6 +2688,10 @@
       "title": "金标准 Q18 关键断言 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "双编码理论支持视频加文本增强记忆",
@@ -2304,10 +2711,14 @@
       "title": "金标准 Q18 关键断言 2",
       "year": null,
       "outcome_token": "retention",
-      "direction": "support",
+      "outcome_tokens": [
+        "retention",
+        "cognitive_load"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "认知负荷理论提示冗余信息降低保持",
-      "effect_summary": "金标准断言（support）：认知负荷理论提示冗余信息降低保持",
+      "effect_summary": "金标准断言（contradict）：认知负荷理论提示冗余信息降低保持",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -2323,6 +2734,10 @@
       "title": "金标准 Q18 关键断言 3",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "模态冗余与学习者经验交互",
@@ -2342,6 +2757,10 @@
       "title": "金标准 Q18 已知矛盾 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "高先验学习者对冗余不敏感",
@@ -2362,6 +2781,10 @@
       "title": "金标准 Q18 已知矛盾 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "材料复杂度调节冗余效应",
@@ -2382,6 +2805,10 @@
       "title": "金标准 Q18 支持来源 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "多媒体学习双编码研究",
@@ -2401,6 +2828,10 @@
       "title": "金标准 Q18 支持来源 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "冗余效应实验研究",
@@ -2420,6 +2851,10 @@
       "title": "金标准 Q19 关键断言 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "metacognition"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "即时反馈显著提高下一轮答题准确率",
@@ -2439,10 +2874,14 @@
       "title": "金标准 Q19 关键断言 2",
       "year": null,
       "outcome_token": "accuracy",
-      "direction": "support",
+      "outcome_tokens": [
+        "accuracy",
+        "metacognition"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "刷分重试行为可能削弱元认知发展",
-      "effect_summary": "金标准断言（support）：刷分重试行为可能削弱元认知发展",
+      "effect_summary": "金标准断言（contradict）：刷分重试行为可能削弱元认知发展",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -2458,6 +2897,10 @@
       "title": "金标准 Q19 关键断言 3",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "metacognition"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "反馈设计需防刷分机制",
@@ -2477,6 +2920,10 @@
       "title": "金标准 Q19 已知矛盾 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "metacognition"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示即时反馈对高能力学生无额外收益",
@@ -2497,6 +2944,10 @@
       "title": "金标准 Q19 已知矛盾 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "metacognition"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "重试次数与学习收益呈倒U关系",
@@ -2517,6 +2968,10 @@
       "title": "金标准 Q19 支持来源 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "metacognition"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "自动评分即时反馈实验",
@@ -2536,6 +2991,10 @@
       "title": "金标准 Q19 支持来源 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "metacognition"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "答题行为与元认知研究",
@@ -2555,6 +3014,10 @@
       "title": "金标准 Q20 关键断言 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "高频形成性小测验提高短期知识保持",
@@ -2574,10 +3037,14 @@
       "title": "金标准 Q20 关键断言 2",
       "year": null,
       "outcome_token": "retention",
-      "direction": "support",
+      "outcome_tokens": [
+        "retention",
+        "motivation"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "高频测验增加考试焦虑并可能降低动机",
-      "effect_summary": "金标准断言（support）：高频测验增加考试焦虑并可能降低动机",
+      "effect_summary": "金标准断言（contradict）：高频测验增加考试焦虑并可能降低动机",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -2593,6 +3060,10 @@
       "title": "金标准 Q20 关键断言 3",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "频度-焦虑权衡需平衡",
@@ -2612,6 +3083,10 @@
       "title": "金标准 Q20 已知矛盾 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "motivation"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "低焦虑学生从高频测验中持续获益",
@@ -2632,6 +3107,10 @@
       "title": "金标准 Q20 已知矛盾 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "motivation"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "测验反馈质量比频度更重要",
@@ -2652,6 +3131,10 @@
       "title": "金标准 Q20 支持来源 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "测验效应研究",
@@ -2671,6 +3154,10 @@
       "title": "金标准 Q20 支持来源 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "考试焦虑与形成性评价研究",
@@ -2690,10 +3177,16 @@
       "title": "金标准 Q21 关键断言 1",
       "year": null,
       "outcome_token": "code_quality",
-      "direction": "support",
+      "outcome_tokens": [
+        "code_quality",
+        "independent_problem_solving",
+        "transfer",
+        "ai_dependency"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "全面整合AI编程助手需分离代码质量、独立解题、迁移与依赖四个维度",
-      "effect_summary": "金标准断言（support）：全面整合AI编程助手需分离代码质量、独立解题、迁移与依赖四个维度",
+      "effect_summary": "金标准断言（contradict）：全面整合AI编程助手需分离代码质量、独立解题、迁移与依赖四个维度",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -2709,6 +3202,12 @@
       "title": "金标准 Q21 关键断言 2",
       "year": null,
       "outcome_token": "code_quality",
+      "outcome_tokens": [
+        "code_quality",
+        "independent_problem_solving",
+        "transfer",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "新手与进阶学生影响方向可能相反",
@@ -2728,6 +3227,12 @@
       "title": "金标准 Q21 关键断言 3",
       "year": null,
       "outcome_token": "code_quality",
+      "outcome_tokens": [
+        "code_quality",
+        "independent_problem_solving",
+        "transfer",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "需护栏设计与独立评测",
@@ -2747,6 +3252,12 @@
       "title": "金标准 Q21 已知矛盾 1",
       "year": null,
       "outcome_token": "code_quality",
+      "outcome_tokens": [
+        "code_quality",
+        "independent_problem_solving",
+        "transfer",
+        "ai_dependency"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "进阶学生可能从AI加速中获益更多",
@@ -2767,6 +3278,12 @@
       "title": "金标准 Q21 已知矛盾 2",
       "year": null,
       "outcome_token": "code_quality",
+      "outcome_tokens": [
+        "code_quality",
+        "independent_problem_solving",
+        "transfer",
+        "ai_dependency"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "依赖效应在学期末可能减弱",
@@ -2787,6 +3304,12 @@
       "title": "金标准 Q21 支持来源 1",
       "year": null,
       "outcome_token": "code_quality",
+      "outcome_tokens": [
+        "code_quality",
+        "independent_problem_solving",
+        "transfer",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "Bastani et al. (2025) 预注册RCT",
@@ -2806,6 +3329,12 @@
       "title": "金标准 Q21 支持来源 2",
       "year": null,
       "outcome_token": "code_quality",
+      "outcome_tokens": [
+        "code_quality",
+        "independent_problem_solving",
+        "transfer",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "编程教育AI整合综述",
@@ -2825,6 +3354,12 @@
       "title": "金标准 Q22 关键断言 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk",
+        "motivation",
+        "false_confidence"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI写作助手对不同写作水平学生影响各异",
@@ -2844,6 +3379,12 @@
       "title": "金标准 Q22 关键断言 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk",
+        "motivation",
+        "false_confidence"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "独立写作能力、原创性、动机与虚假自信需分别评估",
@@ -2863,6 +3404,12 @@
       "title": "金标准 Q22 关键断言 3",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk",
+        "motivation",
+        "false_confidence"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "需差异化使用策略",
@@ -2882,6 +3429,12 @@
       "title": "金标准 Q22 已知矛盾 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk",
+        "motivation",
+        "false_confidence"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "低水平写作者可能受益于脚手架式辅助",
@@ -2902,6 +3455,12 @@
       "title": "金标准 Q22 已知矛盾 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk",
+        "motivation",
+        "false_confidence"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "虚假自信测量与写作自我效能混淆",
@@ -2922,6 +3481,12 @@
       "title": "金标准 Q22 支持来源 1",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk",
+        "motivation",
+        "false_confidence"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "写作教育AI分层研究",
@@ -2941,6 +3506,12 @@
       "title": "金标准 Q22 支持来源 2",
       "year": null,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving",
+        "academic_integrity_risk",
+        "motivation",
+        "false_confidence"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI辅助写作的原创性分析",
@@ -2960,6 +3531,12 @@
       "title": "金标准 Q23 关键断言 1",
       "year": null,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement",
+        "help_seeking",
+        "reduced_effort",
+        "reduced_transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "全校开放AI工具对参与度、求助行为、努力投入与迁移的影响存在群体异质性",
@@ -2979,10 +3556,16 @@
       "title": "金标准 Q23 关键断言 2",
       "year": null,
       "outcome_token": "engagement",
-      "direction": "support",
+      "outcome_tokens": [
+        "engagement",
+        "help_seeking",
+        "reduced_effort",
+        "reduced_transfer"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "求助行为从教师转向AI可能削弱求助技能",
-      "effect_summary": "金标准断言（support）：求助行为从教师转向AI可能削弱求助技能",
+      "effect_summary": "金标准断言（contradict）：求助行为从教师转向AI可能削弱求助技能",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -2998,6 +3581,12 @@
       "title": "金标准 Q23 关键断言 3",
       "year": null,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement",
+        "help_seeking",
+        "reduced_effort",
+        "reduced_transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "需分群体监测与政策配套",
@@ -3017,6 +3606,12 @@
       "title": "金标准 Q23 已知矛盾 1",
       "year": null,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement",
+        "help_seeking",
+        "reduced_effort",
+        "reduced_transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分专业学生努力投入未下降",
@@ -3037,6 +3632,12 @@
       "title": "金标准 Q23 已知矛盾 2",
       "year": null,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement",
+        "help_seeking",
+        "reduced_effort",
+        "reduced_transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "参与度提升与学习效果提升混淆",
@@ -3057,6 +3658,12 @@
       "title": "金标准 Q23 支持来源 1",
       "year": null,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement",
+        "help_seeking",
+        "reduced_effort",
+        "reduced_transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "全校级AI政策实施研究",
@@ -3076,10 +3683,16 @@
       "title": "金标准 Q23 支持来源 2",
       "year": null,
       "outcome_token": "engagement",
-      "direction": "support",
+      "outcome_tokens": [
+        "engagement",
+        "help_seeking",
+        "reduced_effort",
+        "reduced_transfer"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "求助行为与AI依赖研究",
-      "effect_summary": "支持来源标注（support）：求助行为与AI依赖研究",
+      "effect_summary": "支持来源标注（contradict）：求助行为与AI依赖研究",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -3095,10 +3708,16 @@
       "title": "金标准 Q24 关键断言 1",
       "year": null,
       "outcome_token": "retention",
-      "direction": "support",
+      "outcome_tokens": [
+        "retention",
+        "transfer",
+        "metacognition",
+        "cognitive_load"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "直接生成答案提升速度但可能损害保持与迁移",
-      "effect_summary": "金标准断言（support）：直接生成答案提升速度但可能损害保持与迁移",
+      "effect_summary": "金标准断言（contradict）：直接生成答案提升速度但可能损害保持与迁移",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -3114,6 +3733,12 @@
       "title": "金标准 Q24 关键断言 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "transfer",
+        "metacognition",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "错误解释提升元认知但增加认知负荷",
@@ -3133,6 +3758,12 @@
       "title": "金标准 Q24 关键断言 3",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "transfer",
+        "metacognition",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "形成性评价在三类反馈中保持-迁移平衡最优",
@@ -3152,6 +3783,12 @@
       "title": "金标准 Q24 已知矛盾 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "transfer",
+        "metacognition",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "反馈效果受课程与先验水平调节",
@@ -3172,6 +3809,12 @@
       "title": "金标准 Q24 已知矛盾 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "transfer",
+        "metacognition",
+        "cognitive_load"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "错误解释对高先验学生可能冗余",
@@ -3192,6 +3835,12 @@
       "title": "金标准 Q24 支持来源 1",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "transfer",
+        "metacognition",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI反馈形式三臂对比研究",
@@ -3211,6 +3860,12 @@
       "title": "金标准 Q24 支持来源 2",
       "year": null,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention",
+        "transfer",
+        "metacognition",
+        "cognitive_load"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "反馈与元认知文献",
@@ -3230,6 +3885,12 @@
       "title": "金标准 Q25 关键断言 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "help_seeking",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI Tutor对不同基础学生成绩与动机影响不均",
@@ -3249,10 +3910,16 @@
       "title": "金标准 Q25 关键断言 2",
       "year": null,
       "outcome_token": "assignment_score",
-      "direction": "support",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "help_seeking",
+        "ai_dependency"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "求助行为向工具倾斜可能削弱求助技能",
-      "effect_summary": "金标准断言（support）：求助行为向工具倾斜可能削弱求助技能",
+      "effect_summary": "金标准断言（contradict）：求助行为向工具倾斜可能削弱求助技能",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -3268,6 +3935,12 @@
       "title": "金标准 Q25 关键断言 3",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "help_seeking",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "需分层辅导与适时退出机制",
@@ -3287,6 +3960,12 @@
       "title": "金标准 Q25 已知矛盾 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "help_seeking",
+        "ai_dependency"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "基础薄弱学生可能从AI Tutor获益最大",
@@ -3307,6 +3986,12 @@
       "title": "金标准 Q25 已知矛盾 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "help_seeking",
+        "ai_dependency"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "退出机制效果缺乏直接证据",
@@ -3327,6 +4012,12 @@
       "title": "金标准 Q25 支持来源 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "help_seeking",
+        "ai_dependency"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI Tutor分层效果研究",
@@ -3346,10 +4037,16 @@
       "title": "金标准 Q25 支持来源 2",
       "year": null,
       "outcome_token": "assignment_score",
-      "direction": "support",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "help_seeking",
+        "ai_dependency"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "工具依赖与退出机制研究",
-      "effect_summary": "支持来源标注（support）：工具依赖与退出机制研究",
+      "effect_summary": "支持来源标注（contradict）：工具依赖与退出机制研究",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -3365,6 +4062,12 @@
       "title": "金标准 Q26 关键断言 1",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement",
+        "completion_time",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "混合式教学改革在多学科中知识获取与参与度总体正向",
@@ -3384,6 +4087,12 @@
       "title": "金标准 Q26 关键断言 2",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement",
+        "completion_time",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "任务完成时间与动机效应存在学科异质性",
@@ -3403,6 +4112,12 @@
       "title": "金标准 Q26 关键断言 3",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement",
+        "completion_time",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "跨课程推广需分层评估",
@@ -3422,6 +4137,12 @@
       "title": "金标准 Q26 已知矛盾 1",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement",
+        "completion_time",
+        "motivation"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分学科未见参与度提升",
@@ -3442,6 +4163,12 @@
       "title": "金标准 Q26 已知矛盾 2",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement",
+        "completion_time",
+        "motivation"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "翻转成分比例调节效果",
@@ -3462,6 +4189,12 @@
       "title": "金标准 Q26 支持来源 1",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement",
+        "completion_time",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "混合式教学元分析",
@@ -3481,6 +4214,12 @@
       "title": "金标准 Q26 支持来源 2",
       "year": null,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain",
+        "engagement",
+        "completion_time",
+        "motivation"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "多学科混合式改革对比研究",
@@ -3500,6 +4239,12 @@
       "title": "金标准 Q27 关键断言 1",
       "year": null,
       "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition",
+        "motivation",
+        "independent_problem_solving",
+        "transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "自我调节学习干预提升元认知与动机",
@@ -3519,6 +4264,12 @@
       "title": "金标准 Q27 关键断言 2",
       "year": null,
       "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition",
+        "motivation",
+        "independent_problem_solving",
+        "transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "独立解题与长期迁移效果证据较弱",
@@ -3538,6 +4289,12 @@
       "title": "金标准 Q27 关键断言 3",
       "year": null,
       "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition",
+        "motivation",
+        "independent_problem_solving",
+        "transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "不同学习风格群体收益不均",
@@ -3557,6 +4314,12 @@
       "title": "金标准 Q27 已知矛盾 1",
       "year": null,
       "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition",
+        "motivation",
+        "independent_problem_solving",
+        "transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "干预剂量与效果非线性",
@@ -3577,6 +4340,12 @@
       "title": "金标准 Q27 已知矛盾 2",
       "year": null,
       "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition",
+        "motivation",
+        "independent_problem_solving",
+        "transfer"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分群体迁移效果未复制",
@@ -3597,6 +4366,12 @@
       "title": "金标准 Q27 支持来源 1",
       "year": null,
       "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition",
+        "motivation",
+        "independent_problem_solving",
+        "transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "自我调节学习干预元分析",
@@ -3616,6 +4391,12 @@
       "title": "金标准 Q27 支持来源 2",
       "year": null,
       "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition",
+        "motivation",
+        "independent_problem_solving",
+        "transfer"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "元认知训练纵向研究",
@@ -3635,10 +4416,15 @@
       "title": "金标准 Q28 关键断言 1",
       "year": null,
       "outcome_token": "concept_understanding",
-      "direction": "support",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load",
+        "retention"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "认知负荷管理策略降低复杂问题中的认知负荷",
-      "effect_summary": "金标准断言（support）：认知负荷管理策略降低复杂问题中的认知负荷",
+      "effect_summary": "金标准断言（contradict）：认知负荷管理策略降低复杂问题中的认知负荷",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -3654,6 +4440,11 @@
       "title": "金标准 Q28 关键断言 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "对低先验学生概念理解改善更显著",
@@ -3673,6 +4464,11 @@
       "title": "金标准 Q28 关键断言 3",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "样例先行对高先验学生可能冗余",
@@ -3692,6 +4488,11 @@
       "title": "金标准 Q28 已知矛盾 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load",
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "切分任务对高先验学生效果不显著",
@@ -3712,6 +4513,11 @@
       "title": "金标准 Q28 已知矛盾 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load",
+        "retention"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "策略组合效应缺乏直接比较",
@@ -3732,6 +4538,11 @@
       "title": "金标准 Q28 支持来源 1",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "认知负荷理论实验研究",
@@ -3751,6 +4562,11 @@
       "title": "金标准 Q28 支持来源 2",
       "year": null,
       "outcome_token": "concept_understanding",
+      "outcome_tokens": [
+        "concept_understanding",
+        "cognitive_load",
+        "retention"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "样例效应与先验知识研究",
@@ -3770,6 +4586,13 @@
       "title": "金标准 Q29 关键断言 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "motivation",
+        "metacognition",
+        "cognitive_load",
+        "academic_integrity_risk"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI辅助形成性评价提升答题准确性与动机",
@@ -3789,10 +4612,17 @@
       "title": "金标准 Q29 关键断言 2",
       "year": null,
       "outcome_token": "accuracy",
-      "direction": "support",
+      "outcome_tokens": [
+        "accuracy",
+        "motivation",
+        "metacognition",
+        "cognitive_load",
+        "academic_integrity_risk"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "个性化反馈与风险预警可能改善元认知",
-      "effect_summary": "金标准断言（support）：个性化反馈与风险预警可能改善元认知",
+      "effect_summary": "金标准断言（contradict）：个性化反馈与风险预警可能改善元认知",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -3808,10 +4638,17 @@
       "title": "金标准 Q29 关键断言 3",
       "year": null,
       "outcome_token": "accuracy",
-      "direction": "support",
+      "outcome_tokens": [
+        "accuracy",
+        "motivation",
+        "metacognition",
+        "cognitive_load",
+        "academic_integrity_risk"
+      ],
+      "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "学术诚信风险与自动化偏差需监控",
-      "effect_summary": "金标准断言（support）：学术诚信风险与自动化偏差需监控",
+      "effect_summary": "金标准断言（contradict）：学术诚信风险与自动化偏差需监控",
       "confidence_markers": [
         "gold_annotation",
         "benchmark_source",
@@ -3827,6 +4664,13 @@
       "title": "金标准 Q29 已知矛盾 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "motivation",
+        "metacognition",
+        "cognitive_load",
+        "academic_integrity_risk"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "反馈过度自动化可能降低师生互动",
@@ -3847,6 +4691,13 @@
       "title": "金标准 Q29 已知矛盾 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "motivation",
+        "metacognition",
+        "cognitive_load",
+        "academic_integrity_risk"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "预警误报损害信任",
@@ -3867,6 +4718,13 @@
       "title": "金标准 Q29 支持来源 1",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "motivation",
+        "metacognition",
+        "cognitive_load",
+        "academic_integrity_risk"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "AI形成性评价试点研究",
@@ -3886,6 +4744,13 @@
       "title": "金标准 Q29 支持来源 2",
       "year": null,
       "outcome_token": "accuracy",
+      "outcome_tokens": [
+        "accuracy",
+        "motivation",
+        "metacognition",
+        "cognitive_load",
+        "academic_integrity_risk"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "学习分析预警系统研究",
@@ -3905,6 +4770,12 @@
       "title": "金标准 Q30 关键断言 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "completion_time",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "自适应测验提升低能力学生成绩与参与",
@@ -3924,6 +4795,12 @@
       "title": "金标准 Q30 关键断言 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "completion_time",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "高能力学生收益不明显且可能增加焦虑",
@@ -3943,6 +4820,12 @@
       "title": "金标准 Q30 关键断言 3",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "completion_time",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "需分群体使用策略与成绩应用边界",
@@ -3962,6 +4845,12 @@
       "title": "金标准 Q30 已知矛盾 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "completion_time",
+        "engagement"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "部分研究显示自适应测验对所有学生成绩无显著差异",
@@ -3982,6 +4871,12 @@
       "title": "金标准 Q30 已知矛盾 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "completion_time",
+        "engagement"
+      ],
       "direction": "contradict",
       "study_type": "benchmark_annotation",
       "claim_text": "题项选择策略影响动机",
@@ -4002,6 +4897,12 @@
       "title": "金标准 Q30 支持来源 1",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "completion_time",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "自适应测验系统研究",
@@ -4021,6 +4922,12 @@
       "title": "金标准 Q30 支持来源 2",
       "year": null,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score",
+        "motivation",
+        "completion_time",
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "benchmark_annotation",
       "claim_text": "考试焦虑与测验机制研究",
@@ -4040,6 +4947,9 @@
       "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
       "year": 2023,
       "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "AI coding assistants significantly increase task completion speed and completion rate during training.",
@@ -4060,6 +4970,9 @@
       "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
       "year": 2023,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "neutral",
       "study_type": "rct",
       "claim_text": "Access to AI code generation did not decrease performance on manual code-modification tasks.",
@@ -4080,6 +4993,9 @@
       "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
       "year": 2023,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "neutral",
       "study_type": "rct",
       "claim_text": "One week after training, retention differences between Codex and baseline groups did not reach statistical significance.",
@@ -4100,6 +5016,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "rct",
       "claim_text": "Students with unguarded GPT-4 access performed 17% worse on the independent exam than the control group, despite higher practice performance.",
@@ -4120,6 +5039,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Guardrail design of the AI tutor (hints instead of answers, teacher-informed prompts) largely eliminated the negative learning effect.",
@@ -4140,6 +5062,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Access to GPT-4 during practice improves task performance (48% for GPT Base, 127% for GPT Tutor) — but this task performance does not transfer to independent exam performance.",
@@ -4160,6 +5085,9 @@
       "title": "Impact of ChatGPT on ESL students' academic writing skills",
       "year": 2024,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain"
+      ],
       "direction": "support",
       "study_type": "mixed_methods",
       "claim_text": "ChatGPT as a formative feedback tool produced a significant positive impact on students' academic writing skills with positive student perceptions.",
@@ -4180,6 +5108,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Access to GPT-4 during practice substantially improves practice problem performance (+48% for unguarded GPT Base, +127% for guardrailed GPT Tutor), but these task-performance gains do not transfer to independent exam performance.",
@@ -4200,6 +5131,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "rct",
       "claim_text": "Students using unguarded GPT-4 (GPT Base, general chat) performed 17% worse on the independent exam than the control group despite higher practice performance — unguarded generative AI harms learning.",
@@ -4220,6 +5154,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Guardrail design of the AI tutor (hints and guidance instead of direct answers, teacher-informed prompts) largely eliminated the negative learning effect on the independent exam.",
@@ -4240,6 +5177,9 @@
       "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
       "year": 2025,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Replacing traditional homework with an interactive GPT-4 homework tutor produced higher student satisfaction and greater willingness to continue using the tool.",
@@ -4260,6 +5200,9 @@
       "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
       "year": 2025,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Learning outcomes were not harmed when homework was replaced by the GPT-4 interactive tutor, and one of the treatment groups showed significantly better learning gains.",
@@ -4280,6 +5223,9 @@
       "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
       "year": 2023,
       "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
       "direction": "neutral",
       "study_type": "rct",
       "claim_text": "One week after training, retention differences between the AI-assistant group and the baseline group were not statistically significant — indirect evidence for a similar AI tutoring tool, but with a null learning effect in a different subject and age group.",
@@ -4300,6 +5246,9 @@
       "title": "Impact of ChatGPT on ESL students' academic writing skills",
       "year": 2024,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain"
+      ],
       "direction": "support",
       "study_type": "mixed_methods",
       "claim_text": "Using ChatGPT as a formative feedback tool significantly improved university ESL students' academic writing skills across pre/post/delayed tests.",
@@ -4320,6 +5269,9 @@
       "title": "Impact of ChatGPT on ESL students' academic writing skills",
       "year": 2024,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "mixed_methods",
       "claim_text": "Students reported positive perceptions of ChatGPT as a feedback tool, using it to improve assignment quality and writing efficiency.",
@@ -4340,6 +5292,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "contradict",
       "study_type": "rct",
       "claim_text": "Unguarded generative AI access (GPT Base) improved practice performance (+48%) but lowered independent exam performance by 17% relative to control — contradicting the claim that AI access reliably improves independent performance.",
@@ -4360,6 +5315,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Teacher-designed guardrails (GPT Tutor: hints instead of answers) largely eliminated the negative effect of AI on independent exam performance.",
@@ -4380,6 +5338,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Task performance during practice improves sharply with AI access (+48% GPT Base, +127% GPT Tutor), yet these gains do not transfer to independent exam performance — assignment/writing scores must not be equated with independent ability.",
@@ -4400,6 +5361,9 @@
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
       "year": 2025,
       "outcome_token": "ai_dependency",
+      "outcome_tokens": [
+        "ai_dependency"
+      ],
       "direction": "contradict",
       "study_type": "rct",
       "claim_text": "Students treated unguarded GPT Base as a crutch during practice, and this reliance was associated with worse independent performance — a documented AI dependency mechanism.",
@@ -4420,6 +5384,9 @@
       "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
       "year": 2025,
       "outcome_token": "engagement",
+      "outcome_tokens": [
+        "engagement"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "GPT-4 interactive homework produced higher student satisfaction and stronger intention to continue using it than traditional homework.",
@@ -4440,6 +5407,9 @@
       "title": "GPT-4 as a Homework Tutor Can Improve Student Engagement and Learning Outcomes",
       "year": 2025,
       "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain"
+      ],
       "direction": "support",
       "study_type": "rct",
       "claim_text": "Replacing traditional homework with GPT-4 interactive homework did not harm learning outcomes, and one group achieved significantly better learning gains.",

@@ -27,6 +27,7 @@ from __future__ import annotations
 import hashlib
 import json
 import secrets
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
@@ -39,7 +40,20 @@ from engine.tribunal import adjudicate, decision_diff, save_decision_snapshot
 from engine.versions import METHODOLOGY_POLICY_VERSION
 from scripts.validate_schema import SchemaError, validate
 
-_V4_DIR = Path(__file__).resolve().parent.parent / "schemas" / "v4"
+def _resolve_v4_schema_dir() -> Path:
+    """Repository layout first; wheel-installed share/ layout as fallback
+    (same pattern as engine/contracts._resolve_schema_dir)."""
+    repo = Path(__file__).resolve().parent.parent / "schemas" / "v4"
+    if repo.is_dir():
+        return repo
+    import sys
+    share = Path(sys.prefix) / "share" / "eduevidence" / "schemas" / "v4"
+    if share.is_dir():
+        return share
+    return repo
+
+
+_V4_DIR = _resolve_v4_schema_dir()
 
 #: evidence record key -> (graph table, entity schema name)
 _PACKET_TABLES = {
@@ -103,6 +117,9 @@ def _subscription_path(project: ProjectWorkspace, subscription_id: str) -> Path:
 
 
 def _load_subscription(project: ProjectWorkspace, subscription_id: str) -> dict:
+    if not re.fullmatch(r"SUB-[0-9a-f]{8}", str(subscription_id)):
+        raise ValueError(
+            f"invalid subscription id {subscription_id!r}; expected SUB-<hex8>")
     path = _subscription_path(project, subscription_id)
     if not path.is_file():
         raise FileNotFoundError(
@@ -241,7 +258,8 @@ def refresh(project: ProjectWorkspace, subscription_id: str, *,
         new_evidence = list(retriever(subscription) or [])
 
     store = GraphStore(project)
-    claims = {c["claim_id"] for c in store.read_table("claims")}
+    claims = {c["claim_id"] for c in store.read_table("claims")
+              if c.get("status", "active") == "active"}
     if not claims:
         raise ValueError("project graph has no claims; a subscription cannot bind evidence")
 
@@ -249,6 +267,7 @@ def refresh(project: ProjectWorkspace, subscription_id: str, *,
                    .get("ingested_evidence_hashes", []))
     fresh_packets: list[tuple[str, dict]] = []
     skipped: list[str] = []
+    pending_hashes: set[str] = set()
     seen_in_batch: set[str] = set()
     for packet in new_evidence or []:
         if not isinstance(packet, dict):
@@ -259,9 +278,20 @@ def refresh(project: ProjectWorkspace, subscription_id: str, *,
             skipped.append(h)
             continue
         seen_in_batch.add(h)
+        # Idempotent retry (P1-1): a previous refresh may have committed the
+        # record's study/finding into the graph but failed before updating the
+        # subscription's hash list. Treat graph-presence as ingested and only
+        # restore the hash bookkeeping.
+        study_id = (packet.get("study") or {}).get("study_id")
+        if study_id and store.get("studies", study_id):
+            skipped.append(h)
+            pending_hashes.add(h)
+            continue
         fresh_packets.append((h, packet))
 
     if not fresh_packets:
+        if pending_hashes:
+            _restore_ingested_hashes(project, subscription, pending_hashes)
         return _no_change_refresh(project, subscription, store, skipped)
 
     # ---- normalize + validate fresh evidence ---------------------------
@@ -572,6 +602,18 @@ def _summarize(suggested: str, diff: dict, previous: dict, snapshot: dict,
     if not parts:
         parts.append("no substantive change")
     return "; ".join(parts)
+
+
+def _restore_ingested_hashes(project, subscription, hashes: set[str]) -> None:
+    """Best-effort state recovery (P1-1): a refresh whose graph commit
+    succeeded but whose subscription bookkeeping failed left the hashes
+    unrecorded; on retry the records are already in the graph, so we only
+    need to restore the hash list."""
+    ext = dict(subscription.get("extensions") or {})
+    ext["ingested_evidence_hashes"] = sorted(
+        set(ext.get("ingested_evidence_hashes", [])) | hashes)
+    subscription["extensions"] = ext
+    _save_subscription(project, subscription)
 
 
 def _no_change_refresh(project, subscription, store, skipped) -> dict:

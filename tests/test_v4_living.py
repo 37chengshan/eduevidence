@@ -322,5 +322,9 @@ def test_refresh_rejects_paused_subscription(project, decision):
 
 
 def test_refresh_missing_subscription(project, decision):
-    with pytest.raises(FileNotFoundError, match="subscription not found"):
+    # malformed id -> ValueError (shape validated before existence)
+    with pytest.raises(ValueError, match="invalid subscription id"):
         refresh(project, "SUB-missing", new_evidence=[])
+    # well-formed but absent id -> FileNotFoundError
+    with pytest.raises(FileNotFoundError, match="subscription not found"):
+        refresh(project, "SUB-00000000", new_evidence=[])

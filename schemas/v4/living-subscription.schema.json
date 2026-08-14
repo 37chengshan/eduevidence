@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://eduevidence.dev/schemas/v4/living-subscription.schema.json",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/v4/living-subscription.schema.json",
   "title": "LivingEvidenceSubscription",
   "description": "A living-evidence watch (v4): binds a revision-bound DecisionSnapshot to a question and query terms, so refresh() can fold newly discovered evidence into the graph and emit drift reports. Subscriptions are durable project records under living/subscriptions/.",
   "type": "object",

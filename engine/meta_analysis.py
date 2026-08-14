@@ -83,6 +83,8 @@ def collect_effect_sizes(evidence_list: list[dict]) -> list[dict]:
     entries whose effect size cannot be extracted are returned with
     ``d/se/n = None`` plus ``not_extractable: True`` and a ``reason``.
     """
+    if not evidence_list:
+        return []
     rows: list[dict] = []
     for evidence in evidence_list:
         if not isinstance(evidence, dict):
@@ -134,7 +136,7 @@ def _usable(rows: list[dict]) -> list[dict]:
     for row in rows or []:
         d, se = row.get("d"), row.get("se")
         if _is_number(d) and _is_number(se) and se > 0 and math.isfinite(float(d)) \
-                and math.isfinite(float(se)):
+                and math.isfinite(float(se)) and float(se) < 1e100:
             clean.append(row)
     return clean
 
@@ -149,7 +151,8 @@ def fixed_effect_pooling(rows: list[dict]) -> dict | None:
     usable = _usable(rows)
     if not usable:
         return None
-    weights = [1.0 / (float(r["se"]) ** 2) for r in usable]
+    # precision form avoids se**2 overflow for extreme se (review P2)
+    weights = [p * p for p in (1.0 / float(r["se"]) for r in usable)]
     sum_w = sum(weights)
     if sum_w <= 0 or not math.isfinite(sum_w):
         return None
@@ -185,7 +188,8 @@ def random_effect_pooling(rows: list[dict]) -> dict | None:
     fixed = fixed_effect_pooling(usable)
     assert fixed is not None
     d_fixed = fixed["d"]
-    weights = [1.0 / (float(r["se"]) ** 2) for r in usable]
+    # precision form avoids se**2 overflow for extreme se (review P2)
+    weights = [p * p for p in (1.0 / float(r["se"]) for r in usable)]
     sum_w = sum(weights)
     Q = sum(w * (float(r["d"]) - d_fixed) ** 2 for w, r in zip(weights, usable))
     df = k - 1
@@ -194,7 +198,9 @@ def random_effect_pooling(rows: list[dict]) -> dict | None:
     denom_c = sum_w - (sum_w2 / sum_w) if sum_w > 0 else 0.0
     tau2 = (Q - df) / denom_c if (Q > df and denom_c > 0) else 0.0
     tau2 = max(0.0, tau2)
-    I2 = 100.0 * (Q - df) / Q if Q > 0 else 0.0
+    # I2 must stay in [0, 100]: with near-homogeneous data Q < df is common
+    # (P(Q < df) ~ 40% for real k-1 df), so clamp before dividing (P0-1).
+    I2 = 100.0 * max(0.0, Q - df) / Q if Q > 0 else 0.0
 
     re_weights = [1.0 / ((float(r["se"]) ** 2) + tau2) for r in usable]
     sum_w_star = sum(re_weights)
@@ -237,7 +243,8 @@ def forest_data(rows: list[dict], pooled: dict | None) -> dict | None:
         return None
     weights = pooled.get("weights")
     if not weights or len(weights) != len(usable):
-        weights = [1.0 / (float(r["se"]) ** 2) for r in usable]
+        # precision form avoids se**2 overflow for extreme se (review P2)
+        weights = [p * p for p in (1.0 / float(r["se"]) for r in usable)]
     sum_w = sum(weights)
     if sum_w <= 0:
         return None

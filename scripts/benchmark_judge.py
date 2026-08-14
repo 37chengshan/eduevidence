@@ -151,11 +151,11 @@ def _coerce_score(value: Any) -> float | None:
         v = float(value)
     elif isinstance(value, str):
         s = value.strip()
-        m = re.search(r"(\d+(?:\.\d+)?)\s*/\s*3", s, re.IGNORECASE)
+        m = re.search(r"(-?\d+(?:\.\d+)?)\s*/\s*3", s, re.IGNORECASE)
         if m:
             v = float(m.group(1))
         else:
-            m = re.search(r"(\d+(?:\.\d+)?)", s)
+            m = re.search(r"(-?\d+(?:\.\d+)?)", s)
             if not m:
                 return None
             v = float(m.group(1))

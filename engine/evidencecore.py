@@ -23,7 +23,21 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DOMAINS_DIR = REPO_ROOT / "domains"
+
+
+def _resolve_domains_dir() -> Path:
+    """Repository layout first; wheel-installed share/ layout as fallback."""
+    repo = REPO_ROOT / "domains"
+    if repo.is_dir():
+        return repo
+    import sys
+    share = Path(sys.prefix) / "share" / "eduevidence" / "domains"
+    if share.is_dir():
+        return share
+    return repo
+
+
+DOMAINS_DIR = _resolve_domains_dir()
 REGISTRY_FILE = DOMAINS_DIR / "manifest.json"
 
 #: 领域无关：四态决策（README: ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE）。

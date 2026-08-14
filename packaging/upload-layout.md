@@ -14,7 +14,7 @@
 upload/
 ├── SKILL.md                    # ← Skill 文档（仓库 SKILL.md，根目录唯一保留形式）
 ├── engine/ scripts/ retrieval/ integrations/ schemas/ skill/ references/ visualization/   # 项目源码（平铺，比赛要求“项目源码 必须提交”）
-│   ├── engine/                 #   研究引擎核心（27 模块：证据综述/证据图/综合/裁决/缺口/研究设计）
+│   ├── engine/                 #   研究引擎核心（32 模块：证据综述/证据图/综合/裁决/缺口/研究设计）
 │   ├── scripts/                #   确定性脚本（21 个：评分/矩阵/置信度/门控/渲染/基准）
 │   ├── retrieval/              #   检索与抓取层（fetch/validate/dedupe/failures）
 │   ├── integrations/           #   Agent MCP 增强 + Smart Web Fetch 集成
@@ -26,7 +26,7 @@ upload/
 │   ├── pyproject.toml          #   包元数据 + pytest 配置
 │   └── install.sh              #   一键安装脚本（--dev / --skill / --list-hosts / --dry-run）
 ├── examples/                   # 示例与演示（4 个；ai-coding-assistant 含可直接打开的报告 HTML）
-├── docs/                       # 文档（13 篇；**不含 competition-brief.md**）
+├── docs/                       # 文档（16 篇；**不含 competition-brief.md**）
 ├── benchmarks/                 # 评测基准（V1/V2 问题集 + 确定性指标评估器 + 基线/注释/结果）
 ├── tests/                      # 测试（56 个 test_*.py + conftest.py）
 ├── assets/                     # 展示图片（top-banner / multi-agent-research / tribunal-workflow）
@@ -47,7 +47,7 @@ upload/
 | `examples/` | `examples/` | ✅ | 4 个示例完整复制，含报告 HTML 与 reports-5themes/ 预览 |
 | `docs/` | `docs/`（剔除 competition-brief.md） | ✅ | 架构/方法论/安装指南/Demo/基准/可复现性/失败矩阵/项目评审/全量运行发现 |
 | `benchmarks/` | `benchmarks/` | ✅ | 评测基准与确定性指标评估器，支撑“技术实现质量”评审维度 |
-| `tests/` | `tests/` | ✅ | 56 个测试文件；`.venv/bin/python -m pytest -q` 可跑 |
+| `tests/` | `tests/` | ✅ | 61 个测试文件；`.venv/bin/python -m pytest -q` 可跑 |
 | `assets/` | `assets/` | 建议 | 展示材料（可视化图片） |
 | `LICENSE` | `LICENSE` | ✅ | MIT |
 | `README.md` / `README.en.md` | 同名 | ✅ | 中英双语项目说明 |

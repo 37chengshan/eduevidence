@@ -1,5 +1,5 @@
 {
-  "version": "4.0.0-dev",
+  "version": "4.0.0",
   "description": "EduEvidence v4 领域注册表（EvidenceCore 抽象第一步）。每个条目声明一个领域的契约：frame_schema（框架 schema）、outcome_taxonomy（结果分类）、methodology_checklist（方法学清单）、golds_dir（金标目录）与 references_dir（参考文献目录）。education 为“指向现有契约”的注册域，不新增任何逻辑路径；policy 为 v4 首个自带契约的独立领域。domain select（领域选择）由主 agent 接 CLI 完成，引擎层不自行选择领域。",
   "domains": [
     {

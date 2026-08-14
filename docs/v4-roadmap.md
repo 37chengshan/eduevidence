@@ -65,7 +65,7 @@
 | M3 | Canonical Protocol 9 步（6 研究核心 + 3 决策扩展），唯一权威定义 | P0 | 已实施 |
 | M4 | 实证 Benchmark：Layer B 真实模型运行 + run manifest 契约（SIMULATED 严格隔离） | P0 | 已实施 |
 | M5 | 金标 30 题（Q01–Q30 标注 + 字段/枚举/outcome 一致性校验） | P1 | 已实施 |
-| M6 | 效应量合成 / 发表偏倚 / 稳健性检验方法学（docs/evidence-synthesis.md） | P1 | 进行中 |
+| M6 | 效应量合成 / 发表偏倚 / 稳健性检验方法学（engine/meta_analysis.py / bias.py / robustness.py，docs/evidence-synthesis.md） | P0 | 已实施 |
 
 ## 横切主线：科艺融合 × 通用智能
 
