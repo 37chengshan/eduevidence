@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # make_upload.sh - build the competition upload/ folder as a FLAT SKILL package
-# (skill.md + resource dirs at the root, exactly like a standard skill repo)
+# mirroring the previous dist/eduevidence-submission layout: SKILL.md AND
+# skill.md both live at the root (identical content), resource dirs flat.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 UPLOAD="$ROOT/upload"
@@ -9,10 +10,12 @@ echo "==> Building flat skill upload folder at $UPLOAD"
 rm -rf "$UPLOAD"
 mkdir -p "$UPLOAD"
 
-# 1) skill.md (competition-required name; content identical to SKILL.md)
+# 1) skill.md AND SKILL.md at the root (previous submission had both;
+#    competition requires a skill.md file)
 cp "$ROOT/SKILL.md" "$UPLOAD/skill.md"
+cp "$ROOT/SKILL.md" "$UPLOAD/SKILL.md"
 
-# 2) skill resource dirs at the root (flat skill layout)
+# 2) skill resource dirs at the root (flat skill layout, as before)
 for d in engine scripts retrieval integrations schemas skill references visualization packaging; do
   rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store"} "$ROOT/$d" "$UPLOAD/"
 done
@@ -45,5 +48,5 @@ rm -rf "$UPLOAD/benchmarks/baselines"
 rm -rf "$UPLOAD/packaging"
 
 echo "==> Flat skill upload folder ready:"
-ls "$UPLOAD" | head -30
+ls "$UPLOAD"
 du -sh "$UPLOAD"
