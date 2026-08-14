@@ -35,13 +35,13 @@ EduEvidence 将完整证据流程拆成八个独立职责（Role），每个角�
 
 ### 1.2 关键角色说明
 
-- **Skeptic**：证据流程中最容易被省略、也最有价值的一环。Skeptic 的职责是主动**寻找、验证和记录**反方证据、null result 与替代解释：该研究是否有自选偏倚（self-selection）？效果是否来自 novelty effect？是否存在负面结果被丢弃？没有 Skeptic 的综述是"单边证据"。**禁止为形成"双边观点"虚构反方证据**；没有反方证据时明确输出 `NO CONTRADICTORY EVIDENCE FOUND`。
+- **Skeptic**：证据流程中最容易被省略、也最有价值的一环。Skeptic 的职责是主动**寻找、验证和记录**反方证据、null result 与替代解释，而不是生成反方事实：该研究是否有自选偏倚（self-selection）？效果是否来自 novelty effect？是否存在负面结果被丢弃？没有 Skeptic 的综述是"单边证据"。**禁止为形成"双边观点"虚构反方证据**；没有反方证据时明确输出 `NO CONTRADICTORY EVIDENCE FOUND`。
 - **Method Reviewer**：不判断证据"说什么"，只判断证据"站不站得住"。核心铁律：**task performance 不得自动等同为 learning effect**——作业完成快不等于学会了。
 - **Evidence Judge**：是所有角色的最终仲裁者，输出 `what_can_be_claimed` 与 `what_cannot_be_claimed` 两张清单，并明确"超出证据边界"的结论（exceeds_evidence_boundary）。
 
 ## 二、Complexity Gate：S/M/L 判级与执行路径
 
-先给教育问题分级，再决定投入多少证据流程深度，避免"小题大做"或"大题浅做"。步骤命名统一采用完整 10 步工作流（`SKILL.md` §6 与 `docs/architecture.md` §1.2）：1 Frame / 2 Retrieve / 3 Fetch / 4 Validate / 5 Extract / 6 Challenge / 7 Audit / 8 Adjudicate / 9 Design（Applicability + Intervention + Evaluation）/ 10 Present；EvidenceFlow Core = Frame → … → Adjudicate，Decision Extension = Applicability → Intervention → Evaluation。
+先给教育问题分级，再决定投入多少证据流程深度，避免"小题大做"或"大题浅做"。步骤命名统一采用 **Canonical Protocol**（`docs/architecture.md` 文首「唯一权威定义」）：**Research Core 6 阶段** 1 Frame / 2 Retrieve / 3 Extract / 4 Challenge / 5 Audit / 6 Adjudicate + **Decision Extension 3 阶段** 7 Applicability / 8 Intervene / 9 Evaluate = **9 步端到端**；Fetch / Validate 是 Retrieve 内部的强制 gate（RULE 2），Present 是最终呈现层，均不计入协议阶段。
 
 | 级别 | 判定条件（满足其一即升级） | 执行路径 |
 |------|------------------------------|----------|

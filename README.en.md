@@ -283,7 +283,7 @@ result.json + result.zh.json（中文平行数据）
 ```text
 EduEvidence/  （= 一个 Skill 包）
 │
-├─ SKILL.md                  ← Skill 入口：When to Use / Inputs / 10 步 Workflow / 输出契约
+├─ SKILL.md                  ← Skill 入口：When to Use / Inputs / 9 步 Workflow / 输出契约
 │
 ├─ Skill 本体（运行必需）
 │  ├─ skill/agents/          8 个角色协议（Planner / Retriever / Analyst / Skeptic /
@@ -385,6 +385,21 @@ pytest
 - Benchmark 基于真实文献的可检索证据；模型实际运行结果需按 `docs/benchmark.md` 的 B0–B4 基线采集。
 - 搜索与抽取依赖可用检索资源；`TOOL_FAILURE` 时不编造来源。
 - EduEvidence 是教学决策辅助，**不代替教师或学校最终决策**；涉及高风险评价、学生处分、个体心理判断、学生重大教育机会时不自动决策。
+
+## Roadmap
+
+**已完成（仅 harness / 仿真，标注 SIMULATED，非实证）：**
+
+- [x] Benchmark v2 harness / simulation —— `benchmarks/results/` 是确定性仿真，证明评测框架可运行，**不是**真实模型性能（见上方 [Benchmark](#benchmark) 的 ⚠️ 说明）。
+- [x] Skill 核心与管线：9 步协议（Research Core 6 + Decision Extension 3）、13 个顶层 JSON Schema、确定性脚本、8 角色协议（原计划 Phase 0–6）。
+- [x] Evidence-to-Action：适用性 / 四态决策 / 干预 / 评价设计。
+- [x] 产品 UI：单文件双语 HTML 报告 + 信息图 + 学术图（原计划 Phase 8）。
+
+**待做（尚未完成，不做已完成宣称）：**
+
+- [ ] **Empirical Benchmark** —— B2 vs B3（方法论价值）与 B3 vs B4（Agent MCP 价值）的真实模型运行，含重复运行、方差报告与 gold annotation / 独立评审计分（见 `docs/benchmark.md`）。
+- [ ] **HTML 可访问性** —— 语言切换同步 `<html lang>`、theme/lang 按钮 `aria-pressed`、表格筛选控件 label、SVG 图双语 title/desc、source link 安全 scheme 白名单。
+- [ ] **纵向决策闭环** —— 打通 **PILOT → 真实数据 → 再裁决**：试点结果回填项目证据图，产出更新后的决策（Full Research Cycle 端到端真实数据跑通）。
 
 ## License
 

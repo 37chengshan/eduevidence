@@ -398,6 +398,31 @@ pytest
 - Search and extraction depend on available retrieval resources; `TOOL_FAILURE` never fabricates sources.
 - EduEvidence assists teaching decisions — **it does not replace the final decision of teachers or institutions**; it never auto-decides on high-stakes assessment, student discipline, individual psychological judgments, or major student educational opportunities.
 
+## Roadmap
+
+**Completed — harness / simulation only (marked as SIMULATED, not empirical):**
+
+- [x] Benchmark v2 harness / simulation — `benchmarks/results/` is a deterministic
+  simulation that proves the evaluation framework runs; it is **not** real model
+  performance (see the ⚠️ note in [Benchmark](#benchmark)).
+- [x] Skill core & pipeline: 9-step protocol (Research Core 6 + Decision Extension 3),
+  13 top-level JSON Schemas, deterministic scripts, 8-role protocols (original Phases 0–6).
+- [x] Evidence-to-action: applicability / four-state decision / intervention / evaluation.
+- [x] Product UI: single-file bilingual HTML report + infographics + academic figures
+  (original Phase 8).
+
+**Planned — not yet done, and not claimed as done:**
+
+- [ ] **Empirical Benchmark** — real-model runs for **B2 vs B3** (methodology value) and
+  **B3 vs B4** (Agent MCP value), with repeated runs, variance reporting, and
+  gold-annotation / independent-judge scoring (see `docs/benchmark.md`).
+- [ ] **HTML accessibility** — sync `<html lang>` on language switch, `aria-pressed` on
+  theme/lang buttons, labeled table filter controls, bilingual `title`/`desc` on SVG
+  figures, and a safe URL scheme allowlist for source links.
+- [ ] **Vertical decision loop** — close **PILOT → real data → re-adjudication**:
+  feed pilot outcomes back into the project evidence graph and produce an updated
+  decision (Full Research Cycle end-to-end with real user data).
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

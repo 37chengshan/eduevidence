@@ -2,6 +2,26 @@
 
 EduEvidence 是一个"基于证据的 AI 教学决策与干预"能力（Evidence-Based AI Teaching Decision & Intervention Skill）：输入一条教育问题，输出一份可追溯的证据综述、方法论审计、结论判定、试点干预与评估设计。本文档说明其三层架构与双运行模式。
 
+## Canonical Protocol（唯一权威定义）
+
+EduEvidence 的端到端流程统一为 **9 步**，由两部分组成。此为本项目唯一权威定义，`docs/methodology.md`、README 等所有文档的协议表述均以本节为准：
+
+```text
+Research Core（6 阶段，证据纪律核心）:
+Frame → Retrieve → Extract → Challenge → Audit → Adjudicate
+
+Decision Extension（3 阶段，证据到行动）:
+Applicability → Intervene → Evaluate
+
+端到端 9 步:
+Frame → Retrieve → Extract → Challenge → Audit → Adjudicate
+→ Applicability → Intervene → Evaluate
+```
+
+- `Fetch` 与 `Validate` 是 `Retrieve` 阶段内部的强制 gate（snippet ≠ 证据内容，RULE 2），不单独计为阶段。
+- `Present` 是最终呈现层（报告渲染），不属于协议阶段计数。
+- 每个阶段的输出仍须通过对应 JSON Schema 校验（`schemas/` 顶层共 13 个 Schema，见 §三 目录结构）。
+
 ## 〇、EduEvidence Research Engine（V2 内部能力内核）
 
 Skill 本体不变；Skill 内部操作 **EduEvidence Research Engine** —— 以 Project/Run/Revision/DecisionSnapshot 为状态模型的持久化研究引擎：
@@ -25,8 +45,8 @@ Skill 本体不变；Skill 内部操作 **EduEvidence Research Engine** —— �
 │  · 评价设计（Task vs Learning，Immediate vs Retention vs Transfer）│
 ├─────────────────────────────────────────────────────────────────┤
 │ 第 2 层  EvidenceFlow Protocol（流程层）                           │
-│  Frame → Retrieve → Fetch → Validate → Extract →                 │
-│  Challenge → Audit → Adjudicate                                  │
+│  Frame → Retrieve → Extract → Challenge → Audit → Adjudicate      │
+│  （Retrieve 内含 Fetch/Validate gate；Decision Extension 3 阶段）   │
 │  每一步有独立输入/输出契约，由 13 个 JSON Schema 约束                │
 ├─────────────────────────────────────────────────────────────────┤
 │ 第 3 层  执行层（Execution Layer）                                 │
@@ -45,30 +65,28 @@ Skill 本体不变；Skill 内部操作 **EduEvidence Research Engine** —— �
 
 ### 1.2 第 2 层：EvidenceFlow Protocol
 
-证据流协议分两层：**Research Core 八阶段**（证据纪律核心）+ **Decision Extension 三阶段**（证据到行动）+ **Present 呈现**。共 10 步，与 `SKILL.md` 的 Workflow 一致。
+证据流协议采用 **Canonical Protocol**（见文首「唯一权威定义」）：**Research Core 六阶段**（证据纪律核心）+ **Decision Extension 三阶段**（证据到行动）= **9 步端到端**；`Present` 为最终呈现层，不计入协议阶段。
 
-**Research Core（八阶段，可剥离的核心）：**
+**Research Core（六阶段，可剥离的核心）：**
 
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
 | 1. 框定 | Frame | 原始教育问题 | Education Research Frame（含 decision_target、scope、inclusion/exclusion criteria） |
-| 2. 检索 | Retrieve | Frame | 候选证据来源列表（含 source_location 可验证指针） |
-| 3. 抓取 | Fetch | 候选来源 | 来源全文/可验证内容（snippet ≠ 证据内容，RULE 2） |
-| 4. 校验 | Validate | 抓取结果 | 校验通过的来源与内容（来源有效、抓取完整、Schema 校验） |
-| 5. 抽取 | Extract | 校验后的来源文献 | Claim 级证据对象（`evidence.schema.json`） |
-| 6. 质询 | Challenge | 证据对象 | 反方证据、负面结果、未发现、confounder 清单 |
-| 7. 审计 | Audit | 证据对象 | 方法学审计（`methodology.schema.json`），含 task_vs_learning_guard |
-| 8. 裁决 | Adjudicate | 全部证据 + 审计 | Education Verdict + Recommended Action + Confidence |
+| 2. 检索 | Retrieve | Frame | 校验通过的来源与 Claim 级证据基础（内部强制 gate：Fetch 抓取全文 + Validate 来源/内容校验，snippet ≠ 证据内容，RULE 2；对应 `source.schema.json` / `fetch-result.schema.json`） |
+| 3. 抽取 | Extract | 校验后的来源文献 | Claim 级证据对象（`evidence.schema.json`） |
+| 4. 质询 | Challenge | 证据对象 | 反方证据、负面结果、未发现、confounder 清单 |
+| 5. 审计 | Audit | 证据对象 | 方法学审计（`methodology.schema.json`），含 task_vs_learning_guard |
+| 6. 裁决 | Adjudicate | 全部证据 + 审计 | Education Verdict + Recommended Action + Confidence |
 
-**Decision Extension（三阶段，证据到行动，即第 9 步 Design）：**
+**Decision Extension（三阶段，证据到行动，即端到端第 7–9 步）：**
 
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
-| 9.1 适用 | Applicability | Verdict | 适用性分析（For whom / which course / which outcome / what conditions） |
-| 9.2 干预 | Intervention | Verdict + Applicability | Teaching Intervention（最小可验证试点 + 停止条件） |
-| 9.3 评价 | Evaluation | 干预方案 | Evaluation Plan（基线/后测/保持/迁移 + 成功阈值） |
+| 7. 适用 | Applicability | Verdict | 适用性分析（For whom / which course / which outcome / what conditions） |
+| 8. 干预 | Intervene | Verdict + Applicability | Teaching Intervention（最小可验证试点 + 停止条件） |
+| 9. 评价 | Evaluate | 干预方案 | Evaluation Plan（基线/后测/保持/迁移 + 成功阈值） |
 
-**Present（呈现）：**
+**Present（呈现，不计入 9 步协议）：**
 
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
@@ -117,23 +135,44 @@ Skill 本体不变；Skill 内部操作 **EduEvidence Research Engine** —— �
 ```
 edu/
 ├── SKILL.md                # 技能入口：EduEvidence 使用说明（Mode A 可独立理解）
-├── references/             # 证据来源、研究报告与检索记录
-├── schemas/                # 13 个 JSON Schema 数据契约
+├── README.md / README.en.md# 双语说明（英文 / 中文）
+├── pyproject.toml          # 打包元数据（wheel 自带 CLI + engine；核心零第三方依赖）
+├── install.sh              # 一键安装（本地 / 多 Agent Skill）+ 自检
+├── skill/                  # 技能组件
+│   ├── agents/             # 8 个角色协议（education-planner / evidence-retriever /
+│   │                       # evidence-analyst / skeptic / method-reviewer /
+│   │                       # evidence-judge / intervention-designer / evaluation-designer）
+│   └── task-briefs/        # 任务简报模板
+├── references/             # 11 份教育方法论文档（education-framing / outcome-taxonomy /
+│                           # evidence-quality / methodology-audit / skeptic-protocol /
+│                           # tribunal-policy / applicability-policy / intervention-design /
+│                           # evaluation-design / retrieval-protocol / source-validity）
+├── schemas/                # 13 个顶层 JSON Schema 数据契约 + schemas/v2/（V2 契约）
 │   ├── education-frame.schema.json
+│   ├── source.schema.json
+│   ├── fetch-result.schema.json
 │   ├── evidence.schema.json
+│   ├── cross-model-review.schema.json
 │   ├── methodology.schema.json
 │   ├── verdict.schema.json
 │   ├── intervention.schema.json
-│   └── evaluation.schema.json
-├── scripts/                # 工具脚本
-│   ├── validate_schema.py  # Schema 校验
-│   └── benchmark.py        # Benchmark 运行器
-├── benchmarks/             # 基准评测
-│   ├── questions.jsonl     # 评测题目
-│   ├── annotations/        # 人工标注（参考答案）
-│   ├── baselines/          # 基线结果
-│   ├── evaluator/          # 评估器实现
-│   └── results/            # 评估结果输出
+│   ├── evaluation.schema.json
+│   ├── report-result.schema.json
+│   ├── report-spec.schema.json
+│   ├── chart-spec.schema.json
+│   └── agent-mcp-approval.schema.json
+├── engine/                 # Research Engine 内核（Project / Run / Revision /
+│                           # DecisionSnapshot、Evidence Graph、tribunal / synthesis /
+│                           # gaps / study-design / datasets / analysis / projections）
+├── scripts/                # 工具脚本（validate_schema / pre_verdict_gate /
+│                           # compute_confidence / orchestrator / benchmark /
+│                           # render_report 等确定性逻辑）
+├── retrieval/              # 检索与抓取层（fetch / validate / dedupe / failures）
+├── integrations/           # 集成层（Agent MCP 增强 + Smart Web Fetch）
+├── visualization/          # 呈现层（eduevidence-report：build_report / build_charts /
+│                           # build_infographics / build_figures）
+├── benchmarks/             # 基准评测（questions / annotations / baselines /
+│                           # evaluator / results / v2）
 ├── examples/               # 端到端示例（按教育问题组织）
 │   └── ai-coding-assistant/ # 主 Demo：大一 C 语言课程 AI 编程助手
 ├── docs/                   # 本文档（架构/方法学/Benchmark/Demo/复现指南）
