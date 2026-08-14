@@ -87,6 +87,32 @@
     "intervention": { "type": "object", "description": "TeachingIntervention (see intervention.schema.json)." },
     "evaluation": { "type": "object", "description": "EvaluationPlan (see evaluation.schema.json)." },
     "benchmark": { "type": "object", "additionalProperties": true, "description": "Benchmark metrics for this result (optional)." },
+    "outcome_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entries", "declared_without_evidence"],
+      "description": "Frame-declared vs evidence-covered outcome map (OPEN-2): every outcome type seen in frame or evidence, with directional counts and an explicit status. Entries never mix support/contradict/neutral.",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["outcome_type", "status", "support_count", "contradict_count", "neutral_count", "evidence_ids"],
+            "properties": {
+              "outcome_type": { "type": "string" },
+              "declared_in_frame": { "type": "boolean" },
+              "status": { "type": "string", "enum": ["supported", "contested", "contradicted", "null_evidence_only", "no_evidence"] },
+              "support_count": { "type": "integer" },
+              "contradict_count": { "type": "integer" },
+              "neutral_count": { "type": "integer" },
+              "evidence_ids": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "declared_without_evidence": { "type": "array", "items": { "type": "string" }, "description": "Frame-declared outcomes that no evidence covers — the evidence gaps a decision must disclose." }
+      }
+    },
     "provenance": {
       "type": "object",
       "additionalProperties": false,

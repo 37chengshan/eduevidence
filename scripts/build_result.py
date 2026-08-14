@@ -102,6 +102,72 @@ def aggregate_outcomes(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [by_outcome[o] for o in OUTCOME_ORDER if o in by_outcome]
 
 
+def build_outcome_mapping(evidence: list[dict[str, Any]],
+                          frame: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Frame-declared vs evidence-covered outcome map (OPEN-2).
+
+    Every outcome type seen in the frame or in evidence gets exactly one
+    entry with directional counts (support / contradict / neutral -- never
+    mixed, consistent with the three-column Evidence Matrix) and an explicit
+    status:
+
+        supported / contested / contradicted / null_evidence_only / no_evidence
+
+    Frame-declared outcomes with no covering evidence are surfaced in
+    declared_without_evidence so a decision must disclose its gaps.
+    """
+    declared: set[str] = set()
+    for group in ("primary", "secondary", "risk"):
+        declared.update((frame or {}).get("outcomes", {}).get(group, []) or [])
+    declared.discard("")
+
+    by_outcome: dict[str, dict[str, Any]] = {}
+    for ev in evidence:
+        outcome = ev.get("outcome_type") or "unknown"
+        row = by_outcome.setdefault(outcome, {
+            "outcome_type": outcome,
+            "support_count": 0, "contradict_count": 0, "neutral_count": 0,
+            "evidence_ids": [],
+        })
+        direction = ev.get("direction", "neutral")
+        if direction == "support":
+            row["support_count"] += 1
+        elif direction == "contradict":
+            row["contradict_count"] += 1
+        else:
+            row["neutral_count"] += 1
+        if ev.get("evidence_id"):
+            row["evidence_ids"].append(ev["evidence_id"])
+
+    entries: list[dict[str, Any]] = []
+    for outcome in sorted(set(declared) | set(by_outcome)):
+        row = by_outcome.get(outcome) or {
+            "outcome_type": outcome, "support_count": 0,
+            "contradict_count": 0, "neutral_count": 0, "evidence_ids": []}
+        s, c, n = row["support_count"], row["contradict_count"], row["neutral_count"]
+        if s > 0 and c > 0:
+            status = "contested"
+        elif s > 0:
+            status = "supported"
+        elif c > 0:
+            status = "contradicted"
+        elif n > 0:
+            status = "null_evidence_only"
+        else:
+            status = "no_evidence"
+        entries.append({
+            "outcome_type": outcome,
+            "declared_in_frame": outcome in declared,
+            "status": status,
+            "support_count": s,
+            "contradict_count": c,
+            "neutral_count": n,
+            "evidence_ids": list(row["evidence_ids"]),
+        })
+
+    declared_without_evidence = sorted(d for d in declared if d not in by_outcome)
+    return {"entries": entries, "declared_without_evidence": declared_without_evidence}
+
 def build_claims(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Claim-level rows bound to evidence (Claim-Evidence Contract, A-3).
 
@@ -177,6 +243,7 @@ def build_result(pack_dir: Path, *, mode: str = "platform_native") -> dict[str, 
         "research_frame": frame,
         "decision": decision,
         "outcomes": aggregate_outcomes(evidence),
+        "outcome_mapping": build_outcome_mapping(evidence, frame),
         "claims": build_claims(evidence),
         "sources": sources,
         "evidence": evidence,

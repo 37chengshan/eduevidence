@@ -456,7 +456,8 @@ def _run_adjudicate(ws: RunWorkspace, question: str,
 def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, Any]:
     """Assemble result.json from workspace artifacts (decision=final_verdict.json)."""
     from build_result import (NOT_CAPTURED_USAGE, OUTCOME_ORDER,
-                              aggregate_outcomes, build_claims, derive_provenance)
+                              aggregate_outcomes, build_claims,
+                              build_outcome_mapping, derive_provenance)
 
     frame = load_json(ws.path / "frame.json")
     evidence = load_jsonl(ws.path / "evidence.jsonl")
@@ -491,6 +492,7 @@ def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, An
         "research_frame": frame,
         "decision": verdict,
         "outcomes": aggregate_outcomes(evidence),
+        "outcome_mapping": build_outcome_mapping(evidence, frame),
         "claims": claims,
         "sources": sources,
         "evidence": evidence,

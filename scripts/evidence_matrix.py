@@ -40,12 +40,14 @@ def evidence_matrix(evidence_list: list[dict]) -> list[dict[str, str]]:
     for ev in evidence_list:
         key = (ev.get("claim", ""), ev.get("outcome_type", ""))
         row = rows.setdefault(key, {"claim": key[0], "outcome": key[1],
-                                    "support": [], "contradiction": [],
+                                    "support": [], "contradiction": [], "neutral": [],
                                     "quality": [], "directness": []})
+        # Three directional columns (review P1-1): support / contradict /
+        # neutral are never mixed — a null result is not a counter-argument,
+        # and it must not inflate the tribunal's conflict picture.
         direction = ev.get("direction", "neutral")
-        # Support vs contradiction columns; neutral evidence is appended as
-        # context to the contradiction column so it is never silently dropped.
-        bucket = "support" if direction == "support" else "contradiction"
+        bucket = {"support": "support", "contradict": "contradiction"}.get(
+            direction, "neutral")
         row[bucket].append(ev.get("evidence_id", "?"))
 
         dims = ev.get("quality_dimensions", {})
@@ -60,12 +62,14 @@ def evidence_matrix(evidence_list: list[dict]) -> list[dict[str, str]]:
     for key, row in sorted(rows.items()):
         quality = sum(row["quality"]) / len(row["quality"]) if row["quality"] else None
         directness = sum(row["directness"]) / len(row["directness"]) if row["directness"] else 0.0
-        verdict = _verdict(row["support"], row["contradiction"], quality)
+        verdict = _verdict(row["support"], row["contradiction"],
+                          row["neutral"], quality)
         result.append({
             "claim": row["claim"],
             "outcome": row["outcome"],
             "support": ", ".join(row["support"]) or "-",
             "contradiction": ", ".join(row["contradiction"]) or "-",
+            "neutral": ", ".join(row["neutral"]) or "-",
             "quality": f"{quality:.1f}/10" if quality is not None else "-",
             "directness": f"{directness:.1f}/2",
             "verdict": verdict,
@@ -73,9 +77,12 @@ def evidence_matrix(evidence_list: list[dict]) -> list[dict[str, str]]:
     return result
 
 
-def _verdict(support: list, contradiction: list, quality: float | None) -> str:
+def _verdict(support: list, contradiction: list, neutral: list,
+             quality: float | None) -> str:
     if contradiction and not support:
         return "CONTRADICTED"
+    if not support and not contradiction and neutral:
+        return "NEUTRAL"
     if not support and not contradiction:
         return "NO_EVIDENCE"
     if quality is None or quality < 5:
@@ -88,14 +95,16 @@ def _verdict(support: list, contradiction: list, quality: float | None) -> str:
 
 
 def render_markdown(matrix: list[dict[str, str]]) -> str:
-    header = "| Claim | Outcome | Support | Contradiction | Quality | Directness | Verdict |"
-    sep = "|---|---|---|---|---|---|---|"
+    header = ("| Claim | Outcome | Support | Contradiction | Neutral "
+              "| Quality | Directness | Verdict |")
+    sep = "|---|---|---|---|---|---|---|---|"
     lines = [header, sep]
     for row in matrix:
         claim = row["claim"].replace("|", "\\|")
         lines.append(
             f"| {claim} | {row['outcome']} | {row['support']} | {row['contradiction']} "
-            f"| {row['quality']} | {row['directness']} | {row['verdict']} |")
+            f"| {row['neutral']} | {row['quality']} | {row['directness']} "
+            f"| {row['verdict']} |")
     return "\n".join(lines)
 
 

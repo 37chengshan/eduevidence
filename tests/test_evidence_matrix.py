@@ -59,11 +59,11 @@ def test_matrix_verdict_contradicted_only():
 def test_render_markdown_has_header():
     evs = [_ev("AI improves speed", "completion_time", "support")]
     md = render_markdown(evidence_matrix(evs))
-    assert "| Claim | Outcome | Support | Contradiction | Quality | Directness | Verdict |" in md
+    assert "| Claim | Outcome | Support | Contradiction | Neutral | Quality | Directness | Verdict |" in md
     assert "|--" in md
 
 
-def test_matrix_keeps_neutral_evidence_as_context():
+def test_matrix_puts_neutral_in_neutral_column():
     evs = [
         _ev("AI improves speed", "completion_time", "support", eid="E-1"),
         _ev("AI improves speed", "completion_time", "neutral", eid="E-2"),
@@ -71,7 +71,27 @@ def test_matrix_keeps_neutral_evidence_as_context():
     matrix = evidence_matrix(evs)
     row = next(r for r in matrix if r["outcome"] == "completion_time")
     assert row["support"] == "E-1"
-    assert "E-2" in row["contradiction"]  # neutral kept as context, not dropped
+    assert row["contradiction"] == "-"
+    assert row["neutral"] == "E-2"
+
+
+def test_matrix_verdict_neutral_only():
+    evs = [_ev("AI improves speed", "completion_time", "neutral", eid="E-2")]
+    matrix = evidence_matrix(evs)
+    assert matrix[0]["verdict"] == "NEUTRAL"
+
+
+def test_matrix_verdict_conflicted_keeps_neutral_separate():
+    evs = [
+        _ev("AI improves speed", "completion_time", "support", eid="E-1"),
+        _ev("AI improves speed", "completion_time", "contradict", eid="E-2"),
+        _ev("AI improves speed", "completion_time", "neutral", eid="E-3"),
+    ]
+    matrix = evidence_matrix(evs)
+    row = next(r for r in matrix if r["outcome"] == "completion_time")
+    assert row["verdict"] == "CONFLICTED"
+    assert row["neutral"] == "E-3"
+    assert "E-3" not in row["contradiction"]
 
 
 def test_example_pack_builds_matrix():

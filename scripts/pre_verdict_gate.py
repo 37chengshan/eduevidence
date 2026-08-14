@@ -61,7 +61,7 @@ from evidence_score import independent_samples, independent_studies  # noqa: E40
 from evidence_semantics import claim_relation  # noqa: E402
 from run_workspace import utc_now  # noqa: E402
 
-GATE_VERSION = "2026-08-12.v1"
+GATE_VERSION = "2026-08-13.v1"
 
 CONFIDENCE_RANK = {"Insufficient": 0, "Low": 1, "Moderate": 2, "High": 3}
 
@@ -213,6 +213,16 @@ def _verdict_for_audit(ws: Path) -> dict[str, Any]:
     return _load_ws_json(ws, "raw_verdict.json")
 
 
+#: Explicit markers a verdict claim may carry to declare "no direct evidence
+#: exists" instead of silently omitting a binding (OPEN-1). A hedged claim
+#: that carries no evidence id AND no such marker blocks High confidence.
+NO_DIRECT_EVIDENCE_MARKERS = ("[无直接证据]", "no direct evidence", "NO_DIRECT_EVIDENCE")
+
+
+def _claim_has_no_evidence_marker(claim_text: str) -> bool:
+    return any(marker in claim_text for marker in NO_DIRECT_EVIDENCE_MARKERS)
+
+
 def check_claim_evidence(ws: Path) -> dict[str, str]:
     verdict = _verdict_for_audit(ws)
     if not verdict:
@@ -229,6 +239,8 @@ def check_claim_evidence(ws: Path) -> dict[str, str]:
                 continue
             ids = _CLAIM_ID_RE.findall(claim_text)
             if not ids:
+                if _claim_has_no_evidence_marker(claim_text):
+                    continue  # explicitly declared "no direct evidence": acceptable
                 warnings.append(f"{category}: claim carries no evidence id: {claim_text[:60]}")
                 continue
             for eid in ids:
@@ -247,10 +259,12 @@ def check_claim_evidence(ws: Path) -> dict[str, str]:
     if issues:
         return _item_res("fail", "; ".join(issues[:3]) + (f" (+{len(issues)-3} more)" if len(issues) > 3 else ""))
     if warnings:
-        # a SUPPORTED claim without any evidence id is unverifiable and blocks
-        # High; hedged/contradicted claims without ids are noted but do not block.
-        unverifiable = [w for w in warnings
-                        if w.startswith("supported_claims") and "carries no evidence id" in w]
+        # ANY claim category without an evidence id (and without an explicit
+        # "no direct evidence" marker) is unverifiable and blocks High
+        # confidence — uncertain claims must bind evidence or declare the gap
+        # (OPEN-1); hedged/contradicted claims without ids were previously
+        # only noted but could still mislead the confidence label.
+        unverifiable = [w for w in warnings if "carries no evidence id" in w]
         note = "; ".join(warnings[:2]) + (f" (+{len(warnings)-2} more)" if len(warnings) > 2 else "")
         return _item_res("warn", note, blocks_high=bool(unverifiable))
     return _item_res("pass", "all verdict claims bind to existing evidence with consistent categories")
