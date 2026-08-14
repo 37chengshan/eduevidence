@@ -52,22 +52,44 @@ python3 integrations/agent_mcp.py
 ```json
 {
   "available": true,
+  "state": "available",
   "mode": "agent_mcp_enhanced",
   "port": 8765,
+  "reason": "agent-mcp installed and daemon reachable",
+  "hint": "",
   "enhanced_features": {"multi_cli_dispatch": true, "cross_model_review": true, "memory_bank": true}
 }
 ```
 
-- `available: true` → 启用高级功能
-- `available: false` → 输出 `platform_native` 模式，一切照常运行
+检测结果是**三态**（`state` 字段，新增；旧字段全部保留，向后兼容）：
 
-环境变量：
+| `state` | 含义 | 动作 |
+|---|---|---|
+| `available` | `AGENT_MCP_INSTALLED` 已声明 **且** daemon 可达（`available: true`，`mode: agent_mcp_enhanced`） | 直接启用高级功能 |
+| `daemon_reachable_undeclared` | daemon 在 8765 端口可达，但 `AGENT_MCP_INSTALLED` 未声明（`available: false`，`mode: platform_native`） | 设置 `AGENT_MCP_INSTALLED=1`（见下）即可启用，无需重装；`hint` 字段给出指引 |
+| `unavailable` | 未安装 / daemon 不可达（`available: false`，`mode: platform_native`；`reasons` 说明原因） | 安装并启动 agent-mcp daemon |
+
+> 「daemon 在跑但 env 未设」不再被误报为完全不可用（OPEN-5）：`state` 如实区分，
+> 并给出可执行提示（`hint`）。`available: true` 仅在三态为 `available` 时为真。
+
+环境变量 / 声明文件：
 
 | 变量 | 默认 | 说明 |
 |---|---|---|
-| `AGENT_MCP_INSTALLED` | 未设置 | `1/true/yes` 表示已安装 |
+| `AGENT_MCP_INSTALLED` | 未设置 | `1/true/yes` 表示已安装；`~/.eduevidence/env` 中的 `AGENT_MCP_INSTALLED=1` 作为后备来源（`bash install.sh` 安装完成后自动写入） |
 | `AGENT_MCP_PORT` | `8765` | daemon 端口 |
 | `AGENT_MCP_HOME` | `~/.codex`（或 `CODEX_HOME`） | 状态目录 |
+| `AGENT_MCP_ENV_FILE` | `~/.eduevidence/env` | 声明文件路径；优先级：真实环境变量 > 该文件 > 默认值 |
+
+**设置 `AGENT_MCP_INSTALLED=1` 的三种方式**（任选其一）：
+
+1. `bash install.sh` 安装完成后自动写入 `~/.eduevidence/env`（`AGENT_MCP_INSTALLED=1`，幂等）；
+2. 手动写入 shell profile：`echo 'export AGENT_MCP_INSTALLED=1' >> ~/.zshrc`（或 `~/.bashrc`）后 `source`；
+3. 由宿主 MCP 层在启动会话时注入该环境变量（`daemon_reachable_undeclared` 的 `hint` 会提示这一点）。
+
+> 本仓库 `install.sh` 只写「已安装」声明，**不安装 agent-mcp daemon**（daemon 请用
+> agent-mcp 仓库的安装脚本安装并启动）。声明 ≠ daemon 可达：声明了但 daemon 未起 →
+> `state: unavailable`；daemon 起了但未声明 → `state: daemon_reachable_undeclared`。
 
 ## 4. 高级策略：Fast / Strong / Independent
 
@@ -173,7 +195,8 @@ build_memory_recall_call("previous verdict on AI coding assistant", kind="resear
 
 | 症状 | 动作 |
 |---|---|
-| 未安装 / daemon 不可达 | `AGENT_MCP_UNAVAILABLE`，退化为 Platform Native Mode，照常出结果 |
+| 未安装 / daemon 不可达 | `state: unavailable`，`AGENT_MCP_UNAVAILABLE`，退化为 Platform Native Mode，照常出结果 |
+| daemon 可达但未声明 `AGENT_MCP_INSTALLED` | `state: daemon_reachable_undeclared`；按 `hint` 设置 `AGENT_MCP_INSTALLED=1`（写入 `~/.eduevidence/env` / shell profile / 宿主 MCP 注入）后重试 |
 | 已安装但未确认模型映射 / approval 哈希不匹配 | `AGENT_MCP_APPROVAL_REQUIRED`，禁止 spawn；展示推荐表请用户确认后再执行 |
 | 派发超时 | 任务级 `timeout_seconds` 自动终止；等待超时看 wait 存活证据再决策 |
 | 独立审核者结果与主分析冲突 | Judge 裁定，必要时 `followup_task` 返工 |
@@ -181,7 +204,7 @@ build_memory_recall_call("previous verdict on AI coding assistant", kind="resear
 
 ## 9. 自检清单
 
-- [ ] `python3 integrations/agent_mcp.py` 可正确报告 available / mode
+- [ ] `python3 integrations/agent_mcp.py` 可正确报告 available / mode / state（三态）
 - [ ] 未安装时（`available: false`）核心流程 100% 可用，无报错
 - [ ] 已安装时 Cross-Model Review 能派发独立模型并返回 `CrossModelReview`
 - [ ] Memory Bank store / recall 调用格式与 agent-mcp 契约一致

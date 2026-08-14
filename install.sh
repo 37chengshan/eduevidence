@@ -15,6 +15,9 @@ SKILL_NAME="eduevidence"
 # Skill 本体（运行协议 + 确定性脚本 + 检索/集成层 + 展示层）。
 # retrieval/ 与 integrations/ 会被 scripts/ 直接 import；visualization/ 负责最终 HTML 渲染。
 SKILL_PAYLOAD=(SKILL.md engine skill references schemas scripts retrieval integrations visualization)
+# Agent MCP 声明文件：安装完成后写入 AGENT_MCP_INSTALLED=1，供
+# integrations/agent_mcp.py 作为 env 后备来源读取（真实环境变量优先于该文件）。
+AGENT_MCP_ENV_FILE="${AGENT_MCP_ENV_FILE:-$HOME/.eduevidence/env}"
 
 # ---------- curl 远程执行支持 ----------
 # 用法: bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
@@ -130,6 +133,31 @@ star_prompt() {
     echo "==> If EduEvidence helps, consider starring ⭐ ${REPO_URL}（仅提示，不会自动点 star）"
 }
 
+# ---------- Agent MCP 声明（~/.eduevidence/env） ----------
+# 安装完成后写入 AGENT_MCP_INSTALLED=1，供 integrations/agent_mcp.py 读取。
+# 只写「已安装」声明，不安装 agent-mcp daemon：detect 仍要求 daemon 可达
+# （声明但 daemon 未起 -> state: unavailable；daemon 起但未声明 ->
+# state: daemon_reachable_undeclared）。
+write_agent_mcp_env() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "    [dry-run] 将写入 $AGENT_MCP_ENV_FILE: AGENT_MCP_INSTALLED=1"
+        return 0
+    fi
+    mkdir -p "$(dirname "$AGENT_MCP_ENV_FILE")"
+    touch "$AGENT_MCP_ENV_FILE"
+    if grep -q '^AGENT_MCP_INSTALLED=' "$AGENT_MCP_ENV_FILE" 2>/dev/null; then
+        # 幂等更新（兼容 macOS/BSD 与 GNU sed：不用 -i）
+        local tmp
+        tmp="$(mktemp)"
+        sed 's/^AGENT_MCP_INSTALLED=.*/AGENT_MCP_INSTALLED=1/' \
+            "$AGENT_MCP_ENV_FILE" > "$tmp"
+        mv "$tmp" "$AGENT_MCP_ENV_FILE"
+    else
+        printf 'AGENT_MCP_INSTALLED=1\n' >> "$AGENT_MCP_ENV_FILE"
+    fi
+    echo "    ✅ 已写入 ${AGENT_MCP_ENV_FILE}（AGENT_MCP_INSTALLED=1）"
+}
+
 # ---------- 本地安装：Python 检查 + venv + 依赖 + 自检（--dev 时含 pytest） ----------
 local_setup() {
     local PYTHON_BIN="${PYTHON:-python3}"
@@ -172,6 +200,7 @@ local_setup() {
     if [ "$DRY_RUN" -eq 1 ]; then
         echo "    [dry-run] 将激活 .venv 并安装依赖（pip install -e .）"
         echo "    [dry-run] 将运行自检：Schema 校验 + 渲染双语 HTML 报告"
+        write_agent_mcp_env
         return 0
     fi
     # shellcheck disable=SC1091
@@ -214,6 +243,9 @@ local_setup() {
         echo "==> 运行测试"
         pytest -q
     fi
+
+    # 7. Agent MCP 声明：写入 AGENT_MCP_INSTALLED=1（~/.eduevidence/env）
+    write_agent_mcp_env
 }
 
 local_finish() {
@@ -223,6 +255,8 @@ local_finish() {
     echo "  2. 渲染自己的 result.json（需同时准备 result.zh.json 中文平行数据）:"
     echo "     python visualization/eduevidence-report/scripts/build_report.py \\"
     echo "         --result <你的 result.json> --out REPORT.html"
+    echo "  3. Agent MCP: 已写入 ${AGENT_MCP_ENV_FILE}（AGENT_MCP_INSTALLED=1），"
+    echo "     安装并启动 agent-mcp daemon 后 detect 即报 state: available"
 }
 
 # ---------- Skill 安装 ----------
@@ -330,6 +364,7 @@ skill_install() {
                 pip install --quiet -e '.[dev]'
                 pytest -q
             fi
+            write_agent_mcp_env
             ;;
         all)
             for h in "${HOSTS[@]}"; do install_one_host "$h"; done

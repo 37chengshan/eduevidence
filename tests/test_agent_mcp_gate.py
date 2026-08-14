@@ -440,3 +440,77 @@ def test_cross_model_review_degrades_when_unavailable(monkeypatch):
     assert plan["status"] == AGENT_MCP_UNAVAILABLE
     assert plan["degraded_to"] == "native_self_review"
     assert "spawn_call" not in plan
+
+# --------------------------------------------------------------------------
+# OPEN-5 — Tri-state detection: available / daemon_reachable_undeclared / unavailable
+# --------------------------------------------------------------------------
+
+def test_detect_available_requires_declared_and_reachable(monkeypatch):
+    monkeypatch.setattr(agent_mcp, "AGENT_MCP_INSTALLED", True)
+    monkeypatch.setattr(agent_mcp, "_daemon_reachable", lambda port=None: True)
+    report = agent_mcp.detect_agent_mcp()
+    assert report["state"] == "available"
+    assert report["available"] is True
+    assert report["mode"] == "agent_mcp_enhanced"
+    assert report["reasons"] == []
+    assert report["reason"]
+    assert report["hint"] == ""
+    assert report["enhanced_features"]["multi_cli_dispatch"] is True
+
+
+def test_detect_daemon_reachable_undeclared_hints_user(monkeypatch):
+    # OPEN-5 UX fix: daemon running but env not declared must NOT look like a
+    # hard failure — report the actionable daemon_reachable_undeclared state.
+    monkeypatch.setattr(agent_mcp, "AGENT_MCP_INSTALLED", False)
+    monkeypatch.setattr(agent_mcp, "_daemon_reachable", lambda port=None: True)
+    report = agent_mcp.detect_agent_mcp()
+    assert report["state"] == "daemon_reachable_undeclared"
+    assert report["available"] is False          # backward compat
+    assert report["mode"] == "platform_native"   # still degraded until declared
+    assert report["reasons"] == ["AGENT_MCP_INSTALLED env not set"]
+    assert "AGENT_MCP_INSTALLED=1" in report["hint"]
+    assert "AGENT_MCP_INSTALLED" in report["reason"]
+
+
+def test_detect_unavailable_when_not_declared_and_no_daemon(monkeypatch):
+    monkeypatch.setattr(agent_mcp, "AGENT_MCP_INSTALLED", False)
+    monkeypatch.setattr(agent_mcp, "_daemon_reachable", lambda port=None: False)
+    report = agent_mcp.detect_agent_mcp()
+    assert report["state"] == "unavailable"
+    assert report["available"] is False
+    assert report["mode"] == "platform_native"
+    assert len(report["reasons"]) == 2
+    assert report["enhanced_features"]["cross_model_review"] is False
+
+
+def test_detect_declared_but_daemon_down_is_unavailable(monkeypatch):
+    # env declares install but daemon is down -> unavailable (with reason),
+    # never a false "available".
+    monkeypatch.setattr(agent_mcp, "AGENT_MCP_INSTALLED", True)
+    monkeypatch.setattr(agent_mcp, "_daemon_reachable", lambda port=None: False)
+    report = agent_mcp.detect_agent_mcp()
+    assert report["state"] == "unavailable"
+    assert report["available"] is False
+    assert any("daemon not reachable" in r for r in report["reasons"])
+
+
+def test_env_file_is_fallback_env_source(monkeypatch, tmp_path):
+    # ~/.eduevidence/env (written by install.sh) is an env source with lower
+    # precedence than real environment variables (OPEN-5 UX fix).
+    env_file = tmp_path / "env"
+    env_file.write_text(
+        "# EduEvidence agent-mcp marker\n"
+        "AGENT_MCP_INSTALLED=1\n"
+        "AGENT_MCP_PORT=9876\n",
+        encoding="utf-8")
+    values = agent_mcp._env_file_values(str(env_file))
+    assert values == {"AGENT_MCP_INSTALLED": "1", "AGENT_MCP_PORT": "9876"}
+    # No real env var -> file value applies.
+    monkeypatch.delenv("AGENT_MCP_PORT", raising=False)
+    assert agent_mcp._effective_env(values, "AGENT_MCP_PORT", "8765") == "9876"
+    # Real env var wins over the file.
+    monkeypatch.setenv("AGENT_MCP_PORT", "1234")
+    assert agent_mcp._effective_env(values, "AGENT_MCP_PORT", "8765") == "1234"
+    # Missing key -> default.
+    assert agent_mcp._effective_env(values, "AGENT_MCP_HOME", "~/.codex") == "~/.codex"
+

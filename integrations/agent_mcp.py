@@ -41,9 +41,41 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-AGENT_MCP_PORT = int(os.environ.get("AGENT_MCP_PORT", "8765"))
-AGENT_MCP_HOME = os.environ.get("AGENT_MCP_HOME", os.environ.get("CODEX_HOME", "~/.codex"))
-AGENT_MCP_INSTALLED = os.environ.get("AGENT_MCP_INSTALLED", "").lower() in ("1", "true", "yes")
+AGENT_MCP_ENV_FILE = os.environ.get("AGENT_MCP_ENV_FILE", "~/.eduevidence/env")
+
+
+def _env_file_values(path: str | Path | None = None) -> dict[str, str]:
+    """Parse KEY=VALUE lines from ~/.eduevidence/env (best-effort).
+
+    install.sh writes AGENT_MCP_INSTALLED=1 there after installation; it is a
+    *fallback* env source — real environment variables always win
+    (see _effective_env).
+    """
+    try:
+        text = Path(os.path.expanduser(path or AGENT_MCP_ENV_FILE)).read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    values: dict[str, str] = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        values[key.strip()] = value.strip().strip("\"'")
+    return values
+
+
+def _effective_env(file_values: dict[str, str], key: str, default: str = "") -> str:
+    """Resolve one setting: real env var > ~/.eduevidence/env > default."""
+    return os.environ.get(key) or file_values.get(key) or default
+
+
+_ENV_FILE_VALUES = _env_file_values()
+AGENT_MCP_PORT = int(_effective_env(_ENV_FILE_VALUES, "AGENT_MCP_PORT", "8765"))
+AGENT_MCP_HOME = _effective_env(_ENV_FILE_VALUES, "AGENT_MCP_HOME",
+                                os.environ.get("CODEX_HOME", "~/.codex"))
+AGENT_MCP_INSTALLED = _effective_env(_ENV_FILE_VALUES, "AGENT_MCP_INSTALLED",
+                                     "").lower() in ("1", "true", "yes")
 
 # Failure states per 总体实施计划 §54 + Phase 8 Approval Gate.
 AGENT_MCP_UNAVAILABLE = "AGENT_MCP_UNAVAILABLE"
@@ -151,38 +183,75 @@ class AgentMCPUnavailable(RuntimeError):
 
 
 # --------------------------------------------------------------------------
-# detect / require — availability probe (unchanged contract)
+# detect / require — availability probe (tri-state, OPEN-5)
 # --------------------------------------------------------------------------
+
+def _daemon_reachable(port: int | None = None) -> bool:
+    """Best-effort probe of the agent-mcp daemon on 127.0.0.1:<port>."""
+    try:
+        with socket.create_connection(("127.0.0.1", AGENT_MCP_PORT if port is None else port),
+                                      timeout=0.5):
+            return True
+    except OSError:
+        return False
+
 
 def detect_agent_mcp() -> dict[str, Any]:
     """Probe availability: env marker + daemon health endpoint.
 
-    Returns an availability report (never raises).
+    Tri-state detection (OPEN-5 — a running daemon must not look like a hard
+    failure when the env marker is missing):
+
+      - "available": env declares AGENT_MCP_INSTALLED AND the daemon is reachable
+      - "daemon_reachable_undeclared": daemon reachable but env not declared —
+        the host is running agent-mcp; set AGENT_MCP_INSTALLED=1 (via
+        ~/.eduevidence/env, shell profile, or host MCP injection) to enable it
+      - "unavailable": not installed / fully unavailable (env declares but
+        daemon down is also reported here, with the daemon reason)
+
+    Backward compatible: available / mode / port / home / reasons /
+    enhanced_features keep their prior meaning; state / reason / hint are
+    additive. Returns an availability report (never raises).
     """
+    declared = AGENT_MCP_INSTALLED
+    daemon_reachable = _daemon_reachable()
     reasons: list[str] = []
-    available = False
 
-    if AGENT_MCP_INSTALLED:
-        available = True
-    else:
+    if not declared:
         reasons.append("AGENT_MCP_INSTALLED env not set")
-
-    # Daemon health probe (best-effort; a missing daemon is not fatal if the
-    # host agent can still start one via the MCP layer).
-    try:
-        with socket.create_connection(("127.0.0.1", AGENT_MCP_PORT), timeout=0.5):
-            daemon_reachable = True
-    except OSError:
-        daemon_reachable = False
+    if not daemon_reachable:
         reasons.append(f"daemon not reachable on 127.0.0.1:{AGENT_MCP_PORT}")
 
-    available = available and daemon_reachable
+    if declared and daemon_reachable:
+        state = "available"
+    elif daemon_reachable:
+        state = "daemon_reachable_undeclared"
+    else:
+        state = "unavailable"
+
+    available = state == "available"
+    if state == "daemon_reachable_undeclared":
+        reason = (f"daemon reachable on 127.0.0.1:{AGENT_MCP_PORT} but "
+                  "AGENT_MCP_INSTALLED is not declared")
+        hint = ("Agent MCP daemon 可达但未声明安装：设置 AGENT_MCP_INSTALLED=1 "
+                "（写入 ~/.eduevidence/env、shell profile，或由宿主 MCP 层注入）"
+                "即可启用 agent_mcp_enhanced")
+    elif available:
+        reason = "agent-mcp installed and daemon reachable"
+        hint = ""
+    else:
+        reason = "agent-mcp not available (see reasons)"
+        hint = ""
+
     return {
         "available": available,
+        "state": state,
         "mode": "agent_mcp_enhanced" if available else "platform_native",
         "port": AGENT_MCP_PORT,
         "home": os.path.expanduser(AGENT_MCP_HOME),
+        "reason": reason,
         "reasons": reasons,
+        "hint": hint,
         "enhanced_features": {
             "multi_cli_dispatch": available,
             "cross_model_review": available,
