@@ -166,6 +166,54 @@ class ApiDriver:
         return text, usage_out
 
 
+class CliDriver:
+    """omp CLI driver - host agent runtime (user-approved).
+
+    Calls `omp -p --no-session --model=<model> <prompt>` in a scratch dir;
+    captures stdout as the response. Token usage is estimated from text
+    length and recorded as such (manifest usage fields may stay null; the
+    run manifest environment records the exact invocation).
+    """
+
+    name = "cli"
+
+    def __init__(self, model: str | None = None, thinking: str = "minimal",
+                 timeout: int = 600):
+        self.model = model or os.environ.get("EDUEVIDENCE_LLM_MODEL", "deepseek-v4-flash")
+        self.thinking = thinking
+        self.timeout = timeout
+
+    def available(self) -> bool:
+        import shutil
+        return shutil.which("omp") is not None
+
+    def call(self, prompt: str, *, no_tools: bool = False) -> tuple[str, dict]:
+        import subprocess
+        import tempfile
+        import time
+
+        cmd = ["omp", "-p", "--no-session", f"--model={self.model}",
+               f"--thinking={self.thinking}", "--no-extensions", "--no-skills"]
+        if no_tools:
+            cmd.append("--no-tools")
+        cmd.append(prompt)
+        t0 = time.monotonic()
+        with tempfile.TemporaryDirectory(prefix="eduevidence-bench-") as workdir:
+            proc = subprocess.run(cmd, capture_output=True, text=True,
+                                 timeout=self.timeout, cwd=workdir)
+        latency = time.monotonic() - t0
+        if proc.returncode != 0:
+            raise RuntimeError(
+                f"omp failed rc={proc.returncode}: "
+                f"{(proc.stderr or proc.stdout or '')[:300]}")
+        text = (proc.stdout or "").strip()
+        usage = {
+            "prompt_tokens": max(1, len(prompt) // 2),
+            "completion_tokens": max(1, len(text) // 2),
+            "latency_s": round(latency, 2),
+        }
+        return text, usage
+
 class SimDriver:
     """Deterministic simulation — harness validation ONLY. Never performance evidence."""
 
@@ -177,7 +225,7 @@ class SimDriver:
     def available(self) -> bool:
         return True
 
-    def call(self, prompt: str) -> tuple[str, dict[str, Any]]:
+    def call(self, prompt: str, *, no_tools: bool = False) -> tuple[str, dict[str, Any]]:
         from benchmark_v2 import simulate_question_result  # noqa: PLC0415
 
         # Deterministic pseudo-usage from prompt length; response is a stub
@@ -201,6 +249,8 @@ class SimDriver:
 def make_driver(name: str) -> Any:
     if name == "api":
         return ApiDriver()
+    if name == "cli":
+        return CliDriver()
     if name == "sim":
         return SimDriver()
     raise ValueError(f"unknown driver: {name}")
@@ -237,8 +287,12 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
             "model_family": getattr(driver, "model", "sim") or "unknown",
             "model_version": getattr(driver, "model", "sim") or "unknown",
             "temperature": temperature,
-            "tools": [],
-            "search_provider": "none" if driver_name == "sim" else "host_tool",
+            "tools": ([] if driver_name == "sim"
+                      else (["host agent tools"] if driver_name == "cli"
+                            else [])),
+            "search_provider": ("none" if driver_name == "sim"
+                                else ("host_tools" if driver_name == "cli"
+                                      else "none")),
             "agent_mcp_used": False,
         },
         "attempts": [],
@@ -274,7 +328,8 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                 }
                 try:
                     prompt = build_prompt(baseline, question)
-                    text, usage = driver.call(prompt)
+                    text, usage = driver.call(
+                        prompt, no_tools=(baseline == "B0_direct_llm"))
                     entry.update({
                         "finished_at": _now_iso(),
                         "prompt_tokens": usage.get("prompt_tokens"),
@@ -374,8 +429,8 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--questions", default="benchmarks/questions.jsonl")
     p_run.add_argument("--ids", default=None, help="comma-separated question ids to run")
     p_run.add_argument("--repeats", type=int, default=3)
-    p_run.add_argument("--driver", choices=["api", "sim"], default=None,
-                       help="api (needs env keys) or sim (harness validation only)")
+    p_run.add_argument("--driver", choices=["api", "cli", "sim"], default=None,
+                       help="api (needs env keys), cli (omp), or sim (harness validation only)")
     p_run.add_argument("--out", required=True)
     p_run.add_argument("--budget-tokens", type=int, default=DEFAULT_BUDGET_TOKENS)
     p_run.add_argument("--temperature", type=float, default=0.0)
@@ -395,7 +450,12 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
     if args.driver is None:
-        args.driver = "api" if ApiDriver().available() else "sim"
+        if ApiDriver().available():
+            args.driver = "api"
+        elif CliDriver().available():
+            args.driver = "cli"
+        else:
+            args.driver = "sim"
     return args.func(args)
 
 

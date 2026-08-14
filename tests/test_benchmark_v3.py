@@ -117,3 +117,43 @@ def test_evaluate_run_and_report(tmp_path):
     md = be.report_from_run(out, manifest, report_path)
     assert "SIMULATED" in md
     assert "harness validation only" in md
+
+
+def test_cli_driver_mocked(monkeypatch):
+    import subprocess
+    from benchmark_v3 import CliDriver
+
+    calls = {}
+
+    class FakeProc:
+        returncode = 0
+        stdout = "{\"recommended_action\": \"pilot\"}"
+        stderr = ""
+
+    def fake_run(cmd, **kw):
+        calls["cmd"] = cmd
+        return FakeProc()
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    d = CliDriver(model="deepseek-v4-flash")
+    assert d.available() is True  # omp exists on this host
+    text, usage = d.call("prompt here", no_tools=True)
+    assert "recommended_action" in text
+    assert usage["latency_s"] >= 0
+    assert "--no-tools" in calls["cmd"]
+    assert "--no-session" in calls["cmd"]
+    assert calls["cmd"][-1] == "prompt here"
+
+
+def test_cli_driver_failure_raises(monkeypatch):
+    import subprocess
+    from benchmark_v3 import CliDriver
+
+    class FakeProc:
+        returncode = 1
+        stdout = ""
+        stderr = "boom"
+
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: FakeProc())
+    with pytest.raises(RuntimeError, match="omp failed"):
+        CliDriver().call("x")
