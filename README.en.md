@@ -2,12 +2,12 @@
 
 > **🌐 [English](README.md) | 中文**
 
-## Evidence-Based AI Teaching Decision & Intervention Skill
+## EduEvidence Research Engine — Evidence-Based Education Decision Skill
 
 > **From Education Questions to Evidence-Based Decisions.**
-> **从教学问题，到有证据支撑的教学决策。**
+> **从教育问题，到有证据支撑的教育决策。**
 
-EduEvidence 面向高校教师、教学研究者与教学管理者，把"是否采用一种 AI 教学方式"从经验判断转化为**可追溯、可质疑、可验证的证据决策流程**。
+EduEvidence 面向教师、教学研究者与教学管理者，把"是否采用某教学法、课程设计、评估方式或 AI 教学工具"从经验判断转化为**可追溯、可质疑、可验证的证据决策流程**——教学法、课程、评估、学习干预与 AI 工具均是应用域，引擎方法学教育通用。
 
 - ⚖️ 不是替教师生成答案，而是帮助教师知道：证据支持什么、不能支持什么、适用于谁、应该怎样试点并验证。
 - 🧪 基于真实研究（示例包含 CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 的实证证据），不做无来源断言。

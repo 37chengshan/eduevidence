@@ -1,11 +1,21 @@
 ---
 name: eduevidence
-description: Use when a teaching or education decision — whether, when, and how to adopt a teaching method, tool, or AI-based intervention — must be grounded in research evidence rather than opinion. Covers any education question: teaching methods, AI tools, assessment, curriculum, and learning interventions, with structured evidence review, counter-evidence search, methodology audit, evidence tribunal, and actionable pilot design.
+description: Evidence-based decisions for ANY education question — whether, when, and how to adopt a teaching method, curriculum change, assessment practice, learning intervention, or AI teaching tool. Use when an education decision must be grounded in research evidence rather than opinion; runs structured evidence review, counter-evidence search, methodology audit, evidence tribunal, and actionable pilot design across teaching methods, curriculum, assessment, learning psychology, and AI tools.
 ---
 
 # EduEvidence — EduEvidence Research Engine (Evidence-Based Education Decision Skill)
 
 **From Education Questions to Evidence-Based Decisions.**
+
+> **30-second quick start** — see the full worked example in
+> `examples/ai-coding-assistant/` (open `EduEvidence_Report.html` in any
+> browser), or run the engine's own checks:
+>
+> ```bash
+> python3 scripts/validate_schema.py --schema schemas/evidence.schema.json \
+>     --data examples/ai-coding-assistant/evidence.jsonl
+> python3 scripts/evidence_matrix.py examples/ai-coding-assistant/evidence.jsonl
+> ```
 
 EduEvidence is delivered as an **AI Agent Skill**; inside the Skill operates
 the **EduEvidence Research Engine** — a persistent, auditable engine that
@@ -46,33 +56,22 @@ DecisionSnapshot
 Visual Brief / Full Report / Markdown / future PPT
 ```
 
-- **Project** = long-lived research project owning a versioned Project
-  Evidence Graph. **Run** = one execution attempt/mutation inside a Project.
-  **Revision** = one immutable scientific evidence state. **DecisionSnapshot**
-  = an adjudication bound to a graph revision. Four concepts stay separate.
-- **Project Workspace** lives under `~/.eduevidence/projects/PRJ-.../` with
-  graph/, gaps/, study-designs/, datasets/, analyses/, decisions/,
-  projections/, reports/ and runs/.
+- **Project/Run/Revision/DecisionSnapshot** stay four separate concepts
+  (details: docs/architecture.md): Project = long-lived research state owning
+  a versioned Evidence Graph; Run = one execution attempt; Revision = one
+  immutable evidence state; DecisionSnapshot = an adjudication bound to a
+  graph revision.
 - **Evidence Graph** is the sole authoritative scientific state; `result.json`,
-  localization packs, Markdown, HTML and charts are projections, never fact
-  stores.
-- **Shared Research Library** (`~/.eduevidence/library/`) reuses verified
-  external facts (Source/Study/Finding/Audit) through immutable snapshot
-  imports: research facts may be reused, interpretations (Claim/EvidenceLink/
-  Applicability/Decision) stay Project-local, and a later library change never
-  silently alters an existing Project's conclusions.
-- Two Research Modes: **Evidence Review** (secondary-evidence research only)
-  and **Full Research Cycle** (Evidence Review → Knowledge Gap → new study
-  design → user data → analysis → new evidence → graph update → updated
-  decision). Mode is recommended from a structured ResearchIntent and may be
-  overridden by the user.
-- **Scientific rule (frozen): No new study design without evidence grounding.** Any experiment/survey design must reference explicit,
-  evidence-grounded KnowledgeGap IDs; the Research Router first verifies the
-  Project has sufficient grounding, otherwise it runs at least a minimum
-  Evidence Review to identify a defensible gap.
-- The engine is an internal capability architecture — it is **not** a
-  server application, and it never requires Agent MCP or a daemon.
-  Native Core runs on Python stdlib only.
+  Markdown, HTML and charts are projections, never fact stores.
+- **Shared Research Library** reuses verified external facts through immutable
+  snapshot imports: facts may be reused, interpretations stay Project-local.
+- Two Research Modes: **Evidence Review** (secondary evidence only) and
+  **Full Research Cycle** (Evidence Review → Knowledge Gap → study design →
+  user data → analysis → graph update → updated decision).
+- **Scientific rule (frozen): No new study design without evidence grounding**
+  — designs must reference explicit KnowledgeGap IDs.
+- The engine is an internal capability architecture, **not** a server; Native
+  Core runs on Python stdlib only and never requires Agent MCP or a daemon.
 
 ### 1.2 Startup flow (Skill-level, updated)
 
@@ -110,13 +109,13 @@ needed.
 
 ## 2 When to Use
 
-EduEvidence addresses **any teaching/education decision that needs evidence**: whether to adopt a teaching method, tool, or AI intervention; how to introduce it; for whom it works; and how to verify its effect. Typical scenarios include (not limited to):
+EduEvidence addresses **any education decision that needs evidence** — teaching methods, curriculum, assessment, learning interventions, and AI teaching tools alike: whether to adopt something, how to introduce it, for whom it works, and how to verify its effect. AI tools are one application domain among many; the protocol is education-general. Typical scenarios include (not limited to):
 
-- **AI teaching tools**: Should first-year C programming students be allowed to use AI coding assistants? Is an AI tutor effective for calculus? Does an AI writing assistant harm independent writing skills?
 - **Teaching methods**: Flipped classroom vs traditional lecture? Is project-based learning worth scaling? Peer assessment vs instructor grading?
-- **Curriculum & assessment**: How to set formative assessment frequency? Online vs in-person effect differences?
-- **Learning interventions**: Cognitive load management, motivation interventions, peer learning design.
+- **Curriculum & assessment**: How to set formative assessment frequency? Online vs in-person effect differences? Should a new course be required?
+- **Learning interventions**: Cognitive load management, motivation interventions, peer learning design, spaced vs massed practice.
 - **Pilot design**: How to design a low-risk, evaluable teaching pilot?
+- **AI teaching tools** (one domain among many): Should first-year C programming students be allowed to use AI coding assistants? Is an AI tutor effective for calculus? Does an AI writing assistant harm independent writing skills?
 
 Trigger signals: the question involves "whether to adopt / how to introduce / for whom it works / how to verify", and the answer should be based on research evidence rather than personal experience.
 

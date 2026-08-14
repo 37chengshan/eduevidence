@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "eduevidence"
 version = "3.0.0"
-description = "Evidence-Based AI Teaching Decision & Intervention Skill — from education questions to evidence-based decisions."
+description = "Evidence-Based Education Decision Skill — from any education question (teaching methods, curriculum, assessment, learning interventions, AI tools) to an evidence-based decision."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
