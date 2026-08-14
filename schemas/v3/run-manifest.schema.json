@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/v3/run-manifest.schema.json",
+  "title": "BenchmarkRunManifest",
+  "description": "Layer B empirical benchmark run manifest (v3). Every empirical run MUST record the full environment so results are reproducible: model family/version, temperature, tool set, search provider, question-set version, timestamps, per-attempt usage (tokens/latency/cost) and failures. SIMULATED runs must set run_mode=simulated and may never be presented as model performance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "run_mode",
+    "created_at",
+    "questions_version",
+    "baselines",
+    "repeats",
+    "environment",
+    "attempts"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^run-[0-9]{8}-[0-9]{6}$"
+    },
+    "run_mode": {
+      "type": "string",
+      "enum": [
+        "empirical",
+        "simulated"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "questions_version": {
+      "type": "string",
+      "description": "git commit or tag of benchmarks/questions.jsonl used"
+    },
+    "baselines": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "B0_direct_llm",
+          "B1_search_llm",
+          "B2_standard_agent",
+          "B3_eduevidence_single",
+          "B4_eduevidence_agent_mcp"
+        ]
+      }
+    },
+    "repeats": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "budget_tokens": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "driver",
+        "model_family",
+        "model_version",
+        "temperature",
+        "tools",
+        "search_provider",
+        "agent_mcp_used"
+      ],
+      "properties": {
+        "driver": {
+          "type": "string",
+          "enum": [
+            "api",
+            "cli",
+            "sim"
+          ]
+        },
+        "model_family": {
+          "type": "string"
+        },
+        "model_version": {
+          "type": "string"
+        },
+        "temperature": {
+          "type": "number"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "search_provider": {
+          "type": "string"
+        },
+        "agent_mcp_used": {
+          "type": "boolean"
+        }
+      }
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "attempt_id",
+          "question_id",
+          "baseline",
+          "attempt",
+          "status",
+          "started_at",
+          "finished_at"
+        ],
+        "properties": {
+          "attempt_id": {
+            "type": "string"
+          },
+          "question_id": {
+            "type": "string"
+          },
+          "baseline": {
+            "type": "string"
+          },
+          "attempt": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "budget_stopped"
+            ]
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "prompt_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "completion_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "latency_s": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Relative paths of per-attempt artifact files (response text / parsed result)."
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
