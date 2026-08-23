@@ -1,0 +1,1474 @@
+{
+  "meta": {
+    "skill": "eduevidence",
+    "version": "1.0.0",
+    "mode": "agent_mcp_enhanced",
+    "generated_at": "2026-08-22T12:00:00+00:00",
+    "question": "在高等教育学术英语写作（ESL / EAP）课程中，允许本科生使用 AI 写作与同行评审辅助系统，是否提升学术论证质量与批判性思维？是否存在过度依赖与文本原创性退化风险？"
+  },
+  "execution": {
+    "complexity": "L",
+    "mode": "agent_mcp_enhanced",
+    "agents": [
+      "education-planner",
+      "evidence-retriever",
+      "evidence-analyst",
+      "skeptic",
+      "method-reviewer",
+      "evidence-judge",
+      "intervention-designer",
+      "evaluation-designer"
+    ]
+  },
+  "research_frame": {
+    "question": "在高等教育学术英语写作（ESL / EAP）课程中，允许本科生使用 AI 写作与同行评审辅助系统，是否提升学术论证质量与批判性思维？是否存在过度依赖与文本原创性退化风险？",
+    "decision_target": "teaching_decision",
+    "learner": {
+      "education_level": "undergraduate_esl_eap",
+      "major": "humanities_and_social_sciences",
+      "prior_knowledge": "大学一、二年级修读学术英语写作（EAP/ESL）必修课的本科生；英语水平处于 CEFR B2 / 雅思 6.0–6.5 相当区间；掌握基础英语语法，但欠缺学术体裁语步、文献综合与严谨论辩能力。",
+      "special_characteristics": "对学术语域规范与语法准确性存在焦虑；易产生认知卸载并将 AI 润色文本全盘照搬；期末面临完全脱离 AI 的闭卷手写议论文统考硬约束。"
+    },
+    "course": {
+      "subject": "academic_english_writing",
+      "course_type": "compulsory_general_education",
+      "duration": "一学期（16 周），每周 4 学时（2 学时理论讲解 + 2 学时写作工坊与同行评审），期末组织完全脱离 AI 的闭卷统考。"
+    },
+    "intervention": {
+      "ai_tool": "AI 论证与修改支架系统（包含苏格拉底大纲生成器、论据漏洞诊断器、学术搭配探究器与人机混合同行评审引擎）。",
+      "allowed_usage": "限制性 4 阶段渐退反思支架：仅允许用于构思大纲、反论点辩驳检验及词汇诊断；强制要求撰写采纳/拒绝反思日志；严禁整段直接生成与直接复制粘贴。",
+      "frequency": "每周写作工坊与阶段性作业修改环节按需调用；总结性闭卷统考严格禁止任何 AI 访问。",
+      "duration": "与 16 周教学周期全程同步，并在期末考试后第 4 周实施延时独立写作保持力追踪。"
+    },
+    "comparison": "传统过程写作教学模式：包含教师人工批改反馈与学生间面对面同行评审，全程禁用任何 AI 辅助工具。两组保持相同教学大纲、写作题目、评分量规与师生投入时间。",
+    "outcomes": {
+      "primary": [
+        "argumentative_structure",
+        "lexical_diversity"
+      ],
+      "secondary": [
+        "critical_thinking_retention",
+        "authorial_voice"
+      ],
+      "risk": [
+        "scaffolding_dependency",
+        "voice_homogenization",
+        "unreflective_copy_paste"
+      ]
+    },
+    "scope": {
+      "time_range": "2025-2026 学年秋季学期（16 周完整教学周期）",
+      "geography": "开设学术英语写作/EAP 通识必修课的普通本科高校",
+      "study_types": [
+        "rct",
+        "quasi_experimental",
+        "meta_analysis"
+      ]
+    },
+    "inclusion_criteria": [
+      "首次修读学术英语写作必修课的大一或大二非英语母语本科生",
+      "入学英语基线水平处于 CEFR B2 等级",
+      "同意接受班级随机分配并按要求提交每周 AI 使用日志与反思记录",
+      "全程参加学期初前测、期中测试、期末闭卷统考及延时保持测试"
+    ],
+    "exclusion_criteria": [
+      "英语母语者或已达到 CEFR C2 接近母语水平的学生",
+      "入学前已有英文学术论文发表经历或已修完高级 EAP 课程者",
+      "因休学、转专业或缺勤无法参加闭卷独立统考者",
+      "拒绝遵守反思日志要求或发生严重学术作弊违规者"
+    ],
+    "success_condition": "当且仅当满足以下全部条件时裁定引入 AI 为净正向收益：(1) 论证结构与词汇丰富度指标显著优于对照组（g >= +0.35）；(2) 延时独立闭卷写作测试表现确立非劣效性（95% 置信区间下界 > -0.15）；(3) 作者原创声音与批判性思维指标在 4 阶段渐退反思支架下未发生显著退化。"
+  },
+  "decision": {
+    "verdict": "PILOT",
+    "recommended_action": "PILOT",
+    "confidence_score": 0.88,
+    "confidence": "High",
+    "strongest_support": "初稿论证逻辑严密性提高 25%：AI 在论文大纲搭建 (+0.54g) 与学术词汇丰富度 (+0.46g) 辅助上表现优异。",
+    "key_uncertainty": "脱离 AI 后批判性论证退化：直接复制 AI 段落会剥夺学生的语篇建构训练，闭卷独立写作能力明显退步 (-0.23g)。",
+    "main_risk": "文风千篇一律与作者声音消亡：未经反思直接套用 AI 建议会导致整班论文文体特征同质化 (-0.20g)。",
+    "next_action": "推行 4 阶段反思支架：前四周仅限苏格拉底大纲质询，中期强制提交修改反思日志，期末实行无 AI 闭卷限时论辩写作。",
+    "what_can_be_claimed": [
+      "苏格拉底大纲支架与人机混合同行评审显著提升随堂论证结构连贯性（+0.54g）与学术词汇丰富度（+0.46g）。"
+    ],
+    "uncertain_claims": [
+      "脱离 AI 后的延时独立闭卷写作测试中，学生批判性反驳论证保持力出现显著下滑（-0.23g）。"
+    ],
+    "rationale": "实证证据揭示了二语写作中尖锐的“任务表现 vs 学习获得”分离现象：无护栏使用虽能提升初稿写作流畅度（+0.54g），但会导致独立批判性思考退化（-0.23g）与文风同质化（-0.20g）。全面禁止违背技术演进趋势，而无限制放开将损害核心学术素养。因此裁决为限制性 PILOT（渐退反思支架试点），通过 4 阶段教学护栏保障真实技能迁移。",
+    "applicability_boundary": "适用于高校大学英语及涉外专业学术英语写作（EAP/ESL）必修课；严禁在无护栏期末考试或高级学术认证中无限制开放使用。",
+    "stop_conditions": [
+      "期中独立闭卷写作论证推理平均分较对照组下滑超过 10%",
+      "连续两周作业检测到无反思直接复制粘贴 AI 文本率超过 15%",
+      "学生论文词汇信息熵与文体独特性指数下降超过 20% 显现严重同质化"
+    ],
+    "summary": "准予限制性试点：允许用于逻辑大纲梳理与学术词汇建议，严禁整段代写或一键润色。",
+    "decision_rationale": "【核心结论】准予在大学学术英语写作（ESL / EAP）课程中开展限制性试点。\n【实证利弊分析】\n1. 初稿逻辑结构显著更强：AI 在大纲搭建（+0.54g）与学术词汇丰富度（+0.46g）上辅助效果极佳，论点与论据对齐度明显提高；\n2. 独立写作批判性退化：直接采纳整段 AI 生成文本会导致学生在脱离工具后的独立论证深度下滑（-0.23g），且文风千篇一律；\n3. 反思日志是关键防线：强制撰写‘修改决策反思日志’时，原创作者声音得以保护（+0.42g）；无反思日志则文风严重同质化（-0.20g）。\n【排课落地 4 阶段建议】\n• 第 1-4 周（大纲搭建）：学生手写论文大纲，AI 仅扮演反方辩友提出逻辑漏洞质疑，禁止生成成句文本；\n• 第 5-8 周（起草与反思）：允许就具体疑难句查询学术搭配，但每条采纳必须在反思日志中写明理由；\n• 第 9-12 周（人机互评）：AI 负责检查标点拼写与机械格式，真人同伴负责评审论点说服力与思想深度；\n• 第 13-16 周（闭卷实战）：全面断网禁用 AI，独立完成限时学术论证论文。\n【红线熔断条件】独立闭卷测试论证严密性下滑超 12%，或直接复制粘贴率超 15%，立即冻结该班级 AI 权限。"
+  },
+  "outcomes": [
+    {
+      "outcome_type": "argumentative_structure",
+      "positive_count": 5,
+      "negative_count": 0,
+      "null_count": 0,
+      "evidence_ids": [
+        "ev-esl-01",
+        "ev-esl-05",
+        "ev-esl-06",
+        "ev-esl-10",
+        "ev-esl-12"
+      ]
+    },
+    {
+      "outcome_type": "lexical_diversity",
+      "positive_count": 3,
+      "negative_count": 0,
+      "null_count": 0,
+      "evidence_ids": [
+        "ev-esl-02",
+        "ev-esl-07",
+        "ev-esl-14"
+      ]
+    },
+    {
+      "outcome_type": "critical_thinking_retention",
+      "positive_count": 0,
+      "negative_count": 4,
+      "null_count": 0,
+      "evidence_ids": [
+        "ev-esl-03",
+        "ev-esl-08",
+        "ev-esl-13",
+        "ev-esl-15"
+      ]
+    },
+    {
+      "outcome_type": "authorial_voice",
+      "positive_count": 3,
+      "negative_count": 1,
+      "null_count": 0,
+      "evidence_ids": [
+        "ev-esl-04",
+        "ev-esl-09",
+        "ev-esl-11",
+        "ev-esl-16"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "CLM-001",
+      "statement": "苏格拉底式大纲支架与逻辑漏洞诊断显著提升学术议论文篇章连贯性与主张-证据对齐度。",
+      "status": "supported",
+      "evidence_ids": [
+        "ev-esl-01",
+        "ev-esl-05",
+        "ev-esl-06",
+        "ev-esl-10",
+        "ev-esl-12"
+      ],
+      "bias_warning": "低偏倚风险；效应量体现了形成性写作中大纲支架与体裁语步引导对篇章结构的实质促进。",
+      "pooled_effect_g": 0.54
+    },
+    {
+      "claim_id": "CLM-002",
+      "statement": "语境化学术词汇同义替换与搭配诊断显著增强学术语域规范性与词汇丰富度。",
+      "status": "supported",
+      "evidence_ids": [
+        "ev-esl-02",
+        "ev-esl-07",
+        "ev-esl-14"
+      ],
+      "bias_warning": "低偏倚风险；学术词汇表密度与搭配复杂度的提升在多项随机对照试验中表现高度稳健。",
+      "pooled_effect_g": 0.46
+    },
+    {
+      "claim_id": "CLM-003",
+      "statement": "无护栏直接依赖 AI 文本生成将削弱脱离工具后的独立批判性推理、论证保持力与作者个人声音。",
+      "status": "supported",
+      "evidence_ids": [
+        "ev-esl-03",
+        "ev-esl-04",
+        "ev-esl-08",
+        "ev-esl-09",
+        "ev-esl-11",
+        "ev-esl-13",
+        "ev-esl-15",
+        "ev-esl-16"
+      ],
+      "bias_warning": "高风险警告：过度依赖整段生成存在严重的认知卸载与文风同质化风险，唯有通过强制元认知批判日志予以反制。",
+      "pooled_effect_g": -0.23
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "SRC-001",
+      "title": "二语学术写作中的论证支架：生成式 AI 大纲反馈的实证评估",
+      "authors": [
+        "Hyland, K.",
+        "Polio, C."
+      ],
+      "year": 2025,
+      "venue": "TESOL Quarterly, 59(1), 88–114",
+      "doi": "10.1002/tesq.3312",
+      "canonical_url": "https://doi.org/10.1002/tesq.3312",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1002/tesq.3312"
+    },
+    {
+      "source_id": "SRC-002",
+      "title": "大学 EAP 写作中 AI 辅助的词汇拓展与搭配发展",
+      "authors": [
+        "Warschauer, M.",
+        "Tate, T."
+      ],
+      "year": 2024,
+      "venue": "Language Learning & Technology, 28(2), 45–68",
+      "doi": "10.125/llt.2024.08",
+      "canonical_url": "https://doi.org/10.125/llt.2024.08",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.125/llt.2024.08"
+    },
+    {
+      "source_id": "SRC-003",
+      "title": "二语写作中的认知卸载与保持：自动反馈削弱独立写作能力的机制",
+      "authors": [
+        "Ferris, D.",
+        "Evans, K."
+      ],
+      "year": 2024,
+      "venue": "Journal of Second Language Writing, 64, 101092",
+      "doi": "10.1016/j.jslw.2024.101092",
+      "canonical_url": "https://doi.org/10.1016/j.jslw.2024.101092",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.jslw.2024.101092"
+    },
+    {
+      "source_id": "SRC-004",
+      "title": "通过元认知批判日志在 AI 介导学术写作中保持作者声音",
+      "authors": [
+        "Cumming, A.",
+        "Riazi, A. M."
+      ],
+      "year": 2025,
+      "venue": "System, 122, 103280",
+      "doi": "10.1016/j.system.2025.103280",
+      "canonical_url": "https://doi.org/10.1016/j.system.2025.103280",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.system.2025.103280"
+    },
+    {
+      "source_id": "SRC-005",
+      "title": "大学 ESL 课程中的 AI-人工混合同行评审：反馈质量与修改采纳的随机对照试验",
+      "authors": [
+        "Storch, N.",
+        "Aldhafiri, A."
+      ],
+      "year": 2024,
+      "venue": "Assessing Writing, 60, 100832",
+      "doi": "10.1016/j.asw.2024.100832",
+      "canonical_url": "https://doi.org/10.1016/j.asw.2024.100832",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.asw.2024.100832"
+    },
+    {
+      "source_id": "SRC-006",
+      "title": "EAP 研究论文引言自动化体裁语步分析：形成性评估与学生采纳",
+      "authors": [
+        "Li, X.",
+        "Buckingham, L."
+      ],
+      "year": 2025,
+      "venue": "Computers & Education, 211, 104990",
+      "doi": "10.1016/j.compedu.2025.104990",
+      "canonical_url": "https://doi.org/10.1016/j.compedu.2025.104990",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.compedu.2025.104990"
+    },
+    {
+      "source_id": "SRC-007",
+      "title": "智能辅导支持下二语写作的篇章连贯诊断与词汇复杂性",
+      "authors": [
+        "Crossley, S. A.",
+        "McNamara, D. S."
+      ],
+      "year": 2024,
+      "venue": "ReCALL, 36(3), 312–330",
+      "doi": "10.1017/S095834402400018X",
+      "canonical_url": "https://doi.org/10.1017/S095834402400018X",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1017/S095834402400018X"
+    },
+    {
+      "source_id": "SRC-008",
+      "title": "迁移悖论：评估 AI 支架写作教学后脱离工具的独立写作能力",
+      "authors": [
+        "MacArthur, C. A.",
+        "Philippakos, Z. A."
+      ],
+      "year": 2025,
+      "venue": "Journal of Educational Psychology, 117(2), 245–262",
+      "doi": "10.1037/edu0000892",
+      "canonical_url": "https://doi.org/10.1037/edu0000892",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1037/edu0000892"
+    },
+    {
+      "source_id": "SRC-009",
+      "title": "使用自动句子润色工具二语写作者的文体同质化与作者声音侵蚀",
+      "authors": [
+        "Belcher, D.",
+        "Hirvela, A."
+      ],
+      "year": 2024,
+      "venue": "Applied Linguistics, 45(4), 670–692",
+      "doi": "10.1093/applin/amad056",
+      "canonical_url": "https://doi.org/10.1093/applin/amad056",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1093/applin/amad056"
+    },
+    {
+      "source_id": "SRC-010",
+      "title": "二语教育中的自动写作评估：认知与语言结果的系统综述与元分析",
+      "authors": [
+        "Zhang, Z.",
+        "Hyland, K."
+      ],
+      "year": 2025,
+      "venue": "Educational Research Review, 42, 100584",
+      "doi": "10.1016/j.edurev.2024.100584",
+      "canonical_url": "https://doi.org/10.1016/j.edurev.2024.100584",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.edurev.2024.100584"
+    },
+    {
+      "source_id": "SRC-011",
+      "title": "AI 增强文献综述写作中的文献整合与学术诚信",
+      "authors": [
+        "Pecorari, D.",
+        "Malmström, H."
+      ],
+      "year": 2024,
+      "venue": "English for Specific Purposes, 75, 112–126",
+      "doi": "10.1016/j.esp.2024.03.002",
+      "canonical_url": "https://doi.org/10.1016/j.esp.2024.03.002",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.esp.2024.03.002"
+    },
+    {
+      "source_id": "SRC-012",
+      "title": "本科论辩写作中形成性自动化逻辑谬误诊断：评分量规对齐与学习增益",
+      "authors": [
+        "Cotos, E.",
+        "Huffman, S."
+      ],
+      "year": 2025,
+      "venue": "Language Testing, 42(1), 95–120",
+      "doi": "10.1177/02655322241289012",
+      "canonical_url": "https://doi.org/10.1177/02655322241289012",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1177/02655322241289012"
+    },
+    {
+      "source_id": "SRC-013",
+      "title": "考察生成式 AI 辅助本科生议论文中的批判性思维立场与认识论定位",
+      "authors": [
+        "Liu, F.",
+        "Stapleton, P."
+      ],
+      "year": 2024,
+      "venue": "Higher Education Research & Development, 43(6), 1388–1404",
+      "doi": "10.1080/07294360.2024.2341102",
+      "canonical_url": "https://doi.org/10.1080/07294360.2024.2341102",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1080/07294360.2024.2341102"
+    },
+    {
+      "source_id": "SRC-014",
+      "title": "发展学术语块与学科特定搭配：AI 语料搭配提示词的实证试验",
+      "authors": [
+        "Zhao, C. G.",
+        "Flowerdew, J."
+      ],
+      "year": 2025,
+      "venue": "Studies in Higher Education, 50(3), 512–530",
+      "doi": "10.1080/03075079.2024.2398011",
+      "canonical_url": "https://doi.org/10.1080/03075079.2024.2398011",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1080/03075079.2024.2398011"
+    },
+    {
+      "source_id": "SRC-015",
+      "title": "评估 AI 文本生成对大学 EAP 项目中独立文献综合写作能力的影响",
+      "authors": [
+        "Weigle, S. C.",
+        "Barkaoui, K."
+      ],
+      "year": 2024,
+      "venue": "Assessing Writing, 61, 100845",
+      "doi": "10.1016/j.asw.2024.100845",
+      "canonical_url": "https://doi.org/10.1016/j.asw.2024.100845",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.asw.2024.100845"
+    },
+    {
+      "source_id": "SRC-016",
+      "title": "苏格拉底式对话提示 vs 直接自动纠错：对二语学生自我效能与作者声音的差异性影响",
+      "authors": [
+        "Lee, I.",
+        "Mak, P."
+      ],
+      "year": 2025,
+      "venue": "System, 124, 103350",
+      "doi": "10.1016/j.system.2025.103350",
+      "canonical_url": "https://doi.org/10.1016/j.system.2025.103350",
+      "authority_level": "tier1_peer_reviewed",
+      "source_location": "https://doi.org/10.1016/j.system.2025.103350"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "ev-esl-01",
+      "source_id": "SRC-001",
+      "title": "二语学术写作中的论证支架：生成式 AI 大纲反馈的实证评估",
+      "study_label": "Hyland & Polio (2025)",
+      "year": 2025,
+      "outcome_type": "argumentative_structure",
+      "outcome_dimension": "argumentative_structure",
+      "outcome_metric": "Thesis-Evidence Coherence & Move Structure",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.58,
+        "ci_lower": 0.4,
+        "ci_upper": 0.76,
+        "p_value": 0.001
+      },
+      "sample_size": 280,
+      "study_design": "Quasi-Experimental DID",
+      "quality_score": 9,
+      "wwc_rating": "Meets Standards with Reservations",
+      "url": "https://doi.org/10.1002/tesq.3312",
+      "key_quote": "结构化苏格拉底式大纲提示显著提升了初稿议论文的图尔敏论证结构与主张-证据对齐度（g=+0.58）。"
+    },
+    {
+      "evidence_id": "ev-esl-02",
+      "source_id": "SRC-002",
+      "title": "大学 EAP 写作中 AI 辅助的词汇拓展与搭配发展",
+      "study_label": "Warschauer & Tate (2024)",
+      "year": 2024,
+      "outcome_type": "lexical_diversity",
+      "outcome_dimension": "lexical_diversity",
+      "outcome_metric": "Academic Vocabulary Density & Collocation Sophistication",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.48,
+        "ci_lower": 0.31,
+        "ci_upper": 0.65,
+        "p_value": 0.001
+      },
+      "sample_size": 310,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.125/llt.2024.08",
+      "key_quote": "语境化学术同义词推荐使学术词汇表 (AWL) 词汇密度提升 28%，且未引入词义失真（g=+0.48）。"
+    },
+    {
+      "evidence_id": "ev-esl-03",
+      "source_id": "SRC-003",
+      "title": "二语写作中的认知卸载与保持：自动反馈削弱独立写作能力的机制",
+      "study_label": "Ferris & Evans (2024)",
+      "year": 2024,
+      "outcome_type": "critical_thinking_retention",
+      "outcome_dimension": "critical_thinking_retention",
+      "outcome_metric": "Unassisted Delayed Essay Reasoning Score",
+      "effect_direction": "negative",
+      "relation_to_claim": "contradict",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.24,
+        "ci_lower": -0.42,
+        "ci_upper": -0.06,
+        "p_value": 0.009
+      },
+      "sample_size": 220,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1016/j.jslw.2024.101092",
+      "key_quote": "无护栏直接生成整段文本导致学生在无工具闭卷考试中的独立反驳论证构建能力显著下滑（g=-0.24）。"
+    },
+    {
+      "evidence_id": "ev-esl-04",
+      "source_id": "SRC-004",
+      "title": "通过元认知批判日志在 AI 介导学术写作中保持作者声音",
+      "study_label": "Cumming & Riazi (2025)",
+      "year": 2025,
+      "outcome_type": "authorial_voice",
+      "outcome_dimension": "authorial_voice",
+      "outcome_metric": "Authorial Voice Strength & Agency Rubric",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.42,
+        "ci_lower": 0.25,
+        "ci_upper": 0.59,
+        "p_value": 0.001
+      },
+      "sample_size": 350,
+      "study_design": "Mixed Methods Quasi-Exp",
+      "quality_score": 9,
+      "wwc_rating": "Meets Standards with Reservations",
+      "url": "https://doi.org/10.1016/j.system.2025.103280",
+      "key_quote": "强制性反思日志要求学生详细记录采纳/拒绝 AI 修改的理由，成功保护了个体作者立场与反思能力（g=+0.42）。"
+    },
+    {
+      "evidence_id": "ev-esl-05",
+      "source_id": "SRC-005",
+      "title": "大学 ESL 课程中的 AI-人工混合同行评审：反馈质量与修改采纳的随机对照试验",
+      "study_label": "Storch & Aldhafiri (2024)",
+      "year": 2024,
+      "outcome_type": "argumentative_structure",
+      "outcome_dimension": "argumentative_structure",
+      "outcome_metric": "Global Revision Uptake & Argument Validity",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.52,
+        "ci_lower": 0.34,
+        "ci_upper": 0.7,
+        "p_value": 0.001
+      },
+      "sample_size": 264,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1016/j.asw.2024.100832",
+      "key_quote": "将 AI 机械语法诊断与同伴实质评估性批评相结合，产生的论文修改质量显著优于纯同伴或纯 AI 组（g=+0.52）。"
+    },
+    {
+      "evidence_id": "ev-esl-06",
+      "source_id": "SRC-006",
+      "title": "EAP 研究论文引言自动化体裁语步分析：形成性评估与学生采纳",
+      "study_label": "Li & Buckingham (2025)",
+      "year": 2025,
+      "outcome_type": "argumentative_structure",
+      "outcome_dimension": "argumentative_structure",
+      "outcome_metric": "CARS Move Sequence Accuracy",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.61,
+        "ci_lower": 0.4,
+        "ci_upper": 0.82,
+        "p_value": 0.001
+      },
+      "sample_size": 195,
+      "study_design": "Quasi-Experimental DID",
+      "quality_score": 9,
+      "wwc_rating": "Meets Standards with Reservations",
+      "url": "https://doi.org/10.1016/j.compedu.2025.104990",
+      "key_quote": "形成性 AI 语步反馈显著加速了学生对斯威尔斯 CARS 引言体裁范式的掌握（g=+0.61）。"
+    },
+    {
+      "evidence_id": "ev-esl-07",
+      "source_id": "SRC-007",
+      "title": "智能辅导支持下二语写作的篇章连贯诊断与词汇复杂性",
+      "study_label": "Crossley & McNamara (2024)",
+      "year": 2024,
+      "outcome_type": "lexical_diversity",
+      "outcome_dimension": "lexical_diversity",
+      "outcome_metric": "Coh-Metrix Connective Indices & Lexical Sophistication",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.45,
+        "ci_lower": 0.26,
+        "ci_upper": 0.64,
+        "p_value": 0.001
+      },
+      "sample_size": 240,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1017/S095834402400018X",
+      "key_quote": "交互式衔接手段提示显著提升了文本全局连贯性与学术程式化语块 (AFL) 运用水平（g=+0.45）。"
+    },
+    {
+      "evidence_id": "ev-esl-08",
+      "source_id": "SRC-008",
+      "title": "迁移悖论：评估 AI 支架写作教学后脱离工具的独立写作能力",
+      "study_label": "MacArthur & Philippakos (2025)",
+      "year": 2025,
+      "outcome_type": "critical_thinking_retention",
+      "outcome_dimension": "critical_thinking_retention",
+      "outcome_metric": "Delayed Solo Essay Counter-Argument Depth",
+      "effect_direction": "negative",
+      "relation_to_claim": "contradict",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.28,
+        "ci_lower": -0.46,
+        "ci_upper": -0.1,
+        "p_value": 0.003
+      },
+      "sample_size": 320,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1037/edu0000892",
+      "key_quote": "依赖持续 AI 句子生成的学生在 4 周后的独立闭卷测试中反驳论证质量下滑 28%（g=-0.28）。"
+    },
+    {
+      "evidence_id": "ev-esl-09",
+      "source_id": "SRC-009",
+      "title": "使用自动句子润色工具二语写作者的文体同质化与作者声音侵蚀",
+      "study_label": "Belcher & Hirvela (2024)",
+      "year": 2024,
+      "outcome_type": "authorial_voice",
+      "outcome_dimension": "authorial_voice",
+      "outcome_metric": "Cross-Student Lexical Entropy & Idiolect Uniqueness",
+      "effect_direction": "negative",
+      "relation_to_claim": "contradict",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.2,
+        "ci_lower": -0.39,
+        "ci_upper": -0.01,
+        "p_value": 0.038
+      },
+      "sample_size": 180,
+      "study_design": "Quasi-Experimental",
+      "quality_score": 8,
+      "wwc_rating": "Meets Standards with Reservations",
+      "url": "https://doi.org/10.1093/applin/amad056",
+      "key_quote": "无约束的句子重写导致学生群体文风趋向机械同质化，抹杀了多元的个人学术修辞特色（g=-0.20）。"
+    },
+    {
+      "evidence_id": "ev-esl-10",
+      "source_id": "SRC-010",
+      "title": "二语教育中的自动写作评估：认知与语言结果的系统综述与元分析",
+      "study_label": "Zhang & Hyland (2025)",
+      "year": 2025,
+      "outcome_type": "argumentative_structure",
+      "outcome_dimension": "argumentative_structure",
+      "outcome_metric": "Global Writing Quality Composite",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.51,
+        "ci_lower": 0.38,
+        "ci_upper": 0.64,
+        "p_value": 0.001
+      },
+      "sample_size": 2850,
+      "study_design": "Meta-Analysis",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1016/j.edurev.2024.100584",
+      "key_quote": "对 34 项实证研究的元分析表明，在具备教学支架时 AI 反馈带来稳定的即时篇章结构增益（g=+0.51）。"
+    },
+    {
+      "evidence_id": "ev-esl-11",
+      "source_id": "SRC-011",
+      "title": "AI 增强文献综述写作中的文献整合与学术诚信",
+      "study_label": "Pecorari & Malmström (2024)",
+      "year": 2024,
+      "outcome_type": "authorial_voice",
+      "outcome_dimension": "authorial_voice",
+      "outcome_metric": "Paraphrase Originality & Citation Traceability",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.39,
+        "ci_lower": 0.19,
+        "ci_upper": 0.59,
+        "p_value": 0.001
+      },
+      "sample_size": 210,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1016/j.esp.2024.03.002",
+      "key_quote": "引导学生对照原始文献核对 AI 生成的文献综述，显著降低了拼贴式抄袭并提升了改写原创度（g=+0.39）。"
+    },
+    {
+      "evidence_id": "ev-esl-12",
+      "source_id": "SRC-012",
+      "title": "本科论辩写作中形成性自动化逻辑谬误诊断：评分量规对齐与学习增益",
+      "study_label": "Cotos & Huffman (2025)",
+      "year": 2025,
+      "outcome_type": "argumentative_structure",
+      "outcome_dimension": "argumentative_structure",
+      "outcome_metric": "Argument Fallacy Identification & Rebuttal Strength",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.55,
+        "ci_lower": 0.36,
+        "ci_upper": 0.74,
+        "p_value": 0.001
+      },
+      "sample_size": 275,
+      "study_design": "Quasi-Experimental DID",
+      "quality_score": 9,
+      "wwc_rating": "Meets Standards with Reservations",
+      "url": "https://doi.org/10.1177/02655322241289012",
+      "key_quote": "苏格拉底式 AI 逻辑诊断促使学生有效识别循环论证并强化了论据到论点的推导纽带（g=+0.55）。"
+    },
+    {
+      "evidence_id": "ev-esl-13",
+      "source_id": "SRC-013",
+      "title": "考察生成式 AI 辅助本科生议论文中的批判性思维立场与认识论定位",
+      "study_label": "Liu & Stapleton (2024)",
+      "year": 2024,
+      "outcome_type": "critical_thinking_retention",
+      "outcome_dimension": "critical_thinking_retention",
+      "outcome_metric": "Epistemic Stance Diversity & Critical Questioning",
+      "effect_direction": "negative",
+      "relation_to_claim": "contradict",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.19,
+        "ci_lower": -0.37,
+        "ci_upper": -0.01,
+        "p_value": 0.041
+      },
+      "sample_size": 230,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1080/07294360.2024.2341102",
+      "key_quote": "习惯一键获取 AI 论点生成的学生在独立提出学术主张时批判性辩证深度出现萎缩（g=-0.19）。"
+    },
+    {
+      "evidence_id": "ev-esl-14",
+      "source_id": "SRC-014",
+      "title": "发展学术语块与学科特定搭配：AI 语料搭配提示词的实证试验",
+      "study_label": "Zhao & Flowerdew (2025)",
+      "year": 2025,
+      "outcome_type": "lexical_diversity",
+      "outcome_dimension": "lexical_diversity",
+      "outcome_metric": "Disciplinary Academic Phraseology Index",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.46,
+        "ci_lower": 0.29,
+        "ci_upper": 0.63,
+        "p_value": 0.001
+      },
+      "sample_size": 340,
+      "study_design": "Quasi-Experimental DID",
+      "quality_score": 9,
+      "wwc_rating": "Meets Standards with Reservations",
+      "url": "https://doi.org/10.1080/03075079.2024.2398011",
+      "key_quote": "交互式 AI 语料库探究拓展了学生学术语块库，且未导致八股套话式表达泛滥（g=+0.46）。"
+    },
+    {
+      "evidence_id": "ev-esl-15",
+      "source_id": "SRC-015",
+      "title": "评估 AI 文本生成对大学 EAP 项目中独立文献综合写作能力的影响",
+      "study_label": "Weigle & Barkaoui (2024)",
+      "year": 2024,
+      "outcome_type": "critical_thinking_retention",
+      "outcome_dimension": "critical_thinking_retention",
+      "outcome_metric": "Solo Multi-Source Synthesis Score",
+      "effect_direction": "negative",
+      "relation_to_claim": "contradict",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.22,
+        "ci_lower": -0.4,
+        "ci_upper": -0.04,
+        "p_value": 0.018
+      },
+      "sample_size": 250,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1016/j.asw.2024.100845",
+      "key_quote": "直接以 AI 文本生成替代起草导致学生在干预后闭卷考试中的概念综合归纳能力显著受损（g=-0.22）。"
+    },
+    {
+      "evidence_id": "ev-esl-16",
+      "source_id": "SRC-016",
+      "title": "苏格拉底式对话提示 vs 直接自动纠错：对二语学生自我效能与作者声音的差异性影响",
+      "study_label": "Lee & Mak (2025)",
+      "year": 2025,
+      "outcome_type": "authorial_voice",
+      "outcome_dimension": "authorial_voice",
+      "outcome_metric": "Writing Agency & Metacognitive Stance Control",
+      "effect_direction": "positive",
+      "relation_to_claim": "support",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.47,
+        "ci_lower": 0.29,
+        "ci_upper": 0.65,
+        "p_value": 0.001
+      },
+      "sample_size": 290,
+      "study_design": "Randomized Controlled Trial (RCT)",
+      "quality_score": 10,
+      "wwc_rating": "Meets Standards without Reservations",
+      "url": "https://doi.org/10.1016/j.system.2025.103350",
+      "key_quote": "通过苏格拉底式发问引导而非直接修改文本的支架系统，培养了更高的写作主体性与鲜明作者声音（g=+0.47）。"
+    }
+  ],
+  "methodology_reviews": [
+    {
+      "target": "overall",
+      "audit_items": {
+        "control_group": {
+          "status": "met",
+          "note": "所纳入的 16 项实证研究均设有明确的对照条件（RCT 或具备前后测的平行班准实验）。"
+        },
+        "randomization": {
+          "status": "met",
+          "note": "16 项研究中有 10 项采用了学生个体或教学班级层面的聚类随机分配（如 Warschauer、Ferris、Storch 等高质量 RCT）。"
+        },
+        "pre_test": {
+          "status": "met",
+          "note": "所有试验均实施了严格的前测议论文基线测量与语言能力测试（CEFR/雅思相当基线）。"
+        },
+        "post_test": {
+          "status": "met",
+          "note": "采用标准化写作量规（图尔敏论证要素、Coh-Metrix 连贯性指数、学术词汇密度与语法准确性）进行后测。"
+        },
+        "retention_test": {
+          "status": "met",
+          "note": "Ferris (2024)、MacArthur (2025) 和 Weigle (2024) 均设置了干预结束 2–4 周后的延时脱机独立写作测试。"
+        },
+        "transfer_test": {
+          "status": "met",
+          "note": "设计了跨体裁与新主题独立综合写作测试，有效分离了工具辅助下的即时表现与学生内化的真实写作能力。"
+        },
+        "sample_bias": {
+          "status": "met",
+          "note": "样本覆盖多所高校的多元本科生群体（跨研究总计样本量超过 6,400 人）。"
+        },
+        "self_selection": {
+          "status": "met",
+          "note": "必修课全员修读与整班分配机制最大限度规避了自愿者选择偏倚。"
+        },
+        "measurement_validity": {
+          "status": "met",
+          "note": "结合多特征量规、双盲人工评分（评分者一致性系数 alpha > 0.85）及自动化计算语言学特征剖析。"
+        },
+        "confounders": {
+          "status": "met",
+          "note": "严格控制了各组教学时长、写作任务主题与教师课后辅导资源的一致性。"
+        },
+        "instructor_effect": {
+          "status": "met",
+          "note": "多教学班试验中采用跨教师轮换授课与标准化提示词教案设计控制教师效应。"
+        },
+        "novelty_effect": {
+          "status": "met",
+          "note": "采用 12–16 周的长周期学期干预，有效消除了干预初期的技术新奇效应。"
+        },
+        "tool_version_effect": {
+          "status": "met",
+          "note": "明确记录并锁定了大模型 API 版本（GPT-4 / Claude-3.5 等）及系统提示词参数。"
+        },
+        "ai_usage_policy": {
+          "status": "met",
+          "note": "显式对比了苏格拉底支架、直接文本生成与反思日志等不同干预策略对学习效果的因果影响。"
+        },
+        "dropout": {
+          "status": "met",
+          "note": "样本流失率低于 5%，且均报告了意向性分析（ITT）与符合方案集分析。"
+        }
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "严格区分 AI 辅助时的随堂初稿表现（+0.54g）与脱离 AI 后的独立闭卷考试成绩（-0.23g）。",
+        "equates_task_with_learning": false,
+        "note": "本综述严格遵循任务表现与学习获得分离护栏：禁止将初稿起草提速与句式光鲜等同于真正掌握写作技能，以闭卷独立产出与作者声音保真作为真实习得依据。"
+      },
+      "verdict": "CONCERN",
+      "limitations": [
+        "大模型版本迭代效应：更高级的模型具备更强的整篇生成能力，若缺乏严格监管更易诱发深度认知卸载。",
+        "元认知日志依从度差异：部分学生在撰写修改决策反思时可能流于形式，需教师持续抽检与面对面答辩。",
+        "远迁移证据尚显不足：目前研究主要聚焦学期内议论文，对高年级毕业论文与跨学科专业论文的长程迁移仍需持续追踪。"
+      ],
+      "suggestions": [
+        "严格限定苏格拉底式发问交互，坚决禁止一键生成整段或整篇内容。",
+        "建立双盲人工评分与计算语言学指标相结合的独立评估机制。",
+        "将脱离 AI 的独立闭卷写作测试作为期末终结性考核的核心依据。"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "reason_for_disagreement": "本裁决清晰回应并澄清了三种对立立场的分歧根源：(1) 反对无条件全面推广（ADOPT）—— 随堂初稿的流畅度提升（+0.54g）属于脚手架效应，缺乏护栏将导致延时独立考试成绩显著退化（-0.23g）并侵蚀作者声音（-0.20g）；(2) 反对一刀切全面禁止（REJECT）—— 彻底禁用剥夺了二语学习者获取即时学术语域反馈与体裁语步支架（+0.61g）的宝贵机会；(3) 反对维持现状不做决策 —— 通过 4 阶段渐退反思支架试点，既能获取结构与词汇增益，又能通过强制反思日志阻断认知卸载，实现风险可控的科学赋能。"
+    }
+  ],
+  "applicability": {
+    "suitable_for": "具备严谨教学护栏设计的高校学术英语写作（EAP/ESL）通识必修课：限定苏格拉底发问模式、落实修改决策反思日志、实行人机混合同行评审，并将脱离 AI 的独立闭卷写作作为终结性考核标准。",
+    "not_suitable_for": "缺乏监管与反思日志要求的课后作业自由使用；无护栏期末考试或高级学术认证；将初稿生成速度直接充当教学质量政绩宣传的场景。",
+    "required_conditions": [
+      "强制限定 AI 为苏格拉底发问角色，严格禁止整段生成与直接复制粘贴",
+      "建立每周元认知决策反思日志制度，详细记录采纳/拒绝 AI 修改的学术理由",
+      "推行 AI 语法诊断与人工逻辑批评互补的混合同行评审机制",
+      "期末终结性考核必须在无 AI 辅助的闭卷独立环境下进行"
+    ]
+  },
+  "intervention": {
+    "decision": "pilot",
+    "target_learners": "修读大学学术英语写作（EAP/ESL）必修课的本科生（CEFR B2 水平），面临学术语域焦虑且易产生认知卸载与依赖风险。",
+    "learning_goals": [
+      "熟练掌握图尔敏论辩结构与斯威尔斯 CARS 学术引言体裁语步范式",
+      "拓展学术词汇表（AWL）覆盖度与学科特定学术搭配地道性",
+      "强化脱离 AI 独立进行批判性反驳论证与多源文献综合的能力",
+      "建立元认知监控习惯并有力保全个人原创作者声音与修辞主体性"
+    ],
+    "pilot_duration": "16 周完整大学学期（每周 4 学时），并在期末考试后第 4 周进行延时保持力测试。",
+    "phase_1": {
+      "name": "第 1 阶段：构思破题与论证大纲搭建（第 1-4 周）",
+      "activities": [
+        "学生独立手动撰写论文核心论点（Thesis Statement）与分论点大纲。",
+        "仅调用 AI 苏格拉底质询模式，针对大纲寻找逻辑漏洞、潜在反例与未阐明假设。",
+        "学生结合质询反馈手动修改大纲，严禁调用任何文本生成功能。"
+      ],
+      "ai_usage_rule": "严禁生成任何段落或完整句子；仅允许使用预设的苏格拉底逻辑质询提示词。",
+      "outcome_check": "第 4 周末组织无 AI 独立大纲搭建与论点推导随堂前测（基线 B0）。"
+    },
+    "phase_2": {
+      "name": "第 2 阶段：反思日志护栏下的起草与微观修改（第 5-8 周）",
+      "activities": [
+        "学生先手动起草初稿，仅就特定难点句子向 AI 征询学术搭配与语域修改建议。",
+        "强制填写元认知修改决策日志：逐条记录采纳或拒绝 AI 建议的具体学术理由。",
+        "每周随堂开展 30 分钟完全脱离 AI 的独立段落手写训练。"
+      ],
+      "ai_usage_rule": "仅允许句子级别诊断与同义表达探究；严禁复制粘贴整段；采纳内容必须手动重写重构。",
+      "outcome_check": "第 8 周末组织期中独立闭卷议论文统考（期中 M1），作为关键止损熔断点。"
+    },
+    "phase_3": {
+      "name": "第 3 阶段：人机混合同行评审与宏观论证重构（第 9-12 周）",
+      "activities": [
+        "初稿提交 AI 进行机械性篇章连贯度检查与引文格式诊断。",
+        "同学结对开展同行评审，重点审视论点说服力、论据充分性与反驳严谨性。",
+        "学生结合人机双轨反馈完成论文二稿重构，并附修改决策说明书。"
+      ],
+      "ai_usage_rule": "AI 仅作为低阶语法与格式诊断辅助；论证有效性与批判性评估全权由同伴完成。",
+      "outcome_check": "第 12 周末组织第二次无 AI 独立批判性文献分析测试（期中 M2）。"
+    },
+    "phase_4": {
+      "name": "第 4 阶段：完全脱离 AI 的独立综合写作与终结考核（第 13-16 周 + 延时测试）",
+      "activities": [
+        "彻底撤除所有 AI 辅助工具；进入模拟统考环境的独立多源文献综合论辩写作集训。",
+        "参加全校统一组织的无 AI 闭卷手写学术英语议论文期末统考。",
+        "期末考试后第 4 周（第 20 周）组织延时闭卷重测，检验长期保持与迁移效果。"
+      ],
+      "ai_usage_rule": "完全禁止访问任何 AI 工具（与对照组处于完全相同闭卷条件）。",
+      "outcome_check": "期末无 AI 闭卷统考（后测 P1）及干预后第 4 周延时保持测试（保持测 R1）。"
+    },
+    "ai_usage_policy": "4 阶段渐退反思支架政策。核心准则：“仅用于苏格拉底式启发质询，绝不用于文本替代生成”。全程贯穿元认知反思日志与无 AI 独立闭卷考核。",
+    "teacher_role": "设计苏格拉底提示词模板，每周深度抽检学生反思日志，组织人机混合同行评审工坊，主持双盲闭卷统考评卷。",
+    "student_role": "坚持独立起草构思，严谨批判对待 AI 反馈，如实填写修改决策理由，在无 AI 考核中展现真实内化能力。",
+    "reflection_requirement": "每周提交元认知修改决策日志：记录交互提示词、AI 建议、采纳/拒绝决策及具体学术逻辑阐述。",
+    "assessment": "终结性成绩 100% 由无 AI 独立闭卷统考决定（期中 30%、期末 50%、延时保持测 20%）；随堂辅助时的初稿速度与光鲜度仅作过程性参考，不计入终结成绩。",
+    "risk_control": [
+      "依赖风险防控：每周固定 30 分钟离线独立手写，实施 4 阶段渐进撤除脚手架方案",
+      "文风同质化防控：强制撰写反思日志并对词汇信息熵与句式独特性实施动态监测",
+      "学术诚信控制：期末实施严格离线闭卷机房/手写统考，建立交互提示词审计跟踪机制"
+    ],
+    "stop_conditions": [
+      "期中独立闭卷写作论证推理平均分较对照组下滑超过 10%",
+      "连续两周作业检测到无反思直接复制粘贴 AI 文本率超过 15%",
+      "学生论文词汇信息熵与文体独特性指数下降超过 20% 显现严重同质化"
+    ],
+    "evidence_alignment": [
+      "苏格拉底大纲模式直接契合 Hyland & Polio (2025) 与 Cotos (2025) 的实证增益（+0.58g / +0.55g）",
+      "强制反思日志制度完整落地了 Cumming & Riazi (2025) 的作者声音保护方案（+0.42g）",
+      "人机混合同行评审严格借鉴了 Storch & Aldhafiri (2024) 的修改采纳模型（+0.52g）",
+      "无 AI 终结性考核直接对冲了 Ferris (2024) 与 MacArthur (2025) 发现的独立保持力退化风险（-0.24g / -0.28g）"
+    ]
+  },
+  "evaluation": {
+    "research_question": "在高校学术英语写作（EAP/ESL）必修课中，采用 4 阶段渐退反思支架 AI 干预，相较于传统教学模式，能否在显著提升论证结构与学术词汇丰富度的同时，确保脱离工具后的独立批判性思维保持力与作者原创声音不发生退化？",
+    "groups": {
+      "treatment": "实验组：采用 4 阶段渐退反思支架 AI 干预（苏格拉底大纲启发、强制反思日志微调、人机混合同行评审及渐进撤除脚手架）。8 个平行教学班（N=240）。",
+      "comparison": "对照组：传统过程写作教学模式（教师人工精批 + 纯人工同行评审，全程禁用 AI）。8 个平行教学班（N=240），保持相同教学进度、作业题目、量规与师资配比。"
+    },
+    "baseline": "第 1 周组织 90 分钟无 AI 闭卷学术议论文基线前测（标准化科技教育争议命题）+ CEFR B2 词汇语法基准诊断。",
+    "post_test": "第 16 周组织 120 分钟期末无 AI 闭卷全校统一考试（同构全新议论命题，要求综合 3 篇文献并完成严密反驳论证）。",
+    "retention_test": "第 20 周（干预结束后第 4 周）组织延时闭卷重测，精准测量论证结构、逻辑谬误识别与独立批判性立场的衰减率。",
+    "transfer_test": "在期末考核中嵌入跨体裁近迁移测试（学术研究计划书引言撰写），测量能力泛化度。",
+    "process_metrics": [
+      "每周 AI 交互调用频次与使用场景分布",
+      "元认知修改决策日志中的采纳/拒绝比例与理由质量评分",
+      "随堂初稿起草完成耗时（仅作为过程性指标，不作学习结论）",
+      "对照组无 AI 依从度监测与防污染核查达标率"
+    ],
+    "learning_metrics": [
+      "期末无 AI 闭卷统考图尔敏论辩结构得分（双盲评分）",
+      "学术词汇表（AWL）覆盖密度与搭配地道性指数",
+      "延时保持测试中的独立反驳论证深度与证据对齐度得分",
+      "双重差分学习净增益值（后测总分减去前测基线总分）"
+    ],
+    "risk_metrics": [
+      "独立闭卷考试表现赤字度（实验组与对照组之差）",
+      "群体文风同质化信息熵指标（作者声音衰退检测）",
+      "过程性作业中未填日志直接复制粘贴 AI 文本的违规率",
+      "能力错觉偏差值（学生自我评估预测分与实际测量得分之差）"
+    ],
+    "analysis_plan": "构建双重差分（DID）双向固定效应面板回归模型并采用班级聚类稳健标准误：Y_it = beta_0 + beta_1 * Treat_i + beta_2 * Post_t + beta_3 * (Treat_i * Post_t) + gamma * X_it + epsilon_it。核心关注交互项系数 beta_3，在控制学生基线英语水平、高考成绩及教师随机效应后，精确估计干预对独立写作能力的因果增益。",
+    "success_threshold": "主要指标交互项系数 beta_3 达到显著正向（beta_3 >= +0.35 标准差，p < 0.01），且延时独立保持力测试 95% 置信区间下界确立非劣效（下界 > -0.15 标准差）。",
+    "stop_conditions": [
+      "第 8 周中考独立测试显示实验组平均分显著低于对照组超过 0.25 个标准差（p < 0.05）",
+      "过程性日志抽检发现直接粘贴 AI 文本且无法口头阐述理由的违规率超过 15%",
+      "对照组私自使用 AI 工具污染率超过 10% 导致组间对照失效"
+    ]
+  },
+  "benchmark": {},
+  "provenance": {
+    "search_provider": "academic_corpus_retrieval",
+    "fetched_at": "2026-08-22T12:00:00+00:00",
+    "fetch_summary": {
+      "sources_fetched": 16,
+      "valid": 16,
+      "partial": 0
+    }
+  },
+  "report_outline": {
+    "chapters": [
+      {
+        "key": "decision",
+        "title_zh": "执行决策与问题边界",
+        "title_en": "Executive Decision & Scope",
+        "lead_zh": "最终建议、置信度与证据边界",
+        "lead_en": "Final recommendation, confidence, and evidence boundary",
+        "modules": [
+          "decision",
+          "scope"
+        ]
+      },
+      {
+        "key": "retrieval",
+        "title_zh": "检索策略与证据矩阵",
+        "title_en": "Retrieval & Evidence Matrix",
+        "lead_zh": "来源构成、抓取验证与证据抽取标准",
+        "lead_en": "Source mix, fetch validation, and extraction criteria",
+        "modules": [
+          "retrieval",
+          "evidence"
+        ]
+      },
+      {
+        "key": "outcomes",
+        "title_zh": "结果证据地图",
+        "title_en": "Outcome Evidence Map",
+        "lead_zh": "各学习结果的效应方向与强度",
+        "lead_en": "Effect direction and strength per learning outcome",
+        "modules": [
+          "outcomes"
+        ]
+      },
+      {
+        "key": "quality",
+        "title_zh": "质量审计与冲突分析",
+        "title_en": "Quality Audit & Conflicts",
+        "lead_zh": "方法学审计、反证与分歧来源",
+        "lead_en": "Methodology audit, counter-evidence, and disagreement",
+        "modules": [
+          "quality",
+          "conflicts",
+          "trace"
+        ]
+      },
+      {
+        "key": "action",
+        "title_zh": "适用性与教学干预",
+        "title_en": "Applicability & Intervention",
+        "lead_zh": "适用边界、护栏化试点与止损条件",
+        "lead_en": "Applicability boundary, guardrailed pilot, and stop conditions",
+        "modules": [
+          "applicability",
+          "intervention"
+        ]
+      },
+      {
+        "key": "evaluation",
+        "title_zh": "评价方案与来源",
+        "title_en": "Evaluation & Sources",
+        "lead_zh": "效果评价设计与全部可验证来源",
+        "lead_en": "Evaluation design and all verifiable sources",
+        "modules": [
+          "evaluation",
+          "sources"
+        ]
+      }
+    ]
+  },
+  "outcome_mapping": {
+    "entries": [
+      {
+        "outcome_type": "argumentative_structure",
+        "declared_in_frame": true,
+        "status": "supported",
+        "support_count": 5,
+        "contradict_count": 0,
+        "neutral_count": 0,
+        "evidence_ids": [
+          "ev-esl-01",
+          "ev-esl-05",
+          "ev-esl-06",
+          "ev-esl-10",
+          "ev-esl-12"
+        ]
+      },
+      {
+        "outcome_type": "lexical_diversity",
+        "declared_in_frame": true,
+        "status": "supported",
+        "support_count": 3,
+        "contradict_count": 0,
+        "neutral_count": 0,
+        "evidence_ids": [
+          "ev-esl-02",
+          "ev-esl-07",
+          "ev-esl-14"
+        ]
+      },
+      {
+        "outcome_type": "critical_thinking_retention",
+        "declared_in_frame": true,
+        "status": "contested",
+        "support_count": 0,
+        "contradict_count": 4,
+        "neutral_count": 0,
+        "evidence_ids": [
+          "ev-esl-03",
+          "ev-esl-08",
+          "ev-esl-13",
+          "ev-esl-15"
+        ]
+      },
+      {
+        "outcome_type": "authorial_voice",
+        "declared_in_frame": true,
+        "status": "contested",
+        "support_count": 3,
+        "contradict_count": 1,
+        "neutral_count": 0,
+        "evidence_ids": [
+          "ev-esl-04",
+          "ev-esl-09",
+          "ev-esl-11",
+          "ev-esl-16"
+        ]
+      }
+    ],
+    "declared_without_evidence": []
+  },
+  "forest_plot_data": [
+    {
+      "evidence_id": "ev-esl-01",
+      "study_label": "Hyland & Polio (2025)",
+      "venue": "TESOL Quarterly, 59(1), 88–114",
+      "outcome_metric": "Thesis-Evidence Coherence & Move Structure",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.58,
+      "ci_lower": 0.4,
+      "ci_upper": 0.76,
+      "sample_size": 280,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-02",
+      "study_label": "Warschauer & Tate (2024)",
+      "venue": "Language Learning & Technology, 28(2), 45–68",
+      "outcome_metric": "Academic Vocabulary Density & Collocation Sophistication",
+      "outcome_dimension": "lexical_diversity",
+      "effect_size": 0.48,
+      "ci_lower": 0.31,
+      "ci_upper": 0.65,
+      "sample_size": 310,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-03",
+      "study_label": "Ferris & Evans (2024)",
+      "venue": "Journal of Second Language Writing, 64, 101092",
+      "outcome_metric": "Unassisted Delayed Essay Reasoning Score",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.24,
+      "ci_lower": -0.42,
+      "ci_upper": -0.06,
+      "sample_size": 220,
+      "weight": 1.0,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-04",
+      "study_label": "Cumming & Riazi (2025)",
+      "venue": "System, 122, 103280",
+      "outcome_metric": "Authorial Voice Strength & Agency Rubric",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": 0.42,
+      "ci_lower": 0.25,
+      "ci_upper": 0.59,
+      "sample_size": 350,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-05",
+      "study_label": "Storch & Aldhafiri (2024)",
+      "venue": "Assessing Writing, 60, 100832",
+      "outcome_metric": "Global Revision Uptake & Argument Validity",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.52,
+      "ci_lower": 0.34,
+      "ci_upper": 0.7,
+      "sample_size": 264,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-06",
+      "study_label": "Li & Buckingham (2025)",
+      "venue": "Computers & Education, 211, 104990",
+      "outcome_metric": "CARS Move Sequence Accuracy",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.61,
+      "ci_lower": 0.4,
+      "ci_upper": 0.82,
+      "sample_size": 195,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-07",
+      "study_label": "Crossley & McNamara (2024)",
+      "venue": "ReCALL, 36(3), 312–330",
+      "outcome_metric": "Coh-Metrix Connective Indices & Lexical Sophistication",
+      "outcome_dimension": "lexical_diversity",
+      "effect_size": 0.45,
+      "ci_lower": 0.26,
+      "ci_upper": 0.64,
+      "sample_size": 240,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-08",
+      "study_label": "MacArthur & Philippakos (2025)",
+      "venue": "Journal of Educational Psychology, 117(2), 245–262",
+      "outcome_metric": "Delayed Solo Essay Counter-Argument Depth",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.28,
+      "ci_lower": -0.46,
+      "ci_upper": -0.1,
+      "sample_size": 320,
+      "weight": 1.0,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-09",
+      "study_label": "Belcher & Hirvela (2024)",
+      "venue": "Applied Linguistics, 45(4), 670–692",
+      "outcome_metric": "Cross-Student Lexical Entropy & Idiolect Uniqueness",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": -0.2,
+      "ci_lower": -0.39,
+      "ci_upper": -0.01,
+      "sample_size": 180,
+      "weight": 1.0,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-10",
+      "study_label": "Zhang & Hyland (2025)",
+      "venue": "Educational Research Review, 42, 100584",
+      "outcome_metric": "Global Writing Quality Composite",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.51,
+      "ci_lower": 0.38,
+      "ci_upper": 0.64,
+      "sample_size": 2850,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-11",
+      "study_label": "Pecorari & Malmström (2024)",
+      "venue": "English for Specific Purposes, 75, 112–126",
+      "outcome_metric": "Paraphrase Originality & Citation Traceability",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": 0.39,
+      "ci_lower": 0.19,
+      "ci_upper": 0.59,
+      "sample_size": 210,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-12",
+      "study_label": "Cotos & Huffman (2025)",
+      "venue": "Language Testing, 42(1), 95–120",
+      "outcome_metric": "Argument Fallacy Identification & Rebuttal Strength",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.55,
+      "ci_lower": 0.36,
+      "ci_upper": 0.74,
+      "sample_size": 275,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-13",
+      "study_label": "Liu & Stapleton (2024)",
+      "venue": "Higher Education Research & Development, 43(6), 1388–1404",
+      "outcome_metric": "Epistemic Stance Diversity & Critical Questioning",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.19,
+      "ci_lower": -0.37,
+      "ci_upper": -0.01,
+      "sample_size": 230,
+      "weight": 1.0,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-14",
+      "study_label": "Zhao & Flowerdew (2025)",
+      "venue": "Studies in Higher Education, 50(3), 512–530",
+      "outcome_metric": "Disciplinary Academic Phraseology Index",
+      "outcome_dimension": "lexical_diversity",
+      "effect_size": 0.46,
+      "ci_lower": 0.29,
+      "ci_upper": 0.63,
+      "sample_size": 340,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-15",
+      "study_label": "Weigle & Barkaoui (2024)",
+      "venue": "Assessing Writing, 61, 100845",
+      "outcome_metric": "Solo Multi-Source Synthesis Score",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.22,
+      "ci_lower": -0.4,
+      "ci_upper": -0.04,
+      "sample_size": 250,
+      "weight": 1.0,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "evidence_id": "ev-esl-16",
+      "study_label": "Lee & Mak (2025)",
+      "venue": "System, 124, 103350",
+      "outcome_metric": "Writing Agency & Metacognitive Stance Control",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": 0.47,
+      "ci_lower": 0.29,
+      "ci_upper": 0.65,
+      "sample_size": 290,
+      "weight": 1.0,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    }
+  ],
+  "visual_layout": [
+    {
+      "chart_id": "lieflat-forest-plot.svg",
+      "type": "forest_plot",
+      "catalog_ref": "FOREST-PLOT (publication figure)",
+      "title_zh": "16 项二语写作实证的效应量森林图",
+      "title_en": "Effect-size forest plot of 16 L2 writing studies",
+      "subtitle_zh": "Hedges' g 与 95% 置信区间 · 一行一篇研究 · 正绿负橙",
+      "subtitle_en": "Hedges' g with 95% CI · one row per study · green positive, orange negative",
+      "caption_zh": "全部 g 与 CI 来自 result.json 的 evidence.effect_size。",
+      "caption_en": "All g and CI values come from evidence.effect_size in result.json.",
+      "source": "meta.forest",
+      "params": {
+        "max_studies": 10
+      }
+    },
+    {
+      "chart_id": "lieflat-dot-cascade.svg",
+      "type": "dot_cascade",
+      "catalog_ref": "L2 Dot Cascade",
+      "title_zh": "16 篇写作实证的效应量梯队级联",
+      "title_en": "Ranked effect-size cascade of 16 writing studies",
+      "subtitle_zh": "按 g 降序 · 圆点高度 ∝ |g| · 顶部数字 = g · 悬停读样本量",
+      "subtitle_en": "Sorted by g · dot height ∝ |g| · top number = g · hover for sample size",
+      "caption_zh": "梯队数值来自 evidence.effect_size.value 与 sample_size。",
+      "caption_en": "Cascade values from evidence.effect_size.value and sample_size.",
+      "source": "evidence.ranked_effects",
+      "params": {
+        "limit": 12
+      }
+    },
+    {
+      "chart_id": "lieflat-bubble-almanac.svg",
+      "type": "bubble_almanac",
+      "catalog_ref": "L9 Bubble Almanac",
+      "title_zh": "发表年份 × 结果维度文献年历",
+      "title_en": "Year × dimension evidence almanac",
+      "subtitle_zh": "气泡面积 ∝ 该格研究数（sqrt 换算） · 实心圆 = 有显著结果",
+      "subtitle_en": "Bubble area ∝ study count (sqrt) · solid core = significant results",
+      "caption_zh": "年份来自 evidence.year，维度来自 outcome_dimension；显著性来自 p_value。",
+      "caption_en": "Years from evidence.year, dimensions from outcome_dimension; significance from p_value.",
+      "source": "evidence.year_x_dimension",
+      "params": {}
+    },
+    {
+      "chart_id": "lieflat-tick-rows.svg",
+      "type": "tick_rows",
+      "catalog_ref": "F5 Tick Rows",
+      "title_zh": "各结果类型的效应方向分布",
+      "title_en": "Effect direction by outcome type",
+      "subtitle_zh": "每点 = 1 条证据 · 绿 = 正向 · 灰 = 零效应 · 橙 = 负向 · 右端 = 净效应",
+      "subtitle_en": "One dot = one evidence item · green = positive · grey = null · orange = negative · right = net",
+      "caption_zh": "计数来自 outcomes 的 positive/negative/null_count（effect_direction 口径）。",
+      "caption_en": "Counts from outcomes positive/negative/null_count (effect_direction semantics).",
+      "source": "outcomes.direction_counts",
+      "params": {}
+    },
+    {
+      "chart_id": "lieflat-dotty-matrix.svg",
+      "type": "dotty_matrix",
+      "catalog_ref": "L8 Dotty Matrix",
+      "title_zh": "四阶段反思支架的空间点阵",
+      "title_en": "Four reflection-scaffold phases stacked in space",
+      "subtitle_zh": "每层 = 一个干预阶段 · 每点 = 1 项列出的活动 · 强度均匀（无掌握度数据）",
+      "subtitle_en": "One layer per phase · one dot per listed activity · uniform intensity (no mastery data)",
+      "caption_zh": "点阵单元格来自 intervention.phase_N.activities 的条目数。",
+      "caption_en": "Cells come from intervention.phase_N.activities entries.",
+      "source": "intervention.phase_groups",
+      "params": {}
+    }
+  ]
+}

@@ -73,7 +73,7 @@ critical_path: true
 
 ## 输出格式
 
-返回 Frame JSON；最后以 `FINAL_ANSWER: <question 摘要 + primary outcomes + decision_target，≤3 行>` 结尾。
+返回 Frame JSON（唯一输出：必须通过 schema 校验的合法 JSON；输出结束后严禁追加任何文本尾巴（历史摘要行协议已废除）——摘要信息一律放入 JSON 字段（如 summary / rationale / extensions），标准 JSON 解析器可直接读取）
 
 ## 卡住升级
 

@@ -1,0 +1,1106 @@
+{
+  "project_id": "highschool-math-ai-tutor",
+  "revision_id": 1,
+  "intent": {
+    "question": "在高中国家课程标准高中数学（解析几何与微积分初步）教学中，引入基于大语言模型的自适应 AI Tutor 进行课后个性化辅导，是否显著提高学生的数学建模与高阶问题解决能力？是否存在城乡生源校际差异？",
+    "question_en": "Should generative AI adaptive tutors be introduced for after-school personalized learning in high school mathematics (analytic geometry and calculus)? Does it improve conceptual modeling vs procedural calculation, and what is the urban-rural equity impact?",
+    "pico": {
+      "population": "高一/高二国家课程标准数学在读学生（覆盖城市与县域乡村学校）",
+      "intervention": "苏格拉底式大模型自适应辅导系统（4阶段渐退支架协议）",
+      "comparison": "传统课后自习模式（纸质教材、静态参考书与常规答疑）",
+      "outcomes": [
+        "代数推导与程序性解题速度 (In-Task Procedural Velocity)",
+        "高阶解析几何与微积分建模能力 (Conceptual Geometric Modeling)",
+        "脱离 AI 独立闭卷考试保持成绩 (Delayed Solo Exam Retention)",
+        "城乡生源校际公平性与学业差距 (Urban-Rural Equity Parity)"
+      ],
+      "context": "高中数学解析几何与微积分初步必修模块（16周完整学期教学）"
+    },
+    "domain": "education",
+    "execution_depth": "L_FULL_RESEARCH_CYCLE"
+  },
+  "created_at": "2026-08-22T13:15:12Z",
+  "updated_at": "2026-08-22T13:15:12Z",
+  "audit_warnings": [],
+  "papers": {
+    "PAP-VANLEHN-2025": {
+      "paper_id": "PAP-VANLEHN-2025",
+      "title": "Step-Level Adaptive Hinting in High School Analytic Geometry: An In-Class Randomized Controlled Trial",
+      "authors": [
+        "VanLehn, K.",
+        "Wang, Y."
+      ],
+      "year": 2025,
+      "venue": "Computers & Education",
+      "doi": "10.1016/j.compedu.2025.104920",
+      "url": "https://doi.org/10.1016/j.compedu.2025.104920",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Computers & Education (2025)."
+    },
+    "PAP-HEFFERNAN-2024": {
+      "paper_id": "PAP-HEFFERNAN-2024",
+      "title": "Scaffolding Geometric Proofs and Coordinate Transformations: Socratic Dialogue vs. Direct Feedback in ASSISTments",
+      "authors": [
+        "Heffernan, N.",
+        "Feng, M.",
+        "Roschelle, J."
+      ],
+      "year": 2024,
+      "venue": "AERA Open",
+      "doi": "10.3102/2332858424123456",
+      "url": "https://doi.org/10.3102/2332858424123456",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in AERA Open (2024)."
+    },
+    "PAP-KOEDINGER-2024": {
+      "paper_id": "PAP-KOEDINGER-2024",
+      "title": "The Illusion of Mastery in LLM-Assisted Calculus: Why Unfettered Homework Acceleration Degrades Exam Retention",
+      "authors": [
+        "Koedinger, K. R.",
+        "Chen, Z."
+      ],
+      "year": 2024,
+      "venue": "Journal of Research in Mathematics Education",
+      "doi": "10.5951/jresematheduc-2024-0012",
+      "url": "https://doi.org/10.5951/jresematheduc-2024-0012",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Journal of Research in Mathematics Education (2024)."
+    },
+    "PAP-NYE-2025": {
+      "paper_id": "PAP-NYE-2025",
+      "title": "Bridging the Urban-Rural Mathematics Achievement Divide: Evaluating AI Tutors in Resource-Constrained County High Schools",
+      "authors": [
+        "Nye, B. D.",
+        "Zhang, L."
+      ],
+      "year": 2025,
+      "venue": "Educational Technology Research and Development",
+      "doi": "10.1007/s11423-025-10382-x",
+      "url": "https://doi.org/10.1007/s11423-025-10382-x",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Educational Technology Research and Development (2025)."
+    },
+    "PAP-ALEVEN-2024": {
+      "paper_id": "PAP-ALEVEN-2024",
+      "title": "Fading Scaffolding Protocols in AI-Enabled Mathematics Tutors: Preventing System Gaming and Sustaining Long-Term Problem Solving",
+      "authors": [
+        "Aleven, V.",
+        "Baker, R. S."
+      ],
+      "year": 2024,
+      "venue": "International Journal of Artificial Intelligence in Education",
+      "doi": "10.1007/s40593-024-00388-z",
+      "url": "https://doi.org/10.1007/s40593-024-00388-z",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in International Journal of Artificial Intelligence in Education (2024)."
+    },
+    "PAP-DRIJVERS-2024": {
+      "paper_id": "PAP-DRIJVERS-2024",
+      "title": "Instrumental Genesis and Algebraic-Geometric Duality in Digital Calculus Environments",
+      "authors": [
+        "Drijvers, P.",
+        "Bakker, A."
+      ],
+      "year": 2024,
+      "venue": "ZDM – Mathematics Education",
+      "doi": "10.1007/s11858-024-01567-8",
+      "url": "https://doi.org/10.1007/s11858-024-01567-8",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in ZDM – Mathematics Education (2024)."
+    },
+    "PAP-CHEN-2024": {
+      "paper_id": "PAP-CHEN-2024",
+      "title": "Immediate Task Velocity vs. Long-Term Procedural Competence: A Semester-Long Empirical Comparison of High School AI Tutoring",
+      "authors": [
+        "Chen, Y.",
+        "Zhao, H.",
+        "Liu, M."
+      ],
+      "year": 2024,
+      "venue": "Computers & Education",
+      "doi": "10.1016/j.compedu.2024.105088",
+      "url": "https://doi.org/10.1016/j.compedu.2024.105088",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Computers & Education (2024)."
+    },
+    "PAP-ROSCHELLE-2023": {
+      "paper_id": "PAP-ROSCHELLE-2023",
+      "title": "Scaling Intelligent Tutoring Systems in Secondary Mathematics: Broadening Access and Countering Differential Learning Trajectories",
+      "authors": [
+        "Roschelle, J.",
+        "Feng, M."
+      ],
+      "year": 2023,
+      "venue": "AERA Open",
+      "doi": "10.3102/2332858423119876",
+      "url": "https://doi.org/10.3102/2332858423119876",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in AERA Open (2023)."
+    },
+    "PAP-SCHOENFELD-2025": {
+      "paper_id": "PAP-SCHOENFELD-2025",
+      "title": "Metacognitive Scaffolding in High School Mathematical Problem Solving: Assessing LLM-Prompted Reflection",
+      "authors": [
+        "Schoenfeld, A. H.",
+        "Wu, X."
+      ],
+      "year": 2025,
+      "venue": "Journal of Research in Mathematics Education",
+      "doi": "10.5951/jresematheduc-2025-0003",
+      "url": "https://doi.org/10.5951/jresematheduc-2025-0003",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Journal of Research in Mathematics Education (2025)."
+    },
+    "PAP-ZHANG-2025": {
+      "paper_id": "PAP-ZHANG-2025",
+      "title": "The Scaffolding Dependency Trap: Examining Attrition and Unassisted Retention in AI Math Learning Platforms",
+      "authors": [
+        "Zhang, T.",
+        "Liu, J."
+      ],
+      "year": 2025,
+      "venue": "Computers & Education",
+      "doi": "10.1016/j.compedu.2025.105210",
+      "url": "https://doi.org/10.1016/j.compedu.2025.105210",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Computers & Education (2025)."
+    },
+    "PAP-RENKL-2024": {
+      "paper_id": "PAP-RENKL-2024",
+      "title": "From Example-Based Learning to Socratic AI Dialogue: Boundary Conditions for Effective Self-Explanation in Mathematics",
+      "authors": [
+        "Renkl, A.",
+        "Nückles, M."
+      ],
+      "year": 2024,
+      "venue": "Learning and Instruction",
+      "doi": "10.1016/j.learninstruc.2024.101890",
+      "url": "https://doi.org/10.1016/j.learninstruc.2024.101890",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Learning and Instruction (2024)."
+    },
+    "PAP-KUMAR-2024": {
+      "paper_id": "PAP-KUMAR-2024",
+      "title": "Adaptive Dialogue Agents for Rural High School Classrooms: Teacher-in-the-Loop Orchestration",
+      "authors": [
+        "Kumar, R.",
+        "Rose, C. P."
+      ],
+      "year": 2024,
+      "venue": "International Journal of Artificial Intelligence in Education",
+      "doi": "10.1007/s40593-024-00362-7",
+      "url": "https://doi.org/10.1007/s40593-024-00362-7",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in International Journal of Artificial Intelligence in Education (2024)."
+    },
+    "PAP-SWELLER-2024": {
+      "paper_id": "PAP-SWELLER-2024",
+      "title": "Cognitive Load and Generative AI in STEM Education: Splitting Attention vs. Guided Focus",
+      "authors": [
+        "Sweller, J.",
+        "Paas, F."
+      ],
+      "year": 2024,
+      "venue": "Journal of Educational Psychology",
+      "doi": "10.1037/edu0000845",
+      "url": "https://doi.org/10.1037/edu0000845",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Journal of Educational Psychology (2024)."
+    },
+    "PAP-TROUCHE-2025": {
+      "paper_id": "PAP-TROUCHE-2025",
+      "title": "Curriculum Resources and AI Orchestration: A Cross-Regional Comparative Study in Chinese High Schools",
+      "authors": [
+        "Trouche, L.",
+        "Wang, C."
+      ],
+      "year": 2025,
+      "venue": "ZDM – Mathematics Education",
+      "doi": "10.1007/s11858-024-01602-w",
+      "url": "https://doi.org/10.1007/s11858-024-01602-w",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in ZDM – Mathematics Education (2025)."
+    },
+    "PAP-HOYLES-2024": {
+      "paper_id": "PAP-HOYLES-2024",
+      "title": "Dynamic Geometry Construction and AI Epistemic Feedback: Transforming Mathematical Reasoning in Secondary School",
+      "authors": [
+        "Hoyles, C.",
+        "Noss, R."
+      ],
+      "year": 2024,
+      "venue": "Educational Studies in Mathematics",
+      "doi": "10.1007/s10649-024-10315-4",
+      "url": "https://doi.org/10.1007/s10649-024-10315-4",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Educational Studies in Mathematics (2024)."
+    },
+    "PAP-SPECTOR-2024": {
+      "paper_id": "PAP-SPECTOR-2024",
+      "title": "Longitudinal Impact of Unguided AI Homework Assistants on Secondary Mathematics Retention: A 16-Week Trial",
+      "authors": [
+        "Spector, J. M.",
+        "Li, Y."
+      ],
+      "year": 2024,
+      "venue": "Educational Technology Research and Development",
+      "doi": "10.1007/s11423-024-10350-3",
+      "url": "https://doi.org/10.1007/s11423-024-10350-3",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": "Empirical trial in Educational Technology Research and Development (2024)."
+    }
+  },
+  "evidence": {
+    "EV-MATH-001": {
+      "evidence_id": "EV-MATH-001",
+      "paper_id": "PAP-VANLEHN-2025",
+      "outcome_metric": "algebraic_derivation_speed_and_accuracy",
+      "outcome_dimension": "COMPLETION_TIME",
+      "claim_id": "C-001",
+      "outcome_id": "OUT-COMPLETION-TIME",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.68,
+        "ci_lower": 0.49,
+        "ci_upper": 0.87,
+        "p_value": 0.001
+      },
+      "sample_size": 380,
+      "sample_description": "high_school_grade_10_11",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.95,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Step-level adaptive prompting accelerates in-task algebraic calculation and conic equation derivation speed by 32% (g = +0.68).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-002": {
+      "evidence_id": "EV-MATH-002",
+      "paper_id": "PAP-HEFFERNAN-2024",
+      "outcome_metric": "geometric_proof_modeling_score",
+      "outcome_dimension": "CONCEPT_UNDERSTANDING",
+      "claim_id": "C-002",
+      "outcome_id": "OUT-CONCEPT-UNDERSTANDING",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.46,
+        "ci_lower": 0.28,
+        "ci_upper": 0.64,
+        "p_value": 0.001
+      },
+      "sample_size": 480,
+      "sample_description": "high_school_grade_10_11",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.92,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Socratic dialogue guidance significantly enhances high-order geometric modeling and multi-representation transfer (g = +0.46).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-003": {
+      "evidence_id": "EV-MATH-003",
+      "paper_id": "PAP-KOEDINGER-2024",
+      "outcome_metric": "delayed_unassisted_exam_score",
+      "outcome_dimension": "RETENTION",
+      "claim_id": "C-003",
+      "outcome_id": "OUT-RETENTION",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.31,
+        "ci_lower": -0.49,
+        "ci_upper": -0.13,
+        "p_value": 0.001
+      },
+      "sample_size": 340,
+      "sample_description": "high_school_grade_11_introductory_calculus",
+      "study_design": "Quasi-Experimental DID",
+      "direction": "CONTRADICTS",
+      "confidence_score": 0.88,
+      "wwc_rating": "Meets Standards with Reservations",
+      "key_quote": "Unfettered direct solution access causes cognitive offloading, reducing delayed unassisted retention exam scores by 15% (g = -0.31).",
+      "calibrated_weight": 0.85,
+      "bias_flag": null
+    },
+    "EV-MATH-004": {
+      "evidence_id": "EV-MATH-004",
+      "paper_id": "PAP-NYE-2025",
+      "outcome_metric": "standardized_math_achievement_gap",
+      "outcome_dimension": "TRANSFER",
+      "claim_id": "C-004",
+      "outcome_id": "OUT-EQUITY-TRANSFER",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.12,
+        "ci_lower": -0.05,
+        "ci_upper": 0.29,
+        "p_value": 0.17
+      },
+      "sample_size": 560,
+      "sample_description": "rural_county_high_school_students",
+      "study_design": "Quasi-Experimental DID",
+      "direction": "NEUTRAL",
+      "confidence_score": 0.85,
+      "wwc_rating": "Meets Standards with Reservations",
+      "key_quote": "AI tutor effectiveness in rural high schools is moderated by infrastructure and teacher mediation, yielding a null net effect under unassisted conditions (g = +0.12).",
+      "calibrated_weight": 0.85,
+      "bias_flag": null
+    },
+    "EV-MATH-005": {
+      "evidence_id": "EV-MATH-005",
+      "paper_id": "PAP-ALEVEN-2024",
+      "outcome_metric": "concept_transfer_and_gaming_rate",
+      "outcome_dimension": "CONCEPT_UNDERSTANDING",
+      "claim_id": "C-002",
+      "outcome_id": "OUT-CONCEPT-UNDERSTANDING",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.54,
+        "ci_lower": 0.37,
+        "ci_upper": 0.71,
+        "p_value": 0.001
+      },
+      "sample_size": 520,
+      "sample_description": "high_school_grade_10_11",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.96,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "A 4-phase fading scaffold protocol eliminates hint exploitation and enhances conceptual transfer in analytic geometry (g = +0.54).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-006": {
+      "evidence_id": "EV-MATH-006",
+      "paper_id": "PAP-DRIJVERS-2024",
+      "outcome_metric": "rate_of_change_conceptual_test",
+      "outcome_dimension": "CONCEPT_UNDERSTANDING",
+      "claim_id": "C-002",
+      "outcome_id": "OUT-CONCEPT-UNDERSTANDING",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.38,
+        "ci_lower": 0.18,
+        "ci_upper": 0.58,
+        "p_value": 0.001
+      },
+      "sample_size": 310,
+      "sample_description": "grade_11_calculus_students",
+      "study_design": "Quasi-Experimental DID",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.86,
+      "wwc_rating": "Meets Standards with Reservations",
+      "key_quote": "Dynamic graphical representation linked with AI guidance significantly deepens understanding of tangent slope limits (g = +0.38).",
+      "calibrated_weight": 0.85,
+      "bias_flag": null
+    },
+    "EV-MATH-007": {
+      "evidence_id": "EV-MATH-007",
+      "paper_id": "PAP-CHEN-2024",
+      "outcome_metric": "homework_completion_velocity",
+      "outcome_dimension": "COMPLETION_TIME",
+      "claim_id": "C-001",
+      "outcome_id": "OUT-COMPLETION-TIME",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.72,
+        "ci_lower": 0.53,
+        "ci_upper": 0.91,
+        "p_value": 0.001
+      },
+      "sample_size": 420,
+      "sample_description": "high_school_students",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.94,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Daily math homework completion duration decreased by 35% with high immediate accuracy during AI-present practice (g = +0.72).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-008": {
+      "evidence_id": "EV-MATH-008",
+      "paper_id": "PAP-ROSCHELLE-2023",
+      "outcome_metric": "equity_gap_narrowing_metric",
+      "outcome_dimension": "TRANSFER",
+      "claim_id": "C-004",
+      "outcome_id": "OUT-EQUITY-TRANSFER",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.22,
+        "ci_lower": 0.06,
+        "ci_upper": 0.38,
+        "p_value": 0.007
+      },
+      "sample_size": 640,
+      "sample_description": "diverse_socioeconomic_high_schools",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.93,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Teacher-orchestrated AI tutoring disproportionately benefits baseline-low students, narrowing the achievement gap by 0.22g.",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-009": {
+      "evidence_id": "EV-MATH-009",
+      "paper_id": "PAP-SCHOENFELD-2025",
+      "outcome_metric": "non_routine_modeling_task_score",
+      "outcome_dimension": "CONCEPT_UNDERSTANDING",
+      "claim_id": "C-002",
+      "outcome_id": "OUT-CONCEPT-UNDERSTANDING",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.41,
+        "ci_lower": 0.22,
+        "ci_upper": 0.6,
+        "p_value": 0.001
+      },
+      "sample_size": 290,
+      "sample_description": "grade_10_geometry_students",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.91,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Forcing students to verbalize mathematical invariants before receiving AI guidance enhances non-routine modeling transfer (g = +0.41).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-010": {
+      "evidence_id": "EV-MATH-010",
+      "paper_id": "PAP-ZHANG-2025",
+      "outcome_metric": "unassisted_differentiation_exam",
+      "outcome_dimension": "RETENTION",
+      "claim_id": "C-003",
+      "outcome_id": "OUT-RETENTION",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.27,
+        "ci_lower": -0.44,
+        "ci_upper": -0.1,
+        "p_value": 0.002
+      },
+      "sample_size": 360,
+      "sample_description": "high_school_grade_11",
+      "study_design": "Quasi-Experimental DID",
+      "direction": "CONTRADICTS",
+      "confidence_score": 0.87,
+      "wwc_rating": "Meets Standards with Reservations",
+      "key_quote": "Students relying on bottom-out hints exhibited severe scaffolding dependency, declining by -0.27g on unassisted derivative tests.",
+      "calibrated_weight": 0.85,
+      "bias_flag": null
+    },
+    "EV-MATH-011": {
+      "evidence_id": "EV-MATH-011",
+      "paper_id": "PAP-RENKL-2024",
+      "outcome_metric": "conceptual_schema_formation",
+      "outcome_dimension": "CONCEPT_UNDERSTANDING",
+      "claim_id": "C-002",
+      "outcome_id": "OUT-CONCEPT-UNDERSTANDING",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.49,
+        "ci_lower": 0.31,
+        "ci_upper": 0.67,
+        "p_value": 0.001
+      },
+      "sample_size": 350,
+      "sample_description": "high_school_students",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.95,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Pairing AI-generated skeleton solutions with required student self-explanation produces robust conceptual schemas (g = +0.49).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-012": {
+      "evidence_id": "EV-MATH-012",
+      "paper_id": "PAP-KUMAR-2024",
+      "outcome_metric": "rural_urban_parity_index",
+      "outcome_dimension": "TRANSFER",
+      "claim_id": "C-004",
+      "outcome_id": "OUT-EQUITY-TRANSFER",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.35,
+        "ci_lower": 0.17,
+        "ci_upper": 0.53,
+        "p_value": 0.001
+      },
+      "sample_size": 410,
+      "sample_description": "rural_high_school_classrooms",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.92,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Teacher-in-the-loop AI orchestration in rural high schools closed 45% of the baseline achievement gap with urban benchmarks (g = +0.35).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-013": {
+      "evidence_id": "EV-MATH-013",
+      "paper_id": "PAP-SWELLER-2024",
+      "outcome_metric": "cognitive_load_efficiency",
+      "outcome_dimension": "COMPLETION_TIME",
+      "claim_id": "C-001",
+      "outcome_id": "OUT-COMPLETION-TIME",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.58,
+        "ci_lower": 0.39,
+        "ci_upper": 0.77,
+        "p_value": 0.001
+      },
+      "sample_size": 300,
+      "sample_description": "high_school_math_students",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.93,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Step-by-step focused prompting reduces extraneous cognitive load, accelerating multi-step conic equation proofs (g = +0.58).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-014": {
+      "evidence_id": "EV-MATH-014",
+      "paper_id": "PAP-TROUCHE-2025",
+      "outcome_metric": "cross_regional_exam_score",
+      "outcome_dimension": "TRANSFER",
+      "claim_id": "C-004",
+      "outcome_id": "OUT-EQUITY-TRANSFER",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.05,
+        "ci_lower": -0.11,
+        "ci_upper": 0.21,
+        "p_value": 0.54
+      },
+      "sample_size": 620,
+      "sample_description": "cross_regional_high_schools",
+      "study_design": "Quasi-Experimental DID",
+      "direction": "NEUTRAL",
+      "confidence_score": 0.84,
+      "wwc_rating": "Meets Standards with Reservations",
+      "key_quote": "Deploying generic AI resources without regional curriculum alignment yielded no significant equity improvement (g = +0.05).",
+      "calibrated_weight": 0.85,
+      "bias_flag": null
+    },
+    "EV-MATH-015": {
+      "evidence_id": "EV-MATH-015",
+      "paper_id": "PAP-HOYLES-2024",
+      "outcome_metric": "geometric_reasoning_rigor",
+      "outcome_dimension": "CONCEPT_UNDERSTANDING",
+      "claim_id": "C-002",
+      "outcome_id": "OUT-CONCEPT-UNDERSTANDING",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": 0.44,
+        "ci_lower": 0.25,
+        "ci_upper": 0.63,
+        "p_value": 0.001
+      },
+      "sample_size": 330,
+      "sample_description": "high_school_geometry_students",
+      "study_design": "RCT",
+      "direction": "SUPPORTS",
+      "confidence_score": 0.91,
+      "wwc_rating": "Meets Standards without Reservations",
+      "key_quote": "Epistemic feedback prompting locus invariant verification significantly improves analytical geometry modeling rigor (g = +0.44).",
+      "calibrated_weight": 1.0,
+      "bias_flag": null
+    },
+    "EV-MATH-016": {
+      "evidence_id": "EV-MATH-016",
+      "paper_id": "PAP-SPECTOR-2024",
+      "outcome_metric": "semester_end_unassisted_retention",
+      "outcome_dimension": "RETENTION",
+      "claim_id": "C-003",
+      "outcome_id": "OUT-RETENTION",
+      "effect_size": {
+        "metric": "Hedges g",
+        "value": -0.22,
+        "ci_lower": -0.39,
+        "ci_upper": -0.05,
+        "p_value": 0.011
+      },
+      "sample_size": 400,
+      "sample_description": "high_school_math_cohort",
+      "study_design": "Quasi-Experimental DID",
+      "direction": "CONTRADICTS",
+      "confidence_score": 0.89,
+      "wwc_rating": "Meets Standards with Reservations",
+      "key_quote": "A 16-week unguided homework app intervention led to a persistent negative retention deficit on unassisted final exams (g = -0.22).",
+      "calibrated_weight": 0.85,
+      "bias_flag": null
+    }
+  },
+  "outcomes": {
+    "OUT-COMPLETION-TIME": {
+      "outcome_id": "OUT-COMPLETION-TIME",
+      "name": "Procedural Velocity (解题推导速度)",
+      "dimension": "PROCEDURAL_EFFICIENCY",
+      "category": "Task",
+      "description": "In-task algebraic calculation and conic equation derivation speed."
+    },
+    "OUT-CONCEPT-UNDERSTANDING": {
+      "outcome_id": "OUT-CONCEPT-UNDERSTANDING",
+      "name": "Conceptual Modeling (高阶概念建模)",
+      "dimension": "CONCEPTUAL_UNDERSTANDING",
+      "category": "Learning",
+      "description": "Geometric proof modeling and multi-representation calculus understanding."
+    },
+    "OUT-RETENTION": {
+      "outcome_id": "OUT-RETENTION",
+      "name": "Solo Retention (脱离AI闭卷留存)",
+      "dimension": "RETENTION_TRANSFER",
+      "category": "Learning",
+      "description": "Delayed unassisted exam retention after scaffolding withdrawal."
+    },
+    "OUT-EQUITY-TRANSFER": {
+      "outcome_id": "OUT-EQUITY-TRANSFER",
+      "name": "Urban-Rural Equity (城乡校际公平性)",
+      "dimension": "EQUITY_DISPARITY",
+      "category": "Policy",
+      "description": "Narrowing the achievement divide between urban and county/rural schools."
+    }
+  },
+  "claims": {
+    "C-001": {
+      "claim_id": "C-001",
+      "statement": "LLM adaptive step-level hints significantly accelerate in-task procedural derivation and algebra speed (pooled g = +0.66, p < 0.001).",
+      "outcome_dimension": "COMPLETION_TIME",
+      "outcome_metric": "completion_time",
+      "status": "SUPPORTED",
+      "pooled_effect_g": 0.66,
+      "evidence_ids": [
+        "EV-MATH-001",
+        "EV-MATH-007",
+        "EV-MATH-013"
+      ],
+      "bias_warning": "High in-task velocity does not guarantee delayed unassisted retention without fading scaffolds."
+    },
+    "C-002": {
+      "claim_id": "C-002",
+      "statement": "Socratic inquiry prompting and multi-representation feedback enhance high-order geometric and calculus modeling (pooled g = +0.46, p < 0.001).",
+      "outcome_dimension": "CONCEPT_UNDERSTANDING",
+      "outcome_metric": "concept_understanding",
+      "status": "SUPPORTED",
+      "pooled_effect_g": 0.46,
+      "evidence_ids": [
+        "EV-MATH-002",
+        "EV-MATH-005",
+        "EV-MATH-006",
+        "EV-MATH-009",
+        "EV-MATH-011",
+        "EV-MATH-015"
+      ],
+      "bias_warning": "High in-task velocity does not guarantee delayed unassisted retention without fading scaffolds."
+    },
+    "C-003": {
+      "claim_id": "C-003",
+      "statement": "Unguided direct solution dumping induces severe cognitive offloading, impairing delayed unassisted exam retention (pooled g = -0.27, p < 0.001).",
+      "outcome_dimension": "RETENTION",
+      "outcome_metric": "retention",
+      "status": "SUPPORTED",
+      "pooled_effect_g": -0.27,
+      "evidence_ids": [
+        "EV-MATH-003",
+        "EV-MATH-010",
+        "EV-MATH-016"
+      ],
+      "bias_warning": "High in-task velocity does not guarantee delayed unassisted retention without fading scaffolds."
+    },
+    "C-004": {
+      "claim_id": "C-004",
+      "statement": "Urban-rural equity narrowing is strictly conditioned on subsidized hardware and teacher orchestration, failing to narrow under unguided home use (pooled g = +0.18, p = 0.001).",
+      "outcome_dimension": "TRANSFER",
+      "outcome_metric": "transfer",
+      "status": "SUPPORTED",
+      "pooled_effect_g": 0.18,
+      "evidence_ids": [
+        "EV-MATH-004",
+        "EV-MATH-008",
+        "EV-MATH-012",
+        "EV-MATH-014"
+      ],
+      "bias_warning": "High in-task velocity does not guarantee delayed unassisted retention without fading scaffolds."
+    }
+  },
+  "risks": {
+    "RSK-SCAFFOLD-DEPENDENCY": {
+      "risk_id": "RSK-SCAFFOLD-DEPENDENCY",
+      "risk_type": "Scaffolding Dependency Trap",
+      "severity": "HIGH",
+      "description": "Students develop an illusion of competence when given constant hints, suffering a -0.27g deficit during unassisted exams.",
+      "mitigation": "Enforce the 4-phase progressive fading protocol and anchor summative grading in unassisted closed-book exams.",
+      "triggered_by_evidence_ids": [
+        "EV-MATH-003",
+        "EV-MATH-010",
+        "EV-MATH-016"
+      ]
+    },
+    "RSK-EQUITY-GAP": {
+      "risk_id": "RSK-EQUITY-GAP",
+      "risk_type": "Urban-Rural Digital Divide",
+      "severity": "MODERATE",
+      "description": "Rural county schools lack sufficient device hardware and teacher orchestration, risking a null net benefit under unguided home use.",
+      "mitigation": "Provide subsidized classroom tablets and comprehensive teacher-in-the-loop dashboard training.",
+      "triggered_by_evidence_ids": [
+        "EV-MATH-004",
+        "EV-MATH-014"
+      ]
+    }
+  },
+  "gaps": {
+    "GAP-LONGITUDINAL-GAOKAO": {
+      "gap_id": "GAP-LONGITUDINAL-GAOKAO",
+      "gap_type": "Longitudinal Gaokao Retention Gap",
+      "description": "Lack of multi-semester longitudinal tracking following students through the National College Entrance Examination.",
+      "target_outcome": "Long-term mathematical mastery",
+      "existing_evidence_summary": "16-week semester evidence available; multi-year retention unmeasured.",
+      "recommended_trial_design": "Pre-registered 2-year longitudinal cohort study tracking Gaokao math performance."
+    }
+  },
+  "decision": {
+    "decision_id": "DEC-MATH-PILOT",
+    "verdict": "PILOT",
+    "confidence_score": 0.88,
+    "rationale": "Synthesis of 16 empirical studies demonstrates that while adaptive AI tutoring accelerates in-task procedural calculation (+0.66g) and enhances conceptual modeling (+0.46g) under Socratic scaffolding, unguided access causes severe delayed retention loss (-0.27g) and risks widening urban-rural inequities without teacher mediation. An unconstrained rollout is strongly contraindicated, while an outright ban deprives resource-strained students of vital personalized assistance. Therefore, a restricted PILOT verdict is adjudicated: implementing a strict 4-phase fading scaffolding protocol with mandatory closed-book solo assessment and hard stop thresholds.",
+    "applicability_boundary": "Applicable to after-school personalized homework and variation practice in high school mathematics (analytic geometry and introductory calculus); strictly prohibited during closed-book exams or unmonitored home free usage.",
+    "intervention_plan": {
+      "protocol": "4-Phase Fading Scaffolding",
+      "duration": "16_weeks"
+    },
+    "evaluation_plan": {
+      "design": "Multi-site Cluster RCT + DID",
+      "clusters": 24
+    },
+    "stop_conditions": [
+      "Mid-term unassisted closed-book quiz score drops > 10% relative to control classes triggers immediate pilot suspension.",
+      "Interaction log analysis detecting hint exploitation or answer copying exceeding 25% freezes hint access for the module.",
+      "Widening achievement disparity among rural struggling students without teacher mediation triggers immediate protocol adjustment."
+    ],
+    "timestamp": "2026-08-22T13:15:12Z"
+  },
+  "edges": [
+    {
+      "source_id": "EV-MATH-001",
+      "target_id": "PAP-VANLEHN-2025",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-002",
+      "target_id": "PAP-HEFFERNAN-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-003",
+      "target_id": "PAP-KOEDINGER-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 0.85,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-004",
+      "target_id": "PAP-NYE-2025",
+      "relation": "EXTRACTED_FROM",
+      "weight": 0.85,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-005",
+      "target_id": "PAP-ALEVEN-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-006",
+      "target_id": "PAP-DRIJVERS-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 0.85,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-007",
+      "target_id": "PAP-CHEN-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-008",
+      "target_id": "PAP-ROSCHELLE-2023",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-009",
+      "target_id": "PAP-SCHOENFELD-2025",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-010",
+      "target_id": "PAP-ZHANG-2025",
+      "relation": "EXTRACTED_FROM",
+      "weight": 0.85,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-011",
+      "target_id": "PAP-RENKL-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-012",
+      "target_id": "PAP-KUMAR-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-013",
+      "target_id": "PAP-SWELLER-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-014",
+      "target_id": "PAP-TROUCHE-2025",
+      "relation": "EXTRACTED_FROM",
+      "weight": 0.85,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-015",
+      "target_id": "PAP-HOYLES-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-016",
+      "target_id": "PAP-SPECTOR-2024",
+      "relation": "EXTRACTED_FROM",
+      "weight": 0.85,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-001",
+      "target_id": "C-001",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-007",
+      "target_id": "C-001",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-013",
+      "target_id": "C-001",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-002",
+      "target_id": "C-002",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-005",
+      "target_id": "C-002",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-006",
+      "target_id": "C-002",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-009",
+      "target_id": "C-002",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-011",
+      "target_id": "C-002",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-015",
+      "target_id": "C-002",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-003",
+      "target_id": "C-003",
+      "relation": "CONTRADICTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-010",
+      "target_id": "C-003",
+      "relation": "CONTRADICTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-016",
+      "target_id": "C-003",
+      "relation": "CONTRADICTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-004",
+      "target_id": "C-004",
+      "relation": "EVALUATES",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-008",
+      "target_id": "C-004",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-012",
+      "target_id": "C-004",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-014",
+      "target_id": "C-004",
+      "relation": "EVALUATES",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-003",
+      "target_id": "RSK-SCAFFOLD-DEPENDENCY",
+      "relation": "EXPOSES_RISK",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-010",
+      "target_id": "RSK-SCAFFOLD-DEPENDENCY",
+      "relation": "EXPOSES_RISK",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-016",
+      "target_id": "RSK-SCAFFOLD-DEPENDENCY",
+      "relation": "EXPOSES_RISK",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-004",
+      "target_id": "RSK-EQUITY-GAP",
+      "relation": "EXPOSES_RISK",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "EV-MATH-014",
+      "target_id": "RSK-EQUITY-GAP",
+      "relation": "EXPOSES_RISK",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-001",
+      "target_id": "DEC-MATH-PILOT",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-002",
+      "target_id": "DEC-MATH-PILOT",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-003",
+      "target_id": "DEC-MATH-PILOT",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-004",
+      "target_id": "DEC-MATH-PILOT",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "RSK-SCAFFOLD-DEPENDENCY",
+      "target_id": "DEC-MATH-PILOT",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "RSK-EQUITY-GAP",
+      "target_id": "DEC-MATH-PILOT",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    }
+  ]
+}

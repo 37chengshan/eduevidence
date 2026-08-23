@@ -39,26 +39,28 @@ bash install.sh --dry-run       # 只预览不写入
 
 ```bash
 open examples/ai-coding-assistant/EduEvidence_Report.html
-# 或浏览器打开 examples/ai-coding-assistant/reports-5themes/ 下的 5 主题预览
 ```
 
-主 Demo 叙事（详见 `docs/demo.md`）：**大一 C 语言课程能否使用生成式 AI 编程助手**。核心观点“能更快完成作业 ≠ 编程学得更好”，最终收敛为带 Stop Conditions 的分阶段 **PILOT**（前 4 周禁用 AI → 中期允许 AI 辅助但需使用日志 → 后期限时无 AI 测验；指标下滑即回退）。
+**Local Web Studio（三页只读）**：
+
+```bash
+python3 scripts/dashboard_server.py --port 8765
+# http://127.0.0.1:8765/  → Dashboard / Report Browser / Data Visualization
+```
+
+报告浏览支持默认报告和已烘焙主题变体；数据可视化按 `result.json` / `evidence_graph.json` 读取。Web 交互图加载 jsDelivr ECharts 5.4.3，网络不可用时应使用静态报告。
 
 **命令行跑一个新问题**：
 
 ```bash
 eduevidence run --question "小学是否应采用自适应练习平台替代纸质练习册？" --depth deep
-eduevidence status --run-id <id>   # 查看进度
-eduevidence gate --run-id <id>     # 查看发布门
+eduevidence status --run-id <id>
+eduevidence gate --run-id <id>
 ```
 
 **最小验证（无需联网 / 无第三方依赖）**：
 
 ```bash
-# 1. 确定性脚本自检
-python3 scripts/validate_schema.py --schema schemas/evidence.schema.json --data examples/ai-coding-assistant/evidence.jsonl
-
-# 2. 从示例结果渲染报告（验证 visualization 完整）
 python3 visualization/eduevidence-report/scripts/build_report.py \
   --result examples/ai-coding-assistant/result.json \
   --out /tmp/eduevidence-smoke.html
@@ -67,46 +69,40 @@ python3 visualization/eduevidence-report/scripts/build_report.py \
 ## 五、怎么跑测试
 
 ```bash
-.venv/bin/python -m pytest -q        # 仓库自带 .venv；pyproject 已配置 testpaths=tests、addopts=-q
+.venv/bin/python -m pytest -q
 # 或在未建 .venv 的环境：python3 -m pytest -q
 ```
 
-- 共 **56 个测试文件**（`tests/`），覆盖：V1/V2/V3 全研究周期、契约与 JSON Schema 严格校验、检索 / 抓取 / 去重回归、Skeptic 反证与发布门（pre_verdict_gate）、Agent MCP 门控、报告渲染与图表、benchmark 与发布合同。
-- 测试为确定性软件 / 合同测试：验证引擎产出了符合规范的结构，不评判研究结论的科学正确性（内容级评估依赖人工金标注释，见 `benchmarks/v2/README.md`）。
+当前开发仓库验证结果：`786 passed, 1 skipped`。提交包为 allowlist 运行时包，不含 tests/、benchmarks/ 或内部 brief。
 
 ## 六、目录导读
 
 | 路径 | 内容 |
 |---|---|
-| `SKILL.md` | 参赛 skill.md：Skill 入口（name/description、When to Use、9 步 Workflow、输出契约、能力路由） |
-| `skill/` | 8 个角色协议（Planner / Retriever / Analyst / Skeptic / Method Reviewer / Judge / Intervention / Evaluation Designer） |
-| `references/` | 11 篇教育方法论文档（检索协议、反驳协议、方法学审计、裁决政策等） |
-| `schemas/` | 33 个 JSON Schema 数据契约（V1/V2/V3） |
-| `engine/` | 研究引擎核心：证据综述、证据图（版本化）、综合、裁决、知识缺口、研究设计、数据分析 |
-| `scripts/` | 21 个确定性脚本：评分 / 矩阵 / 置信度 / 门控 / 渲染 / 基准 |
-| `retrieval/` | 检索与抓取层（fetch / validate / dedupe / failures） |
-| `integrations/` | Agent MCP 增强 + Smart Web Fetch 集成（可选） |
-| `visualization/` | HTML 渲染器：5 主题中英双语报告 |
-| `examples/` | 4 个示例（ai-coding-assistant 含可直接打开的报告 HTML） |
-| `docs/` | 架构 / 方法论 / 安装指南 / Demo 与分镜 / 基准 / 可复现性 / 失败矩阵 / 项目评审 |
-| `benchmarks/` | V1/V2 问题集、确定性指标评估器、基线、金标注释、结果 |
-| `tests/` | 56 个测试文件 |
-| `assets/` | 展示用可视化图片 |
-| `LICENSE` / `README.md` / `README.en.md` | MIT 许可证 / 中英文项目说明 |
-| `packaging/` | 本上架包：清单、本说明、上传布局 |
+| `SKILL.md` | Skill 唯一入口（9 步 Workflow、输出契约、能力路由） |
+| `skill/` | 子技能、角色协议、阶段任务简报 |
+| `references/` | 教育研究方法与裁决规则 |
+| `schemas/` | JSON Schema 数据契约 |
+| `engine/` | 证据综述、图谱、综合、裁决、研究设计、数据分析 |
+| `scripts/` | 确定性脚本、DID、报告与三页 Studio 服务 |
+| `retrieval/` | 检索与抓取层 |
+| `integrations/` | Agent MCP / Smart Web Fetch 可选增强 |
+| `visualization/` | 双语报告渲染器与三适配器 |
+| `web/` | Dashboard / Report Browser / Data Visualization 三页前端 |
+| `examples/` | 6 个可运行课题工件（主 Demo 含报告） |
+| `docs/` | 架构、Demo、复现与 release contract |
+| `LICENSE` / `README*.md` | 许可证与双语项目说明 |
 
-## 七、与比赛要求的对应关系
+## 七、提交包构建与验证
 
-| 比赛要求（提交材料） | 本包对应物 | 状态 |
-|---|---|---|
-| `skill.md` 文件（**必须**） | `SKILL.md`，上传包内复制为 `skill.md`（内容一致；仓库内文件无需改名） | ✅ 已提供 |
-| 项目源码（**必须**） | `engine/` `scripts/` `retrieval/` `integrations/` `schemas/` `skill/` `references/` `visualization/` + `eduevidence_cli.py` `pyproject.toml` `install.sh`（上传为 `src/`） | ✅ 已提供 |
-| 展示材料 PPT / 视频 / 可视化图片（**可选，建议**） | `assets/` 三张可视化图 + `docs/demo.md`（Demo 叙事）`docs/demo-storyboard.md`（180 秒分镜表）`docs/PROJECT_REVIEW_2026-08-12.md`（项目评审）`docs/full-run-findings-2026-08-12.md`（全量运行发现） | ⚠️ 素材已备，正式 PPT/视频建议另附 |
+```bash
+bash packaging/make_upload.sh
+```
 
-**评审维度对照**：科研价值与实用性（证据决策 + 落地干预方案）✅ · 技术实现质量（契约化引擎 + 56 测试 + 确定性基准）✅ · 创新性与差异化（Skeptic 反证、方法学审计、四态裁决）✅ · 文档完整度与可复用性（README / 安装指南 / 架构 / 方法论 / 可复现性 + 本上架说明）✅。
+输出：`dist/eduevidence-submission/`，不生成压缩包。脚本按 allowlist 从临时 staging 重建目录，编译 Python 文件，验证主 Demo，并写 `submission-manifest.json`（内容文件 SHA-256、字节数、POSIX 路径；manifest 自身不计入清单）。当前实测 301 个内容文件、24,693,641 bytes。
 
 ## 八、上架注意事项
 
-1. **排除项**：上传包不应包含 `.venv/`、`.git/`、`.pytest_cache/`、`__pycache__/`、`build/`、`dist/`、`*.egg-info/`、`.DS_Store`（见清单 `exclusions`）。
-2. **`docs/competition-brief.md` 不随包上传**：该文件为比赛说明本地留存，明确标注“不提交版本库”。
-3. 打包与核对请先看 `packaging/scp-manifest.json`（逐项 path/required/说明）与 `packaging/upload-layout.md`（上传文件夹布局），再按清单 `checklist` 逐项人工复核后上传。
+1. 排除 `.venv/`、`.git/`、缓存、`.DS_Store`、内部 brief、旧 Web 归档和 `visualization/lieflat-charts`。
+2. 官方提交媒介、大小限制、联网策略、Python/浏览器版本以官方规则为准；24.7MB 不是平台硬门。
+3. 核对 `packaging/scp-manifest.json`；它描述仓库来源清单，实际比赛包以 `dist/eduevidence-submission/` 和其 manifest 为准。

@@ -255,26 +255,28 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
-研究完成后，`result.json` 通过确定性适配器渲染为三套可视化产物（全部零第三方依赖，单文件离线可打开）：
+After research completes, `result.json` is rendered by three deterministic Python adapters. The adapters use the standard library; the optional Web Studio chart enhancement has a separate browser dependency.
 
 ```text
-result.json + result.zh.json（中文平行数据）
-  ├─ build_charts.py        → chart_specs.json（ECharts 规格：结果概览/主张追溯/基准）
-  ├─ build_infographics.py  → infographics.json（4 张 AntV 风格 SVG：EvidenceFlow/裁决/干预/评价）
-  ├─ build_figures.py       → figures/（出版级学术图：figure_data.json + SVG/PNG/PDF）
-  └─ build_report.py        → EduEvidence_Report.html（单文件双语报告 + report_spec.json）
+result.json + result.zh.json
+  ├─ build_charts.py        → chart_specs.json (ECharts option data; no ECharts runtime bundled)
+  ├─ build_infographics.py  → infographics.json (hand-authored SVGs)
+  ├─ build_figures.py       → figures/ (publication figures: figure_data.json + SVG/PNG/PDF)
+  └─ build_report.py        → EduEvidence_Report.html (single-file bilingual report + report_spec.json)
 ```
 
-**EduEvidence_Report.html（主产物）**：
+**EduEvidence_Report.html (main deliverable)**:
 
-- **双语切换**：默认中文，顶部一键切换 EN；中文模式下证据、主张、方法学审计、干预与评价全部为中文，数据同构（`result.zh.json` 与 `result.json` 键/数字/ID/URL 一致，由 AI 直接产出双语数据而非机器翻译）。
-- **执行摘要叙事**：第一屏"一句话结论"——问题 → 依据（支持/反驳证据）→ 行动（决策+置信度+理由）；每个 Section 顶部有"本节回答：…"导读行。
-- **双层分页**：可视化摘要（Visual Brief）+ 完整报告（Full Report，AI 规划 5–7 章动态结构，非固定模板）。
-- **五种风格（生成时选择，HTML 内不提供切换）**：claude [Light] / academic [Light] / datalab [Light] / datalab-dark [Dark] / presentation [Dark]，同一数据仅呈现方式不同。
-- **静态优先**：无 JS 也可读（决策/矩阵/裁决/干预/来源）；ECharts 可用时增强交互；表格横向滚动防溢出。
-- **完整性门**：图表数字与 result.json 逐项核对，`REPORT_INVALID` 时禁止发布。
+- **Bilingual switch**: Chinese by default, one click to EN; data remains isomorphic.
+- **Executive summary narrative**: question → evidence → action, with traceable source sections.
+- **Two-page layout**: Visual Brief + Full Report (AI-planned 5–7 dynamic chapters, not a fixed template).
+- **Five styles (chosen at generation time, no in-HTML switcher)**: claude / academic / datalab / datalab-dark / presentation.
+- **Static-first**: decision, matrix, tribunal, intervention and sources remain readable without JavaScript; ECharts is an optional enhancement.
+- **Integrity gate**: chart numbers are checked against result.json item by item; publishing is blocked with `REPORT_INVALID` on mismatch.
 
-> 示例产物直接打开：`examples/ai-coding-assistant/EduEvidence_Report.html`
+**Local Web Studio** (`python3 scripts/dashboard_server.py --port 8765`) has exactly three read-only views: Dashboard, Report Browser and Data Visualization. It loads ECharts 5.4.3 from jsDelivr for interactive charts; the submission package does not bundle that runtime, so Web interactivity requires network access. The baked report's static HTML/SVG remains the offline artifact.
+
+> Open the example directly: `examples/ai-coding-assistant/EduEvidence_Report.html`
 
 ## Architecture
 

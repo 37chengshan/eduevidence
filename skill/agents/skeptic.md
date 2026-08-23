@@ -75,8 +75,15 @@ critical_path: true
 
 ## 输出格式
 
-返回 Skeptic Findings JSON；最后以 `FINAL_ANSWER: <found 反方 N 项 + 最强威胁 + 是否虚构回避说明，≤3 行>` 结尾。
+返回 Skeptic Findings JSON（唯一输出：必须通过 schema 校验的合法 JSON；输出结束后严禁追加任何文本尾巴（历史摘要行协议已废除）——摘要信息一律放入 JSON 字段（如 summary / rationale / extensions），标准 JSON 解析器可直接读取）
 
 ## 卡住升级
 
 反方证据存在但无法验证来源回传 `UNSUPPORTED_CLAIM`；检索不足回传 `INSUFFICIENT_SOURCES`。
+
+
+## 语言人话化规则（Present 语言契约 · 硬标准）
+
+- 反方证据描述（counter_evidence / null_results / confounders）为面向研究者的流畅中文（en 版为英文）；禁止证据 ID 堆砌；
+- 引用证据用"作者-年份 + 人话描述"；禁止把内部字段名（search_performed、risk_level 等）写进叙述；
+- 无截断残留、无中英夹生。

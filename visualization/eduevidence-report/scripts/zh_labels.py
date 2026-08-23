@@ -38,8 +38,15 @@ OUTCOME_ZH = {
 
 STUDY_ZH = {
     "rct": "随机对照试验",
+    "randomized_controlled_trial": "随机对照试验",
+    "randomized controlled trial (rct)": "随机对照试验",
     "quasi_experiment": "准实验",
     "quasi_experimental": "准实验",
+    "quasi-experimental did": "准实验（双重差分）",
+    "did": "双重差分",
+    "literature_review": "文献综述",
+    "literature review": "文献综述",
+    "systematic_review": "系统综述",
     "observational": "观察性研究",
     "mixed_methods": "混合方法",
     "case_study": "案例研究",
@@ -53,8 +60,11 @@ STUDY_ZH = {
 
 AUTHORITY_ZH = {
     "tier1_paper_doi": "T1 DOI 可验证论文",
+    "tier1_peer_reviewed": "T1 同行评议论文",
     "tier1_peer_reviewed_journal": "T1 同行评议期刊",
+    "tier2_peer_reviewed": "T2 同行评议论文",
     "tier2_peer_reviewed_conference": "T2 同行评议会议",
+    "tier3_peer_reviewed": "T3 专业机构成果",
     "tier3_professional_institution": "T3 专业机构",
     "tier4_reputable_media": "T4 权威媒体",
     "tier5_unverified": "T5 未验证",
@@ -62,15 +72,22 @@ AUTHORITY_ZH = {
 
 CLAIM_STATUS_ZH = {
     "SUPPORTED": "已支持",
+    "supported": "已支持",
     "UNSUPPORTED": "无支撑",
+    "unsupported": "无支撑",
     "DOWNGRADE_CONFIDENCE": "降级置信度",
+    "downgrade_confidence": "降级置信度",
     "CONTRADICT": "被反驳",
+    "contradicted": "被反驳",
+    "uncertain": "不确定",
+    "missing": "缺失",
 }
 
 VERDICT_ZH = {
     "met": "通过",
     "partial": "部分",
     "not_applicable": "不适用",
+    "missing": "缺失",
     "concern": "关注",
     "CONCERN": "关注",
     "PASS": "通过",
@@ -91,9 +108,14 @@ MODE_ZH = {
 
 ACTION_ZH = {
     "adopt": "全面采用",
+    "ADOPT": "全面采用",
     "pilot": "试点验证",
+    "PILOT": "试点验证",
     "reject": "不建议采用",
+    "REJECT": "不建议采用",
     "insufficient_evidence": "证据不足",
+    "INSUFFICIENT": "证据不足",
+    "INSUFFICIENT_EVIDENCE": "证据不足",
 }
 
 
@@ -180,7 +202,15 @@ def label(lang: str, kind: str, value: str) -> str:
         table = {"outcome": OUTCOME_EN, "study": STUDY_EN, "authority": AUTHORITY_EN,
                  "status": STATUS_EN, "verdict": VERDICT_EN, "confidence": CONFIDENCE_EN,
                  "mode": MODE_EN, "action": ACTION_EN, "dir": DIR_EN}
-    return table.get(kind, {}).get(value, value)
+    table = table.get(kind, {})
+    if value is None:
+        return value
+    if value in table:
+        return table[value]
+    lowered = value.lower()
+    if lowered in table:
+        return table[lowered]
+    return value
 
 
 def zh_outcome(value: str) -> str:

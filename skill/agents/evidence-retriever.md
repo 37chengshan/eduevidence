@@ -73,7 +73,7 @@ critical_path: false
 
 ## 输出格式
 
-返回 Source 列表 JSON；最后以 `FINAL_ANSWER: <支持 N 条 + 反方 M 条 + 检索时间窗，≤3 行>` 结尾。
+返回 Source 列表 JSON（唯一输出：必须通过 schema 校验的合法 JSON；输出结束后严禁追加任何文本尾巴（历史摘要行协议已废除）——摘要信息一律放入 JSON 字段（如 summary / rationale / extensions），标准 JSON 解析器可直接读取）
 
 ## 卡住升级
 

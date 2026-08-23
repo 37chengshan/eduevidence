@@ -3,6 +3,67 @@
 所有显著变更均记录于此。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)；版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
 
+## [5.1.0] — 2026-08-22
+
+> Present 层大改造：**AI 自由组合 Lieflat 图表 + 5 套主题文案排版优化（含展开动画）**。
+
+### 数据驱动 Lieflat 画廊（AI 自由组合）
+- 新增 `visualization/eduevidence-report/scripts/charts_data.py`：16 个提取器（meta.forest / evidence.ranked_effects / year_x_dimension / grouped_distribution / multidim_top / study_type & wwc_composition / outcomes.direction_counts & paired_counts & bipolar_axes / intervention.phase_weeks & activity_weights & phase_groups / decision.confidence_score / methodology.flag_rates / year_x_outcome_counts），数据不足返回 None + reason（镜像 Meaningful Visualization Gate），不编造单位。
+- 重构 `lieflat_engine.py`：REGISTRY（17 个 type ↔ 目录编号 ↔ 提取器 ↔ 渲染器）+ `render_figure` 调度器，未知 type 显式报错；**删除全部硬编码演示数据与 SVG 内嵌 `<style>`**，改为 `lf-pop/lf-fade/lf-draw` 类 + `--motion-delay`（点阵 12ms / 条形 100ms）；SVG 最小字号 6.5px、数值 800、面积 sqrt。
+- `build_figures.py`：学术图保持不变；Lieflat 部分只渲染 `resolve_visual_layout` 校验通过的条目，键用条目 chart_id。
+- `build_report.py`：新增 `resolve_visual_layout`（新契约 `{chart_id, type, catalog_ref, title_zh/en, subtitle_zh/en, caption_zh/en, source, params}`；兼容旧 title/subtitle 双语共用并告警；未注册/缺双语/参数非法 → 丢弃 + 原因入 report_spec；全无效 → 确定性安全组合 forest + dot_cascade + bubble_almanac + tick_rows）；完整性门新增 `lieflat_data_bound`（渲染值逐一比对提取器 bundle）；`render_lieflat_gallery_brief` 重写（四件套卡片 + `data-lieflat`/`data-visual` + 图注 + 抑制清单）；`report_spec.json` 增加 `lieflat_gallery`。
+- 新增 `schemas/visual-layout.schema.json`（目录原为空，正放新契约）。
+
+### 展开动画对齐 skill 正本（图表 SVG 为主）
+- `motion/motion.css`：新增 `data-lieflat` 区块——`.js-lf` 门控的 `lf-pop`（scale 0→1，cubic-bezier(.2,.7,.3,1.3)，500ms）/ `lf-fade`（900ms ease）/ `lf-draw`（dasharray 1，1s cubic-bezier(.4,0,.2,1)），`--motion-delay` stagger，reduced-motion 与 print 全关，无 JS 静态可见。
+- `motion/motion.js`：`[data-lieflat]` 实现 mono-tokens `obsReveal` 语义——IntersectionObserver（threshold .3）滚入播放一次；点击重播（先清该 id 已登记 timer，防叠加）；`CSS.escape` 安全。
+- `references/motion-system.md`：`chart-reveal` 写为固定模板角色，五主题不得另造动画逻辑。
+
+### 5 套主题文案排版优化（设计个性全部保留）
+- 文案：表头 meta 行规范为「模式：… · 生成时间：… · 证据 N 条 · 来源 N 个」（英文对应）；润色 `full_report_intro`、12 条 section leads、brief 各块 lead、`benchmark_note`；图表文案规范（标题写结论、副标题说清图例单位、来源行全大写）。
+- 排版：中文优先字体栈（PingFang SC / Noto Sans CJK，academic 保留 Songti 衬线）；中文正文不加 letter-spacing；数字 `tabular-nums`；claude 标题 500 字重与 measure 收窄；academic 打印 8.5pt；datalab/datalab-dark 4 列 brief 网格 + 章头双栏 + 控件尺寸统一（暗版对比度 ≥4.5:1 复核）；presentation 裁决字号阶梯 + insight 内边距 + 金橙对比度复核。
+
+### 夹具、测试与交付
+- 修复 `examples/ai-coding-assistant` 夹具（决策叙述中的 E-xxx 引用 / null 残留 / overall_risk schema 键 → 语言门禁 0 问题）；三个示例项目 `visual_layout` 升级为新双语契约（50 篇示例展示 L20/G15/L14/F11/L15/L16 六种轮廓组合）。
+- 新增 `tests/test_lieflat_composition.py`（提取器溯源、注册表拒绝、抑制、无演示值、schema、数据溯源门）；`test_build_report_html.py` 增补画廊卡片 / motion 定义唯一 / reveal 契约 / footer / meta 行；`test_build_figures.py` 按 layout 渲染。
+- 全量 pytest 与 `skill_lint.py` 全绿；`rebake_all_5themes.py` 重烘焙 3 示例 × 5 主题（15 份，integrity 全 PASS）。
+
+### 文档
+- `skill/sub-skills/report-generation/SKILL.md` §2 重写为六步组合工作流；新增 `references/lieflat-composition.md`（注册表 + 契约 + 推荐组合 + 抑制规则）；更新 `component-catalog.md` / `full-report-outline.md` / 根 `SKILL.md` Present 行 / `docs/architecture.md` Present 管线。
+
+## [5.0.0] — 2026-08-21
+
+> v5 大迭代旗舰版（`ENGINE_VERSION = "5.0.0"`）。主题：**「SSOT 证据图谱 × 杀手级实证闭环 × Claude 本地控制台」**。
+
+### 统一 SSOT 证据图谱引擎 (`engine/evidence_graph.py`)
+- **7 大统一实体节点模型**：`PaperNode` (文献)、`EvidenceNode` (量化效应量 Hedges' g、WWC 5.0 评级)、`OutcomeNode` (5维社科分类)、`ClaimNode` (科学主张)、`RiskNode` (方法学陷阱)、`GapNode` (学术空白)、`DecisionNode` (四态裁决快照)
+- **消除数据孤岛**：所有下游消费端（Tribunal 仲裁、HTML 报告、Web 控制台、GapLens）统一读取此 SSOT 图模型
+- **ECharts 力导向图导出**：支持可视化拓扑导出与交互式路径追踪
+
+### 50 篇真实学术文献杀手级 Demo (`examples/ai-coding-assistant-50/`)
+- **核心命题**：“高校大一程序设计课程引入 AI 编程助手是否真正提升计算思维与独立编程能力？”
+- **揭示社科核心悖论**：任务完成速度提升 $+0.64g$ vs 撤除 AI 后的独立闭卷期末考迁移赤字 $-0.28g$
+- **WWC 5.0 脚手架依赖陷阱检测**：自动触发认知陷阱告警，裁决为 `PILOT` (限制性试点)
+- **12周准实验因果闭环**：自动生成 12 周 DID 准实验设计，支持课堂 CSV 数据回注因果回归
+
+### Claude 风格本地控制台 (`scripts/dashboard_server.py`)
+- **浅色极简美学**：暖白底色 `#FAF9F6`、1px hairline 边框、`Instrument Serif` 衬线字体、呼吸感负空间
+- **实时事件流 (SSE)**：基于 `engine/events.py` 的 EventBus 内存总线实时推送 9 阶段执行日志
+- **Token 消耗与多模型成本矩阵**：实时比对 DeepSeek-V3/R1、Minimax 2.7（壁仞科技）、Claude 3.5 Sonnet 与 GPT-4o 成本
+- **混合多渠道检索诊断台**：支持 4 大免配置学术渠道与 AIHot 动态趋势渠道实时测试
+
+### 出版级 HTML 报告与图表重构
+- **出版级效应量森林图 (Forest Plot SVG)**：直观展现速度提升 vs 迁移赤字的尖锐分歧
+- **100% 数据一致性门控**：所有动态聚合与图表通过严苛校验，生成单文件 618KB 离线可用报告
+- **三层白话信息架构**：一页白话结论 (30秒) ➔ 可视化概要 (3分钟) ➔ 完整证据档案 (可折叠)
+
+### 外部 Skill 深度集成与安全补强
+- **`skills/aihot-trend-analysis/`**：集成 AIHot 实时 AI/EdTech 技术趋势雷达
+- **`skills/gap-analysis/`**：集成 BioGapLens 空白与矛盾透镜
+- **`skills/ethics-review/`**：引入人类受试者与 IRB 研究伦理审查
+- **`retrieval/corpus_store.py`**：内置 5 领域离线语料库，保障 100% 离线演示容灾
+- **测试矩阵**：补齐 `tests/test_search.py`，全量 703 个 pytest 用例 100% 零错误通过
+
 ## [4.0.0] — 2026-08-14
 
 > v4 正式版（`ENGINE_VERSION = "4.0.0"`）。主题：**「科艺融合 × 通用智能」——从教育证据引擎到社科证据决策平台**。

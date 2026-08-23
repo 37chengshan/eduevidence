@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/visualization/eduevidence-report/schemas/visual-layout.schema.json",
+  "title": "VisualLayout",
+  "description": "AI-composed Lieflat gallery plan written by the upstream AI into result.json.visual_layout. Entries name a registered chart type, its catalog reference, bilingual copy, data source and renderer params — the AI never writes numbers; the renderer extracts every value from result.json via scripts/charts_data.py. Unregistered types are rejected (no silent fallback).",
+  "type": "array",
+  "minItems": 1,
+  "maxItems": 6,
+  "uniqueItems": true,
+  "items": {
+    "type": "object",
+    "required": ["type"],
+    "oneOf": [
+      {
+        "description": "New bilingual contract (preferred).",
+        "required": ["title_zh", "title_en", "subtitle_zh", "subtitle_en"]
+      },
+      {
+        "description": "Legacy contract (title/subtitle shared across languages; accepted with a warning).",
+        "required": ["title", "subtitle"]
+      }
+    ],
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "forest_plot",
+          "dot_cascade",
+          "bubble_almanac",
+          "jitter_strip",
+          "parallel_coordinates",
+          "hundred_field",
+          "tick_donut",
+          "tick_rows",
+          "rung_bars",
+          "paired_rungs",
+          "brand_spectrum",
+          "barcode_lollipop",
+          "launch_fan",
+          "dotty_matrix",
+          "tick_gauge",
+          "ballot_tally",
+          "matrix_heat"
+        ],
+        "description": "Registered Lieflat chart type (the registry lives in scripts/lieflat_engine.py). Unknown types are dropped with a recorded reason."
+      },
+      "chart_id": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Stable id for the rendered figure; defaults to lieflat-<type>.svg. Academic figure keys are namespaced automatically."
+      },
+      "catalog_ref": {
+        "type": "string",
+        "description": "Catalog number + name (e.g. 'L2 Dot Cascade', 'G15 Jitter Strip'). Must match the registry value."
+      },
+      "source": {
+        "type": "string",
+        "description": "Extractor source key in scripts/charts_data.py (e.g. 'evidence.ranked_effects'). Defaults to the registry source."
+      },
+      "title_zh": {"type": "string", "minLength": 1},
+      "title_en": {"type": "string", "minLength": 1},
+      "subtitle_zh": {"type": "string", "minLength": 1},
+      "subtitle_en": {"type": "string", "minLength": 1},
+      "caption_zh": {"type": "string"},
+      "caption_en": {"type": "string"},
+      "title": {"type": "string", "minLength": 1},
+      "subtitle": {"type": "string", "minLength": 1},
+      "params": {
+        "type": "object",
+        "description": "Renderer/extractor parameters. Allowed keys per type: forest_plot{max_studies}, dot_cascade{limit}, jitter_strip{limit}, parallel_coordinates{limit}, launch_fan{max_items}, tick_rows/rung_bars/paired_rungs/brand_spectrum{outcomes}. Unknown keys or wrong types reject the entry.",
+        "properties": {
+          "max_studies": {"type": "integer", "minimum": 1, "maximum": 30},
+          "limit": {"type": "integer", "minimum": 3, "maximum": 60},
+          "max_items": {"type": "integer", "minimum": 3, "maximum": 12},
+          "outcomes": {
+            "type": "array",
+            "items": {"type": "string"},
+            "minItems": 1,
+            "description": "Optional filter of outcome_type keys to include."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  }
+}

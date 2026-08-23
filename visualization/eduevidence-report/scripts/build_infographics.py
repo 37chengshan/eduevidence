@@ -37,6 +37,7 @@ import xml.sax.saxutils as sax
 from pathlib import Path
 from typing import Any
 
+from adapter_contract import load_result, write_adapter_output
 from zh_labels import label
 
 W = 720
@@ -82,12 +83,23 @@ def _esc(text: Any) -> str:
     return sax.escape(str(text if text is not None else ""))
 
 
+def _tspan_text(x: int, first_y: int, label: str, font_size: int, fill: str,
+                line_height: int = 14) -> str:
+    """Split \n-separated labels into <tspan> lines (SVG never collapses them)."""
+    lines = str(label).split("\n")
+    out = []
+    for i, line in enumerate(lines):
+        y = first_y if i == 0 else first_y + i * line_height
+        out.append(f'<tspan x="{x}" y="{y}">{_esc(line)}</tspan>')
+    return "".join(out)
+
+
 def _box(x: int, y: int, w: int, h: int, label: str, fill: str, text_color: str = "#FFFFFF",
          font_size: int = 13, sub: str = "") -> str:
     parts = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{fill}"/>']
     ty = y + h / 2 - (5 if sub else 0)
     parts.append(f'<text x="{x + w / 2}" y="{ty}" text-anchor="middle" fill="{text_color}" '
-                 f'font-size="{font_size}" font-weight="600">{_esc(label)}</text>')
+                 f'font-size="{font_size}" font-weight="600">{_tspan_text(x + w / 2, ty, label, font_size, text_color)}</text>')
     if sub:
         parts.append(f'<text x="{x + w / 2}" y="{ty + 16}" text-anchor="middle" '
                      f'fill="{text_color}" font-size="11" opacity="0.85">{_esc(sub)}</text>')
@@ -112,8 +124,9 @@ def _svg(title: str, body: str) -> str:
 def _evidence_ids(items: list[Any], limit: int = 4) -> list[str]:
     """从主张/反证条目文本中抽取证据 ID（短标识），长文本不进 SVG。"""
     ids: list[str] = []
+    pattern = re.compile(r"\b(?:E|EV)-[A-Za-z0-9-]+\b")  # W6: E-xxx 与 EV-xxx 双匹配
     for item in items:
-        for eid in re.findall(r"\bE-[A-Za-z0-9-]+\b", str(item or "")):
+        for eid in pattern.findall(str(item or "")):
             if eid not in ids:
                 ids.append(eid)
         if len(ids) >= limit:
@@ -244,10 +257,9 @@ def main() -> int:
     parser.add_argument("--lang", choices=["zh", "en"], default="zh")
     args = parser.parse_args()
 
-    result = json.loads(Path(args.result).read_text(encoding="utf-8"))
+    result = load_result(args.result)
     infographics = build_all(result, lang=args.lang)
-    out = Path(args.out)
-    out.write_text(json.dumps(infographics, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_adapter_output(args.out, "infographics", args.result, infographics, locale=args.lang)
     print(f"wrote {args.out} ({', '.join(infographics.keys())})")
     return 0
 

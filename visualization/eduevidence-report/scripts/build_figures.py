@@ -31,16 +31,55 @@ import xml.sax.saxutils as sax
 from pathlib import Path
 from typing import Any
 
+from adapter_contract import load_result, write_adapter_output
 from zh_labels import zh_outcome
 from build_charts import effect_outcomes
 
 OKABE_ITO = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"]
 NATURE = ["#1F4E5F", "#5B8C9E", "#9E4B3A", "#7A8B5C", "#C2A24A", "#4E4E4E"]
+PALM = ["#B8694A", "#5E8A6A", "#C99A4A", "#8A867E", "#A85B53", "#3A3833"]
+PORCELAIN = ["#0284C7", "#10B981", "#F59E0B", "#64748B", "#EF4444", "#0F172A"]
+WIRE = ["#38BDF8", "#10B981", "#F59E0B", "#EF4444", "#818CF8", "#F8FAFC"]
+JUDICIAL = ["#F59E0B", "#F24D29", "#10B981", "#B8694A", "#D97706", "#FFFFFF"]
 CONSERVATIVE = ["#4E4E4E", "#8C8C8C", "#B0B0B0", "#6B6B6B", "#D0D0D0", "#2E2E2E"]
+
+THEME_PALETTES = {
+    "okabe_ito": OKABE_ITO,
+    "nature": NATURE,
+    "mono": NATURE,
+    "academic": NATURE,
+    "academic_paper": NATURE,
+    "claude": PALM,
+    "claude_research": PALM,
+    "palm": PALM,
+    "datalab": PORCELAIN,
+    "datalab_light": PORCELAIN,
+    "porcelain": PORCELAIN,
+    "datalab_dark": WIRE,
+    "datalab-dark": WIRE,
+    "wire": WIRE,
+    "presentation": JUDICIAL,
+    "presentation_judge": JUDICIAL,
+    "judicial": JUDICIAL,
+    "conservative": CONSERVATIVE
+}
 
 
 def _esc(t: Any) -> str:
     return sax.escape(str(t if t is not None else ""))
+
+
+def _linear_ticks(maxv: int) -> list[int]:
+    """Integer tick labels at roughly uniform intervals (never skip the top)."""
+    if maxv <= 0:
+        return [0]
+    if maxv <= 5:
+        return list(range(0, maxv + 1))
+    step = max(1, (maxv + 4) // 5)  # ceil division for ~5 intervals
+    ticks = list(range(0, maxv + 1, step))
+    if ticks[-1] < maxv:
+        ticks.append(maxv)
+    return ticks
 
 
 def _figure_svg(title: str, caption: str, body: str, w: int = 720, h: int = 300) -> str:
@@ -72,12 +111,8 @@ def _bar_chart(title: str, names: list[str], values: list[float], palette: list[
                     f'font-size="10" fill="#333">{_esc(name)}</text>')
         body.append(f'<text x="{x + bw / 2:.1f}" y="{y - 4:.1f}" text-anchor="middle" font-size="10" '
                     f'fill="#333">{value:.0f}{_esc(unit)}</text>')
-    # 计数图 Y 轴整数刻度（0,1,2,…）；max=1 时只显示 0/1（P0-11）
-    ticks = [0]
-    while ticks[-1] < maxv and len(ticks) < 5:
-        ticks.append(ticks[-1] + 1)
-    if ticks[-1] < maxv:
-        ticks.append(int(maxv))
+    # 计数图 Y 轴整数刻度：线性间隔，绝不产生 [0,1,2,3,4,12] 式失真刻度
+    ticks = _linear_ticks(int(maxv)) if maxv > 0 else [0]
     for t in ticks:
         ty = plot_y + plot_h - (t / maxv) * plot_h
         body.append(f'<line x1="{plot_x - 5}" y1="{ty:.1f}" x2="{plot_x}" y2="{ty:.1f}" stroke="#999"/>')
@@ -161,6 +196,80 @@ def _scatter_chart(title: str, points: list[tuple[float, float]], labels: list[s
     return _figure_svg(title, caption, "".join(body), h=h)
 
 
+def _forest_plot_svg(title: str, points: list[dict], caption: str, h: int = 420) -> str:
+    """Publication-Grade Meta-Analysis Forest Plot.
+
+    Shows effect sizes (Hedges' g), 95% Confidence Intervals, study weights,
+    and the diverging contrast between in-task procedural speed vs delayed unassisted transfer.
+    """
+    w = 820
+    header_y = 52
+    row_start_y = 78
+    row_height = 28
+
+    # Plot bounds: scale g from -1.0 (x=330) to +1.0 (x=670), center 0.0 at x=500
+    plot_left = 330
+    plot_right = 670
+    plot_center = (plot_left + plot_right) / 2  # x=500
+    scale = (plot_right - plot_left) / 2.0  # 170 px per 1.0 g
+
+    total_h = max(h, row_start_y + len(points) * row_height + 70)
+
+    body = [
+        f'<text x="{w / 2:.1f}" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#111">{_esc(title)}</text>',
+        f'<text x="24" y="{header_y}" font-size="11" font-weight="700" fill="#444">Study & Venue</text>',
+        f'<text x="240" y="{header_y}" font-size="11" font-weight="700" fill="#444">Dimension</text>',
+        f'<text x="{plot_center:.1f}" y="{header_y}" text-anchor="middle" font-size="10" font-weight="700" fill="#444">Hedges\' g [95% CI]</text>',
+        f'<text x="{w - 24:.1f}" y="{header_y}" text-anchor="end" font-size="11" font-weight="700" fill="#444">Effect [95% CI]</text>',
+        f'<line x1="20" y1="{header_y + 8}" x2="{w - 20}" y2="{header_y + 8}" stroke="#333" stroke-width="1"/>',
+        # Vertical zero line (g = 0.0)
+        f'<line x1="{plot_center:.1f}" y1="{header_y + 8}" x2="{plot_center:.1f}" y2="{total_h - 40}" stroke="#999" stroke-dasharray="3,3"/>',
+        # Bottom axis scale
+        f'<line x1="{plot_left}" y1="{total_h - 40}" x2="{plot_right}" y2="{total_h - 40}" stroke="#333" stroke-width="1"/>',
+    ]
+
+    for tick_g in [-1.0, -0.5, 0.0, 0.5, 1.0]:
+        tx = plot_center + tick_g * scale
+        body.append(f'<line x1="{tx:.1f}" y1="{total_h - 40}" x2="{tx:.1f}" y2="{total_h - 35}" stroke="#333"/>')
+        body.append(f'<text x="{tx:.1f}" y="{total_h - 24}" text-anchor="middle" font-size="9" fill="#555">{tick_g:+.1f}</text>')
+
+    body.append(f'<text x="{plot_left + 10}" y="{total_h - 10}" text-anchor="start" font-size="9" fill="#A85B53">← Favors Control (Deficit)</text>')
+    body.append(f'<text x="{plot_right - 10}" y="{total_h - 10}" text-anchor="end" font-size="9" fill="#5E8A6A">Favors AI (Gain) →</text>')
+
+    for i, p in enumerate(points):
+        ry = row_start_y + i * row_height
+        g_val = p.get("effect_size", 0.0)
+        ci_l = p.get("ci_lower")
+        ci_u = p.get("ci_upper")
+        has_ci = ci_l is not None and ci_u is not None
+        dim = p.get("outcome_dimension", "")
+
+        is_pos = g_val > 0.10
+        color = "#5E8A6A" if is_pos else ("#A85B53" if g_val < -0.05 else "#C99A4A")
+
+        # Study label & Dimension
+        body.append(f'<text x="24" y="{ry + 4}" font-size="10" font-weight="500" fill="#222">{_esc(p.get("study_label", "Study"))}</text>')
+        body.append(f'<text x="240" y="{ry + 4}" font-size="9" fill="#666">{_esc(dim.replace("_", " ").title()[:14])}</text>')
+
+        x_pt = max(plot_left, min(plot_right, plot_center + g_val * scale))
+        if has_ci:
+            x_ci_l = max(plot_left, min(plot_right, plot_center + ci_l * scale))
+            x_ci_u = max(plot_left, min(plot_right, plot_center + ci_u * scale))
+            body.append(f'<line x1="{x_ci_l:.1f}" y1="{ry}" x2="{x_ci_u:.1f}" y2="{ry}" stroke="{color}" stroke-width="1.5"/>')
+            body.append(f'<line x1="{x_ci_l:.1f}" y1="{ry - 4}" x2="{x_ci_l:.1f}" y2="{ry + 4}" stroke="{color}" stroke-width="1.5"/>')
+            body.append(f'<line x1="{x_ci_u:.1f}" y1="{ry - 4}" x2="{x_ci_u:.1f}" y2="{ry + 4}" stroke="{color}" stroke-width="1.5"/>')
+        # Center square (point only when CI not reported)
+        body.append(f'<rect x="{x_pt - 3.5:.1f}" y="{ry - 3.5:.1f}" width="7" height="7" fill="{color}"/>')
+
+        # Numeric label: no fabricated precision when CI missing
+        if has_ci:
+            body.append(f'<text x="{w - 24:.1f}" y="{ry + 4}" text-anchor="end" font-size="10" font-family="monospace" fill="#333">{g_val:+.2f} [{ci_l:+.2f}, {ci_u:+.2f}]</text>')
+        else:
+            body.append(f'<text x="{w - 24:.1f}" y="{ry + 4}" text-anchor="end" font-size="10" font-family="monospace" fill="#777">{g_val:+.2f} [CI not reported]</text>')
+
+    return _figure_svg(title, caption, "".join(body), w=w, h=total_h)
+
+
 def build_figure_data(result: dict) -> dict[str, Any]:
     """figure_data.json — publication-ready adapter output (v5 §52)."""
     outcomes = effect_outcomes(result)
@@ -220,7 +329,8 @@ DIR_SERIES = {
 
 def render_figures(figure_data: dict, theme: str = "okabe_ito", lang: str = "zh") -> dict[str, str]:
     """Render publication SVG figures from figure_data (pure Python)."""
-    palette = {"okabe_ito": OKABE_ITO, "nature": NATURE, "conservative": CONSERVATIVE}[theme]
+    theme_key = (theme or "okabe_ito").lower().replace("-", "_")
+    palette = THEME_PALETTES.get(theme_key, OKABE_ITO)
     figures: dict[str, str] = {}
 
     # Figure 1: Outcome × effect_direction (positive / negative / null 三色分组；
@@ -249,7 +359,84 @@ def render_figures(figure_data: dict, theme: str = "okabe_ito", lang: str = "zh"
             figures["benchmark-quality-cost.svg"] = _scatter_chart(
                 FIGURE_TITLES[lang]["fig3"], list(zip(costs, citation)), names, palette,
                 FIGURE_CAPTIONS[lang]["fig3"])
+
+    forest_pts = figure_data.get("forest_plot_data", [])
+    if not forest_pts and "evidence_nodes" in figure_data:
+        for ev in figure_data["evidence_nodes"][:10]:
+            es = ev.get("effect_size")
+            es_dict = es if isinstance(es, dict) else {}
+            forest_pts.append({
+                "study_label": ev.get("study_label", ev.get("evidence_id", "Study")),
+                "outcome_dimension": ev.get("outcome_dimension", "GENERAL"),
+                "effect_size": es_dict.get("value", 0.0),
+                "ci_lower": es_dict.get("ci_lower"),
+                "ci_upper": es_dict.get("ci_upper"),
+            })
+
+    if forest_pts:
+        figures["forest-plot.svg"] = _forest_plot_svg(
+            "效应量森林图 (Forest Plot: 任务速度提升 vs 独立迁移赤字)",
+            forest_pts,
+            "图 4. 效应量森林图（Hedges' g 与 95% 置信区间；展示程序速度提升与无 AI 独立迁移赤字的尖锐分歧）。来源：EduEvidence SSOT 证据图谱。"
+        )
+
+    # Lieflat gallery: data-driven composition only. Every chart is rendered
+    # from a charts_data extractor bundle; entries come from the validated
+    # visual_layout (resolve_visual_layout). Unregistered types never reach
+    # this point; insufficient data suppresses the chart with a reason.
     return figures
+
+
+def render_lieflat_gallery(result: dict, theme: str, lang: str,
+                           layout_entries: list) -> tuple[dict[str, str], dict]:
+    """Render only the layout entries that passed resolve_visual_layout.
+
+    Each entry {chart_id, type, title_zh/en, subtitle_zh/en, caption_zh/en,
+    source, params} is rendered from the extractor bundle for its registry
+    source. Returns (figures_by_chart_id, meta) where meta records selected
+    charts, suppressed charts with reasons, and the number audit used by the
+    lieflat_data_bound integrity gate.
+    """
+    from lieflat_engine import REGISTRY, render_figure
+
+    figures: dict[str, str] = {}
+    meta_out = {"selected": [], "suppressed": [], "audits": {}}
+    for entry in layout_entries or []:
+        fig_type = entry.get("type")
+        reg = REGISTRY.get(fig_type)
+        if reg is None:
+            meta_out["suppressed"].append({
+                "chart_id": entry.get("chart_id"), "type": fig_type,
+                "reason": f"unregistered type {fig_type!r}"})
+            continue
+        bundle, reason = reg["extractor"](result, entry.get("params") or {}, lang)
+        if bundle is None:
+            meta_out["suppressed"].append({
+                "chart_id": entry.get("chart_id"), "type": fig_type,
+                "catalog_ref": reg["catalog_ref"], "reason": reason})
+            continue
+        audit: list = []
+        meta = {
+            "lang": lang,
+            "title": entry.get(f"title_{lang}") or entry.get("title") or "",
+            "subtitle": entry.get(f"subtitle_{lang}") or entry.get("subtitle") or "",
+            "caption": entry.get(f"caption_{lang}") or entry.get("caption") or "",
+            "source": entry.get("source") or reg["source"],
+        }
+        try:
+            svg = render_figure(fig_type, bundle, theme, meta, audit=audit)
+        except ValueError as exc:
+            meta_out["suppressed"].append({
+                "chart_id": entry.get("chart_id"), "type": fig_type,
+                "catalog_ref": reg["catalog_ref"], "reason": f"render error: {exc}"})
+            continue
+        figures[entry.get("chart_id")] = svg
+        meta_out["audits"][entry.get("chart_id")] = {
+            "type": fig_type, "bundle": bundle, "audit": audit}
+        meta_out["selected"].append({
+            "chart_id": entry.get("chart_id"), "type": fig_type,
+            "catalog_ref": reg["catalog_ref"], "source": reg["source"]})
+    return figures, meta_out
 
 
 def export_png_pdf(svg_path: Path, out_dir: Path) -> None:
@@ -283,7 +470,10 @@ def export_png_pdf(svg_path: Path, out_dir: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build Academic Figures from result.json")
     parser.add_argument("--result", required=True)
-    parser.add_argument("--out-dir", required=True)
+    parser.add_argument("--out", required=False,
+                        help="output envelope JSON path (new unified contract)")
+    parser.add_argument("--out-dir", required=False,
+                        help="[deprecated] legacy directory output; use --out")
     parser.add_argument("--theme", choices=["okabe_ito", "nature", "conservative"],
                         default="okabe_ito")
     parser.add_argument("--lang", choices=["zh", "en"], default="zh")
@@ -291,10 +481,22 @@ def main() -> int:
                         help="try matplotlib export to PNG/PDF (optional)")
     args = parser.parse_args()
 
-    result = json.loads(Path(args.result).read_text(encoding="utf-8"))
+    if not args.out and not args.out_dir:
+        parser.error("one of --out / --out-dir is required")
+
+    result = load_result(args.result)
     figure_data = build_figure_data(result)
     figures = render_figures(figure_data, theme=args.theme, lang=args.lang)
 
+    if args.out:
+        # New unified contract: single envelope JSON with structured data + SVG strings.
+        write_adapter_output(args.out, "figures", args.result,
+                             {"figure_data": figure_data, "figures": figures},
+                             locale=args.lang)
+        print(f"wrote {args.out} (figures_data + {len(figures)} svg figures)")
+        return 0
+
+    # Legacy --out-dir compatibility (deprecated; migrate callers to --out).
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "figure_data.json").write_text(

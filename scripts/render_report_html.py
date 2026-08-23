@@ -25,7 +25,7 @@ from pathlib import Path
 from typing import Any
 
 THEMES_DIR = Path(__file__).resolve().parent.parent / "visualization" / "eduevidence-report" / "themes"
-THEME_NAMES = ("claude", "academic", "editorial", "datalab", "presentation")
+THEME_NAMES = ("claude", "academic", "datalab", "presentation")  # W5: ghost removed
 
 DIRECTION_LABELS = {"support": "支持", "contradict": "反驳", "neutral": "中性"}
 DIRECTION_CLASS = {"support": "pos", "contradict": "neg", "neutral": "neu"}
@@ -243,15 +243,7 @@ def render_html(result: dict) -> str:
     sources = result.get("sources", [])
     meta = result.get("meta", {})
 
-    theme_switcher = (
-        '<div class="theme-switcher" role="group" aria-label="主题切换">'
-        '<span>主题</span>'
-        '<button type="button" data-theme-target="claude" class="theme-btn active">Claude</button>'
-        '<button type="button" data-theme-target="academic" class="theme-btn">Academic</button>'
-        '<button type="button" data-theme-target="editorial" class="theme-btn">Editorial</button>'
-        '<button type="button" data-theme-target="datalab" class="theme-btn">Data Lab</button>'
-        '<button type="button" data-theme-target="presentation" class="theme-btn">Presentation</button>'
-        '</div>')
+    # W5: 主题在生成时烘焙；最终 HTML 不做运行时主题切换（仅中英文切换/language switch）
 
     body = "\n".join([
         section("01 Executive Decision", render_decision(decision), "01-executive-decision"),
@@ -300,10 +292,7 @@ body {{ margin:0; background:var(--bg); color:var(--text);
 .report-header {{ border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; }}
 .report-header h1 {{ font-family:var(--font-head); font-size:1.9rem; margin:0 0 8px; color:var(--text); }}
 .report-header .meta {{ color:var(--insufficient); font-size:.85rem; }}
-.theme-switcher {{ margin:12px 0 4px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }}
-.theme-btn {{ background:var(--surface); border:1px solid var(--border); border-radius:999px;
              padding:4px 12px; font-size:.8rem; cursor:pointer; color:var(--text); }}
-.theme-btn.active {{ background:var(--primary); color:#fff; border-color:var(--primary); }}
 .report-section {{ background:var(--surface); border:1px solid var(--border);
                   border-radius:var(--radius); box-shadow:var(--shadow);
                   padding:20px 24px; margin-bottom:20px; }}
@@ -339,28 +328,12 @@ a {{ color:var(--primary); word-break:break-all; }}
 <body>
 <div class="report-shell">
 <header class="report-header">
-{theme_switcher}
 <h1>{esc(meta.get('question', 'EduEvidence Evidence Report'))}</h1>
 <p class="meta">EduEvidence · {esc(meta.get('mode'))} · {esc(meta.get('generated_at'))}</p>
 </header>
 {body}
 <footer class="report-section"><p>EduEvidence Evidence Report · 由 eduevidence-report Skill 确定性渲染 · 数据源：result.json</p></footer>
 </div>
-<script>
-/* Theme switcher (JS enhancement; the static report is fully readable without it). */
-(function () {{
-  var root = document.documentElement;
-  var saved = localStorage.getItem('eduevidence-theme');
-  if (saved) root.setAttribute('data-theme', saved);
-  document.querySelectorAll('.theme-btn').forEach(function (btn) {{
-    btn.addEventListener('click', function () {{
-      root.setAttribute('data-theme', btn.dataset.themeTarget);
-      localStorage.setItem('eduevidence-theme', btn.dataset.themeTarget);
-      document.querySelectorAll('.theme-btn').forEach(function (b) {{ b.classList.toggle('active', b === btn); }});
-    }});
-  }});
-}})();
-</script>
 </body>
 </html>
 """

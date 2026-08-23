@@ -157,9 +157,13 @@ _CLI_MODEL_COMMANDS: dict[str, tuple[list[str], str]] = {
 # are coarse identifiers, not capability claims).
 _FAMILY_RULES: tuple[tuple[str, str], ...] = (
     ("claude", "anthropic"),
+    ("fable", "anthropic"),
     ("gemini", "google"),
     ("gpt-", "openai"),
+    ("luna", "openai"),
     ("deepseek", "deepseek"),
+    ("dsh", "deepseek"),
+    ("ds-flash", "deepseek"),
     ("glm", "zhipu"),
     ("kimi", "moonshot"),
     ("moonshot", "moonshot"),

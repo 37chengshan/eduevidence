@@ -90,8 +90,15 @@ critical_path: true
 
 ## 输出格式
 
-返回 MethodologyAudit JSON；最后以 `FINAL_ANSWER: <verdict + 最强设计缺陷 + task/learning 混淆情况，≤3 行>` 结尾。
+返回 MethodologyAudit JSON（唯一输出：必须通过 schema 校验的合法 JSON；输出结束后严禁追加任何文本尾巴（历史摘要行协议已废除）——摘要信息一律放入 JSON 字段（如 summary / rationale / extensions），标准 JSON 解析器可直接读取）
 
 ## 卡住升级
 
 原始方法描述缺失回传 `NEEDS_CONTEXT: <缺方法部分>`；无法判断回传 BLOCKED 并说明需要什么。
+
+
+## 语言人话化规则（Present 语言契约 · 硬标准）
+
+- 审计说明（note / summary / verdict 理由）为流畅人话（en/zh 分写）；PASS / CONCERN / FAIL 只作枚举标签，由显示层映射中文；
+- 禁止在叙述里堆证据 ID 或 schema 键；引用研究用"作者-年份 + 人话描述"；
+- 无截断残留、无中英夹生。

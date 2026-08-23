@@ -90,7 +90,33 @@ Skill 本体不变；Skill 内部操作 **EduEvidence Research Engine** —— �
 
 | 阶段 | 英文名 | 输入 | 输出 |
 |------|--------|------|------|
-| 10. 呈现 | Present | result.json + result.zh.json | 单文件双语 HTML 报告 + 信息图 + 学术图（`visualization/`；主题在生成前从 `claude`[Light] / `academic`[Light] / `datalab`[Light] / `datalab-dark`[Dark] / `presentation`[Dark] 五选一，最终 HTML 不提供主题切换，仅保留中英文切换） |
+| 10. 呈现 | Present | result.json + result.zh.json | 单文件双语 HTML 报告 + 信息图 + 学术图 + **AI 自由组合的 Lieflat 数据驱动画廊**（`visualization/`；主题在生成前从 `claude`[Light] / `academic`[Light] / `datalab`[Light] / `datalab-dark`[Dark] / `presentation`[Dark] 五选一，最终 HTML 不提供主题切换，仅保留中英文切换） |
+
+**Present 可视化管线（AI 组合 + 数据驱动）：**
+
+```text
+result.json.visual_layout（AI 写图表计划：type + 目录编号 + 双语文案 + 数据源参数）
+        │ resolve_visual_layout（build_report.py）
+        │   · 只接受注册表内 type（lieflat_engine.REGISTRY），未注册显式报错
+        │   · 双语缺失 / 参数非法 → 丢弃该条 + 原因入 report_spec
+        │   · 缺失或全无效 → 确定性安全组合（forest + dot_cascade +
+        │     bubble_almanac + tick_rows）
+        ▼
+charts_data.py 提取器（唯一数字来源，读 result.json → 规范化 bundle）
+        │   数据不足 → 抑制该图 + 原因（镜像 Meaningful Visualization Gate）
+        ▼
+lieflat_engine.render_figure(type, bundle, theme, meta)
+        │   主题化内联 SVG：lf-pop/lf-fade/lf-draw + --motion-delay stagger，
+        │   无内嵌 <style>、无硬编码演示数据；每个显示数值登记 audit
+        ▼
+完整性门 lieflat_data_bound（compute_integrity + 页脚）
+        │   渲染值逐一比对提取器 bundle——篡改数值天然不被采用
+        ▼
+motion/motion.css + motion/motion.js（data-lieflat reveal：滚入播放、
+        点击重播 + timer 清理、prefers-reduced-motion 降级、打印全开）
+```
+
+学术图（outcome-comparison / benchmark / forest）保持主题无关的出版级渲染；Lieflat 部分只渲染 `resolve_visual_layout` 校验通过的条目。注册表、契约与推荐组合见 `visualization/eduevidence-report/references/lieflat-composition.md`，schema 见 `visualization/eduevidence-report/schemas/visual-layout.schema.json`。
 
 该协议是**可剥离的**：即使没有 Agent 框架，只要按此协议组织检索、抽取、审计与裁决，也能得到可复现的决策链。
 
@@ -142,8 +168,9 @@ edu/
 │   ├── agents/             # 8 个角色协议（education-planner / evidence-retriever /
 │   │                       # evidence-analyst / skeptic / method-reviewer /
 │   │                       # evidence-judge / intervention-designer / evaluation-designer）
+│   ├── sub-skills/        # 12 个子技能 SKILL.md（原 skills/，v5 合并至此）
 │   └── task-briefs/        # 任务简报模板
-├── references/             # 11 份教育方法论文档（education-framing / outcome-taxonomy /
+├── references/             # 15 份教育方法论文档（education-framing / outcome-taxonomy /
 │                           # evidence-quality / methodology-audit / skeptic-protocol /
 │                           # tribunal-policy / applicability-policy / intervention-design /
 │                           # evaluation-design / retrieval-protocol / source-validity）
@@ -171,7 +198,9 @@ edu/
 ├── retrieval/              # 检索与抓取层（fetch / validate / dedupe / failures）
 ├── integrations/           # 集成层（Agent MCP 增强 + Smart Web Fetch）
 ├── visualization/          # 呈现层（eduevidence-report：build_report / build_charts /
-│                           # build_infographics / build_figures）
+│                           # build_infographics / build_figures / charts_data 提取器 /
+│                           # lieflat_engine 注册表渲染器 / motion / themes / schemas；
+│                           # lieflat-charts：图表品味法典正本）
 ├── benchmarks/             # 基准评测（questions / annotations / baselines /
 │                           # evaluator / results / v2）
 ├── examples/               # 端到端示例（按教育问题组织）

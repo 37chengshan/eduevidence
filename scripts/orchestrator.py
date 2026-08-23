@@ -722,24 +722,65 @@ def advance(ws: RunWorkspace, *, demo_pack: Path | None = None) -> dict[str, Any
     return summary
 
 
-# ---------------------------------------------------------------------- CLI
+def interactive_agent_mcp_setup(approved: bool) -> bool:
+    """W3.1 启动授权流程：检测 → 提示推荐启用 Agent MCP → 用户授权。
 
+    保留 GitHub 版全部行为（--approve-agent-mcp 旗标、agent_mcp_approval.json、
+    safe_spawn 门）；此处只补 run 启动时的交互提示层。非交互终端直接返回原值。
+    """
+    if approved:
+        return True
+    try:
+        from integrations.agent_mcp import detect_agent_mcp
+        detection = detect_agent_mcp()
+    except Exception:
+        detection = {"state": "unavailable", "mode": "platform_native",
+                     "hint": "", "reasons": ["detect failed"]}
 
-def _print_status(ws: RunWorkspace) -> None:
-    state = ws.load_state()
-    print(f"run_id: {ws.run_id}")
-    print(f"question: {state.get('question', '')[:120]}")
-    print(f"status: {state.get('status')}  current_stage: {state.get('current_stage')}")
-    print("stages:")
-    for stage in STAGES:
-        row = state["stages"].get(stage, {})
-        detail = row.get("detail", "")
-        print(f"  {stage:12} {row.get('status', 'pending'):10} {detail}")
+    state_ = detection.get("state", "unavailable")
+    print("------------------------------------------------------------")
+    print(f"[startup] 执行模式: {detection.get('mode', 'platform_native')}"
+          f" ｜ Agent MCP 状态: {state_}")
+    if detection.get("hint"):
+        print(f"[startup] 提示: {detection['hint']}")
+    print("         启用 Agent MCP 增强 = 多 CLI/多模型分工、独立子上下文、"
+          "超时恢复与成本优化、Memory Bank；未启用自动降级 platform-native。")
+    print("------------------------------------------------------------")
+
+    if state_ != "available" and state_ != "daemon_reachable_undeclared":
+        print("[startup] Agent MCP 不可用（未安装或 daemon 未启动），本次以 platform-native 运行。")
+        return False
+    if not sys.stdin.isatty():
+        print("[startup] 非交互终端：需授权请使用 --approve-agent-mcp。")
+        return False
+
+    if state_ == "daemon_reachable_undeclared":
+        answer = input("检测到 daemon 在运行但未声明安装。是否写入 AGENT_MCP_INSTALLED=1 "
+                       "到 ~/.eduevidence/env？[Y/n] ").strip().lower()
+        if answer in ("n", "no"):
+            return False
+        try:
+            env_file = os.path.expanduser("~/.eduevidence/env")
+            os.makedirs(os.path.dirname(env_file), exist_ok=True)
+            lines = []
+            if os.path.exists(env_file):
+                lines = Path(env_file).read_text(encoding="utf-8").splitlines()
+            if not any(l.strip().startswith("AGENT_MCP_INSTALLED=") for l in lines):
+                lines.append("AGENT_MCP_INSTALLED=1")
+                Path(env_file).write_text("\n".join(lines) + "\n", encoding="utf-8")
+                print(f"[startup] 已写入 {env_file}")
+        except OSError as exc:
+            print(f"[startup] 写入失败: {exc}；继续 platform-native。")
+            return False
+
+    answer = input("是否启用 Agent MCP 增强模式（推荐）？[Y/n] ").strip().lower()
+    return answer not in ("n", "no")
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
+    approve = args.approve_agent_mcp or interactive_agent_mcp_setup(args.approve_agent_mcp)
     ws = init_run(Path(args.runs_dir), args.question, depth=args.depth, run_id=args.run_id,
-                  approve_agent_mcp=args.approve_agent_mcp)
+                  approve_agent_mcp=approve)
     print(f"workspace created: {ws.path}")
     print(f"manifest: {json.dumps(ws.load_manifest(), ensure_ascii=False, indent=2)}")
     if args.dry_run:
@@ -750,6 +791,18 @@ def _cmd_run(args: argparse.Namespace) -> int:
     if summary["failures"]:
         return 1
     return 0
+
+
+def _print_status(ws) -> None:
+    state = ws.load_state()
+    print(f"run_id: {ws.run_id}")
+    print(f"question: {state.get('question', '')[:120]}")
+    print(f"status: {state.get('status')}  current_stage: {state.get('current_stage')}")
+    print("stages:")
+    for stage in STAGES:
+        row = state["stages"].get(stage, {})
+        detail = row.get("detail", "")
+        print(f"  {stage:12} {row.get('status', 'pending'):10} {detail}")
 
 
 def _cmd_resume(args: argparse.Namespace) -> int:
@@ -1123,6 +1176,44 @@ def _cmd_migrate(args) -> int:
     return 0
 
 
+def _cmd_dashboard(args) -> int:
+    from dashboard_server import run_dashboard_server
+    run_dashboard_server(host=args.host, port=args.port)
+    return 0
+
+
+def _cmd_search(args) -> int:
+    from retrieval.search import search_evidence
+    hits = search_evidence(args.query, limit=args.limit, academic_only=args.academic)
+    print(json.dumps(hits, indent=2, ensure_ascii=False))
+    return 0
+
+
+def _cmd_did(args) -> int:
+    from did_regression import run_did_analysis
+    res = run_did_analysis(str(args.csv))
+    print(json.dumps(res, indent=2, ensure_ascii=False))
+    return 0 if res.get("status") == "success" else 1
+
+
+def _cmd_effect(args) -> int:
+    from effect_calculator import compute_hedges_g
+    res = compute_hedges_g(args.mean1, args.sd1, args.n1, args.mean2, args.sd2, args.n2)
+    print(json.dumps(res, indent=2, ensure_ascii=False))
+    return 0
+
+
+def _cmd_lint(args) -> int:
+    from skill_lint import lint_skill
+    errs = lint_skill()
+    if errs:
+        for e in errs:
+            print(f"ERROR: {e}", file=sys.stderr)
+        return 1
+    print("Skill lint passed.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="eduevidence",
@@ -1306,6 +1397,33 @@ def main(argv: list[str] | None = None) -> int:
     p_migrate.add_argument("--title", default=None)
     p_migrate.add_argument("--home", default=None)
     p_migrate.set_defaults(func=_cmd_migrate)
+
+    p_dash = sub.add_parser("dashboard", help="start local research & token dashboard")
+    p_dash.add_argument("--host", default="127.0.0.1")
+    p_dash.add_argument("--port", type=int, default=8765)
+    p_dash.set_defaults(func=_cmd_dashboard)
+
+    p_srch = sub.add_parser("search", help="multi-channel hybrid search")
+    p_srch.add_argument("query", help="search query")
+    p_srch.add_argument("--limit", type=int, default=10)
+    p_srch.add_argument("--academic", action="store_true", help="academic only")
+    p_srch.set_defaults(func=_cmd_search)
+
+    p_did = sub.add_parser("did", help="run DID regression on classroom CSV")
+    p_did.add_argument("csv", type=Path, help="CSV file path")
+    p_did.set_defaults(func=_cmd_did)
+
+    p_eff = sub.add_parser("effect", help="calculate Hedges g effect size")
+    p_eff.add_argument("--mean1", type=float, required=True)
+    p_eff.add_argument("--sd1", type=float, required=True)
+    p_eff.add_argument("--n1", type=int, required=True)
+    p_eff.add_argument("--mean2", type=float, required=True)
+    p_eff.add_argument("--sd2", type=float, required=True)
+    p_eff.add_argument("--n2", type=int, required=True)
+    p_eff.set_defaults(func=_cmd_effect)
+
+    p_lnt = sub.add_parser("lint", help="run skill static linter")
+    p_lnt.set_defaults(func=_cmd_lint)
 
     args = parser.parse_args(argv)
     try:

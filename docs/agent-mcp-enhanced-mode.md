@@ -91,19 +91,21 @@ python3 integrations/agent_mcp.py
 > agent-mcp 仓库的安装脚本安装并启动）。声明 ≠ daemon 可达：声明了但 daemon 未起 →
 > `state: unavailable`；daemon 起了但未声明 → `state: daemon_reachable_undeclared`。
 
-## 4. 高级策略：Fast / Strong / Independent
+## 4. 高级策略：Fast / Strong / Independent（模型档位与推荐基座）
 
 > **Fast models collect. Strong models reason. Independent models verify.**
+> **旗舰模型定裁决，基础模型跑流水；基座直连 codex / claude / dsh，通用兜底 omp。**
 
-| 角色 | 类别 | 建议（示例，须用户确认） |
-|---|---|---|
-| evidence-retriever | fast（资料搜索/整理/去重/初筛） | omp / fast-low-cost |
-| education-planner | strong（Framing） | claude / reasoning |
-| evidence-analyst | strong（结构化抽取） | claude / structured |
-| method-reviewer | strong（方法学） | claude / reasoning |
-| evidence-judge | strong（Tribunal） | claude / reasoning |
-| intervention-designer / evaluation-designer | strong | claude / reasoning |
-| skeptic | independent（反证） | claude / reasoning |
+| 档位 | 适用角色 | 推荐模型（示例，须用户确认） | 推荐基座 |
+|---|---|---|---|
+| 旗舰 FLAGSHIP（strong/independent） | education-planner / method-reviewer / evidence-judge / skeptic | gpt-5.5 / gpt-5.6-sol、claude-opus-5 / fable-5、glm-5.3、deepseek-v4-pro、kimi-k3 | codex / claude / dsh 直连；通用兜底 omp |
+| 基础 BASE（fast） | evidence-retriever / evidence-analyst / intervention-designer / evaluation-designer | ds-flash / deepseek-v4-flash、gpt-5.6-luna、claude-sonnet-5、glm-5.2、kimi-k2.7 | omp（通用聚合可混合档位）或 codex / claude |
+| 说明 | 档位仅供推荐表展示 | 不写死路由；以扫描结果 + 用户授权为准 | 不设模型/CLI 硬限制 |
+
+启动时流程：`eduevidence run` 三态检测 → 提示推荐启用 Agent MCP（daemon 可达未声明即推荐写入
+`AGENT_MCP_INSTALLED=1`）→ 扫描可用 CLI/模型（`scripts/startup_probe.py` 名单，含上表旗舰/基础模型）
+→ 展示推荐表 → 用户确认 → 写 `agent_mcp_approval.json` → `safe_spawn()` 仅按授权路由派发；
+未授权自动 platform-native 降级。
 
 **具体模型与 CLI 不写死在代码中**——`integrations/agent_mcp.py` 的 `ROLE_REQUIREMENTS` 只描述**能力需求**（reasoning/speed/cost/structured_output/context/tool_use）。实际 CLI/模型必须来自用户确认的 `agent_mcp_approval.json`：先扫描（`model_inventory.json`）→ 展示推荐表 → 用户明确确认 → `safe_spawn()` 才放行；任何一步缺失都返回 `AGENT_MCP_APPROVAL_REQUIRED`，业务代码禁止绕过 `safe_spawn` 直接 spawn。
 

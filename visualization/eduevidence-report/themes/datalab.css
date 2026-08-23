@@ -7,8 +7,10 @@
   --support:#17805E; --support-soft:#E8F5EF; --contradict:#C94343;
   --contradict-soft:#FBEDED; --uncertain:#B86D12; --uncertain-soft:#FBF1E5;
   --insufficient:#7A8493; --border:#D9DEE7; --radius:8px; --radius-sm:6px;
-  --shadow:0 1px 2px rgba(16,24,40,.05); --font-head:'Helvetica Neue',Arial,'PingFang SC',sans-serif;
-  --font-ui:'Helvetica Neue',Arial,'PingFang SC',sans-serif; --font-mono:'SF Mono',Menlo,Consolas,monospace;
+  --shadow:0 1px 2px rgba(16,24,40,.05);
+  --font-head:'Helvetica Neue','PingFang SC','Noto Sans CJK SC',Arial,sans-serif;
+  --font-ui:'Helvetica Neue','PingFang SC','Noto Sans CJK SC',Arial,sans-serif;
+  --font-mono:'SF Mono',Menlo,Consolas,monospace;
 }
 :root[data-theme="datalab"] body { font-size:15.5px; }
 :root[data-theme="datalab"] .controls {
@@ -31,17 +33,21 @@
 :root[data-theme="datalab"] .report-view-btn + .report-view-btn { border-radius:0 6px 6px 0; margin-left:-1px; }
 :root[data-theme="datalab"] .report-view-btn.active { background:var(--primary); color:#fff; }
 
-/* Visual Brief: decision → outcomes → tribunal/action → sources. */
+/* Visual Brief: 4-column workbench grid — decision/outcomes span the row,
+   tribunal and action pair at half width, chapter headers stay two-column. */
 :root[data-theme="datalab"] .report-page-brief {
-  width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; align-items:start;
+  width:100%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; align-items:start;
 }
 :root[data-theme="datalab"] .brief-block {
   width:100%; max-width:none; margin:0; padding:18px 20px;
   border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow);
 }
 :root[data-theme="datalab"] .brief-decision,
+:root[data-theme="datalab"] .brief-lieflat,
 :root[data-theme="datalab"] .brief-outcomes,
 :root[data-theme="datalab"] .brief-sources { grid-column:1/-1; }
+:root[data-theme="datalab"] .brief-tribunal,
+:root[data-theme="datalab"] .brief-action { grid-column:span 2; }
 :root[data-theme="datalab"] .brief-block-header {
   max-width:none; margin-bottom:16px; display:flex; justify-content:space-between; align-items:flex-start; gap:24px;
 }
@@ -95,9 +101,25 @@
 :root[data-theme="datalab"] .claim-cell { max-width:none; min-width:260px; }
 :root[data-theme="datalab"] code { font-size:.78em; }
 
+/* Lieflat gallery — analytical workbench density: compact cards, uppercase
+   micro labels, controlled figure surface. */
+:root[data-theme="datalab"] .lieflat-gallery-container {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px;
+}
+:root[data-theme="datalab"] .lieflat-card { padding:16px 18px 12px; border-radius:10px; background:var(--surface2); }
+:root[data-theme="datalab"] .lieflat-title { font-family:var(--font-ui); font-size:.98rem; line-height:1.35; }
+:root[data-theme="datalab"] .lieflat-sub { font-size:.8rem; line-height:1.5; }
+:root[data-theme="datalab"] .lieflat-figure svg { border-radius:6px; background:var(--surface); }
+:root[data-theme="datalab"] .lieflat-caption { font-size:.75rem; }
+:root[data-theme="datalab"] .lieflat-src { font-size:.62rem; }
+:root[data-theme="datalab"] .lieflat-suppressed { font-size:.78rem; }
+:root[data-theme="datalab"] .lang-btn { min-height:36px; }
+:root[data-theme="datalab"] .lang-switcher { align-items:center; }
+
 @media (max-width:1100px) {
   :root[data-theme="datalab"] .brief-decision .hero-insights { grid-template-columns:repeat(2,minmax(0,1fr)); }
   :root[data-theme="datalab"] .brief-source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :root[data-theme="datalab"] .lieflat-gallery-container { grid-template-columns:1fr; }
 }
 @media (max-width:980px) {
   :root[data-theme="datalab"] .report-page-brief { grid-template-columns:1fr; }

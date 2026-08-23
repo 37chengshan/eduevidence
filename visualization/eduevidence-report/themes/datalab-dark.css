@@ -32,11 +32,14 @@
 :root[data-theme="datalab-dark"] .report-view-btn + .report-view-btn { border-radius:0 6px 6px 0; margin-left:-1px; }
 :root[data-theme="datalab-dark"] .report-view-btn.active { background:var(--primary); border-color:var(--primary); color:#0D1420; }
 
-:root[data-theme="datalab-dark"] .report-page-brief { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; align-items:start; }
+:root[data-theme="datalab-dark"] .report-page-brief { width:100%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; align-items:start; }
 :root[data-theme="datalab-dark"] .brief-block { width:100%; max-width:none; margin:0; padding:18px 20px; border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow); }
 :root[data-theme="datalab-dark"] .brief-decision,
+:root[data-theme="datalab-dark"] .brief-lieflat,
 :root[data-theme="datalab-dark"] .brief-outcomes,
 :root[data-theme="datalab-dark"] .brief-sources { grid-column:1/-1; }
+:root[data-theme="datalab-dark"] .brief-tribunal,
+:root[data-theme="datalab-dark"] .brief-action { grid-column:span 2; }
 :root[data-theme="datalab-dark"] .brief-block-header { max-width:none; margin-bottom:16px; display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
 :root[data-theme="datalab-dark"] .brief-block-header h2 { margin:0; font-family:var(--font-ui); font-size:1.02rem; line-height:1.35; text-transform:uppercase; letter-spacing:.055em; }
 :root[data-theme="datalab-dark"] .brief-block-header p { max-width:680px; margin:0; font-size:.86rem; line-height:1.55; text-align:right; color:var(--text-muted); }
@@ -94,9 +97,25 @@
 :root[data-theme="datalab-dark"] .claim-cell { max-width:none; min-width:260px; }
 :root[data-theme="datalab-dark"] code { font-size:.78em; background:var(--surface2); }
 
+/* Lieflat gallery — dark workbench density; figure surface keeps the dark
+   card_bg and labels hold ≥4.5:1 contrast against it. */
+:root[data-theme="datalab-dark"] .lieflat-gallery-container {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px;
+}
+:root[data-theme="datalab-dark"] .lieflat-card { padding:16px 18px 12px; border-radius:10px; background:var(--surface2); }
+:root[data-theme="datalab-dark"] .lieflat-title { font-family:var(--font-ui); font-size:.98rem; line-height:1.35; }
+:root[data-theme="datalab-dark"] .lieflat-sub { font-size:.8rem; line-height:1.5; }
+:root[data-theme="datalab-dark"] .lieflat-figure svg { border-radius:6px; background:transparent; }
+:root[data-theme="datalab-dark"] .lieflat-caption { font-size:.75rem; }
+:root[data-theme="datalab-dark"] .lieflat-src { font-size:.62rem; }
+:root[data-theme="datalab-dark"] .lieflat-suppressed { font-size:.78rem; }
+:root[data-theme="datalab-dark"] .lang-btn { min-height:36px; }
+:root[data-theme="datalab-dark"] .lang-switcher { align-items:center; }
+
 @media (max-width:1100px) {
   :root[data-theme="datalab-dark"] .brief-decision .hero-insights { grid-template-columns:repeat(2,minmax(0,1fr)); }
   :root[data-theme="datalab-dark"] .brief-source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :root[data-theme="datalab-dark"] .lieflat-gallery-container { grid-template-columns:1fr; }
 }
 @media (max-width:980px) {
   :root[data-theme="datalab-dark"] .report-page-brief { grid-template-columns:1fr; }

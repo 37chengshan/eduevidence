@@ -8,7 +8,7 @@
   --contradict-soft:#F0E0DE; --uncertain:#C99A4A; --uncertain-soft:#F4EADA;
   --insufficient:#8A867E; --border:#E5DFD3; --radius:12px; --radius-sm:8px;
   --shadow:0 1px 3px rgba(60,56,48,.07); --font-head:'Georgia','Songti SC','STSong',serif;
-  --font-ui:'Helvetica Neue',Arial,'PingFang SC',sans-serif; --font-mono:'SF Mono',Menlo,Consolas,monospace;
+  --font-ui:'Helvetica Neue','PingFang SC','Noto Sans CJK SC',Arial,sans-serif; --font-mono:'SF Mono',Menlo,Consolas,monospace;
 }
 :root[data-theme="claude"] .report-shell { max-width:1240px; padding-top:34px; }
 :root[data-theme="claude"] .report-header { max-width:900px; margin:0 auto 42px; padding-bottom:22px; }
@@ -78,3 +78,16 @@
 @media (max-width:980px) {
   :root[data-theme="claude"] .full-report-intro { margin-left:0; }
 }
+
+/* Typography pass: reading measure stays inside the serif breathing room;
+   Lieflat cards inherit the warm-paper identity (no letter-spacing on CJK). */
+:root[data-theme="claude"] .full-chapter-body p,
+:root[data-theme="claude"] .section-narrative p { max-width:68ch; }
+:root[data-theme="claude"] .brief-block-header p,
+:root[data-theme="claude"] .full-chapter-lead,
+:root[data-theme="claude"] .section-lead { max-width:62ch; }
+:root[data-theme="claude"] .lieflat-card { background:var(--surface); border-radius:16px; padding:26px 28px 20px; }
+:root[data-theme="claude"] .lieflat-title { font-weight:500; font-size:1.28rem; line-height:1.3; }
+:root[data-theme="claude"] .lieflat-sub { max-width:720px; }
+:root[data-theme="claude"] .lieflat-figure svg { border-radius:12px; background:transparent; }
+:root[data-theme="claude"] .lieflat-suppressed { background:var(--surface2); }

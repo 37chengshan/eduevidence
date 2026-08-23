@@ -4,7 +4,7 @@ Policy versions are frozen identifiers, not free-form strings: changing a
 policy requires a new version, never silent mutation of an existing one.
 """
 
-ENGINE_VERSION = "4.0.0"
+ENGINE_VERSION = "5.0.0"
 GRAPH_SCHEMA_VERSION = "2.0"
 SOURCE_VALIDATION_POLICY_VERSION = "2026-08-12.v2"
 METHODOLOGY_POLICY_VERSION = "2026-08-12.v2"

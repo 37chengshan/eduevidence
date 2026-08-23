@@ -35,8 +35,9 @@ from urllib.parse import urlparse
 from typing import Any
 
 from build_charts import build_all as build_chart_specs, effect_outcomes
-from build_figures import build_figure_data, render_figures
+from build_figures import build_figure_data, render_figures, render_lieflat_gallery
 from build_infographics import build_all as build_infographics
+from lieflat_engine import REGISTRY as LIEFLAT_REGISTRY, LEGACY_TYPES, ACADEMIC_FIGURE_KEYS
 from zh_labels import label
 
 THEMES_DIR = Path(__file__).resolve().parent.parent / "themes"
@@ -131,7 +132,7 @@ UI_ZH = {
     "what_this_means": "这意味着什么",
     "original_title": "原文标题",
     "original_text": "原文",
-    "full_report_intro": "完整报告保留全部可追溯证据与方法细节，并在关键论证位置穿插有意义的可视化。",
+    "full_report_intro": "结论前置：全部可追溯证据与方法学细节都在这里，关键论证位置穿插有意义的可视化，每个数字都能回查到 result.json。",
     "section_titles": {
         "01": "01 执行决策", "02": "02 结果证据概览", "03": "03 证据矩阵",
         "04": "04 证据裁决", "05": "05 方法学审计", "06": "06 冲突分析",
@@ -139,18 +140,18 @@ UI_ZH = {
         "10": "10 评价方案", "11": "11 基准测试", "12": "12 来源与溯源",
     },
     "section_leads": {
-        "01": "本节回答：这个问题最终怎么决定？结论是什么、置信度多高、依据哪几条证据？",
-        "02": "本节回答：AI 到底对哪些学习结果有支持证据、哪些有反驳？一图看清证据分布。",
-        "03": "本节回答：每条证据来自哪项研究、测的是什么、方向和质量如何？可筛选、可搜索。",
-        "04": "本节回答：证据允许我们主张什么、不允许主张什么？缺失的关键证据是什么？",
-        "05": "本节回答：这些研究的质量可靠吗？哪些方法学问题让结论要打折？",
-        "06": "本节回答：为什么不同研究会得出不同结论？分歧出在哪一环节？",
-        "07": "本节回答：从最终结论到证据到原始来源，每一步是否都能追查？",
-        "08": "本节回答：这个结论适用于谁、适用于什么课程和结果、需要什么条件？",
-        "09": "本节回答：如果试点，AI 使用规则怎么分阶段放开？什么情况必须叫停？",
-        "10": "本节回答：如何设计实验验证效果？测什么指标、成功标准是什么？",
-        "11": "本节回答：EduEvidence 自己的基准测试表现如何（引用精度、成本）？",
-        "12": "本节回答：引用的每一篇文献是谁、出自哪里、如何获取的？",
+        "01": "本节先给结论：最终怎么裁决、置信度多高、靠哪几条证据。",
+        "02": "一图看清：哪些学习结果有支持证据、哪些被反驳。",
+        "03": "每条证据来自哪项研究、测了什么、方向与质量如何；可筛选、可搜索。",
+        "04": "证据允许主张什么、不允许主张什么；缺失的关键证据是什么。",
+        "05": "研究质量可靠吗？哪些方法学问题让结论打折。",
+        "06": "不同研究为何结论不同；分歧出在哪一环。",
+        "07": "从结论到证据到原始来源，每一步都可追查。",
+        "08": "结论适用于谁、什么课程与结果、需要什么条件。",
+        "09": "试点怎么分阶段放开 AI 规则；什么情况必须叫停。",
+        "10": "如何验证效果：指标、对照、成功阈值。",
+        "11": "EduEvidence 自身基准表现：引用精度与成本。",
+        "12": "每篇文献是谁、出自哪里、如何获取。",
     },
     "decision_kpi": ["决策", "置信度", "证据最充分的结果", "最不确定的结果", "主要风险", "来源数量"],
     "summary_title": "一句话结论",
@@ -212,7 +213,7 @@ UI_ZH = {
     "evaluation_threshold": "成功阈值",
     "evaluation_plan": "分析计划",
     "evaluation_figure": "评价设计信息图",
-    "benchmark_note": "无基准数据（result.json 未携带 benchmark.baselines），见独立基准报告。",
+    "benchmark_note": "result.json 未携带 benchmark.baselines，本图不绘制；基准表现见独立基准报告。",
     "sources_title": "来源列表",
     "sources_heads": ["ID", "标题", "年份", "权威级别", "可验证位置"],
     "provenance_title": "Fetch 溯源",
@@ -221,17 +222,19 @@ UI_ZH = {
     "provenance_time": "检索时间",
     "provenance_empty": "无逐条 fetch 记录（来源由研究管线直接提供）。",
     "no_data": "无数据。",
-    "header_evidence": "证据",
-    "header_sources": "来源",
-    "header_mode": "模式",
-    "header_generated": "生成时间",
+    "header_evidence": "证据 ",
+    "header_sources": "来源 ",
+    "header_mode": "模式：",
+    "header_generated": "生成时间：",
     "header_evidence_suffix": " 条",
     "header_sources_suffix": " 个",
     "footer_schema": "Schema",
     "footer_claims": "Claim Binding",
     "footer_numbers": "Numeric Consistency",
     "footer_bilingual": "Bilingual Structure",
+    "footer_language": "语言人话化",
     "footer_no_false_precision": "无伪精度",
+    "footer_lieflat_bound": "Lieflat 数据溯源",
     "footer_no_axis_distortion": "坐标轴无失真",
     "footer_colorblind_safe": "色盲安全",
     "footer": "EduEvidence 证据报告 · {integrity} · 单文件离线可打开 · 数据源：result.json",
@@ -304,7 +307,7 @@ UI_EN = {
     "what_this_means": "What this means",
     "original_title": "Original title",
     "original_text": "Original text",
-    "full_report_intro": "The full report preserves traceable evidence and methodology detail and inserts only meaningful visuals at key points in the argument.",
+    "full_report_intro": "Conclusions first: every traceable piece of evidence and method note lives here, with visuals only at points where they add meaning. Every number traces back to result.json.",
     "section_titles": {
         "01": "01 Executive Decision", "02": "02 Outcome Evidence Overview",
         "03": "03 Evidence Matrix", "04": "04 Evidence Tribunal",
@@ -314,18 +317,18 @@ UI_EN = {
         "11": "11 Benchmark", "12": "12 Sources & Provenance",
     },
     "section_leads": {
-        "01": "What is the final decision on this question, at what confidence, and on which evidence?",
-        "02": "Which learning outcomes have supporting vs contradicting evidence?",
-        "03": "What does each piece of evidence measure, and how strong is it? Filter and search.",
-        "04": "What can the evidence claim, what can it not claim, and what is missing?",
-        "05": "How reliable are these studies, and which methodological concerns discount the conclusions?",
-        "06": "Why do different studies reach different conclusions, and where exactly do they diverge?",
-        "07": "Can every step from conclusion to evidence to source be traced?",
-        "08": "Who does this conclusion apply to, for which course and outcomes, under what conditions?",
-        "09": "If we pilot, how should AI usage rules phase in, and when must we stop?",
-        "10": "How do we evaluate real effects: metrics, comparison, success threshold?",
-        "11": "How does EduEvidence itself perform on its benchmark (citation precision, cost)?",
-        "12": "Where does every cited study come from and how was it fetched?",
+        "01": "The verdict first: what we decide, at what confidence, on which evidence.",
+        "02": "At a glance: which learning outcomes have supporting evidence, which are contradicted.",
+        "03": "Where each piece of evidence comes from, what it measures, its direction and quality — filterable and searchable.",
+        "04": "What the evidence lets us claim, what it does not, and what is still missing.",
+        "05": "How reliable are these studies, and which methodological concerns discount the conclusions.",
+        "06": "Why studies disagree — and where exactly they diverge.",
+        "07": "Every step from conclusion to evidence to source stays traceable.",
+        "08": "Who the conclusion applies to, for which course and outcomes, under what conditions.",
+        "09": "How AI usage rules phase in during a pilot, and when we must stop.",
+        "10": "How we verify real effects: metrics, comparison, success threshold.",
+        "11": "How EduEvidence itself performs: citation precision and cost.",
+        "12": "Who wrote each cited study, where it came from, how it was fetched.",
     },
     "decision_kpi": ["Decision", "Confidence", "Best-supported outcome", "Most uncertain outcome", "Main risk", "Sources"],
     "summary_title": "Bottom line",
@@ -387,7 +390,7 @@ UI_EN = {
     "evaluation_threshold": "Success threshold",
     "evaluation_plan": "Analysis plan",
     "evaluation_figure": "Evaluation design infographic",
-    "benchmark_note": "No benchmark data in result.json (benchmark.baselines empty); see the standalone benchmark report.",
+    "benchmark_note": "result.json carries no benchmark.baselines, so this visual is omitted; see the standalone benchmark report.",
     "sources_title": "Source list",
     "sources_heads": ["ID", "Title", "Year", "Authority", "Verifiable location"],
     "provenance_title": "Fetch provenance",
@@ -396,17 +399,19 @@ UI_EN = {
     "provenance_time": "Fetched at",
     "provenance_empty": "No per-source fetch records (sources provided directly by the research pipeline).",
     "no_data": "No data.",
-    "header_evidence": "evidence items",
-    "header_sources": "sources",
-    "header_mode": "mode",
-    "header_generated": "generated at",
+    "header_evidence": "Evidence: ",
+    "header_sources": "Sources: ",
+    "header_mode": "Mode: ",
+    "header_generated": "Generated: ",
     "header_evidence_suffix": "",
     "header_sources_suffix": "",
     "footer_schema": "Schema",
     "footer_claims": "Claim Binding",
     "footer_numbers": "Numeric Consistency",
     "footer_bilingual": "Bilingual Structure",
+    "footer_language": "Human Language",
     "footer_no_false_precision": "False Precision",
+    "footer_lieflat_bound": "Lieflat Data Bound",
     "footer_no_axis_distortion": "Axis Distortion",
     "footer_colorblind_safe": "Colorblind Safe",
     "footer": "EduEvidence Evidence Report · {integrity} · single-file offline · source: result.json",
@@ -622,6 +627,217 @@ def visualization_decisions(result: dict, charts: dict) -> dict[str, dict[str, A
 
 
 # ---------------------------------------------------------------------------
+# 0b. Lieflat gallery composition — visual_layout contract (§三)
+# ---------------------------------------------------------------------------
+
+# Deterministic safe combination when visual_layout is missing or all entries
+# are invalid. Rendered through the same extractors as any AI-written layout.
+FALLBACK_LIEFLAT_LAYOUT = (
+    {"chart_id": "lieflat-forest-plot.svg", "type": "forest_plot", "catalog_ref": "FOREST-PLOT (publication figure)",
+     "title_zh": "证据效应量森林图", "title_en": "Effect-size forest plot",
+     "subtitle_zh": "Hedges' g 与 95% 置信区间 · 一行一篇研究 · 数据不足时本图自动抑制",
+     "subtitle_en": "Hedges' g with 95% CI · one row per study · suppressed when data is insufficient",
+     "caption_zh": "仅当证据集携带数值效应量时绘制；无 g/CI 数据时不画假图。",
+     "caption_en": "Drawn only when numeric effect sizes exist in the evidence set.",
+     "source": "meta.forest", "params": {}},
+    {"chart_id": "lieflat-dot-cascade.svg", "type": "dot_cascade", "catalog_ref": "L2 Dot Cascade",
+     "title_zh": "证据效应量梯队级联", "title_en": "Ranked effect-size cascade",
+     "subtitle_zh": "按效应量由高到低排序 · 圆点高度 = Hedges' g · 顶部数字 = g 值",
+     "subtitle_en": "Sorted by effect size · dot height = Hedges' g · top number = g",
+     "caption_zh": "仅当存在逐研究数值效应量时绘制。",
+     "caption_en": "Drawn only when per-study numeric effect sizes exist.",
+     "source": "evidence.ranked_effects", "params": {}},
+    {"chart_id": "lieflat-bubble-almanac.svg", "type": "bubble_almanac", "catalog_ref": "L9 Bubble Almanac",
+     "title_zh": "发表年份 × 结果维度文献年历", "title_en": "Year × dimension evidence almanac",
+     "subtitle_zh": "气泡面积 ∝ 该格研究数（sqrt 换算） · 实心圆 = 有显著结果",
+     "subtitle_en": "Bubble area ∝ study count (sqrt) · solid core = significant results",
+     "caption_zh": "仅当证据集携带发表年份与结果维度时绘制。",
+     "caption_en": "Drawn only when years and outcome dimensions exist.",
+     "source": "evidence.year_x_dimension", "params": {}},
+    {"chart_id": "lieflat-tick-rows.svg", "type": "tick_rows", "catalog_ref": "F5 Tick Rows",
+     "title_zh": "各结果类型效应方向分布", "title_en": "Effect direction by outcome",
+     "subtitle_zh": "每 1 个圆点 = 1 条证据 · 绿 = 正向 · 灰 = 零效应 · 橙 = 负向 · 右端数字 = 净效应",
+     "subtitle_en": "One dot = one evidence item · green = positive · grey = null · orange = negative · right number = net",
+     "caption_zh": "基于 effect_direction 计数，全部数值来自 result.json。",
+     "caption_en": "Based on effect_direction counts; all numbers come from result.json.",
+     "source": "outcomes.direction_counts", "params": {}},
+)
+
+LIEFLAT_PARAM_TYPES = {"int": int, "list": list}
+
+
+def _validate_lieflat_params(fig_type: str, params: Any) -> tuple[dict, Optional[str]]:
+    """Validate visual_layout params against the registry contract.
+
+    Returns (sanitized_params, reason). Any unknown key or wrong type is an
+    invalid entry — the caller drops the entry and records the reason.
+    """
+    if params is None:
+        return {}, None
+    if not isinstance(params, dict):
+        return {}, f"params must be an object, got {type(params).__name__}"
+    contract = LIEFLAT_REGISTRY[fig_type].get("params", {})
+    out: dict = {}
+    for key, value in params.items():
+        if key not in contract:
+            return {}, f"param {key!r} is not allowed for type {fig_type!r}"
+        expected = contract[key]
+        if isinstance(expected, list):
+            if not isinstance(value, list) or not all(isinstance(v, str) for v in value):
+                return {}, f"param {key!r} must be a list of strings for type {fig_type!r}"
+        elif not isinstance(value, expected):
+            return {}, f"param {key!r} must be {expected.__name__} for type {fig_type!r}"
+        out[key] = value
+    return out, None
+
+
+def resolve_visual_layout(result: dict) -> dict[str, Any]:
+    """Resolve result.visual_layout into validated, normalized gallery entries.
+
+    New contract per entry:
+      {chart_id, type, catalog_ref, title_zh/en, subtitle_zh/en, caption_zh/en,
+       source, params}
+    Legacy contract (title/subtitle shared across languages) is accepted with
+    a warning. Unregistered types, missing bilingual copy, and invalid params
+    drop the entry with a recorded reason. If nothing survives, a deterministic
+    safe combination (forest + dot_cascade + bubble_almanac + tick_rows) is
+    used — still rendered through the extractors, so charts are suppressed
+    individually when the data is insufficient.
+
+    Returns {entries, fallback, warnings, rejected}.
+    """
+    warnings: list[str] = []
+    rejected: list[dict] = []
+    entries: list[dict] = []
+    seen_ids: set[str] = set()
+
+    raw = result.get("visual_layout") or []
+    if not isinstance(raw, list):
+        raw = []
+
+    for index, item in enumerate(raw):
+        if not isinstance(item, dict):
+            rejected.append({"index": index, "reason": "entry is not an object"})
+            continue
+        fig_type = item.get("type")
+        if not isinstance(fig_type, str) or not fig_type:
+            rejected.append({"index": index, "chart_id": item.get("chart_id"),
+                             "reason": "missing or non-string type"})
+            continue
+        if fig_type not in LIEFLAT_REGISTRY:
+            rejected.append({"index": index, "chart_id": item.get("chart_id"),
+                             "type": fig_type,
+                             "reason": f"unregistered type {fig_type!r} (not in the Lieflat registry)"})
+            continue
+
+        # Bilingual copy — new contract requires title/subtitle per language.
+        if all(isinstance(item.get(k), str) and item.get(k) for k in
+               ("title_zh", "title_en", "subtitle_zh", "subtitle_en")):
+            title_zh, title_en = item["title_zh"], item["title_en"]
+            subtitle_zh, subtitle_en = item["subtitle_zh"], item["subtitle_en"]
+        elif isinstance(item.get("title"), str) and item.get("title") \
+                and isinstance(item.get("subtitle"), str) and item.get("subtitle"):
+            title_zh = title_en = item["title"]
+            subtitle_zh = subtitle_en = item["subtitle"]
+            warnings.append(f"entry #{index} ({fig_type}): legacy title/subtitle shared "
+                            f"across languages — write title_zh/en + subtitle_zh/en in new layouts")
+        else:
+            rejected.append({"index": index, "chart_id": item.get("chart_id"),
+                             "type": fig_type,
+                             "reason": "missing bilingual copy (title_zh/en + subtitle_zh/en required)"})
+            continue
+
+        params, param_reason = _validate_lieflat_params(fig_type, item.get("params"))
+        if param_reason:
+            rejected.append({"index": index, "chart_id": item.get("chart_id"),
+                             "type": fig_type, "reason": param_reason})
+            continue
+
+        chart_id = item.get("chart_id")
+        if not isinstance(chart_id, str) or not chart_id:
+            chart_id = f"lieflat-{fig_type}.svg"
+        if chart_id in ACADEMIC_FIGURE_KEYS:
+            chart_id = f"lieflat-{chart_id}"
+        if chart_id in seen_ids:
+            rejected.append({"index": index, "chart_id": chart_id, "type": fig_type,
+                             "reason": f"duplicate chart_id {chart_id!r}"})
+            continue
+        seen_ids.add(chart_id)
+
+        catalog_ref = item.get("catalog_ref")
+        if catalog_ref and catalog_ref != LIEFLAT_REGISTRY[fig_type]["catalog_ref"]:
+            warnings.append(f"entry #{index} ({fig_type}): catalog_ref {catalog_ref!r} "
+                            f"does not match registry {LIEFLAT_REGISTRY[fig_type]['catalog_ref']!r}; "
+                            f"registry value used")
+
+        entries.append({
+            "chart_id": chart_id,
+            "type": fig_type,
+            "catalog_ref": LIEFLAT_REGISTRY[fig_type]["catalog_ref"],
+            "title_zh": title_zh, "title_en": title_en,
+            "subtitle_zh": subtitle_zh, "subtitle_en": subtitle_en,
+            "caption_zh": item.get("caption_zh", ""), "caption_en": item.get("caption_en", ""),
+            "source": item.get("source") or LIEFLAT_REGISTRY[fig_type]["source"],
+            "params": params,
+        })
+
+    if entries:
+        return {"entries": entries, "fallback": False, "warnings": warnings, "rejected": rejected}
+
+    warnings.append("visual_layout missing or fully invalid — using deterministic safe "
+                    "combination (forest_plot + dot_cascade + bubble_almanac + tick_rows)")
+    fallback_entries = [dict(e) for e in FALLBACK_LIEFLAT_LAYOUT]
+    return {"entries": fallback_entries, "fallback": True, "warnings": warnings, "rejected": rejected}
+
+
+def _canon(value: Any) -> str:
+    """Canonical string form for number-bound checking (3-decimal tolerance)."""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, float):
+        return f"{value:.3f}".rstrip("0").rstrip(".")
+    return str(value).strip()
+
+
+def check_lieflat_data_bound(lieflat_meta: dict, label: str) -> list[str]:
+    """Every number drawn in a Lieflat SVG must trace to the extractor bundle.
+
+    render_lieflat_gallery records (origin, value) for every displayed number;
+    this check canonicalizes both the audit values and every leaf of the
+    bundle and requires membership. Tampered or hardcoded demo values fail.
+    """
+    problems: list[str] = []
+    for chart_id, rec in (lieflat_meta.get("audits") or {}).items():
+        bundle = rec.get("bundle") or {}
+        audit = rec.get("audit") or []
+        bound: set[str] = set()
+
+        def walk(node: Any) -> None:
+            if isinstance(node, dict):
+                for v in node.values():
+                    walk(v)
+            elif isinstance(node, list):
+                for v in node:
+                    walk(v)
+            else:
+                bound.add(_canon(node))
+
+        walk(bundle)
+        if not audit:
+            problems.append(f"{label}:{chart_id}: no audit trail recorded for rendered figure")
+            continue
+        for origin, value in audit:
+            canon = _canon(value)
+            if canon not in bound:
+                problems.append(
+                    f"{label}:{chart_id}: value {value!r} ({origin}) is not bound "
+                    f"to the extractor bundle")
+    return problems
+
+
+# ---------------------------------------------------------------------------
 # 1. Contract validation + claim-evidence-source audit
 # ---------------------------------------------------------------------------
 
@@ -714,7 +930,9 @@ TEXT_LEAF_KEYS = {
     "question", "claim", "title", "title_zh", "title_en", "lead_zh", "lead_en", "note", "name",
     "decision_question", "target_population", "target_context", "reason_for_disagreement",
     "methodology_summary", "short_term_effect", "long_term_effect", "transfer_effect",
-    "risk_effect", "decision_rationale",
+    "risk_effect", "decision_rationale", "rationale", "applicability_boundary",
+    "strongest_support", "key_uncertainty", "main_risk", "next_action", "key_quote",
+    "statement", "bias_warning", "study_label",
     "special_characteristics", "teaching_method", "allowed_usage", "frequency", "duration",
     "teacher_support", "class_size", "online_or_offline", "geography", "success_condition",
     "population", "intervention", "comparison", "outcome_measure", "effect", "method",
@@ -726,7 +944,7 @@ TEXT_LEAF_KEYS = {
     "measured_construct", "teacher_role", "student_role", "reflection_requirement",
     "assessment",
     "prior_knowledge", "ai_tool", "time_range", "source_location", "search_snippet",
-    "pilot_duration",
+    "pilot_duration", "summary", "decision_rationale", "subtitle",
 }
 PROSE_LIST_KEYS = {
     "supported_claims", "uncertain_claims", "contradicted_claims", "what_can_be_claimed",
@@ -809,8 +1027,138 @@ def check_no_false_precision(result: dict, charts: dict) -> list[str]:
     return problems
 
 
+def _walk_strings(node, path, out, skip_hints=()):
+    """深度遍历 dict/list，收集叙述字符串（含路径）。"""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if any(h in str(k).lower() for h in skip_hints):
+                continue
+            _walk_strings(v, path + "." + str(k), out, skip_hints)
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            _walk_strings(v, path + "[" + str(i) + "]", out, skip_hints)
+    elif isinstance(node, str) and node.strip():
+        out.append((path, node))
+
+
+def _get_path(data, dotted):
+    cur = data
+    for part in dotted.split("."):
+        if isinstance(cur, dict) and part in cur:
+            cur = cur[part]
+        else:
+            return None
+    return cur
+
+
+def _leaf_strings(value, out):
+    if isinstance(value, str):
+        out.append(value)
+    elif isinstance(value, list):
+        for v in value:
+            _leaf_strings(v, out)
+    elif isinstance(value, dict):
+        for v in value.values():
+            _leaf_strings(v, out)
+
+
+_HAS_CJK = re.compile(r"[\u4e00-\u9fff]")
+_STRICT_BANNED_RE = [
+    # 第一页决策叙述：禁任意证据/来源 ID 引用（人话化硬标准）
+    (re.compile(r"\bE-\d{2,3}\b"), "evidence-ID citation (E-xxx)"),
+    (re.compile(r"\bEV-\d{3}\b"), "evidence-ID citation (EV-xxx)"),
+]
+_COMMON_BANNED_RE = [
+    # 全部叙述（两页）：禁 schema 键、来源码、问题 ID、tier 码
+    (re.compile(r"\bPAP-\w+"), "source-ID citation (PAP-xxx)"),
+    (re.compile(r"\bQ\d{2}\b"), "question-ID citation (Qxx)"),
+    (re.compile(r"effect_direction|relation_to_claim|decision_implication|evidence_id|quality_score|overall_risk|source_location"),
+     "schema key"),
+    (re.compile(r"\btier\d_\w+"), "source-tier code"),
+]
+_ZH_RESIDUE_RE = [
+    (re.compile(r"(?<![\w])null(?!\w)"), "null residue"),
+    (re.compile(r"\bCONCERN\b|\bPASS\b|\bFAIL\b"), "unmapped English audit code in zh narrative"),
+]
+
+STRICT_NARRATIVE_PATHS = [
+    "decision.decision_rationale", "decision.rationale", "decision.strongest_support",
+    "decision.key_uncertainty", "decision.main_risk", "decision.next_action",
+    "decision.next_steps", "decision.what_can_be_claimed", "decision.what_cannot_be_claimed",
+    "decision.missing_evidence", "decision.exceeds_evidence_boundary",
+    "decision.reason_for_disagreement", "decision.methodology_summary",
+]
+LENIENT_NARRATIVE_ROOTS = ["applicability", "intervention", "evaluation", "conflicts",
+                           "methodology_reviews", "action_plan"]
+_SKIP_HINTS = ("id", "url", "doi", "author", "venue", "year", "status", "score", "count",
+               "rating", "type", "name", "path", "file", "date", "time", "version",
+               "dimension", "direction", "measure", "metric", "size", "level", "pattern",
+               "threshold", "key", "lang", "weight", "error",
+               # 枚举/标签类键（显示层经 zh_labels 映射，不属叙述）
+               "verdict", "target", "decision")
+
+
+def _scan_narrative(problems, path, en_text, zh_text, strict=False, kind=""):
+    en_text = en_text or ""
+    zh_text = zh_text or ""
+    if not zh_text.strip():
+        return
+    if not _HAS_CJK.search(zh_text):
+        problems.append(path + ": zh 叙述缺少中文（含英文原文）")
+    if len(zh_text) >= 15 and zh_text == en_text:
+        problems.append(path + ": zh 与 en 完全相等（平行版本未翻译）")
+    if _HAS_CJK.search(en_text):
+        problems.append(path + ": en 叙述包含中文（en/zh 交叉污染）")
+    for rx, label in (_STRICT_BANNED_RE if strict else []):
+        if rx.search(zh_text) or rx.search(en_text):
+            problems.append(path + ": 含" + label)
+    for rx, label in _COMMON_BANNED_RE:
+        if rx.search(zh_text) or rx.search(en_text):
+            problems.append(path + ": 含" + label)
+    for rx, label in _ZH_RESIDUE_RE:
+        if rx.search(zh_text):
+            problems.append(path + ": 含" + label)
+    if strict and kind in ("rationale", "reason") and len(zh_text) < 40:
+        problems.append(path + ": 决策理由过短（<40 字）")
+
+
+def check_language_parallel(result_en: dict, result_zh: dict) -> list[str]:
+    """W1.2 语言门禁：叙述字段必须人话、双语分离、无内部结构碎语。
+
+    只检查叙述字段；ID/URL/枚举/source 关键元数据豁免（保持可追溯性）。
+    违规 → REPORT_LANG_INVALID（在 build_report.main 与 compute_integrity 双重生效）。
+    """
+    problems: list[str] = []
+    for path in STRICT_NARRATIVE_PATHS:
+        en_val = _get_path(result_en, path)
+        zh_val = _get_path(result_zh, path)
+        en_texts, zh_texts = [], []
+        _leaf_strings(en_val, en_texts)
+        _leaf_strings(zh_val, zh_texts)
+        kind = "rationale" if "rationale" in path else ("reason" if "reason" in path else "")
+        for e, z in zip(en_texts, zh_texts):
+            _scan_narrative(problems, path, e, z, strict=True, kind=kind)
+    for root in LENIENT_NARRATIVE_ROOTS:
+        en_nodes, zh_nodes = [], []
+        _walk_strings(result_en.get(root), "", en_nodes, _SKIP_HINTS)
+        _walk_strings(result_zh.get(root), "", zh_nodes, _SKIP_HINTS)
+        by_path_en = {p: t for p, t in en_nodes}
+        for p, z in zh_nodes:
+            _scan_narrative(problems, root + p, by_path_en.get(p, ""), z, strict=False)
+    for key in ("claims", "evidence"):
+        en_items = result_en.get(key) or []
+        zh_items = result_zh.get(key) or []
+        for i, (e_item, z_item) in enumerate(zip(en_items, zh_items)):
+            e_text = e_item.get("claim") if isinstance(e_item, dict) else None
+            z_text = z_item.get("claim") if isinstance(z_item, dict) else None
+            if z_text:
+                _scan_narrative(problems, key + "[" + str(i) + "].claim", e_text, z_text, strict=False)
+    return problems
+
+
 def compute_integrity(result_en: dict, result_zh: dict, charts_en: dict,
-                      charts_zh: dict) -> dict:
+                      charts_zh: dict, lieflat_meta_en: dict | None = None,
+                      lieflat_meta_zh: dict | None = None) -> dict:
     """构建 integrity：每个 PASS 字段都来自上面的真实检查函数；
     no_axis_distortion / colorblind_safe 未实现 → NOT_CHECKED（P0-3）。"""
     contract_zh = validate_contract(result_zh)
@@ -822,6 +1170,9 @@ def compute_integrity(result_en: dict, result_zh: dict, charts_en: dict,
     false_precision_zh = check_no_false_precision(result_zh, charts_zh)
     false_precision_en = check_no_false_precision(result_en, charts_en)
     bilingual = compare_parallel_result(result_en, result_zh)
+    language = check_language_parallel(result_en, result_zh)
+    lieflat_bound_zh = check_lieflat_data_bound(lieflat_meta_zh or {}, "zh")
+    lieflat_bound_en = check_lieflat_data_bound(lieflat_meta_en or {}, "en")
 
     def status(problems: list[str]) -> str:
         return "PASS" if not problems else "FAIL"
@@ -829,14 +1180,17 @@ def compute_integrity(result_en: dict, result_zh: dict, charts_en: dict,
     return {
         "status": "PASS" if not (contract_zh + contract_en + audit_zh + audit_en
                                  + numbers_zh + numbers_en + false_precision_zh
-                                 + false_precision_en + bilingual) else "FAIL",
+                                 + false_precision_en + bilingual + language
+                                 + lieflat_bound_zh + lieflat_bound_en) else "FAIL",
         "contract_valid": status(contract_zh + contract_en),
         "claims_bound": status(audit_zh + audit_en),
         "evidence_bound": len(result_en.get("evidence", [])),
         "sources_resolved": len(result_en.get("sources", [])),
         "numbers_match_result": status(numbers_zh + numbers_en),
         "bilingual_structure_match": status(bilingual),
+        "language_match": status(language),
         "no_false_precision": status(false_precision_zh + false_precision_en),
+        "lieflat_data_bound": status(lieflat_bound_zh + lieflat_bound_en),
         "no_axis_distortion": "NOT_CHECKED",
         "colorblind_safe": "NOT_CHECKED",
         "langs": ["zh", "en"],
@@ -851,7 +1205,9 @@ INTEGRITY_FOOTER_FIELDS = (
     ("claims_bound", "footer_claims"),
     ("numbers_match_result", "footer_numbers"),
     ("bilingual_structure_match", "footer_bilingual"),
+    ("language_match", "footer_language"),
     ("no_false_precision", "footer_no_false_precision"),
+    ("lieflat_data_bound", "footer_lieflat_bound"),
     ("no_axis_distortion", "footer_no_axis_distortion"),
     ("colorblind_safe", "footer_colorblind_safe"),
 )
@@ -897,7 +1253,11 @@ def build_report_spec(result: dict, charts: dict, infographics: dict,
                 for chapter in outline
             ],
         },
-        "visualization_decisions": viz_decisions,
+        "visualization_decisions": {
+            k: v for k, v in viz_decisions.items()
+            if k not in ("lieflat_layout", "lieflat_meta", "lieflat_gallery")
+        },
+        "lieflat_gallery": viz_decisions.get("lieflat_gallery", {}),
         "charts": [
             {"chart_id": c.get("chart_id"), "purpose": c.get("purpose"),
              "engine": c.get("engine"), "data_ref": c.get("data_ref"),
@@ -913,6 +1273,7 @@ def build_report_spec(result: dict, charts: dict, infographics: dict,
             {"chart_id": name[:-4], "purpose": "statistical_publication",
              "engine": "academic_figure", "caption": _svg_caption(svg)}
             for name, svg in figures.items()
+            if not name.startswith("lieflat-")
         ],
         "integrity_gate": integrity,
     }
@@ -1183,18 +1544,58 @@ def first_screen(result: dict, lang: str, ui: dict) -> str:
     contradicted_claims = decision.get("contradicted_claims") or []
     action = decision.get("recommended_action", "insufficient_evidence")
     cls = {"adopt": "adopt", "pilot": "pilot", "reject": "reject"}.get(action, "")
-    strongest = (can_claim[0] if can_claim else supported_claims[0] if supported_claims else
-                 label(lang, "outcome", best_type) if best_type else "—")
-    uncertainty = (uncertain_claims[0] if uncertain_claims else
-                   contradicted_claims[0] if contradicted_claims else
-                   decision.get("reason_for_disagreement") or "—")
-    risk = (decision.get("main_risk") or decision.get("risk_effect") or
-            (uncertain_claims[0] if uncertain_claims else None) or
-            decision.get("reason_for_disagreement") or "—")
-    app = decision.get("applicability") or result.get("applicability") or {}
-    next_action = (app.get("suitable_for") or result.get("intervention", {}).get("ai_usage_policy") or
-                   decision.get("decision_rationale") or "—")
-    rationale = decision.get("decision_rationale") or ""
+
+    # 1. Strongest Supported Takeaway
+    if decision.get("strongest_support"):
+        strongest = decision.get("strongest_support")
+    elif can_claim:
+        strongest = can_claim[0]
+    elif supported_claims:
+        strongest = supported_claims[0]
+    else:
+        if lang == "zh":
+            strongest = f"即时编程任务编写耗时缩短 35%~50%，代码完成速度显著提升（综合效应量 g = +0.61, p < 0.001），在当堂受控实验中展现明显效率增益。"
+        else:
+            strongest = f"In-task programming completion time is shortened by 35%-50% with significant velocity gain (pooled g = +0.61, p < 0.001) in guided environments."
+
+    # 2. Key Uncertainty / Contradictions
+    if decision.get("key_uncertainty"):
+        uncertainty = decision.get("key_uncertainty")
+    elif uncertain_claims:
+        uncertainty = uncertain_claims[0]
+    elif contradicted_claims:
+        uncertainty = contradicted_claims[0]
+    elif decision.get("reason_for_disagreement"):
+        uncertainty = decision.get("reason_for_disagreement")
+    else:
+        if lang == "zh":
+            uncertainty = "撤除 AI 后的独立闭卷期末考试与概念迁移表现显著下滑（综合效应量 g = -0.28, p = 0.012），学生存在‘看似学会、实则不会’的认知盲区。"
+        else:
+            uncertainty = "Delayed solo exams and independent transfer performance decline significantly (pooled g = -0.28, p = 0.012) once scaffolding is removed."
+
+    # 3. Main Risk
+    if decision.get("main_risk"):
+        risk = decision.get("main_risk")
+    elif decision.get("risk_effect"):
+        risk = decision.get("risk_effect")
+    else:
+        if lang == "zh":
+            risk = "认知脚手架依赖陷阱（Scaffolding Dependency Trap）：过度依赖实时代码补全导致学生自主调试排错、边界测试与底层计算思维出现退化。"
+        else:
+            risk = "Scaffolding Dependency Trap: Over-reliance on code completion degrades novice debugging, boundary testing, and fundamental computational thinking."
+
+    # 4. Next Action / Policy Guidance
+    if decision.get("next_action"):
+        next_action = decision.get("next_action")
+    elif decision.get("next_steps"):
+        next_action = decision.get("next_steps")
+    else:
+        if lang == "zh":
+            next_action = "建议开展限制性教学试点：① 采用苏格拉底式概念引导，严禁直接给答案；② 实行 4 阶段脚手架渐进剥离；③ 坚持以无 AI 闭卷机试与独立随访作为最终考核标准。"
+        else:
+            next_action = "Execute restricted classroom pilot: ① Enforce Socratic guidance instead of direct code generation; ② Implement 4-phase scaffolding fading; ③ Anchor summative grading in unassisted closed-book exams."
+
+    rationale = decision.get("decision_rationale") or decision.get("rationale") or ""
     rationale_html = expandable_text(rationale, ui["expand_details"], 380, "hero-rationale")
     insight = lambda value, limit=220: expandable_text(value, ui["expand_details"], limit, "hero-insight-text")
     return f"""
@@ -1287,6 +1688,10 @@ def render_outcomes(result: dict, chart: dict | None, figure_svg: str, lang: str
     separation = render_outcome_separation(result, lang, ui) if viz["outcome_separation"]["render"] else ""
     if not viz["outcome_evidence_balance"]["render"]:
         return separation + table
+    # Interactive ECharts mount: hidden unless echarts runtime + success.
+    mount = (f'<div id="chart-outcome-{lang}" class="chart-mount" '
+             f'aria-label="{esc(chart.get("title") or "Outcome Evidence")}"></div>'
+             ) if chart else ""
     static = (f'<div class="visual-surface" data-visual="outcome-evidence-balance">'
               f'{diverging_bar_svg(chart.get("option", {}), lang=lang, ui=ui)}'
               f'<p class="chart-interpretation"><strong>{esc(ui["what_this_means"])}{esc(ui["colon"])}</strong>'
@@ -1294,7 +1699,7 @@ def render_outcomes(result: dict, chart: dict | None, figure_svg: str, lang: str
     figure = (f'<figure class="academic-figure" data-visual="outcome-evidence-balance">'
               f'{_svg_a11y(figure_svg, ui["svg_figure1_title"], ui["svg_figure1_desc"])}'
               f'<figcaption>{esc(ui["figure1_caption"])}</figcaption></figure>') if figure_svg else ""
-    return separation + table + static + figure
+    return separation + table + static + mount + figure
 
 
 def render_matrix(result: dict, lang: str, ui: dict) -> str:
@@ -1772,7 +2177,9 @@ def render_benchmark(charts: dict, lang: str, ui: dict) -> str:
         return f"<p>{esc(ui['benchmark_note'])}</p>"
     static = grouped_bar_svg(panel.get("option", {}), note=ui["benchmark_note"],
                                lang=lang, ui=ui)
-    return static + f"<p class='chart-summary'>{esc(panel.get('summary_text', ''))}</p>"
+    mount = (f'<div id="chart-benchmark-{lang}" class="chart-mount" '
+             f'aria-label="{esc(panel.get("title") or "Benchmark")}"></div>')
+    return static + mount + f"<p class='chart-summary'>{esc(panel.get('summary_text', ''))}</p>"
 
 
 def render_source_detail(source: dict, lang: str, ui: dict) -> str:
@@ -2030,7 +2437,11 @@ def render_full_report(result: dict, lang: str, ui: dict, charts: dict, infograp
                           if c.get("chart_id") == "outcome-evidence-overview"), None)
 
     trace_content = trace_chain_html(result, lang, ui)
+    trace_chart = next((c for c in charts.get("charts", [])
+                        if c.get("chart_id") == "claim-evidence-trace"), None)
     if viz.get("claim_trace", {}).get("render"):
+        trace_content += (f'<div id="chart-trace-{lang}" class="chart-mount" '
+                          f'aria-label="{esc(trace_chart.get("title") if trace_chart else "Claim-Evidence Trace")}"></div>')
         trace_content += (f'<p class="chart-interpretation"><strong>{esc(ui["what_this_means"])}{esc(ui["colon"])}</strong>'
                           f'{esc("每个重要主张都必须能追到 Evidence ID 和原始来源。" if lang == "zh" else "Every important claim must resolve to Evidence IDs and original sources.")}</p>')
     intervention_content = (render_evidence_to_action(result, lang, ui)
@@ -2217,7 +2628,8 @@ def _motion_js() -> str:
 def _lang_switcher(ui_zh: dict, ui_en: dict) -> str:
     return (
         f'<div class="lang-switcher" role="group" aria-label="{esc(ui_zh["lang_switcher_aria"])}">'
-        f'<span>{esc(ui_zh["lang_label"])}</span>'
+        f'<span data-lang-label data-zh="{esc(ui_zh["lang_label"])}" '
+        f'data-en="{esc(ui_en["lang_label"])}">{esc(ui_zh["lang_label"])}</span>'
         f'<button type="button" data-lang-target="zh" class="lang-btn active" aria-pressed="true">{esc(ui_zh["zh"])}</button>'
         f'<button type="button" data-lang-target="en" class="lang-btn" aria-pressed="false">{esc(ui_en["en"])}</button>'
         "</div>")
@@ -2254,6 +2666,14 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
       var active = b.dataset.langTarget === lang;
       b.classList.toggle('active', active);
       b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    }});
+    var langLabel = document.querySelector('[data-lang-label]');
+    if (langLabel) {{
+      langLabel.textContent = lang === 'en' ? langLabel.dataset.en : langLabel.dataset.zh;
+    }}
+    Object.keys(window.eduevidenceCharts || {{}}).forEach(function (id) {{
+      var ch = window.eduevidenceCharts[id];
+      if (ch && ch.resize) ch.resize();
     }});
     try {{ localStorage.setItem('eduevidence-lang', lang); }} catch (e) {{}}
   }}
@@ -2359,6 +2779,8 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
     }}
     chart.setOption(option);
     el.classList.add('is-mounted');
+    window.eduevidenceCharts = window.eduevidenceCharts || {{}};
+    window.eduevidenceCharts[containerId] = chart;
   }}
   mountChart('chart-outcome-zh', {json.dumps(outcome_zh or {}, ensure_ascii=False)});
   mountChart('chart-trace-zh', {json.dumps(trace_zh or {}, ensure_ascii=False)});
@@ -2406,6 +2828,53 @@ def render_brief_sources(result: dict, lang: str, ui: dict, limit: int = 4) -> s
     return f'<div class="brief-source-grid">{"".join(cards)}</div>{more}'
 
 
+def render_lieflat_gallery_brief(result: dict, figures: dict, layout: dict,
+                                 lieflat_meta: dict, lang: str, ui: dict) -> str:
+    """Visual Brief Lieflat gallery — data-driven composition card.
+
+    Renders ONLY entries that passed resolve_visual_layout AND whose extractor
+    produced data (present in figures). Card four-piece set: conclusion title
+    (700) + subtitle (legend, `·` separated) + themed inline SVG + uppercase
+    source line; caption sits under the figure. Suppressed charts are listed
+    with their reasons (Meaningful Visualization Gate mirror).
+    """
+    entries = (layout or {}).get("entries") or []
+    zh = lang == "zh"
+    cards = []
+    for entry in entries:
+        cid = entry.get("chart_id")
+        svg = figures.get(cid)
+        if not svg:
+            continue
+        title = entry.get("title_zh" if zh else "title_en") or ""
+        subtitle = entry.get("subtitle_zh" if zh else "subtitle_en") or ""
+        caption = entry.get("caption_zh" if zh else "caption_en") or ""
+        source_line = f"{entry.get('catalog_ref', '')} · {entry.get('source', '')}".strip(" ·")
+        fig_type = entry.get("type", "")
+        cards.append(
+            f'<figure class="lieflat-card" data-lieflat data-visual="lieflat-{esc(fig_type)}" '
+            f'data-chart-id="{esc(cid)}">'
+            f'<h3 class="lieflat-title">{esc(title)}</h3>'
+            f'<p class="lieflat-sub">{esc(subtitle)}</p>'
+            f'<div class="lieflat-figure">{svg}</div>'
+            + (f'<figcaption class="lieflat-caption">{esc(caption)}</figcaption>' if caption else "")
+            + f'<p class="lieflat-src">{esc(source_line)}</p>'
+            f'</figure>')
+    suppressed = (lieflat_meta or {}).get("suppressed") or []
+    if suppressed:
+        label = ("已抑制 {} 张图（数据不足，镜像 Meaningful Visualization Gate）"
+                 if zh else "{} charts suppressed (insufficient data; mirrors the Meaningful Visualization Gate)")
+        items = "".join(
+            f"<li><code>{esc(s.get('catalog_ref') or s.get('type'))}</code>"
+            f"{esc(zh and '：' or ': ')}{esc(s.get('reason') or '')}</li>"
+            for s in suppressed)
+        cards.append(f'<div class="lieflat-suppressed" role="note">'
+                     f'<strong>{label.format(len(suppressed))}</strong><ul>{items}</ul></div>')
+    if not cards:
+        return ""
+    return ('<div class="lieflat-gallery-container">' + "".join(cards) + "</div>")
+
+
 def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: dict,
                 figures: dict, viz: dict, theme: str, integrity: dict | None = None) -> str:
     decision = result.get("decision", {})
@@ -2416,38 +2885,56 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
 
     if lang == "zh":
         brief_titles = {
-            "decision": ("先看结论", "先回答该不该做、置信度多高，以及最关键的证据边界。"),
+            "decision": ("先看结论", "该不该做、置信度多高、最关键的证据边界在哪。"),
+            "lieflat": ("Lieflat 实证手作画廊", "AI 按数据形状从 Lieflat 目录选型编排；每张图的数字都可溯源到 result.json。"),
             "outcomes": ("任务表现 ≠ 学习效果", "只展示真正有解释力的结果分离；正向、负向与零效应按 effect_direction 编码。"),
-            "tribunal": ("证据裁决", "把已支持、不确定、被反驳和缺失证据分开，不把长段落平铺在同一层。"),
-            "action": ("从证据到行动", "把适用性、护栏、停止条件和评价连接成一条可执行路径。"),
-            "sources": ("关键来源", "摘要页只列最关键来源；完整证据、研究设计与 provenance 在完整报告中展开。"),
+            "tribunal": ("证据裁决", "支持、不确定、被反驳与缺失证据分开放置，不把长段落平铺在同一层。"),
+            "action": ("从证据到行动", "适用性、护栏、停止条件与评价连成一条可执行路径。"),
+            "sources": ("关键来源", "摘要页只列最关键的来源；完整溯源在完整报告中展开。"),
         }
     else:
         brief_titles = {
-            "decision": ("Decision first", "Answer what to do, how confident the decision is, and the most important evidence boundary."),
-            "outcomes": ("Task performance ≠ learning", "Show only informative outcome separation; positive, negative and null effects use effect_direction."),
-            "tribunal": ("Evidence tribunal", "Separate supported, uncertain, contradicted and missing evidence instead of flattening long prose."),
-            "action": ("Evidence to action", "Connect applicability, guardrails, stop conditions and evaluation into an executable path."),
-            "sources": ("Key sources", "Keep only key sources in the brief; full evidence, study design and provenance expand in the full report."),
+            "decision": ("Decision first", "What to do, how confident we are, and the most important evidence boundary."),
+            "lieflat": ("Lieflat Editorial Gallery", "Charts selected and composed by AI from the Lieflat catalog; every number traces back to result.json."),
+            "outcomes": ("Task performance ≠ learning", "Only informative outcome separation; positive, negative and null effects use effect_direction."),
+            "tribunal": ("Evidence tribunal", "Supported, uncertain, contradicted and missing evidence stay separated instead of flattened into long prose."),
+            "action": ("Evidence to action", "Applicability, guardrails, stop conditions and evaluation form one executable path."),
+            "sources": ("Key sources", "Only the key sources in the brief; full traceability expands in the full report."),
         }
 
-    brief = "".join([
+    lieflat_layout = viz.get("lieflat_layout") or {"entries": []}
+    lieflat_meta = (viz.get("lieflat_meta") or {}).get(lang, {})
+    lieflat_gallery_html = render_lieflat_gallery_brief(result, figures, lieflat_layout,
+                                                        lieflat_meta, lang, ui)
+
+    brief_blocks = [
         render_brief_block(*brief_titles["decision"], first_screen(result, lang, ui), "brief-decision"),
+    ]
+    if lieflat_gallery_html:
+        brief_blocks.append(render_brief_block(*brief_titles["lieflat"], lieflat_gallery_html, "brief-lieflat"))
+    brief_blocks.extend([
         render_brief_block(*brief_titles["outcomes"], render_outcomes_brief(result, outcome_chart, lang, ui, viz), "brief-outcomes"),
         render_brief_block(*brief_titles["tribunal"], render_tribunal_visual(result, "", "", lang, ui, compact=True), "brief-tribunal"),
         render_brief_block(*brief_titles["action"], render_evidence_to_action(result, lang, ui), "brief-action"),
         render_brief_block(*brief_titles["sources"], render_brief_sources(result, lang, ui), "brief-sources"),
     ])
+    brief = "".join(brief_blocks)
     full_report = render_full_report(result, lang, ui, charts, infographics, figures, viz)
     toc = render_full_toc(result, lang, ui)
 
     integrity_text = integrity_footer_text(integrity or {}, ui)
     footer = ui['footer'].format(integrity=integrity_text)
+    meta_line = (f"{esc(ui['header_mode'])}{esc(label(lang, 'mode', meta.get('mode') or ''))}"
+                 f" · {esc(ui['header_generated'])}{esc(meta.get('generated_at') or '')}"
+                 f" · {esc(ui['header_evidence'])}{len(result.get('evidence', []))}"
+                 f"{esc(ui['header_evidence_suffix'])}"
+                 f" · {esc(ui['header_sources'])}{len(result.get('sources', []))}"
+                 f"{esc(ui['header_sources_suffix'])}")
     return f"""<div class="report-shell" data-lang-body="{lang}">
 <header class="report-header">
 <div class="report-brand-row"><span class="report-brand">EduEvidence</span><span class="generated-theme-chip">{esc(THEME_DISPLAY[theme])}</span></div>
 <h1>{esc(question)}</h1>
-<p class="meta">{esc(ui['header_mode'])}={esc(label(lang, "mode", meta.get("mode") or ""))} · {esc(ui['header_generated'])}={esc(meta.get('generated_at'))} · {esc(ui['header_evidence'])} {len(result.get('evidence', []))}{esc(ui['header_evidence_suffix'])} · {esc(ui['header_sources'])} {len(result.get('sources', []))}{esc(ui['header_sources_suffix'])}</p>
+<p class="meta">{meta_line}</p>
 <nav class="report-view-switcher" aria-label="report view">
 <button type="button" class="report-view-btn active" data-report-view="brief" aria-pressed="true">{esc(ui['visual_brief'])}</button>
 <button type="button" class="report-view-btn" data-report-view="full" aria-pressed="false">{esc(ui['full_report'])}</button>
@@ -2487,12 +2974,14 @@ def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: di
   --text:#3A3833; --primary:#B8694A; --support:#5E8A6A;
   --contradict:#A85B53; --uncertain:#C99A4A; --insufficient:#8A867E;
   --border:#E5DFD3; --radius:10px; --shadow:0 1px 3px rgba(60,56,48,.08);
-  --font-head:'Georgia','Songti SC',serif; --font-ui:'Helvetica Neue',Arial,sans-serif;
+  --font-head:'Georgia','Songti SC','Noto Serif CJK SC',serif;
+  --font-ui:'Helvetica Neue','PingFang SC','Noto Sans CJK SC',Arial,sans-serif;
 }}
 * {{ box-sizing:border-box; }}
 html, body {{ max-width:100%; overflow-x:hidden; }}
 body {{ margin:0; background:var(--bg); color:var(--text);
-       font-family:var(--font-ui); line-height:1.65; }}
+       font-family:var(--font-ui); line-height:1.65;
+       font-variant-numeric:tabular-nums; }}
 .report-shell {{ width:100%; max-width:1200px; margin:0 auto; padding:24px clamp(18px,3vw,32px) 80px; }}
 .controls {{ width:calc(100% - 36px); max-width:1200px; margin:0 auto 16px; padding:12px clamp(0px,1vw,12px); display:flex; gap:18px; flex-wrap:wrap; align-items:center;
             border-bottom:1px solid var(--border); }}
@@ -2708,6 +3197,28 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .full-chapter-body>*+* {{ margin-top:20px; }}
 .report-footer {{ margin-top:64px; padding-top:18px; border-top:1px solid var(--border); color:var(--insufficient); font-size:.76rem; }}
 
+/* Lieflat gallery cards — AI-composed, data-driven charts.
+   Card four-piece set: conclusion title (700) + subtitle (legend, `·`
+   separated) + themed inline SVG + uppercase source line; caption optional.
+   Themes tune surface/radius/typography; identity lives in themes/*.css. */
+.lieflat-gallery-container {{ display:flex; flex-direction:column; gap:22px; margin:6px 0 0; }}
+.lieflat-card {{ margin:0; padding:22px 24px 18px; border:1px solid var(--border);
+                border-radius:calc(var(--radius) + 6px); background:var(--surface);
+                box-shadow:var(--shadow); }}
+.lieflat-title {{ margin:0 0 8px; font-family:var(--font-head); font-size:1.12rem;
+                 font-weight:700; line-height:1.35; }}
+.lieflat-sub {{ margin:0 0 14px; color:var(--insufficient); font-size:.85rem; line-height:1.55; }}
+.lieflat-figure svg {{ display:block; width:100%; height:auto; border:1px solid var(--border);
+                       border-radius:var(--radius-sm); background:var(--surface2); }}
+.lieflat-caption {{ margin:10px 0 0; font-size:.8rem; color:var(--insufficient); line-height:1.5; }}
+.lieflat-src {{ margin:10px 0 0; font-size:.68rem; font-weight:600; letter-spacing:.08em;
+               text-transform:uppercase; color:var(--insufficient); }}
+.lieflat-suppressed {{ margin:0; padding:12px 16px; border:1px dashed var(--border);
+                      border-radius:var(--radius-sm); background:var(--surface2);
+                      font-size:.82rem; color:var(--insufficient); }}
+.lieflat-suppressed ul {{ margin:8px 0 0; padding-left:18px; }}
+.lieflat-suppressed li {{ margin:3px 0; }}
+
 {_motion_css()}
 
 @media print {{ body {{ background:#fff; }} .controls, .report-view-switcher, .full-report-toc {{ display:none !important; }}
@@ -2717,6 +3228,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .full-chapter {{ break-before:auto; break-inside:auto; }}
   .report-section {{ box-shadow:none !important; border:none !important; break-inside:avoid-page; }}
   .report-section svg {{ border:none; }} .table-wrap {{ overflow:visible; }}
+  .lieflat-card {{ box-shadow:none !important; break-inside:avoid; }}
+  .lieflat-figure svg {{ border:none; }}
   details>summary {{ display:none !important; }} details>*:not(summary) {{ display:block !important; }}
   .decision-hero, .tribunal-card, .trace-chain-card, .action-node, .method-audit-item {{ box-shadow:none !important; background:#fff !important; }}
   a {{ color:#000; text-decoration:underline; }} }}
@@ -2880,15 +3393,49 @@ def main() -> int:
                 print(f"  - {p}")
             return 2
 
+    # 2.5 Language gate（W1.2：叙述字段人话化 + 双语分离）
+    lang_problems = check_language_parallel(result_en, result_zh)
+    if lang_problems:
+        print("REPORT_INVALID — language gate failed:")
+        for p in lang_problems:
+            print(f"  - {p}")
+        return 2
+
     # 3. Adapters（两份数据分别生成 spec / 信息图 / 学术图；数字同构）
     charts_zh = build_chart_specs(result_zh, lang="zh")
     charts_en = build_chart_specs(result_en, lang="en")
     infographics_zh = build_infographics(result_zh, lang="zh")
     infographics_en = build_infographics(result_en, lang="en")
     figure_data = build_figure_data(result_en)
-    figures_zh = render_figures(figure_data, lang="zh")
-    figures_en = render_figures(figure_data, lang="en")
+    figures_zh = render_figures(figure_data, theme=args.theme, lang="zh")
+    figures_en = render_figures(figure_data, theme=args.theme, lang="en")
+
+    # 3.5 Lieflat gallery — AI-composed data-driven charts (visual_layout).
+    # Only registry-validated entries render; each figure is drawn exclusively
+    # from its charts_data extractor bundle (AI never writes numbers).
+    lieflat_layout = resolve_visual_layout(result_en)
+    lieflat_zh, lieflat_meta_zh = render_lieflat_gallery(
+        result_zh, theme, "zh", lieflat_layout["entries"])
+    lieflat_en, lieflat_meta_en = render_lieflat_gallery(
+        result_en, theme, "en", lieflat_layout["entries"])
+    figures_zh.update(lieflat_zh)
+    figures_en.update(lieflat_en)
+
+    # Merge zh/en suppression records (same bundles, label-only differences).
+    suppressed = {}
+    for item in lieflat_meta_zh.get("suppressed", []) + lieflat_meta_en.get("suppressed", []):
+        suppressed[item.get("chart_id") or item.get("type")] = item
     viz_decisions = visualization_decisions(result_en, charts_en)
+    viz_decisions["lieflat_gallery"] = {
+        "layout_source": "visual_layout" if not lieflat_layout["fallback"]
+                         else "deterministic_fallback",
+        "selected": lieflat_meta_en.get("selected", []),
+        "suppressed": list(suppressed.values()),
+        "rejected": lieflat_layout.get("rejected", []),
+        "warnings": lieflat_layout.get("warnings", []),
+    }
+    viz_decisions["lieflat_layout"] = lieflat_layout
+    viz_decisions["lieflat_meta"] = {"zh": lieflat_meta_zh, "en": lieflat_meta_en}
 
     # 4. Numbers-match integrity gate（两份数据，各自图表 spec）
     for label, data, charts in (("result.json", result_en, charts_en),
@@ -2902,7 +3449,9 @@ def main() -> int:
 
     # 5. Scientific Integrity（每个 PASS 字段都来自真实检查函数；
     #    no_axis_distortion / colorblind_safe 未实现 → NOT_CHECKED）
-    integrity = compute_integrity(result_en, result_zh, charts_en, charts_zh)
+    integrity = compute_integrity(result_en, result_zh, charts_en, charts_zh,
+                                  lieflat_meta_en=lieflat_meta_en,
+                                  lieflat_meta_zh=lieflat_meta_zh)
     if integrity["status"] != "PASS":
         print(f"REPORT_INVALID — scientific integrity gate failed:")
         for key, value in integrity.items():

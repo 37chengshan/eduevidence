@@ -62,9 +62,9 @@ critical_path: true
 
 ## 输出契约（必须遵守）
 
-你的产物 `evidence.jsonl`（每行一个 Evidence Object）必须通过 `schemas/evidence.schema.json` 校验（schema v1.1，stage `extract` 的 schema-gate，首次生成即必须合规）。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。缺失任何 mandatory 字段都会使该对象标记为 `UNSUPPORTED`。
+你的产物 `evidence.jsonl`（每行一个 Evidence Object）必须通过 `schemas/evidence.schema.json` 校验（V1 顶层契约，当前修订 1.1；图谱投射契约见 schemas/v2/evidence-link.schema.json，V2）。stage `extract` 的 schema-gate，首次生成即必须合规。schema 顶层 `additionalProperties: false`，未列出的字段一律放入 `extensions`。缺失任何 mandatory 字段都会使该对象标记为 `UNSUPPORTED`。
 
-**Required 字段（schema v1.1，缺失即 UNSUPPORTED/校验失败）**：`evidence_id`、`source_id`、`study_id`、`sample_id`、`claim_id`、`claim`、`outcome_type`、`relation_to_claim`、`effect_direction`、`source_location`。
+**Required 字段（schemas/evidence.schema.json 修订 1.1，缺失即 UNSUPPORTED/校验失败）**：`evidence_id`、`source_id`、`study_id`、`sample_id`、`claim_id`、`claim`、`outcome_type`、`relation_to_claim`、`effect_direction`、`source_location`。
 
 **枚举值表（禁止自由文本冒充枚举）**：
 
@@ -89,7 +89,7 @@ critical_path: true
 - `study_type` 只能取上表 9 个枚举值；`"controlled_experiment"` 这类非枚举值一律禁止（→ 映射为 `quasi_experimental`）；
 - `sample_size` 必须是整数或 `null`（≥0），禁止字符串（如 `"123 人"`）；
 - `quality_dimensions` 的 `D1_study_design`–`D5_directness` 各为 0/1/2 整数；
-- `claim_id` 是 schema v1.1 的顶层必填字段（FIX-2 曾因缺失移入 extensions，现已升级为正式字段），每条 evidence 必须绑定 `C-xxx`。
+- `claim_id` 是 schemas/evidence.schema.json（修订 1.1）的顶层必填字段（FIX-2 曾因缺失移入 extensions，现已升级为正式字段），每条 evidence 必须绑定 `C-xxx`。
 
 ## 红线
 
@@ -99,7 +99,7 @@ critical_path: true
 
 ## 输出格式
 
-返回 evidence.jsonl；最后以 `FINAL_ANSWER: <E 条数 + 各 outcome 分布 + UNSUPPORTED 数，≤3 行>` 结尾。
+返回 evidence.jsonl（唯一输出：必须通过 schema 校验的合法 JSON；输出结束后严禁追加任何文本尾巴（历史摘要行协议已废除）——摘要信息一律放入 JSON 字段（如 summary / rationale / extensions），标准 JSON 解析器可直接读取）
 
 ## 卡住升级
 

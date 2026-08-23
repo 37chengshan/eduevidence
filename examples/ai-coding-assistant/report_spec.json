@@ -99,6 +99,41 @@
       "reason": "suppressed: absent, simulated, or fewer than two baselines"
     }
   },
+  "lieflat_gallery": {
+    "layout_source": "deterministic_fallback",
+    "selected": [
+      {
+        "chart_id": "lieflat-tick-rows.svg",
+        "type": "tick_rows",
+        "catalog_ref": "F5 Tick Rows",
+        "source": "outcomes.direction_counts"
+      }
+    ],
+    "suppressed": [
+      {
+        "chart_id": "lieflat-forest-plot.svg",
+        "type": "forest_plot",
+        "catalog_ref": "FOREST-PLOT (publication figure)",
+        "reason": "fewer than 3 studies with numeric effect size (got 0)"
+      },
+      {
+        "chart_id": "lieflat-dot-cascade.svg",
+        "type": "dot_cascade",
+        "catalog_ref": "L2 Dot Cascade",
+        "reason": "fewer than 3 studies with numeric effect size (got 0)"
+      },
+      {
+        "chart_id": "lieflat-bubble-almanac.svg",
+        "type": "bubble_almanac",
+        "catalog_ref": "L9 Bubble Almanac",
+        "reason": "fewer than 2 distinct publication years (got 0)"
+      }
+    ],
+    "rejected": [],
+    "warnings": [
+      "visual_layout missing or fully invalid — using deterministic safe combination (forest_plot + dot_cascade + bubble_almanac + tick_rows)"
+    ]
+  },
   "charts": [
     {
       "chart_id": "outcome-evidence-overview",
@@ -169,7 +204,9 @@
     "sources_resolved": 7,
     "numbers_match_result": "PASS",
     "bilingual_structure_match": "PASS",
+    "language_match": "PASS",
     "no_false_precision": "PASS",
+    "lieflat_data_bound": "PASS",
     "no_axis_distortion": "NOT_CHECKED",
     "colorblind_safe": "NOT_CHECKED",
     "langs": [

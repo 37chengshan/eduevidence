@@ -35,27 +35,54 @@ CLI_PROBES: dict[str, list[str]] = {
 }
 
 # 各系列"最新模型"显示顺序（按系列去重，只列最新）
+# 档位：旗舰（FLAGSHIP）= 复杂推理/裁决；基础（BASE）= 检索/抽取/结构化
 SERIES_PRIORITY = [
-    "gpt-5.6-sol", "gpt-5.6-luna", "gpt-5.6-terra",   # OpenAI 系
-    "deepseek-v4-pro", "deepseek-v4-flash",           # DeepSeek 系
-    "glm-5.2", "glm-5.1",                             # GLM 系
-    "kimi-k2.7", "kimi-k3",                           # Kimi 系
-    "qwen3.8-max", "qwen3.7-plus",                    # Qwen 系
-    "minimax-m3", "minimax-m2.7",                     # MiniMax 系
-    "grok-4.5",                                       # Grok 系
+    # OpenAI 系
+    "gpt-5.5", "gpt-5.6-sol", "gpt-5.6-luna", "gpt-5.6-terra",
+    # Anthropic 系
+    "claude-opus-5", "claude-fable-5", "claude-sonnet-5",
+    # DeepSeek 系
+    "deepseek-v4-pro", "deepseek-v4-flash", "ds-flash",
+    # GLM 系
+    "glm-5.3", "glm-5.2", "glm-5.1",
+    # Kimi 系
+    "kimi-k3", "kimi-k2.7",
+    # 其余
+    "qwen3.8-max", "qwen3.7-plus",
+    "minimax-m3", "minimax-m2.7",
+    "grok-4.5",
 ]
+
+# 档位标注（展示用；不写死路由，路由以用户授权为准）
+MODEL_TIERS = {
+    # 旗舰（strong / independent）
+    "gpt-5.5": "FLAGSHIP", "gpt-5.6-sol": "FLAGSHIP",
+    "claude-opus-5": "FLAGSHIP", "claude-fable-5": "FLAGSHIP",
+    "glm-5.3": "FLAGSHIP", "deepseek-v4-pro": "FLAGSHIP", "kimi-k3": "FLAGSHIP",
+    # 基础（fast）
+    "ds-flash": "BASE", "deepseek-v4-flash": "BASE",
+    "gpt-5.6-luna": "BASE", "gpt-5.6-terra": "BASE",
+    "claude-sonnet-5": "BASE", "glm-5.2": "BASE", "glm-5.1": "BASE",
+    "kimi-k2.7": "BASE",
+}
 
 # 模型默认思考等级（主会话内置知识，无需用户确认）
 THINKING_LEVELS = {
     "deepseek-v4-flash": "max",
     "deepseek-v4-pro": "max",
+    "ds-flash": "max",
+    "gpt-5.5": "high",
     "gpt-5.6-sol": "high",
     "gpt-5.6-luna": "high",
     "gpt-5.6-terra": "high",
+    "claude-opus-5": "high",
+    "claude-fable-5": "high",
+    "claude-sonnet-5": "high",
+    "glm-5.3": "high",
     "glm-5.2": "high",
     "glm-5.1": "high",
-    "kimi-k2.7": "high",
     "kimi-k3": "high",
+    "kimi-k2.7": "high",
     "qwen3.8-max": "high",
     "qwen3.7-plus": "high",
     "minimax-m3": "high",

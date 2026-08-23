@@ -67,6 +67,8 @@ A chapter may include a chart or semantic visual only when it adds information b
 
 Outcome visuals must encode `effect_direction` (`positive / negative / null`), not `relation_to_claim`. Evidence can support a claim that an intervention caused a harmful outcome; therefore `support` is not equivalent to a positive effect.
 
+**Lieflat gallery insertion** goes through the registry (`references/lieflat-composition.md`): the AI writes `visual_layout` entries (type + catalog ref + bilingual copy + source + params), and the renderer draws each entry from its extractor bundle only. Unregistered types are rejected, insufficient data suppresses the chart with a recorded reason, and a missing/invalid layout falls back to the deterministic safe combination (forest_plot + dot_cascade + bubble_almanac + tick_rows).
+
 ## Progressive disclosure
 
 Evidence, methodology audit items, tribunal claims and sources default to compact summaries and expose full traceable detail through accessible native `<details>/<summary>` controls. Print mode must not lose the hidden evidence content.

@@ -200,3 +200,76 @@ def test_applicability_labels_en(tmp_path, monkeypatch):
     sec = html_mod.unescape(re.search(r'<section id="full-\d+-action-en".*?</section>', en, re.S).group(0))
     assert "Not suitable for" in sec
     assert app.get("not_suitable_for") in sec
+
+
+# ---------------------------------------------------------------------------
+# Lieflat gallery + motion（数据驱动组合 + mono-tokens reveal）
+# ---------------------------------------------------------------------------
+
+def test_lieflat_gallery_cards_present(tmp_path, monkeypatch):
+    """Brief 画廊卡片：data-lieflat / data-visual / data-chart-id / 四件套。"""
+    _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
+    zh = re.search(r'<div class="report-shell" data-lang-body="zh">(.*?)\n</div>\n<script>',
+                   html, re.S).group(1)
+    assert 'class="lieflat-card" data-lieflat' in zh
+    assert 'data-visual="lieflat-' in zh
+    assert 'data-chart-id="lieflat-' in zh
+    assert 'class="lieflat-title"' in zh
+    assert 'class="lieflat-sub"' in zh
+    assert 'class="lieflat-src"' in zh
+    assert 'class="lieflat-suppressed"' in zh  # 稀疏夹具必有抑制说明
+
+
+def test_lieflat_motion_css_single_definition(tmp_path, monkeypatch):
+    """lf-pop/fade/draw 动画定义只出现一次；reduced-motion 与 print 全关。"""
+    _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
+    assert html.count("@keyframes eduevidenceLfPop") == 1
+    assert html.count("@keyframes eduevidenceLfFade") == 1
+    assert html.count("@keyframes eduevidenceLfDraw") == 1
+    assert ".js-lf [data-lieflat].is-live .lf-pop" in html
+    assert "cubic-bezier(.2,.7,.3,1.3)" in html
+    assert "@media (prefers-reduced-motion:reduce)" in html
+    assert "stroke-dasharray:none" in html  # reduced-motion 关闭描线动画
+
+
+def test_lieflat_motion_js_reveal_contract(tmp_path, monkeypatch):
+    """motion.js：threshold .3 滚入一次、点击重播、timer 清理、CSS.escape。"""
+    _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
+    js = re.search(r"<script>\n(/\* EduEvidence Motion Template.*?)</script>", html, re.S)
+    assert js, "motion template script not found"
+    body = js.group(1)
+    assert "threshold:.3" in body
+    assert "replayLieflat" in body
+    assert "clearLfTimers" in body
+    assert "CSS.escape" in body
+    assert "addEventListener('click'" in body
+    assert "classList.remove('is-live')" in body
+
+
+def test_lieflat_no_hardcoded_demo_in_html(tmp_path, monkeypatch):
+    """渲染 HTML 不含旧硬编码演示值（数据驱动改造的核心验收）。"""
+    _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
+    for demo in ("课后做题卡壳", "Bastani '25", "Ninety days as a barcode",
+                 "VanLehn '25", "苏格拉底反问"):
+        assert demo not in html
+
+
+def test_footer_shows_lieflat_bound(tmp_path, monkeypatch):
+    _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
+    assert "Lieflat 数据溯源 PASS" in html
+    assert "Lieflat Data Bound PASS" in html
+
+
+def test_header_meta_normalized_copy(tmp_path, monkeypatch):
+    """表头 meta 行：中文「模式：… · 生成时间：… · 证据 N 条 · 来源 N 个」，英文对应。"""
+    _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
+    zh = re.search(r'<div class="report-shell" data-lang-body="zh">(.*?)\n</div>\n<script>',
+                   html, re.S).group(1)
+    m = re.search(r'<p class="meta">(.*?)</p>', zh, re.S)
+    assert m and "模式：" in m.group(1) and "生成时间：" in m.group(1)
+    assert "证据 13 条" in m.group(1) and "来源 " in m.group(1) and " 个" in m.group(1)
+    en = _en_shell(html)
+    m2 = re.search(r'<p class="meta">(.*?)</p>', en, re.S)
+    assert m2 and "Mode: " in m2.group(1) and "Generated: " in m2.group(1)
+    assert "Evidence: 13" in m2.group(1) and "Sources: " in m2.group(1)
+    assert "模式：" not in m2.group(1)

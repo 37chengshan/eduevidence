@@ -86,3 +86,19 @@ def test_benchmark_figures_present():
     figures = render_figures(data, lang="zh")
     assert "benchmark-citation-support.svg" in figures
     assert "benchmark-quality-cost.svg" in figures
+
+
+def test_lieflat_renders_only_validated_layout_entries():
+    """Lieflat 部分只渲染 resolve_visual_layout 校验通过的条目，键用条目 chart_id。"""
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "visualization" / "eduevidence-report" / "scripts"))
+    import build_report as _br
+    import build_figures as _bf
+    result = _load("examples/ai-coding-assistant-50/result.json")
+    layout = _br.resolve_visual_layout(result)
+    figures, meta = _bf.render_lieflat_gallery(result, "claude", "zh", layout["entries"])
+    selected_ids = [s["chart_id"] for s in meta["selected"]]
+    assert set(figures.keys()) == set(selected_ids)
+    for cid, svg in figures.items():
+        assert svg.startswith("<svg"), cid
+        assert 'class="lf-pop"' in svg or 'class="lf-fade"' in svg or 'class="lf-draw"' in svg

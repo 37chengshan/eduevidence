@@ -14,7 +14,7 @@ REPO_URL="https://github.com/37chengshan/eduevidence"
 SKILL_NAME="eduevidence"
 # Skill 本体（运行协议 + 确定性脚本 + 检索/集成层 + 展示层）。
 # retrieval/ 与 integrations/ 会被 scripts/ 直接 import；visualization/ 负责最终 HTML 渲染。
-SKILL_PAYLOAD=(SKILL.md engine skill references schemas scripts retrieval integrations visualization)
+SKILL_PAYLOAD=(SKILL.md engine domains skill references schemas scripts retrieval integrations visualization)
 # Agent MCP 声明文件：安装完成后写入 AGENT_MCP_INSTALLED=1，供
 # integrations/agent_mcp.py 作为 env 后备来源读取（真实环境变量优先于该文件）。
 AGENT_MCP_ENV_FILE="${AGENT_MCP_ENV_FILE:-$HOME/.eduevidence/env}"

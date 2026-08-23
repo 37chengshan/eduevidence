@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v5/adapter-envelope.schema.json",
+  "title": "AdapterEnvelope",
+  "description": "Uniform envelope produced by the three zero-dependency visualization adapters (build_charts / build_infographics / build_figures). source_ref is a display alias only; source_sha256 is the provenance that pins the envelope to its exact result.json bytes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "adapter", "contract_version", "source_ref", "source_sha256", "locale", "data"
+  ],
+  "properties": {
+    "adapter": {
+      "type": "string",
+      "enum": ["charts", "infographics", "figures"]
+    },
+    "contract_version": { "type": "string", "const": "1.0" },
+    "source_ref": { "type": "string", "minLength": 1 },
+    "source_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "locale": { "type": "string", "enum": ["zh", "en"] },
+    "data": { "type": "object" }
+  }
+}

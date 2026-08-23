@@ -29,10 +29,14 @@
 |---|---|---|
 | `OutcomeSeparation` | HTML/CSS | Task / Learning / Retention / Transfer / Risk 构念分离 |
 | `EvidenceBalance` | SVG/ECharts | 基于 `effect_direction` 的正向/负向/零效应比较；只有 Gate 通过才渲染 |
+| `LieflatGalleryCard` | 内联 SVG（charts_data + lieflat_engine） | AI 组合的数据驱动 Lieflat 图卡：结论式标题 + 副标题（图例 `·` 分隔）+ 主题化 SVG + 全大写来源行 + 可选图注；`data-lieflat` / `data-visual` 属性供 motion 与测试定位 |
+| `LieflatSuppressed` | HTML | 数据不足时列出被抑制图型与原因（镜像 Meaningful Visualization Gate） |
 | `InteractiveChart` | ECharts | 有信息增益的交互分析图 |
-| `AcademicFigure` | Academic Figures | 出版级静态图 |
+| `AcademicFigure` | Academic Figures | 出版级静态图（outcome-comparison / benchmark / forest，保持主题无关） |
 | `InfographicBlock` | SVG / AntV | 流程、干预、评价等语义图 |
 | `VisualizationSuppressed` | HTML | 数据不足时解释为什么不画图 |
+
+Lieflat 图卡只渲染 `resolve_visual_layout` 校验通过的 `visual_layout` 条目；每个条目经注册表（`references/lieflat-composition.md`）提取器出数，未注册 type 显式报错。完整性门 `lieflat_data_bound` 逐值核对数值溯源。
 
 ## 4. Evidence / progressive disclosure
 
@@ -81,8 +85,9 @@ Outcome/Matrix 的主方向使用 `effect_direction`。`relation_to_claim` 只�
 | 组件 | 职责 |
 |---|---|
 | `MotionTemplate` | 统一 section/stagger/bar/trace/flow/detail/page/toc 动画 |
+| `ChartReveal` | `data-lieflat` 图卡的 mono-tokens reveal：滚入视野（threshold .3）播一次 + 点击重播（timer 清理）+ reduced-motion 降级 + 无 JS 静态可见 |
 
-动画由 `motion/motion.css` + `motion/motion.js` 固化。五种主题不得创建不同的科学/数据动画逻辑。
+动画由 `motion/motion.css` + `motion/motion.js` 固化。五种主题不得创建不同的科学/数据动画逻辑，`chart-reveal` 为固定模板角色（见 `references/motion-system.md`）。
 
 ## 9. Dynamic Report Planner
 
@@ -100,6 +105,8 @@ conflicts · trace · applicability · intervention · evaluation · sources
 3. 全部模块覆盖且每个恰好一次。
 4. AI 可以自由命名章节和合并中间模块。
 5. Invalid outline → safe six-chapter fallback。
+
+章节之外的**图表计划**由 AI 写入 `visual_layout`（每图一个独立结论、≤6 张、形状不重复），渲染器只执行注册表校验通过的条目；数值一律由提取器从 `result.json` 出数（`references/lieflat-composition.md`）。
 
 ## 10. 五种主题共用组件，不共用排版
 

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="claude">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduEvidence 5.0 · Web Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <button class="collapse-btn" id="collapse-btn" title="收起 / 展开侧边栏" aria-label="切换侧边栏">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="brand-badge">E</div>
+      <div class="brand-texts">
+        <div class="brand-title">EduEvidence 5.0</div>
+        <div class="brand-sub">Evidence Research Studio</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard" title="仪表盘">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+        <span>仪表盘</span>
+      </button>
+      <button class="nav-item" data-view="report" title="报告浏览">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        <span>报告浏览</span>
+      </button>
+      <button class="nav-item" data-view="viz" title="数据可视化">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+        <span>数据可视化</span>
+      </button>
+
+      <div class="nav-divider"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div><span class="dot"></span><span class="foot-text">Local Engine · contract-driven</span></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title">EduEvidence Web Studio <span>/ 实证决策引擎</span></div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="theme-toggle">
+        <button class="theme-btn active" data-theme-btn="light">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-2.25l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg> Light
+        </button>
+        <button class="theme-btn" data-theme-btn="dark">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg> Dark
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- 1. 仪表盘 -->
+      <section id="view-dashboard" class="view active">
+        <div class="kpi-grid" id="dash-kpis"></div>
+        <div class="dash-row-3">
+          <div class="card stagger-item">
+            <h3>裁决分布</h3>
+            <div id="chart-verdict" class="chart sm"></div>
+          </div>
+          <div class="card stagger-item">
+            <h3>证据方向分布</h3>
+            <div id="chart-direction" class="chart sm"></div>
+          </div>
+          <div class="card stagger-item">
+            <h3>跨课题证据规模</h3>
+            <div id="chart-cross" class="chart sm"></div>
+          </div>
+        </div>
+        <div class="card stagger-item">
+          <h3>课题速览</h3>
+          <div class="proj-cards" id="proj-cards"></div>
+        </div>
+        <div class="card stagger-item">
+          <h3>实证课题资产矩阵</h3>
+          <div style="overflow-x:auto;">
+            <table class="matrix" id="dash-table">
+              <thead>
+                <tr><th>课题 ID</th><th>研究名称</th><th>证据</th><th>支持/反驳/中性</th><th>效应量</th><th>裁决</th><th>置信度</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. 报告浏览 -->
+      <section id="view-report" class="view">
+        <div class="report-layout">
+          <div class="report-list" id="report-list"></div>
+          <div class="report-viewer">
+            <div class="report-viewer-head">
+              <div>
+                <div id="report-current-title" class="serif-text" style="font-size:1.1rem;font-weight:600;color:var(--text-primary); margin-bottom: 4px;"></div>
+                <div style="font-size:0.75rem;color:var(--text-muted);">主题生成时烘焙 · 报告内仅中英文切换</div>
+              </div>
+              <div class="chip-row" id="report-variant-chips"></div>
+            </div>
+            <div class="iframe-wrap">
+              <div class="iframe-loading" id="report-loading">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin" style="margin-right: 8px;"><circle cx="12" cy="12" r="10"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                报告加载中…
+              </div>
+              <iframe id="report-frame" title="Evidence Report"
+                      sandbox="allow-scripts"></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 数据可视化 -->
+      <section id="view-viz" class="view">
+        <div class="viz-toolbar stagger-item">
+          <label for="viz-project-select">研究课题</label>
+          <select id="viz-project-select"></select>
+          <div class="viz-kpis" id="viz-kpis"></div>
+        </div>
+        <div class="viz-question serif-text stagger-item" id="viz-question"></div>
+        <div class="viz-grid">
+          <div class="card span-2 stagger-item">
+            <h3>森林图 (Forest Plot)</h3>
+            <div id="forest-plot"></div>
+          </div>
+          <div class="card stagger-item">
+            <h3>效应量分布</h3>
+            <div id="chart-effect-dist" class="chart"></div>
+          </div>
+          <div class="card stagger-item">
+            <h3>结果维度 (支持 / 反驳 / 中性)</h3>
+            <div id="chart-outcome" class="chart"></div>
+          </div>
+          <div class="card span-2 stagger-item">
+            <h3 style="display:flex; justify-content:space-between; align-items:center;">
+              SSOT 证据图谱
+              <button class="btn btn-sm" id="graph-reload">↻ 重布局</button>
+            </h3>
+            <div id="chart-graph" class="chart tall"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

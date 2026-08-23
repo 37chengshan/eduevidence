@@ -76,3 +76,16 @@
   :root[data-theme="academic"] .report-section { break-inside:auto; }
   :root[data-theme="academic"] .data-table { font-size:8.5pt; }
 }
+
+/* Typography pass: journal rules for the Lieflat gallery + print scale. */
+:root[data-theme="academic"] .lieflat-card { border:1px solid #444; border-radius:0; background:#fff; padding:18px 22px 14px; }
+:root[data-theme="academic"] .lieflat-title { font-size:1.05rem; }
+:root[data-theme="academic"] .lieflat-sub { font-size:.82rem; }
+:root[data-theme="academic"] .lieflat-caption { font-style:italic; font-size:.78rem; }
+:root[data-theme="academic"] .lieflat-src { letter-spacing:.06em; }
+:root[data-theme="academic"] .lieflat-figure svg { border:1px solid #999; border-radius:0; background:#fff; }
+@media print {
+  :root[data-theme="academic"] body { font-size:8.5pt; }
+  :root[data-theme="academic"] .lieflat-card { border:1px solid #444; }
+  :root[data-theme="academic"] .lieflat-title { font-size:10pt; }
+}

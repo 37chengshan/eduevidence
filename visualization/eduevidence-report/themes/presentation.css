@@ -113,3 +113,17 @@
   :root[data-theme="presentation"] .brief-source-grid { grid-template-columns:1fr; }
   :root[data-theme="presentation"] .full-chapter { padding:18px 16px; border-radius:12px; }
 }
+
+/* Typography pass: verdict type scale + insight padding + dark-court gallery.
+   Gold/orange accents keep ≥4.5:1 contrast on the dark surfaces. */
+:root[data-theme="presentation"] .hero-decision .decision-value { line-height:.96; }
+:root[data-theme="presentation"] .hero-rationale { color:#E9ECF1; }
+:root[data-theme="presentation"] .hero-insight { padding:18px 20px; }
+:root[data-theme="presentation"] .brief-decision .hero-insight { padding:16px 18px; }
+:root[data-theme="presentation"] .lieflat-card { background:var(--surface); border-radius:16px; padding:22px 24px 16px; }
+:root[data-theme="presentation"] .lieflat-title { font-size:1.08rem; line-height:1.3; }
+:root[data-theme="presentation"] .lieflat-sub { font-size:.82rem; }
+:root[data-theme="presentation"] .lieflat-figure svg { border-radius:10px; background:transparent; }
+:root[data-theme="presentation"] .lieflat-caption { font-size:.76rem; }
+:root[data-theme="presentation"] .lieflat-src { font-size:.64rem; }
+:root[data-theme="presentation"] .lieflat-suppressed { background:var(--surface2); font-size:.78rem; }

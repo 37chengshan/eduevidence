@@ -28,6 +28,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from adapter_contract import load_result, write_adapter_output
 from zh_labels import label
 
 WARM_PALETTE = ["#B8694A", "#5E8A6A", "#A85B53", "#C99A4A", "#8A867E", "#4F7A55"]
@@ -271,10 +272,9 @@ def main() -> int:
     parser.add_argument("--lang", choices=["zh", "en"], default="zh")
     args = parser.parse_args()
 
-    result = json.loads(Path(args.result).read_text(encoding="utf-8"))
+    result = load_result(args.result)
     specs = build_all(result, lang=args.lang)
-    out = Path(args.out)
-    out.write_text(json.dumps(specs, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_adapter_output(args.out, "charts", args.result, specs, locale=args.lang)
     print(f"wrote {args.out} (charts={len(specs['charts'])})")
     return 0
 

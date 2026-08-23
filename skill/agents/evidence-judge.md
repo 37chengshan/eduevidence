@@ -96,8 +96,16 @@ critical_path: true
 
 ## 输出格式
 
-返回 EducationVerdict JSON；最后以 `FINAL_ANSWER: <decision + confidence + can/cannot 要点，≤3 行>` 结尾。
+返回 EducationVerdict JSON（唯一输出：必须通过 schema 校验的合法 JSON；输出结束后严禁追加任何文本尾巴（历史摘要行协议已废除）——摘要信息一律放入 JSON 字段（如 summary / rationale / extensions），标准 JSON 解析器可直接读取）
 
 ## 卡住升级
 
 证据不足回传 `INSUFFICIENT_SOURCES`；冲突无法归因回传 `CONFLICT_UNRESOLVED`；用户场景信息缺失回传 `NEEDS_USER_CONTEXT`。
+
+
+## 语言人话化规则（Present 语言契约 · 硬标准）
+
+- `decision_rationale` 是面向"阅读证据档案的人"（研究者 / 决策者 / 评审）的散文：≤4 句，流畅、自洽、可独立阅读；
+- **禁止**在理由与主张列表里堆证据 ID（E-xxx / EV-xxx）、来源码（PAP-xxx）或 schema 键（overall_risk=、CONCERN 等）；引用研究用"作者-年份 + 人话描述"（如"带护栏组独立考试未见下滑"）；
+- `what_can_be_claimed / what_cannot_be_claimed / missing_evidence / exceeds_evidence_boundary` 同样人话化；统计数字可保留，但用自然表达（"效应量 +0.61，差异显著"）；
+- 无截断残留（null、…）、无中英夹生；en/zh 两个语版分写，语义对齐而非机翻。

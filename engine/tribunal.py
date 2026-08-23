@@ -229,24 +229,59 @@ def _confidence(store: GraphStore, syntheses: tuple[ClaimSynthesis, ...]) -> dic
             "decisive_relations": dict(decisive)}
 
 
+def _has_direct_learning_evidence(store: GraphStore,
+                                  decisive_relations: dict[str, str]) -> bool:
+    """True when at least one decisive support_adoption Study measures a
+    learning outcome directly.
+
+    Learning evidence means the finding's outcome is declared
+    outcome_type == "learning" AND its evidence link carries directness == 2.
+    Task performance / process / risk outcomes never qualify, and a missing
+    outcome record or missing directness fails closed (False).
+    """
+    findings = {f["finding_id"]: f for f in store.read_table("findings")}
+    outcomes = {o["outcome_id"]: o for o in store.read_table("outcomes")}
+    links_by_finding: dict[str, list[dict]] = {}
+    for link in store.read_table("evidence_links"):
+        links_by_finding.setdefault(link["finding_id"], []).append(link)
+
+    support_studies = {sid for sid, rel in decisive_relations.items()
+                       if rel == "support_adoption"}
+    if not support_studies:
+        return False
+    for fid, fnd in findings.items():
+        if fnd.get("study_id") not in support_studies:
+            continue
+        outcome = outcomes.get(fnd.get("outcome_id"))
+        if outcome is None or outcome.get("outcome_type") != "learning":
+            continue
+        for link in links_by_finding.get(fid, []):
+            directness = link.get("directness")
+            if isinstance(directness, (int, float)) and int(directness) == 2:
+                return True
+    return False
+
+
 def _decision_action(syn_statuses: dict[str, str], confidence: dict,
-                     decisive_relations: dict[str, str]) -> str:
+                     decisive_relations: dict[str, str],
+                     has_direct_learning_evidence: bool = False) -> str:
     """Gate-enforced decision action.
 
     REJECT requires usable direct opposition evidence (an independent Study
     folded to oppose_adoption). Low/Insufficient can never yield ADOPT.
-    High + decisive support → ADOPT (strong direct evidence only);
-    Moderate + decisive support → PILOT (promising but not yet strong);
-    otherwise INSUFFICIENT_EVIDENCE.
+    ADOPT additionally requires direct learning/transfer evidence: High +
+    decisive support WITHOUT a direct learning outcome downgrades to PILOT
+    (task performance / procedural efficiency is not learning). Moderate +
+    decisive support → PILOT; otherwise INSUFFICIENT_EVIDENCE.
     """
     label = confidence["label"]
     has_oppose = any(r == "oppose_adoption" for r in decisive_relations.values())
     has_support = any(r == "support_adoption" for r in decisive_relations.values())
     if has_oppose:
         return "REJECT"
-    if label == "High" and has_support:
+    if label == "High" and has_support and has_direct_learning_evidence:
         return "ADOPT"
-    if label == "Moderate" and has_support:
+    if label in ("High", "Moderate") and has_support:
         return "PILOT"
     return "INSUFFICIENT_EVIDENCE"
 
@@ -265,8 +300,10 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
 
     syn_statuses = {s.claim_id: s.status for s in syntheses}
     decisive_relations = confidence.get("decisive_relations", {})
+    direct_learning = _has_direct_learning_evidence(store, decisive_relations)
 
-    decision = _decision_action(syn_statuses, confidence, decisive_relations)
+    decision = _decision_action(syn_statuses, confidence, decisive_relations,
+                                has_direct_learning_evidence=direct_learning)
 
     key_links: list[str] = []
     for syn in syntheses:
@@ -315,6 +352,7 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
         "extensions": {"confidence_components": {
             "decisive_studies": confidence.get("decisive_studies", 0),
             "usable_studies": confidence.get("usable_studies", 0),
+            "has_direct_learning_evidence": direct_learning,
         }},
     }
     errors = validate_record("decision-snapshot", snapshot)

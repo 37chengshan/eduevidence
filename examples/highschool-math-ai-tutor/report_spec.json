@@ -1,0 +1,222 @@
+{
+  "generated_by": "build_report.py",
+  "source": "result.json + result.zh.json",
+  "question": "Should generative AI adaptive tutors be introduced for after-school personalized learning in high school mathematics (analytic geometry and calculus)? Does it improve conceptual modeling vs procedural calculation, and what is the urban-rural equity impact?",
+  "theme_selected": "claude",
+  "theme_display": "Claude Research [Light]",
+  "theme_available": [
+    "claude",
+    "academic",
+    "datalab",
+    "datalab-dark",
+    "presentation"
+  ],
+  "theme_selection": "generation_time",
+  "lang_default": "zh",
+  "lang_switchable": [
+    "zh",
+    "en"
+  ],
+  "report_pages": [
+    "visual_brief",
+    "full_report"
+  ],
+  "full_report_outline": {
+    "chapter_count": 6,
+    "source": "result.report_outline",
+    "chapters": [
+      {
+        "key": "decision",
+        "title_zh": "执行决策与研究边界",
+        "title_en": "Executive Decision & Research Boundary",
+        "modules": [
+          "decision",
+          "scope"
+        ]
+      },
+      {
+        "key": "retrieval",
+        "title_zh": "检索策略与证据抽取",
+        "title_en": "Retrieval Strategy & Evidence Extraction",
+        "modules": [
+          "retrieval",
+          "evidence"
+        ]
+      },
+      {
+        "key": "outcomes",
+        "title_zh": "四维结果证据图谱",
+        "title_en": "Four-Dimensional Outcome Evidence Map",
+        "modules": [
+          "outcomes"
+        ]
+      },
+      {
+        "key": "quality",
+        "title_zh": "质量审计与冲突分析",
+        "title_en": "Quality Audit & Conflict Analysis",
+        "modules": [
+          "quality",
+          "conflicts",
+          "trace"
+        ]
+      },
+      {
+        "key": "action",
+        "title_zh": "适用性与四阶段渐退干预",
+        "title_en": "Applicability & 4-Phase Fading Intervention",
+        "modules": [
+          "applicability",
+          "intervention"
+        ]
+      },
+      {
+        "key": "evaluation",
+        "title_zh": "评估方案与来源附录",
+        "title_en": "Evaluation Plan & Sources Appendix",
+        "modules": [
+          "evaluation",
+          "sources"
+        ]
+      }
+    ]
+  },
+  "visualization_decisions": {
+    "outcome_separation": {
+      "render": true,
+      "reason": "multiple outcome constructs present"
+    },
+    "outcome_evidence_balance": {
+      "render": true,
+      "reason": "sufficient effect-direction density"
+    },
+    "claim_trace": {
+      "render": true,
+      "reason": "claim-evidence-source relationships present"
+    },
+    "benchmark": {
+      "render": false,
+      "reason": "suppressed: absent, simulated, or fewer than two baselines"
+    }
+  },
+  "lieflat_gallery": {
+    "layout_source": "visual_layout",
+    "selected": [
+      {
+        "chart_id": "lieflat-forest-plot.svg",
+        "type": "forest_plot",
+        "catalog_ref": "FOREST-PLOT (publication figure)",
+        "source": "meta.forest"
+      },
+      {
+        "chart_id": "lieflat-brand-spectrum.svg",
+        "type": "brand_spectrum",
+        "catalog_ref": "L7 Brand Spectrum",
+        "source": "outcomes.bipolar_axes"
+      },
+      {
+        "chart_id": "lieflat-barcode-lollipop.svg",
+        "type": "barcode_lollipop",
+        "catalog_ref": "L3 Barcode Lollipop",
+        "source": "intervention.phase_weeks"
+      },
+      {
+        "chart_id": "lieflat-launch-fan.svg",
+        "type": "launch_fan",
+        "catalog_ref": "L1 Launch Fan",
+        "source": "intervention.activity_weights"
+      },
+      {
+        "chart_id": "lieflat-paired-rungs.svg",
+        "type": "paired_rungs",
+        "catalog_ref": "F6 Paired Rungs",
+        "source": "outcomes.paired_counts"
+      }
+    ],
+    "suppressed": [],
+    "rejected": [],
+    "warnings": []
+  },
+  "charts": [
+    {
+      "chart_id": "outcome-evidence-overview",
+      "purpose": "interactive_analysis",
+      "engine": "echarts",
+      "data_ref": null,
+      "title": "Outcome Evidence Overview",
+      "integrity": {
+        "numbers_match_result": "NOT_CHECKED",
+        "no_axis_distortion": "NOT_CHECKED",
+        "no_false_precision": "NOT_CHECKED",
+        "colorblind_safe": "NOT_CHECKED"
+      }
+    },
+    {
+      "chart_id": "claim-evidence-trace",
+      "purpose": "interactive_analysis",
+      "engine": "echarts",
+      "data_ref": null,
+      "title": "Claim-Evidence Trace",
+      "integrity": {
+        "numbers_match_result": "NOT_CHECKED",
+        "no_axis_distortion": "NOT_CHECKED",
+        "no_false_precision": "NOT_CHECKED",
+        "colorblind_safe": "NOT_CHECKED"
+      }
+    }
+  ],
+  "infographics": [
+    {
+      "chart_id": "workflow",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    },
+    {
+      "chart_id": "tribunal",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    },
+    {
+      "chart_id": "intervention",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    },
+    {
+      "chart_id": "evaluation",
+      "purpose": "process_or_story",
+      "engine": "antv_infographic",
+      "title": ""
+    }
+  ],
+  "academic_figures": [
+    {
+      "chart_id": "outcome-comparison",
+      "purpose": "statistical_publication",
+      "engine": "academic_figure",
+      "caption": "Fig. 1. Counts of positive / negative / null effects per outcome type (based on effect_direction; publication figure, theme-independent). Source: EduEvidence result.json."
+    }
+  ],
+  "integrity_gate": {
+    "status": "PASS",
+    "contract_valid": "PASS",
+    "claims_bound": "PASS",
+    "evidence_bound": 16,
+    "sources_resolved": 16,
+    "numbers_match_result": "PASS",
+    "bilingual_structure_match": "PASS",
+    "language_match": "PASS",
+    "no_false_precision": "PASS",
+    "lieflat_data_bound": "PASS",
+    "no_axis_distortion": "NOT_CHECKED",
+    "colorblind_safe": "NOT_CHECKED",
+    "langs": [
+      "zh",
+      "en"
+    ],
+    "generated_by": "build_report.py",
+    "source": "result.json + result.zh.json"
+  }
+}

@@ -261,24 +261,26 @@ Two more examples — AI writing assistant (`examples/ai-writing-assistant/`) an
 
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
-After research completes, `result.json` is rendered into three visualization outputs by deterministic adapters (all zero third-party dependencies, single-file offline):
+After research completes, `result.json` is rendered into three visualization outputs by deterministic Python adapters. The adapters themselves use the standard library; the optional Web Studio chart enhancement has a separate browser dependency.
 
 ```text
 result.json + result.zh.json (Chinese parallel data)
-  ├─ build_charts.py        → chart_specs.json (ECharts specs: outcome overview / claim trace / benchmark)
-  ├─ build_infographics.py  → infographics.json (4 AntV-style SVGs: EvidenceFlow / tribunal / intervention / evaluation)
+  ├─ build_charts.py        → chart_specs.json (ECharts option data; no ECharts runtime bundled)
+  ├─ build_infographics.py  → infographics.json (hand-authored SVGs)
   ├─ build_figures.py       → figures/ (publication figures: figure_data.json + SVG/PNG/PDF)
   └─ build_report.py        → EduEvidence_Report.html (single-file bilingual report + report_spec.json)
 ```
 
 **EduEvidence_Report.html (main deliverable)**:
 
-- **Bilingual switch**: Chinese by default, one click to EN; in Chinese mode the evidence, claims, methodology audit, intervention and evaluation are all in Chinese. Data is isomorphic (`result.zh.json` and `result.json` share keys/numbers/IDs/URLs — bilingual data produced directly by AI, not machine translation).
-- **Executive summary narrative**: the first screen shows a "bottom line" — question → evidence (support/contradict) → action (decision + confidence + rationale); every section opens with a "What this section answers:" lead line.
+- **Bilingual switch**: Chinese by default, one click to EN; data remains isomorphic.
+- **Executive summary narrative**: question → evidence → action, with traceable source sections.
 - **Two-page layout**: Visual Brief + Full Report (AI-planned 5–7 dynamic chapters, not a fixed template).
-- **Five styles (chosen at generation time, no in-HTML switcher)**: claude [Light] / academic [Light] / datalab [Light] / datalab-dark [Dark] / presentation [Dark] — same data, different presentation only.
-- **Static-first**: fully readable without JS (decision / matrix / tribunal / intervention / sources); ECharts enhances when available; tables scroll horizontally instead of overflowing.
+- **Five styles (chosen at generation time, no in-HTML switcher)**: claude / academic / datalab / datalab-dark / presentation.
+- **Static-first**: decision, matrix, tribunal, intervention and sources remain readable without JavaScript; ECharts is an optional enhancement.
 - **Integrity gate**: chart numbers are checked against result.json item by item; publishing is blocked with `REPORT_INVALID` on mismatch.
+
+**Local Web Studio** (`python3 scripts/dashboard_server.py --port 8765`) has exactly three read-only views: Dashboard, Report Browser and Data Visualization. It loads ECharts 5.4.3 from jsDelivr for interactive charts; the submission package does not bundle that runtime, so Web interactivity requires network access. The baked report's static HTML/SVG remains the offline artifact.
 
 > Open the example directly: `examples/ai-coding-assistant/EduEvidence_Report.html`
 
