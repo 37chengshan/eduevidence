@@ -19,7 +19,7 @@
 | R4 | data_origin 字段 + HTML 徽章 | ✅ 已完成 | 四值枚举进 schema/meta；报告头徽章（synthetic 高亮警示） |
 | R5 | 指标口径 SSOT | ✅ 已完成 | `generate_metrics.py --check` 进 CI；README 语言命名归位 zh-CN；landing 清泄漏词+虚构统计 |
 | R6 | 复现性声明收敛 | ✅ 已完成 | 两层边界（确定性层/LLM 层）写入 reproducibility.md |
-| R7 | 收尾与重打包 | ⚠️ 部分 | 移动端批次/gitignore/删除伪造包已做；**上传包重建留待用户确认比赛状态后执行**（make_upload.sh 一键可重建） |
+| R7 | 收尾与重打包 | ✅ 已完成 | 移动端批次/gitignore/删除伪造包；`make_upload.sh` 重建上传包并本地复核：零泄漏（canary 0 命中）、本地专属文件排除、SKILL.md parity OK、新旗舰包纳入且伪造 `-50` 包不存在、徽章随包分发（21MB / 327 文件） |
 
 ## v5.3.0 「开源地基」
 
@@ -56,5 +56,4 @@
 
 1. **E1 完整 src-layout**：计划原文允许"若社区安装反馈少可延后"。当前以 wheel 冒烟守护导入契约；迁移涉及 ~40 文件路径假设，宜独立迭代执行。
 2. **esl/math 包内演示性"引文"仍在**（SYNTHETIC 徽章下）：徽章+文档已声明不构成实证；若要彻底清除需重写两包内容（下一迭代候选）。
-3. **F2/F3/F5**：分别等待真实课堂数据、LLM API 预算、SCP 账号操作。
-4. **R7 上传包重建**：建议用户确认比赛评审状态后执行 `bash packaging/make_upload.sh`。
+3. **F2/F3/F5**：分别等待真实课堂数据、LLM API 预算、SCP 账号操作（外部依赖，软件侧均已就绪）。
