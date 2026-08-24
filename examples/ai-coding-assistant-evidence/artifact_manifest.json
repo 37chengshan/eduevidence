@@ -1,0 +1,15 @@
+{
+  "result_sha256": "778f5bc9b040512f4aced41cc569d8efa0272c0015cf94326d6f9fd0c20f2253",
+  "result_zh_sha256": "34d506a566a7d21aefe070323c11abca4d35cf312cd2ba9d7d95d73c9e9453cd",
+  "renderer_version": "1.0.0",
+  "git_commit": "c572508e407f3a19a02d5c13a7a3a5c36b0d135a",
+  "evidence_count": 12,
+  "source_count": 8,
+  "themes": [
+    "claude",
+    "academic",
+    "datalab",
+    "datalab-dark",
+    "presentation"
+  ]
+}

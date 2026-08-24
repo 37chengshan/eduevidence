@@ -1,0 +1,86 @@
+{
+  "decision_question": "大一 C 语言课程是否应该允许学生使用生成式 AI 编程助手？",
+  "target_population": "university first-year computer science students learning C programming for the first time",
+  "target_context": "16-week lecture-lab course, 60 students, TA support, offline",
+  "supported_claims": [
+    "AI coding assistants reliably increase task performance during training (completion speed, correctness) — E-001, E-006.",
+    "Unguarded generative AI access can harm independent problem solving when access is removed — E-004.",
+    "Guardrail design (hints instead of answers) substantially mitigates the negative learning effect — E-005.",
+    "Task performance gains do not automatically imply learning gains — E-004 vs E-006 (within-study contrast).",
+    "Tool capability is substantial: Codex solves roughly half to three-quarters of CS1 exam-style questions — E-010.",
+    "Professional-developer RCT shows ~55% faster task completion with Copilot; directness limited by professional population — E-008.",
+    "LLM code explanations rate comparable to student-authored explanations, viable as scaffold material — E-011."
+  ],
+  "uncertain_claims": [
+    "Whether AI coding assistants improve or preserve actual programming learning in university novices — no direct university-level RCT in reviewed set [无直接证据]",
+    "Whether one-week neutral retention (Kazemitabaar 2023) extends to a semester — E-003.",
+    "Whether benchmark quality findings (E-009) and explanation-quality ratings (E-011) translate into classroom learning gains.",
+    "How comprehension/ownership difficulties documented in usability studies (E-012) behave over a full semester with guardrails."
+  ],
+  "contradicted_claims": [
+    "The claim 'AI tools always improve learning' is contradicted by E-004 (unguarded access, -17% independent exam).",
+    "The claim 'speed gains equal learning gains' is contradicted by the task-vs-learning separation across E-001/E-006/E-008 vs E-004."
+  ],
+  "reason_for_disagreement": "Disagreement comes from outcome separation (task vs learning), tool design (guarded vs unguarded), and population (K-12 / professionals vs university). Task-performance evidence is consistently positive across randomized and benchmark studies; the only study measuring independent performance after AI removal shows harm without guardrails; usability and artifact studies add dependence and quality caveats rather than resolving the learning question.",
+  "methodology_summary": "Eight real sources: three randomized experiments (Kazemitabaar 2023 n=69 K-12; Bastani 2025 n≈950 high-school mathematics; Peng 2023 n=95 professional developers, preprint), one ESL writing mixed-methods study (Marzuki 2024), plus benchmark/capability/usability studies (Yetistiren 2023; Finnie-Ansley 2022; explanation-comparison 2023; Vaithilingam 2022). No direct RCT in university programming courses. Internal validity of the core RCTs is strong; directness to first-year university C programming is weak. All sources carry registry-verified DOIs (see benchmarks/doi-audit/report.md).",
+  "outcome_specific_findings": {
+    "completion_time": "positive during training and professional tasks (E-001, E-008)",
+    "independent_problem_solving": "neutral-to-negative without guardrails (E-002, E-004)",
+    "retention": "neutral over 1 week (E-003)",
+    "assignment_score": "positive during practice, negative on closed-book exam (E-004, E-006); tool itself scores passing-level on CS1 questions (E-010)",
+    "code_quality": "mixed on benchmarks; security concerns documented (E-009)",
+    "metacognition": "LLM explanations compare well (E-011) while novice ownership/debugging difficulties persist (E-012)",
+    "ai_dependency": "documented crutch behavior with unguarded tool (E-004, E-005, E-012)"
+  },
+  "short_term_effect": "Task performance reliably increases; learning effect null-to-negative without guardrails.",
+  "long_term_effect": "No evidence beyond one week; long-term learning effect unknown.",
+  "transfer_effect": "No full transfer evidence; manual code-modification not harmed in one small study (E-002).",
+  "risk_effect": "AI dependency and over-reliance risk is real and documented for unguarded usage (E-004) and foreshadowed by usability findings (E-012).",
+  "applicability": {
+    "suitable_for": "pilot in first-year C course with guardrailed usage policy",
+    "not_suitable_for": "unrestricted AI adoption without usage policy",
+    "required_conditions": [
+      "guardrailed AI usage policy (hints not answers, modeled on GPT Tutor arm)",
+      "no-AI transfer assessment",
+      "TA support"
+    ]
+  },
+  "confidence": "Moderate",
+  "confidence_breakdown": {
+    "score": 0.5,
+    "evidence_quality": 0.7,
+    "consistency": 0.6,
+    "directness": 0.4,
+    "evidence_count": 12,
+    "independent_studies": 8,
+    "independent_samples": 8,
+    "count_term": 1.0,
+    "conflict_penalty": 0.0,
+    "unsupported_penalty": 0.0
+  },
+  "what_can_be_claimed": [
+    "AI coding assistants raise task performance for novices during training.",
+    "Unguarded access carries a real risk of hurting independent problem solving.",
+    "Guardrail design can mitigate that risk.",
+    "Direct evidence for university C programming learning is missing.",
+    "Tool capability headroom is large (CS1 question pass rates; professional speed RCT)."
+  ],
+  "what_cannot_be_claimed": [
+    "AI coding assistants improve (or even preserve) university students' programming learning.",
+    "Any long-term or retention benefit.",
+    "Any claim about which students benefit, based on university samples.",
+    "That benchmark or usability findings substitute for classroom learning outcomes."
+  ],
+  "missing_evidence": [
+    "RCT of AI coding assistants in university programming courses with retention and no-AI transfer tests.",
+    "Studies varying AI usage policy within the same course.",
+    "Longitudinal data on AI dependency beyond one course.",
+    "Peer-reviewed replication of the professional speed RCT (Peng et al. remains a preprint)."
+  ],
+  "recommended_action": "pilot",
+  "decision_rationale": "Positive task-performance evidence plus documented unguarded-access risk, mixed quality/usability signals, and missing university-level learning evidence → bounded, guardrailed pilot with evaluation, not full adoption.",
+  "exceeds_evidence_boundary": [
+    "Claiming 'AI coding assistants improve learning' exceeds the boundary: direct learning-effect evidence is missing.",
+    "Claiming 'AI works for everyone' exceeds the boundary: population and subject mismatch."
+  ]
+}

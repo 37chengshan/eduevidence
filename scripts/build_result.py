@@ -23,6 +23,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+# Repo-root bootstrap so `python3 scripts/build_result.py` works without venv
+# install (removed by the src-layout migration, plan item E1).
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from evidence_semantics import effect_direction
 from engine.versions import ENGINE_VERSION
 

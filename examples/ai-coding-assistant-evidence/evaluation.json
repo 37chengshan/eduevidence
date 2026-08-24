@@ -1,0 +1,35 @@
+{
+  "research_question": "In a first-year C programming course, does a guardrailed AI coding assistant (explain-only → structured collaboration) improve independent problem solving without increasing AI dependency, compared to no-AI instruction?",
+  "groups": {
+    "treatment": "two lab sections using the 4-phase guardrailed AI policy",
+    "comparison": "two matched lab sections without AI access (same instructor and materials)"
+  },
+  "baseline": "week-1 no-AI programming quiz (independent problem solving, completion time)",
+  "post_test": "week-8 no-AI programming quiz (independent problem solving, code quality)",
+  "retention_test": "final exam (week 16) — delayed measure 8 weeks after pilot",
+  "transfer_test": "week-8 novel programming task in a strictly no-AI environment",
+  "process_metrics": [
+    "weekly lab completion rate",
+    "AI usage logs: prompts submitted, copied blocks, reasoning traces",
+    "help-seeking behavior counts"
+  ],
+  "learning_metrics": [
+    "independent problem solving (no-AI quizzes)",
+    "code quality rubric",
+    "retention on final exam",
+    "transfer task score"
+  ],
+  "risk_metrics": [
+    "AI dependency index (usage without understanding, from reasoning-trace quality)",
+    "academic integrity violations",
+    "self-reported over-reliance",
+    "false confidence (post-quiz confidence vs actual score)"
+  ],
+  "analysis_plan": "pre-registered comparison of treatment vs comparison sections on baseline-adjusted learning metrics (ANCOVA); task-performance metrics reported separately from learning metrics; subgroup analysis by prior programming competency; stop-condition monitoring at weeks 3, 5, 7.",
+  "success_threshold": "treatment group shows non-inferior independent problem solving (delta within 5%) AND superior or equal retention AND AI dependency index below threshold; if independent problem solving declines >10%, the pilot is judged unsuccessful regardless of task-performance gains.",
+  "stop_conditions": [
+    "transfer-test decline >10% vs comparison",
+    "integrity violations in >20% of submissions",
+    "AI dependency index exceeding pre-set threshold for two consecutive weeks"
+  ]
+}
