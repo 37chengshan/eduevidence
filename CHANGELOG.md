@@ -12,6 +12,23 @@
 - 新增 `scripts/check_version_consistency.py` 并纳入 CI：versions.py ↔ pyproject ↔ CHANGELOG 头条目 ↔ SKILL.md 标题一致性校验。
 
 ### 示例 provenance 纠偏（随本版后续提交补充）
+- 全量 DOI 审计（`scripts/audit_dois.py`，Crossref/DataCite 双注册表）：88 唯一 DOI 仅 16 真实。
+- 删除伪造旗舰包 `ai-coding-assistant-50`；新建 `ai-coding-assistant-evidence`：
+  8 个注册表核验来源、12 条证据、引擎确定性置信度（Moderate/0.586）、五主题烘焙 ALL CLEAN。
+- esl/math 示例：删除伪造的 agent_mcp_enhanced 运行记录，如实标注 `data_origin=synthetic`，
+  并首次通过 schema 契约（修复 CLM-### claim_id、非法 venue/statement 等历史违规）。
+- 报告头新增 data_origin 徽章；synthetic/hybrid 高亮警示。
+- 口径统一：`docs/metrics.json` 单一权威（752→762 测试函数、37 schema、15 参考、30 金标），
+  CI 校验 README/SKILL/install-guide 数字；README 语言命名归位（README.zh-CN.md）；
+  landing 页清除虚构统计（"50 篇顶刊"/+0.38g）与主办方泄漏词；Skill #650 失效外链移除。
+- 可信度功能化：`engine/citation_check.py` + CLI（--write-back 回写 sources.jsonl）、
+  schema 增 doi_verified/retracted、来源表 DOI ✓ / RETRACTED 徽章；
+  `scripts/retraction_watch.py` 定期撤稿监控。
+- 工程地基：红队压测纳入默认收集并修复至绿（StudioHandler 适配+临时端口）、
+  ruff(E9/F) 守门、pytest-cov 覆盖率报告、移除 CI 静默重试、wheel 隔离安装冒烟、
+  stdlib logging 贯穿 fetch/search/orchestrator（EDUEVIDENCE_LOG_LEVEL 开关）、
+  install.sh 供应链与副作用披露、web archive 快照删除+单一源声明、
+  quickstart 30 分钟引导器、Deep Research 对比页。
 
 
 ## [5.1.1] — 2026-08-23
