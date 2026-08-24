@@ -24,9 +24,12 @@ dev = ["pytest>=7.0"]
 eduevidence = "eduevidence_cli:main"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# scripts/ 只为收编历史遗留的红队压测 scripts/test_adversarial_empirical.py
+# （E5：该文件是全仓唯一 test_*.py 命名的脚本，纳入默认收集后不再"死测试"）。
+testpaths = ["tests", "scripts"]
 python_files = ["test_*.py"]
 addopts = "-q"
+filterwarnings = ["ignore::pytest.PytestReturnNotNoneWarning:scripts.*"]
 
 # wheel 自包含 CLI：eduevidence_cli + engine + scripts（V1/V2 命令实现与
 # validate_schema）+ schemas 数据文件（data-files 安装到 share/eduevidence/，
@@ -45,3 +48,8 @@ packages = ["engine", "scripts"]
 "share/eduevidence/domains" = ["domains/manifest.json", "domains/education/manifest.json", "domains/education/outcome_taxonomy.json", "domains/policy/manifest.json", "domains/policy/frame.schema.json", "domains/policy/outcome_taxonomy.json", "domains/policy/methodology_checklist.json"]
 "share/eduevidence/domains/policy/references" = ["domains/policy/references/*.md"]
 "share/eduevidence/benchmarks" = ["benchmarks/evidence-library.json"]
+
+[tool.ruff.lint]
+# E5 最小守门集：语法层错误 + 未定义/重定义名。风格类规则不设（存量代码
+# 不做一次性大规模格式化，避免淹没 review）。
+select = ["E9", "F63", "F7", "F82"]

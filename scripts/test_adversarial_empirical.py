@@ -440,11 +440,15 @@ def test_dashboard_server_adversarial():
     print_section("TEST 6: Dashboard Server Concurrency, SSE Disconnection & Source Leakage")
 
     import socketserver
-    from scripts.dashboard_server import DashboardHandler
+    from scripts.dashboard_server import StudioHandler
 
-    test_port = 8769
-    server = socketserver.TCPServer(("127.0.0.1", test_port), DashboardHandler)
-    server.allow_reuse_address = True
+    class _ReuseServer(socketserver.TCPServer):
+        # allow_reuse_address 必须在 bind() 之前生效（构造时读取类属性）
+        allow_reuse_address = True
+
+    test_port = 0  # 临时端口：避免与常驻服务/上次残留监听冲突
+    server = _ReuseServer(("127.0.0.1", test_port), StudioHandler)
+    test_port = server.server_address[1]
     
     t = threading.Thread(target=server.serve_forever, daemon=True)
     t.start()
@@ -492,13 +496,13 @@ def test_dashboard_server_adversarial():
                 leakage_results[tf] = False
 
         if any(leakage_results.values()):
-            print(f"    - [SECURITY DEFECT] DashboardHandler exposes arbitrary local project source files through unauthenticated HTTP GET via super().do_GET() fallback!")
+            print(f"    - [SECURITY DEFECT] StudioHandler exposes arbitrary local project source files through unauthenticated HTTP GET via super().do_GET() fallback!")
         results["file_leakage"] = leakage_results
 
         # 3. Concurrency Stress Test (30 Concurrent HTTP Clients)
-        print(f"\n[*] Hammering Dashboard /api/data with 30 concurrent threads...")
+        print(f"\n[*] Hammering Studio /api/projects with 30 concurrent threads...")
         def fetch_data(i):
-            with urllib.request.urlopen(f"http://127.0.0.1:{test_port}/api/data", timeout=5) as resp:
+            with urllib.request.urlopen(f"http://127.0.0.1:{test_port}/api/projects", timeout=5) as resp:
                 return resp.status
 
         t0 = time.time()

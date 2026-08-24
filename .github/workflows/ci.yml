@@ -32,7 +32,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e '.[dev]'
+          pip install -e '.[dev]' ruff pytest-cov
 
       - name: Version consistency gate (engine/versions.py is the authority)
         run: python scripts/check_version_consistency.py
@@ -40,18 +40,17 @@ jobs:
       - name: Metrics gate (docs/metrics.json must match repository reality)
         run: python scripts/generate_metrics.py --check
 
-      - name: Run tests (retry up to 2 times on transient failure)
+      # E5: syntax/undefined-name guard. Style rules intentionally not enforced
+      # (no one-shot mass reformat of legacy code).
+      - name: Ruff (E9/F63/F7/F82)
+        run: ruff check --select E9,F63,F7,F82 .
+
+      # E5: no silent retries — a flaky failure must surface, not be absorbed.
+      # Coverage is reported (not gated) to make blind spots visible over time.
+      - name: Run tests with coverage
         run: |
-          attempts=0
-          until python -m pytest --tb=line; do
-            attempts=$((attempts + 1))
-            if [ "$attempts" -ge 2 ]; then
-              echo "::error::pytest failed after 3 attempts"
-              exit 1
-            fi
-            echo "pytest attempt ${attempts} failed - retrying"
-            sleep 5
-          done
+          python -m pytest --cov=engine --cov=retrieval \
+            --cov-report=term-missing:skip-covered --cov-report=xml --tb=short
 
   schema-smoke:
     name: schema-smoke
