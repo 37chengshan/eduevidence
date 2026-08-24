@@ -52,6 +52,17 @@ jobs:
           python -m pytest --cov=engine --cov=retrieval \
             --cov-report=term-missing:skip-covered --cov-report=xml --tb=short
 
+      # E1（部分交付）：完整 src-layout 迁移按计划允许延后；此处以"wheel 隔离安装 +
+      # 关键包导入 + CLI 模块加载"守住打包/导入契约，消灭 sys.path 假设的回归风险。
+      - name: Wheel install smoke
+        run: |
+          python -m pip wheel . -w /tmp/wheelbuild --no-deps
+          python -m pip install /tmp/wheelbuild/*.whl --target /tmp/wheel-smoke --no-deps
+          PYTHONPATH=/tmp/wheel-smoke python -c "
+            from engine import ENGINE_VERSION
+            import engine.citation_check, retrieval.search, eduevidence_cli
+            print('wheel smoke OK', ENGINE_VERSION)"
+
   schema-smoke:
     name: schema-smoke
     runs-on: ubuntu-latest
