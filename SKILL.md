@@ -183,8 +183,9 @@ python3 scripts/dashboard_server.py --port 8765
 # 2. 学术与实时趋势检索
 python3 -m retrieval.search "AI coding assistants learning transfer"
 
-# 3. 田野数据 DID 回归（数据契约回写见 skill/sub-skills/data-analysis）
-python3 scripts/did_regression.py examples/ai-coding-assistant/field_classroom_data.csv
+# 3. 田野数据 DID 回归（数据契约回写见 skill/sub-skills/data-analysis；
+#    示例用全研究周期夹具的 40 行匿名 DID 数据，无 PII）
+python3 scripts/did_regression.py examples/full-research-cycle-fixture/data.csv
 
 # 4. 效应量计算器
 python3 scripts/effect_calculator.py --mean1 78.5 --sd1 10.2 --n1 90 --mean2 72.1 --sd2 11.0 --n2 90
