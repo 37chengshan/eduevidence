@@ -285,9 +285,21 @@ def main() -> int:
     parser.add_argument("--out", required=True, help="output result.json path")
     parser.add_argument("--mode", choices=["platform_native", "agent_mcp_enhanced"],
                         default="platform_native")
+    parser.add_argument("--data-origin", choices=["real", "synthetic", "hybrid", "manual_curated"],
+                        default=None,
+                        help="provenance of the pack data (plan R4); rendered as a badge in reports")
     args = parser.parse_args()
 
     result = build_result(Path(args.pack), mode=args.mode)
+    if args.data_origin:
+        result["meta"]["data_origin"] = args.data_origin
+        # keep the bilingual projection in lockstep with the English source
+        out = Path(args.out)
+        zh_path = out.parent / "result.zh.json"
+        if zh_path.exists():
+            zh_result = json.loads(zh_path.read_text(encoding="utf-8"))
+            zh_result.setdefault("meta", {})["data_origin"] = args.data_origin
+            zh_path.write_text(json.dumps(zh_result, ensure_ascii=False, indent=2), encoding="utf-8")
     out = Path(args.out)
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"wrote {args.out} (sources={len(result['sources'])}, evidence={len(result['evidence'])}, "

@@ -39,6 +39,16 @@
         },
         "question": {
           "type": "string"
+        },
+        "data_origin": {
+          "type": "string",
+          "enum": [
+            "real",
+            "synthetic",
+            "hybrid",
+            "manual_curated"
+          ],
+          "description": "Provenance of the pack data (plan R4). real=pipeline-generated from real studies; manual_curated=hand-curated from real verified studies; synthetic=demonstration content, not real studies; hybrid=mixed."
         }
       }
     },
@@ -184,6 +194,17 @@
               "DOWNGRADE_CONFIDENCE",
               "CONTRADICT"
             ]
+          },
+          "bias_warning": {
+            "type": "string",
+            "description": "Optional methodological caveat attached to a claim row."
+          },
+          "pooled_effect_g": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Optional pooled Hedges g attached to a claim row."
           }
         }
       }
@@ -337,6 +358,24 @@
       "type": "object",
       "additionalProperties": true,
       "description": "Legacy alias of report_outline accepted for compatibility."
+    },
+    "forest_plot_data": {
+      "type": "array",
+      "description": "Optional precomputed forest-plot rows consumed by the Web Studio visualization page (SKILL.md Visualization Data Contract).",
+      "items": {
+        "type": "object"
+      }
+    },
+    "visual_layout": {
+      "type": [
+        "object",
+        "array"
+      ],
+      "description": "Optional Lieflat gallery layout composition consumed by build_report.resolve_visual_layout."
+    },
+    "meta_analysis": {
+      "type": "object",
+      "description": "Optional pooled meta-analysis block (synthetic demo packs only unless engine-generated)."
     }
   }
 }

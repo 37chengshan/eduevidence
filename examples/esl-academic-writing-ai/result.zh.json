@@ -2,23 +2,15 @@
   "meta": {
     "skill": "eduevidence",
     "version": "1.0.0",
-    "mode": "agent_mcp_enhanced",
+    "mode": "platform_native",
     "generated_at": "2026-08-22T12:00:00+00:00",
-    "question": "在高等教育学术英语写作（ESL / EAP）课程中，允许本科生使用 AI 写作与同行评审辅助系统，是否提升学术论证质量与批判性思维？是否存在过度依赖与文本原创性退化风险？"
+    "question": "在高等教育学术英语写作（ESL / EAP）课程中，允许本科生使用 AI 写作与同行评审辅助系统，是否提升学术论证质量与批判性思维？是否存在过度依赖与文本原创性退化风险？",
+    "data_origin": "synthetic"
   },
   "execution": {
     "complexity": "L",
-    "mode": "agent_mcp_enhanced",
-    "agents": [
-      "education-planner",
-      "evidence-retriever",
-      "evidence-analyst",
-      "skeptic",
-      "method-reviewer",
-      "evidence-judge",
-      "intervention-designer",
-      "evaluation-designer"
-    ]
+    "mode": "platform_native",
+    "agents": []
   },
   "research_frame": {
     "question": "在高等教育学术英语写作（ESL / EAP）课程中，允许本科生使用 AI 写作与同行评审辅助系统，是否提升学术论证质量与批判性思维？是否存在过度依赖与文本原创性退化风险？",
@@ -156,9 +148,8 @@
   ],
   "claims": [
     {
-      "claim_id": "CLM-001",
-      "statement": "苏格拉底式大纲支架与逻辑漏洞诊断显著提升学术议论文篇章连贯性与主张-证据对齐度。",
-      "status": "supported",
+      "claim_id": "C-001",
+      "status": "SUPPORTED",
       "evidence_ids": [
         "ev-esl-01",
         "ev-esl-05",
@@ -167,24 +158,24 @@
         "ev-esl-12"
       ],
       "bias_warning": "低偏倚风险；效应量体现了形成性写作中大纲支架与体裁语步引导对篇章结构的实质促进。",
-      "pooled_effect_g": 0.54
+      "pooled_effect_g": 0.54,
+      "claim": "苏格拉底式大纲支架与逻辑漏洞诊断显著提升学术议论文篇章连贯性与主张-证据对齐度。"
     },
     {
-      "claim_id": "CLM-002",
-      "statement": "语境化学术词汇同义替换与搭配诊断显著增强学术语域规范性与词汇丰富度。",
-      "status": "supported",
+      "claim_id": "C-002",
+      "status": "SUPPORTED",
       "evidence_ids": [
         "ev-esl-02",
         "ev-esl-07",
         "ev-esl-14"
       ],
       "bias_warning": "低偏倚风险；学术词汇表密度与搭配复杂度的提升在多项随机对照试验中表现高度稳健。",
-      "pooled_effect_g": 0.46
+      "pooled_effect_g": 0.46,
+      "claim": "语境化学术词汇同义替换与搭配诊断显著增强学术语域规范性与词汇丰富度。"
     },
     {
-      "claim_id": "CLM-003",
-      "statement": "无护栏直接依赖 AI 文本生成将削弱脱离工具后的独立批判性推理、论证保持力与作者个人声音。",
-      "status": "supported",
+      "claim_id": "C-003",
+      "status": "SUPPORTED",
       "evidence_ids": [
         "ev-esl-03",
         "ev-esl-04",
@@ -196,7 +187,8 @@
         "ev-esl-16"
       ],
       "bias_warning": "高风险警告：过度依赖整段生成存在严重的认知卸载与文风同质化风险，唯有通过强制元认知批判日志予以反制。",
-      "pooled_effect_g": -0.23
+      "pooled_effect_g": -0.23,
+      "claim": "无护栏直接依赖 AI 文本生成将削弱脱离工具后的独立批判性推理、论证保持力与作者个人声音。"
     }
   ],
   "sources": [
@@ -208,10 +200,9 @@
         "Polio, C."
       ],
       "year": 2025,
-      "venue": "TESOL Quarterly, 59(1), 88–114",
       "doi": "10.1002/tesq.3312",
       "canonical_url": "https://doi.org/10.1002/tesq.3312",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1002/tesq.3312"
     },
     {
@@ -222,10 +213,9 @@
         "Tate, T."
       ],
       "year": 2024,
-      "venue": "Language Learning & Technology, 28(2), 45–68",
       "doi": "10.125/llt.2024.08",
       "canonical_url": "https://doi.org/10.125/llt.2024.08",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.125/llt.2024.08"
     },
     {
@@ -236,10 +226,9 @@
         "Evans, K."
       ],
       "year": 2024,
-      "venue": "Journal of Second Language Writing, 64, 101092",
       "doi": "10.1016/j.jslw.2024.101092",
       "canonical_url": "https://doi.org/10.1016/j.jslw.2024.101092",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.jslw.2024.101092"
     },
     {
@@ -250,10 +239,9 @@
         "Riazi, A. M."
       ],
       "year": 2025,
-      "venue": "System, 122, 103280",
       "doi": "10.1016/j.system.2025.103280",
       "canonical_url": "https://doi.org/10.1016/j.system.2025.103280",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.system.2025.103280"
     },
     {
@@ -264,10 +252,9 @@
         "Aldhafiri, A."
       ],
       "year": 2024,
-      "venue": "Assessing Writing, 60, 100832",
       "doi": "10.1016/j.asw.2024.100832",
       "canonical_url": "https://doi.org/10.1016/j.asw.2024.100832",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.asw.2024.100832"
     },
     {
@@ -278,10 +265,9 @@
         "Buckingham, L."
       ],
       "year": 2025,
-      "venue": "Computers & Education, 211, 104990",
       "doi": "10.1016/j.compedu.2025.104990",
       "canonical_url": "https://doi.org/10.1016/j.compedu.2025.104990",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.compedu.2025.104990"
     },
     {
@@ -292,10 +278,9 @@
         "McNamara, D. S."
       ],
       "year": 2024,
-      "venue": "ReCALL, 36(3), 312–330",
       "doi": "10.1017/S095834402400018X",
       "canonical_url": "https://doi.org/10.1017/S095834402400018X",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1017/S095834402400018X"
     },
     {
@@ -306,10 +291,9 @@
         "Philippakos, Z. A."
       ],
       "year": 2025,
-      "venue": "Journal of Educational Psychology, 117(2), 245–262",
       "doi": "10.1037/edu0000892",
       "canonical_url": "https://doi.org/10.1037/edu0000892",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1037/edu0000892"
     },
     {
@@ -320,10 +304,9 @@
         "Hirvela, A."
       ],
       "year": 2024,
-      "venue": "Applied Linguistics, 45(4), 670–692",
       "doi": "10.1093/applin/amad056",
       "canonical_url": "https://doi.org/10.1093/applin/amad056",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1093/applin/amad056"
     },
     {
@@ -334,10 +317,9 @@
         "Hyland, K."
       ],
       "year": 2025,
-      "venue": "Educational Research Review, 42, 100584",
       "doi": "10.1016/j.edurev.2024.100584",
       "canonical_url": "https://doi.org/10.1016/j.edurev.2024.100584",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.edurev.2024.100584"
     },
     {
@@ -348,10 +330,9 @@
         "Malmström, H."
       ],
       "year": 2024,
-      "venue": "English for Specific Purposes, 75, 112–126",
       "doi": "10.1016/j.esp.2024.03.002",
       "canonical_url": "https://doi.org/10.1016/j.esp.2024.03.002",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.esp.2024.03.002"
     },
     {
@@ -362,10 +343,9 @@
         "Huffman, S."
       ],
       "year": 2025,
-      "venue": "Language Testing, 42(1), 95–120",
       "doi": "10.1177/02655322241289012",
       "canonical_url": "https://doi.org/10.1177/02655322241289012",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1177/02655322241289012"
     },
     {
@@ -376,10 +356,9 @@
         "Stapleton, P."
       ],
       "year": 2024,
-      "venue": "Higher Education Research & Development, 43(6), 1388–1404",
       "doi": "10.1080/07294360.2024.2341102",
       "canonical_url": "https://doi.org/10.1080/07294360.2024.2341102",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1080/07294360.2024.2341102"
     },
     {
@@ -390,10 +369,9 @@
         "Flowerdew, J."
       ],
       "year": 2025,
-      "venue": "Studies in Higher Education, 50(3), 512–530",
       "doi": "10.1080/03075079.2024.2398011",
       "canonical_url": "https://doi.org/10.1080/03075079.2024.2398011",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1080/03075079.2024.2398011"
     },
     {
@@ -404,10 +382,9 @@
         "Barkaoui, K."
       ],
       "year": 2024,
-      "venue": "Assessing Writing, 61, 100845",
       "doi": "10.1016/j.asw.2024.100845",
       "canonical_url": "https://doi.org/10.1016/j.asw.2024.100845",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.asw.2024.100845"
     },
     {
@@ -418,10 +395,9 @@
         "Mak, P."
       ],
       "year": 2025,
-      "venue": "System, 124, 103350",
       "doi": "10.1016/j.system.2025.103350",
       "canonical_url": "https://doi.org/10.1016/j.system.2025.103350",
-      "authority_level": "tier1_peer_reviewed",
+      "authority_level": "tier3_professional_institution",
       "source_location": "https://doi.org/10.1016/j.system.2025.103350"
     }
   ],
@@ -449,7 +425,8 @@
       "quality_score": 9,
       "wwc_rating": "Meets Standards with Reservations",
       "url": "https://doi.org/10.1002/tesq.3312",
-      "key_quote": "结构化苏格拉底式大纲提示显著提升了初稿议论文的图尔敏论证结构与主张-证据对齐度（g=+0.58）。"
+      "key_quote": "结构化苏格拉底式大纲提示显著提升了初稿议论文的图尔敏论证结构与主张-证据对齐度（g=+0.58）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-02",
@@ -474,7 +451,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.125/llt.2024.08",
-      "key_quote": "语境化学术同义词推荐使学术词汇表 (AWL) 词汇密度提升 28%，且未引入词义失真（g=+0.48）。"
+      "key_quote": "语境化学术同义词推荐使学术词汇表 (AWL) 词汇密度提升 28%，且未引入词义失真（g=+0.48）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-03",
@@ -499,7 +477,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1016/j.jslw.2024.101092",
-      "key_quote": "无护栏直接生成整段文本导致学生在无工具闭卷考试中的独立反驳论证构建能力显著下滑（g=-0.24）。"
+      "key_quote": "无护栏直接生成整段文本导致学生在无工具闭卷考试中的独立反驳论证构建能力显著下滑（g=-0.24）。",
+      "direction": "contradict"
     },
     {
       "evidence_id": "ev-esl-04",
@@ -524,7 +503,8 @@
       "quality_score": 9,
       "wwc_rating": "Meets Standards with Reservations",
       "url": "https://doi.org/10.1016/j.system.2025.103280",
-      "key_quote": "强制性反思日志要求学生详细记录采纳/拒绝 AI 修改的理由，成功保护了个体作者立场与反思能力（g=+0.42）。"
+      "key_quote": "强制性反思日志要求学生详细记录采纳/拒绝 AI 修改的理由，成功保护了个体作者立场与反思能力（g=+0.42）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-05",
@@ -549,7 +529,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1016/j.asw.2024.100832",
-      "key_quote": "将 AI 机械语法诊断与同伴实质评估性批评相结合，产生的论文修改质量显著优于纯同伴或纯 AI 组（g=+0.52）。"
+      "key_quote": "将 AI 机械语法诊断与同伴实质评估性批评相结合，产生的论文修改质量显著优于纯同伴或纯 AI 组（g=+0.52）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-06",
@@ -574,7 +555,8 @@
       "quality_score": 9,
       "wwc_rating": "Meets Standards with Reservations",
       "url": "https://doi.org/10.1016/j.compedu.2025.104990",
-      "key_quote": "形成性 AI 语步反馈显著加速了学生对斯威尔斯 CARS 引言体裁范式的掌握（g=+0.61）。"
+      "key_quote": "形成性 AI 语步反馈显著加速了学生对斯威尔斯 CARS 引言体裁范式的掌握（g=+0.61）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-07",
@@ -599,7 +581,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1017/S095834402400018X",
-      "key_quote": "交互式衔接手段提示显著提升了文本全局连贯性与学术程式化语块 (AFL) 运用水平（g=+0.45）。"
+      "key_quote": "交互式衔接手段提示显著提升了文本全局连贯性与学术程式化语块 (AFL) 运用水平（g=+0.45）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-08",
@@ -624,7 +607,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1037/edu0000892",
-      "key_quote": "依赖持续 AI 句子生成的学生在 4 周后的独立闭卷测试中反驳论证质量下滑 28%（g=-0.28）。"
+      "key_quote": "依赖持续 AI 句子生成的学生在 4 周后的独立闭卷测试中反驳论证质量下滑 28%（g=-0.28）。",
+      "direction": "contradict"
     },
     {
       "evidence_id": "ev-esl-09",
@@ -649,7 +633,8 @@
       "quality_score": 8,
       "wwc_rating": "Meets Standards with Reservations",
       "url": "https://doi.org/10.1093/applin/amad056",
-      "key_quote": "无约束的句子重写导致学生群体文风趋向机械同质化，抹杀了多元的个人学术修辞特色（g=-0.20）。"
+      "key_quote": "无约束的句子重写导致学生群体文风趋向机械同质化，抹杀了多元的个人学术修辞特色（g=-0.20）。",
+      "direction": "contradict"
     },
     {
       "evidence_id": "ev-esl-10",
@@ -674,7 +659,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1016/j.edurev.2024.100584",
-      "key_quote": "对 34 项实证研究的元分析表明，在具备教学支架时 AI 反馈带来稳定的即时篇章结构增益（g=+0.51）。"
+      "key_quote": "对 34 项实证研究的元分析表明，在具备教学支架时 AI 反馈带来稳定的即时篇章结构增益（g=+0.51）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-11",
@@ -699,7 +685,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1016/j.esp.2024.03.002",
-      "key_quote": "引导学生对照原始文献核对 AI 生成的文献综述，显著降低了拼贴式抄袭并提升了改写原创度（g=+0.39）。"
+      "key_quote": "引导学生对照原始文献核对 AI 生成的文献综述，显著降低了拼贴式抄袭并提升了改写原创度（g=+0.39）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-12",
@@ -724,7 +711,8 @@
       "quality_score": 9,
       "wwc_rating": "Meets Standards with Reservations",
       "url": "https://doi.org/10.1177/02655322241289012",
-      "key_quote": "苏格拉底式 AI 逻辑诊断促使学生有效识别循环论证并强化了论据到论点的推导纽带（g=+0.55）。"
+      "key_quote": "苏格拉底式 AI 逻辑诊断促使学生有效识别循环论证并强化了论据到论点的推导纽带（g=+0.55）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-13",
@@ -749,7 +737,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1080/07294360.2024.2341102",
-      "key_quote": "习惯一键获取 AI 论点生成的学生在独立提出学术主张时批判性辩证深度出现萎缩（g=-0.19）。"
+      "key_quote": "习惯一键获取 AI 论点生成的学生在独立提出学术主张时批判性辩证深度出现萎缩（g=-0.19）。",
+      "direction": "contradict"
     },
     {
       "evidence_id": "ev-esl-14",
@@ -774,7 +763,8 @@
       "quality_score": 9,
       "wwc_rating": "Meets Standards with Reservations",
       "url": "https://doi.org/10.1080/03075079.2024.2398011",
-      "key_quote": "交互式 AI 语料库探究拓展了学生学术语块库，且未导致八股套话式表达泛滥（g=+0.46）。"
+      "key_quote": "交互式 AI 语料库探究拓展了学生学术语块库，且未导致八股套话式表达泛滥（g=+0.46）。",
+      "direction": "support"
     },
     {
       "evidence_id": "ev-esl-15",
@@ -799,7 +789,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1016/j.asw.2024.100845",
-      "key_quote": "直接以 AI 文本生成替代起草导致学生在干预后闭卷考试中的概念综合归纳能力显著受损（g=-0.22）。"
+      "key_quote": "直接以 AI 文本生成替代起草导致学生在干预后闭卷考试中的概念综合归纳能力显著受损（g=-0.22）。",
+      "direction": "contradict"
     },
     {
       "evidence_id": "ev-esl-16",
@@ -824,7 +815,8 @@
       "quality_score": 10,
       "wwc_rating": "Meets Standards without Reservations",
       "url": "https://doi.org/10.1016/j.system.2025.103350",
-      "key_quote": "通过苏格拉底式发问引导而非直接修改文本的支架系统，培养了更高的写作主体性与鲜明作者声音（g=+0.47）。"
+      "key_quote": "通过苏格拉底式发问引导而非直接修改文本的支架系统，培养了更高的写作主体性与鲜明作者声音（g=+0.47）。",
+      "direction": "support"
     }
   ],
   "methodology_reviews": [

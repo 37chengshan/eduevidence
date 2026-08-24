@@ -52,6 +52,16 @@ THEME_DISPLAY = {
     "presentation": "Presentation / Judge [Dark]",
 }
 
+# Provenance badge (plan R4): every report declares where its data came from.
+# synthetic/hybrid get a loud warning style; absence of the field renders no chip
+# (legacy packs), but new packs must always set it.
+DATA_ORIGIN_LABELS = {
+    "real": {"zh": "数据来源：真实文献（流水线生成）", "en": "Data: real studies (pipeline-generated)"},
+    "manual_curated": {"zh": "数据来源：真实文献 · 人工精编", "en": "Data: real studies · manually curated"},
+    "synthetic": {"zh": "数据来源：合成演示数据（非真实研究）", "en": "Data: SYNTHETIC demo — not real studies"},
+    "hybrid": {"zh": "数据来源：混合（真实 + 合成）", "en": "Data: hybrid (real + synthetic)"},
+}
+
 # Full report is intentionally NOT a fixed 12-chapter template. The template exposes
 # semantic modules; an upstream AI may group them into any 5–7 chapter outline by writing
 # `report_outline.chapters`. If it does not, a six-chapter fallback keeps the report usable.
@@ -2924,6 +2934,13 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
 
     integrity_text = integrity_footer_text(integrity or {}, ui)
     footer = ui['footer'].format(integrity=integrity_text)
+    origin = (meta.get('data_origin') or '').strip()
+    if origin:
+        origin_label = DATA_ORIGIN_LABELS.get(origin, {}).get(lang, origin)
+        origin_chip = (f'<span class="data-origin-chip" data-origin="{esc(origin)}">'
+                       f'{esc(origin_label)}</span>')
+    else:
+        origin_chip = ''
     meta_line = (f"{esc(ui['header_mode'])}{esc(label(lang, 'mode', meta.get('mode') or ''))}"
                  f" · {esc(ui['header_generated'])}{esc(meta.get('generated_at') or '')}"
                  f" · {esc(ui['header_evidence'])}{len(result.get('evidence', []))}"
@@ -2932,7 +2949,7 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
                  f"{esc(ui['header_sources_suffix'])}")
     return f"""<div class="report-shell" data-lang-body="{lang}">
 <header class="report-header">
-<div class="report-brand-row"><span class="report-brand">EduEvidence</span><span class="generated-theme-chip">{esc(THEME_DISPLAY[theme])}</span></div>
+<div class="report-brand-row"><span class="report-brand">EduEvidence</span><span class="generated-theme-chip">{esc(THEME_DISPLAY[theme])}</span>{origin_chip}</div>
 <h1>{esc(question)}</h1>
 <p class="meta">{meta_line}</p>
 <nav class="report-view-switcher" aria-label="report view">
@@ -3160,6 +3177,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .report-brand-row {{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }}
 .report-brand {{ font-weight:750; letter-spacing:.02em; }}
 .generated-theme-chip {{ font-size:.7rem; color:var(--insufficient); border:1px solid var(--border); border-radius:999px; padding:2px 8px; }}
+.data-origin-chip {{ font-size:.7rem; border:1px solid var(--border); border-radius:999px; padding:2px 8px; color:var(--insufficient); margin-left:8px; overflow-wrap:anywhere; }}
+.data-origin-chip[data-origin="synthetic"], .data-origin-chip[data-origin="hybrid"] {{ border-color:#b45309; color:#92400e; background:rgba(217,119,6,.10); font-weight:600; }}
 .report-view-switcher {{ display:flex; gap:8px; margin-top:18px; }}
 .report-view-btn {{ border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:999px; padding:7px 14px; cursor:pointer; font-size:.82rem; }}
 .report-view-btn.active {{ background:var(--primary); border-color:var(--primary); color:#fff; }}

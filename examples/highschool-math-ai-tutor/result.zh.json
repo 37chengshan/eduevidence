@@ -2,23 +2,15 @@
   "meta": {
     "skill": "eduevidence",
     "version": "1.0.0",
-    "mode": "agent_mcp_enhanced",
+    "mode": "platform_native",
     "generated_at": "2026-08-22T12:00:00+00:00",
-    "question": "在高中国家课程标准高中数学（解析几何与微积分初步）教学中，引入基于大语言模型的自适应 AI Tutor 进行课后个性化辅导，是否显著提高学生的数学建模与高阶问题解决能力？是否存在城乡生源校际差异？"
+    "question": "在高中国家课程标准高中数学（解析几何与微积分初步）教学中，引入基于大语言模型的自适应 AI Tutor 进行课后个性化辅导，是否显著提高学生的数学建模与高阶问题解决能力？是否存在城乡生源校际差异？",
+    "data_origin": "synthetic"
   },
   "execution": {
     "complexity": "L",
-    "mode": "agent_mcp_enhanced",
-    "agents": [
-      "education-planner",
-      "evidence-retriever",
-      "evidence-analyst",
-      "skeptic",
-      "method-reviewer",
-      "evidence-judge",
-      "intervention-designer",
-      "evaluation-designer"
-    ],
+    "mode": "platform_native",
+    "agents": [],
     "usage": {
       "measurement_status": "NOT_CAPTURED",
       "input_tokens": null,
@@ -228,7 +220,6 @@
         "Wang, Y."
       ],
       "year": 2025,
-      "venue": "Computers & Education",
       "doi": "10.1016/j.compedu.2025.104920",
       "canonical_url": "https://doi.org/10.1016/j.compedu.2025.104920",
       "source_location": "https://doi.org/10.1016/j.compedu.2025.104920",
@@ -245,7 +236,6 @@
         "Roschelle, J."
       ],
       "year": 2024,
-      "venue": "AERA Open",
       "doi": "10.3102/2332858424123456",
       "canonical_url": "https://doi.org/10.3102/2332858424123456",
       "source_location": "https://doi.org/10.3102/2332858424123456",
@@ -261,7 +251,6 @@
         "Chen, Z."
       ],
       "year": 2024,
-      "venue": "Journal of Research in Mathematics Education",
       "doi": "10.5951/jresematheduc-2024-0012",
       "canonical_url": "https://doi.org/10.5951/jresematheduc-2024-0012",
       "source_location": "https://doi.org/10.5951/jresematheduc-2024-0012",
@@ -277,7 +266,6 @@
         "Zhang, L."
       ],
       "year": 2025,
-      "venue": "Educational Technology Research and Development",
       "doi": "10.1007/s11423-025-10382-x",
       "canonical_url": "https://doi.org/10.1007/s11423-025-10382-x",
       "source_location": "https://doi.org/10.1007/s11423-025-10382-x",
@@ -293,7 +281,6 @@
         "Baker, R. S."
       ],
       "year": 2024,
-      "venue": "International Journal of Artificial Intelligence in Education",
       "doi": "10.1007/s40593-024-00388-z",
       "canonical_url": "https://doi.org/10.1007/s40593-024-00388-z",
       "source_location": "https://doi.org/10.1007/s40593-024-00388-z",
@@ -309,7 +296,6 @@
         "Bakker, A."
       ],
       "year": 2024,
-      "venue": "ZDM – Mathematics Education",
       "doi": "10.1007/s11858-024-01567-8",
       "canonical_url": "https://doi.org/10.1007/s11858-024-01567-8",
       "source_location": "https://doi.org/10.1007/s11858-024-01567-8",
@@ -326,7 +312,6 @@
         "Liu, M."
       ],
       "year": 2024,
-      "venue": "Computers & Education",
       "doi": "10.1016/j.compedu.2024.105088",
       "canonical_url": "https://doi.org/10.1016/j.compedu.2024.105088",
       "source_location": "https://doi.org/10.1016/j.compedu.2024.105088",
@@ -342,7 +327,6 @@
         "Feng, M."
       ],
       "year": 2023,
-      "venue": "AERA Open",
       "doi": "10.3102/2332858423119876",
       "canonical_url": "https://doi.org/10.3102/2332858423119876",
       "source_location": "https://doi.org/10.3102/2332858423119876",
@@ -358,7 +342,6 @@
         "Wu, X."
       ],
       "year": 2025,
-      "venue": "Journal of Research in Mathematics Education",
       "doi": "10.5951/jresematheduc-2025-0003",
       "canonical_url": "https://doi.org/10.5951/jresematheduc-2025-0003",
       "source_location": "https://doi.org/10.5951/jresematheduc-2025-0003",
@@ -374,7 +357,6 @@
         "Liu, J."
       ],
       "year": 2025,
-      "venue": "Computers & Education",
       "doi": "10.1016/j.compedu.2025.105210",
       "canonical_url": "https://doi.org/10.1016/j.compedu.2025.105210",
       "source_location": "https://doi.org/10.1016/j.compedu.2025.105210",
@@ -390,7 +372,6 @@
         "Nückles, M."
       ],
       "year": 2024,
-      "venue": "Learning and Instruction",
       "doi": "10.1016/j.learninstruc.2024.101890",
       "canonical_url": "https://doi.org/10.1016/j.learninstruc.2024.101890",
       "source_location": "https://doi.org/10.1016/j.learninstruc.2024.101890",
@@ -406,7 +387,6 @@
         "Rose, C. P."
       ],
       "year": 2024,
-      "venue": "International Journal of Artificial Intelligence in Education",
       "doi": "10.1007/s40593-024-00362-7",
       "canonical_url": "https://doi.org/10.1007/s40593-024-00362-7",
       "source_location": "https://doi.org/10.1007/s40593-024-00362-7",
@@ -422,7 +402,6 @@
         "Paas, F."
       ],
       "year": 2024,
-      "venue": "Journal of Educational Psychology",
       "doi": "10.1037/edu0000845",
       "canonical_url": "https://doi.org/10.1037/edu0000845",
       "source_location": "https://doi.org/10.1037/edu0000845",
@@ -438,7 +417,6 @@
         "Wang, C."
       ],
       "year": 2025,
-      "venue": "ZDM – Mathematics Education",
       "doi": "10.1007/s11858-024-01602-w",
       "canonical_url": "https://doi.org/10.1007/s11858-024-01602-w",
       "source_location": "https://doi.org/10.1007/s11858-024-01602-w",
@@ -454,7 +432,6 @@
         "Noss, R."
       ],
       "year": 2024,
-      "venue": "Educational Studies in Mathematics",
       "doi": "10.1007/s10649-024-10315-4",
       "canonical_url": "https://doi.org/10.1007/s10649-024-10315-4",
       "source_location": "https://doi.org/10.1007/s10649-024-10315-4",
@@ -470,7 +447,6 @@
         "Li, Y."
       ],
       "year": 2024,
-      "venue": "Educational Technology Research and Development",
       "doi": "10.1007/s11423-024-10350-3",
       "canonical_url": "https://doi.org/10.1007/s11423-024-10350-3",
       "source_location": "https://doi.org/10.1007/s11423-024-10350-3",

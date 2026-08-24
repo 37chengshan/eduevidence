@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = [
     "examples/highschool-math-ai-tutor",
     "examples/esl-academic-writing-ai",
-    "examples/ai-coding-assistant-50"
+    "examples/ai-coding-assistant-evidence"
 ]
 
 THEMES = ["claude", "academic", "datalab", "datalab-dark", "presentation"]
