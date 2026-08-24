@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 # EduEvidence 一键安装脚本（macOS / Linux）
 #
+# 供应链提示（E7）：远程执行请优先走「clone + 本地审阅」路径——
+#   git clone --depth 1 https://github.com/37chengshan/eduevidence
+#   cd eduevidence && bash install.sh
+# 若必须 curl 直跑，建议固定到具体 commit 并先人工审阅：
+#   curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/<commit>/install.sh -o install.sh
+#
+# 副作用披露：本脚本会 (a) 创建 Python venv 并安装依赖；
+# (b) 写入 $HOME/.eduevidence/env（AGENT_MCP_INSTALLED=1 声明）；
+# (c) --skill 模式在所选宿主目录写入 skill 文件（覆盖前自动备份）。
+#
 # 用法:
 #   bash install.sh                    # 本地安装：venv + 依赖 + 自检 + 测试（等价 --dev）
 #   bash install.sh --dev              # 同上（向后兼容，默认行为）

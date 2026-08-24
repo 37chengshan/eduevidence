@@ -72,24 +72,29 @@ def _sections(text: str):
 def lint_static() -> list[str]:
     problems: list[str] = []
 
-    # 基座内联 CSS（build_report.py render_html 的 <style> 块）
+    # 基座 CSS（E2 起外置于 assets/base.css；build_report.py 仅保留加载器）。
+    # 扫描源 = py 文本（{{}} 归一为 {}，兼容旧内联形态）+ base.css 全文。
     report_py = (SCRIPTS_DIR / "build_report.py").read_text(encoding="utf-8")
-    if "overflow-x:hidden" not in report_py:
+    base_text = report_py.replace("{{", "{").replace("}}", "}")
+    base_css_path = SCRIPTS_DIR.parent / "assets" / "base.css"
+    if base_css_path.exists():
+        base_text += "\n" + _strip_comments(base_css_path.read_text(encoding="utf-8"))
+    if "overflow-x:hidden" not in base_text and "overflow-x: hidden" not in base_text:
         problems.append("base: html/body 缺少 overflow-x:hidden（横向溢出兜底）")
     for needle in (
-        ".report-shell {{ width:100%; max-width:1200px;",
+        ".report-shell { width:100%; max-width:1200px;",
         "@media (max-width:980px)",
         "@media (max-width:720px)",
     ):
-        if needle not in report_py:
+        if needle not in base_text:
             problems.append(f"base: 缺少必需样式片段 {needle!r}")
-    if "minmax(0,1fr)" not in report_py:
+    if "minmax(0,1fr)" not in base_text:
         problems.append("base: 缺少 minmax(0,1fr)（移动端 1fr 轨道收缩安全）")
-    if "@media (max-width:720px)" not in report_py:
+    if "@media (max-width:720px)" not in base_text:
         problems.append("base: @media (max-width:720px) 块缺失")
-    elif ".outcome-groups {{ grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr))" not in report_py:
+    elif ".outcome-groups{grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr))" not in base_text.replace(" ", ""):
         problems.append("base@720: .outcome-groups 缺少移动端收缩覆写")
-    if ".evidence-detail-grid, .source-detail-grid {{ grid-template-columns:1fr;" not in report_py:
+    if ".evidence-detail-grid, .source-detail-grid { grid-template-columns:1fr;" not in base_text:
         problems.append("base@720: detail 网格缺少 1fr 覆写")
 
     # 各主题

@@ -64,11 +64,14 @@ bash install.sh --skill --dry-run    # preview only, write nothing
 
 You can also run it remotely without cloning:
 
+> ⚠️ Supply-chain note (E7): `curl | bash` executes a remote script. Prefer
+> cloning and reviewing first, or pin the URL to a specific commit.
+
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
 ```
 
-Before writing, the script automatically backs up any existing skill directory (`cp -r` to `.bak-<timestamp>`); `--dry-run` only previews the changes.
+Before writing, the script automatically backs up any existing skill directory (`cp -r` to `.bak-<timestamp>`); `--dry-run` only previews the changes. Side effects: creates a Python venv, writes `~/.eduevidence/env` (`AGENT_MCP_INSTALLED=1`).
 
 ### Supported agents and install locations
 

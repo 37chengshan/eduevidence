@@ -24,12 +24,16 @@ visualization/       HTML 渲染器（5 主题双语报告）
 
 ```bash
 # 方式 A：curl 一键（自动 clone 到 ./eduevidence 并安装）
+# ⚠️ 供应链提示：curl 直跑等于执行远端脚本；更稳妥用方式 B，或把 URL 固定到具体 commit 并先审阅
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
 
-# 方式 B：git clone
+# 方式 B：git clone（推荐——可先审阅 install.sh 再执行）
 git clone https://github.com/37chengshan/eduevidence.git && cd eduevidence
 bash install.sh
 ```
+
+副作用披露：安装会创建 venv、写入 `~/.eduevidence/env`（`AGENT_MCP_INSTALLED=1` 声明）；
+覆盖已有 skill 前自动备份。
 
 ## 2. 安装为 Skill（AI Agent 用户）
 

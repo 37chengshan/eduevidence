@@ -19,13 +19,18 @@ EduEvidence 面向教师、教学研究者与教学管理者，把"是否采用�
 
 ## 快速安装
 
-**方式一：curl 一键安装（推荐，无需 clone）**
+**方式一：curl 一键安装**
+
+> ⚠️ 供应链提示（E7）：curl 直跑等于执行远端脚本。更稳妥的方式是**方式二 clone 后
+> 先审阅再安装**；若坚持直跑，建议把 URL 固定到具体 commit 并先下载审阅。
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
 ```
 
 脚本自动 clone 仓库到 `./eduevidence` 并完成安装（venv + 依赖 + 自检 + 测试）。
+副作用披露：会在 `~/.eduevidence/env` 写入 `AGENT_MCP_INSTALLED=1` 声明；
+`--skill` 模式覆盖已有 skill 前自动备份。
 
 **方式二：git clone**
 
@@ -58,7 +63,7 @@ bash install.sh --list-hosts         # 查看支持的 Agent 与 Skill 落点
 bash install.sh --skill --dry-run    # 只预览将执行的变更，不写入
 ```
 
-也可以不经 clone 直接远程执行：
+也可以不经 clone 直接远程执行（⚠️ 供应链提示见上：优先 clone + 审阅；直跑请固定 commit）：
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"

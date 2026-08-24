@@ -639,6 +639,8 @@
 :root[data-theme="presentation"] .lieflat-src { font-size:.64rem; }
 :root[data-theme="presentation"] .lieflat-suppressed { background:var(--surface2); font-size:.78rem; }
 
+/* EduEvidence base stylesheet — extracted verbatim from build_report.py
+   (plan E2: templates/styles live outside the renderer; loaded at build time). */
 :root {
   --bg:#F7F4ED; --surface:#FFFFFF; --surface2:#FCFAF6;
   --text:#3A3833; --primary:#B8694A; --support:#5E8A6A;
@@ -896,6 +898,85 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .lieflat-suppressed ul { margin:8px 0 0; padding-left:18px; }
 .lieflat-suppressed li { margin:3px 0; }
 
+@media print { body { background:#fff; } .controls, .report-view-switcher, .full-report-toc { display:none !important; }
+  .report-shell { max-width:none !important; padding:0 !important; }
+  .report-page-brief { display:none !important; } .report-page-full { display:block !important; }
+  .full-report-layout { display:block !important; } .full-report-content { max-width:none !important; }
+  .full-chapter { break-before:auto; break-inside:auto; }
+  .report-section { box-shadow:none !important; border:none !important; break-inside:avoid-page; }
+  .report-section svg { border:none; } .table-wrap { overflow:visible; }
+  .lieflat-card { box-shadow:none !important; break-inside:avoid; }
+  .lieflat-figure svg { border:none; }
+  details>summary { display:none !important; } details>*:not(summary) { display:block !important; }
+  .decision-hero, .tribunal-card, .trace-chain-card, .action-node, .method-audit-item { box-shadow:none !important; background:#fff !important; }
+  a { color:#000; text-decoration:underline; } }
+@media (max-width:980px) {
+  /* 网格 item 收缩安全：阻止子内容 min-content 把 1fr 轨道撑破（移动端/平板横向裁切）。 */
+  .full-report-layout { grid-template-columns:minmax(0,1fr); gap:18px; }
+  .brief-block-body > *, .outcome-separation, .visual-surface,
+  .tribunal-grid > *, .hero-insights > *, .brief-source-grid > * { min-width:0; }
+  /* 章节直接子元素（table-wrap / evidence-to-action 等）默认 min-width:auto，
+     会把来源表等宽内容的 min-content 一路传给 shell —— 显式放开收缩。
+     注意用 .table-wrap .data-table 同强度选择器，否则压不过基座 nowrap。 */
+  .full-chapter-body > *, .table-wrap, .evidence-to-action { min-width:0; max-width:100%; }
+  .table-wrap .data-table th { white-space:normal; }
+  .table-wrap .data-table th, .table-wrap .data-table td { overflow-wrap:anywhere; word-break:break-word; }
+  /* 窄屏放弃 nowrap+省略号：让主单元格换行，否则行 min-content 撑破表格容器。 */
+  .table-wrap .data-table td.cell-main { white-space:normal; max-width:none; }
+  /* 定义网格/范围卡片里的 snake_case 枚举值（如 frame.json 的
+     first_programming_course_no_prior_text_based_programming）是不可断行长
+     token，必须允许任意断行，否则 min-content 直接撑破窄屏。 */
+  .scope-card, .scope-text, .scope-grid dt, .scope-grid dd,
+  .evidence-detail-grid dd, .source-detail-grid dd,
+  .retrieval-grid article, .retrieval-grid li { min-width:0;
+      overflow-wrap:anywhere; }
+  .full-report-toc { position:relative; top:auto; max-height:none; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; }
+  .full-report-toc nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :root .full-report-layout.toc-collapsed { grid-template-columns:1fr; }
+  .full-report-layout.toc-collapsed .full-report-toc { position:relative; width:100%; padding:10px 12px; border:1px solid var(--border); }
+  .full-report-layout.toc-collapsed .toc-collapse { position:static; transform:none; padding:4px 8px; box-shadow:none; }
+  .full-report-layout.toc-collapsed .full-report-toc nav { display:none; }
+}
+@media (max-width:720px) {
+  .controls { width:calc(100% - 24px); margin-bottom:10px; padding-left:8px; padding-right:8px; }
+  .report-shell { width:100%; padding:12px 14px 56px; }
+  .report-header { width:100%; }
+  .report-header h1 { font-size:1.55rem; overflow-wrap:anywhere; }
+  .report-header .meta, .brief-source h3, .claim-cell, .detail-body, .source-detail-grid dd { overflow-wrap:anywhere; word-break:break-word; }
+  .data-table { font-size:.78rem; }
+  .hero-insights, .tribunal-grid, .scope-grid, .retrieval-grid, .brief-source-grid, .method-audit-grid { grid-template-columns:1fr; }
+  /* 网格收缩安全：1fr 轨道 min 改 0、auto-fit 轨道 min 随容器收缩(min(180px,100%))，
+     阻断固定 px 最小值 -> min-content 爆炸 -> 移动端横向溢出 的链条。 */
+  .full-report-content, .full-chapter, .full-chapter-body, .brief-block-body,
+  .outcome-separation, .visual-surface, .report-page-full, .report-page-brief { min-width:0; }
+  .outcome-groups { grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr)); }
+  .report-view-switcher { width:100%; }
+  .report-view-btn { flex:1; min-height:42px; }
+  .lang-btn, .toc-collapse { min-height:40px; }
+  .lang-btn { min-width:46px; }
+  .detail-expander>summary, .matrix-controls summary, .supporting-visual summary, .tribunal-more>summary { padding:7px 0; min-height:38px; display:flex; align-items:center; }
+  .full-report-toc nav { grid-template-columns:1fr; }
+  .full-chapter { width:100%; margin-bottom:38px; padding-bottom:38px; }
+  .full-chapter-header, .brief-block-header, .visual-heading { max-width:100%; }
+  .evidence-detail-grid, .source-detail-grid { grid-template-columns:1fr; }
+  .evidence-detail-grid dt, .evidence-detail-grid dd,
+  .source-detail-grid dt, .source-detail-grid dd { min-width:0; overflow-wrap:anywhere; }
+  .evidence-detail-grid dt, .source-detail-grid dt { padding-bottom:2px; }
+  .evidence-detail-grid dd, .source-detail-grid dd { padding-top:2px; }
+  .decision-hero { padding:20px 16px; }
+  .section-data, .section-decision, .section-narrative { width:100%; max-width:100%; }
+  .visual-surface, .outcome-separation, .trace-chain { max-width:100%; }
+  .chart-mount { height:clamp(240px,62vw,320px); }
+  .evidence-to-action { flex-direction:column; overflow:visible; }
+  .flow-arrow { transform:rotate(90deg); }
+  .matrix-wrap { width:100%; border:0; overflow:visible; }
+  .evidence-matrix thead { display:none; }
+  .evidence-matrix, .evidence-matrix tbody, .evidence-matrix tr, .evidence-matrix td { display:block; width:100%; }
+  .evidence-matrix tr { border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; padding:10px; background:var(--surface); }
+  .evidence-matrix td { border:0; padding:5px 0; }
+  .claim-cell { min-width:0; max-width:none; }
+}
+
 /* EduEvidence Motion Template
    Motion explains hierarchy only. It never changes evidence meaning or numeric state. */
 
@@ -1054,85 +1135,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   }
 }
 
-
-@media print { body { background:#fff; } .controls, .report-view-switcher, .full-report-toc { display:none !important; }
-  .report-shell { max-width:none !important; padding:0 !important; }
-  .report-page-brief { display:none !important; } .report-page-full { display:block !important; }
-  .full-report-layout { display:block !important; } .full-report-content { max-width:none !important; }
-  .full-chapter { break-before:auto; break-inside:auto; }
-  .report-section { box-shadow:none !important; border:none !important; break-inside:avoid-page; }
-  .report-section svg { border:none; } .table-wrap { overflow:visible; }
-  .lieflat-card { box-shadow:none !important; break-inside:avoid; }
-  .lieflat-figure svg { border:none; }
-  details>summary { display:none !important; } details>*:not(summary) { display:block !important; }
-  .decision-hero, .tribunal-card, .trace-chain-card, .action-node, .method-audit-item { box-shadow:none !important; background:#fff !important; }
-  a { color:#000; text-decoration:underline; } }
-@media (max-width:980px) {
-  /* 网格 item 收缩安全：阻止子内容 min-content 把 1fr 轨道撑破（移动端/平板横向裁切）。 */
-  .full-report-layout { grid-template-columns:minmax(0,1fr); gap:18px; }
-  .brief-block-body > *, .outcome-separation, .visual-surface,
-  .tribunal-grid > *, .hero-insights > *, .brief-source-grid > * { min-width:0; }
-  /* 章节直接子元素（table-wrap / evidence-to-action 等）默认 min-width:auto，
-     会把来源表等宽内容的 min-content 一路传给 shell —— 显式放开收缩。
-     注意用 .table-wrap .data-table 同强度选择器，否则压不过基座 nowrap。 */
-  .full-chapter-body > *, .table-wrap, .evidence-to-action { min-width:0; max-width:100%; }
-  .table-wrap .data-table th { white-space:normal; }
-  .table-wrap .data-table th, .table-wrap .data-table td { overflow-wrap:anywhere; word-break:break-word; }
-  /* 窄屏放弃 nowrap+省略号：让主单元格换行，否则行 min-content 撑破表格容器。 */
-  .table-wrap .data-table td.cell-main { white-space:normal; max-width:none; }
-  /* 定义网格/范围卡片里的 snake_case 枚举值（如 frame.json 的
-     first_programming_course_no_prior_text_based_programming）是不可断行长
-     token，必须允许任意断行，否则 min-content 直接撑破窄屏。 */
-  .scope-card, .scope-text, .scope-grid dt, .scope-grid dd,
-  .evidence-detail-grid dd, .source-detail-grid dd,
-  .retrieval-grid article, .retrieval-grid li { min-width:0;
-      overflow-wrap:anywhere; }
-  .full-report-toc { position:relative; top:auto; max-height:none; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; }
-  .full-report-toc nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
-  :root .full-report-layout.toc-collapsed { grid-template-columns:1fr; }
-  .full-report-layout.toc-collapsed .full-report-toc { position:relative; width:100%; padding:10px 12px; border:1px solid var(--border); }
-  .full-report-layout.toc-collapsed .toc-collapse { position:static; transform:none; padding:4px 8px; box-shadow:none; }
-  .full-report-layout.toc-collapsed .full-report-toc nav { display:none; }
-}
-@media (max-width:720px) {
-  .controls { width:calc(100% - 24px); margin-bottom:10px; padding-left:8px; padding-right:8px; }
-  .report-shell { width:100%; padding:12px 14px 56px; }
-  .report-header { width:100%; }
-  .report-header h1 { font-size:1.55rem; overflow-wrap:anywhere; }
-  .report-header .meta, .brief-source h3, .claim-cell, .detail-body, .source-detail-grid dd { overflow-wrap:anywhere; word-break:break-word; }
-  .data-table { font-size:.78rem; }
-  .hero-insights, .tribunal-grid, .scope-grid, .retrieval-grid, .brief-source-grid, .method-audit-grid { grid-template-columns:1fr; }
-  /* 网格收缩安全：1fr 轨道 min 改 0、auto-fit 轨道 min 随容器收缩(min(180px,100%))，
-     阻断固定 px 最小值 -> min-content 爆炸 -> 移动端横向溢出 的链条。 */
-  .full-report-content, .full-chapter, .full-chapter-body, .brief-block-body,
-  .outcome-separation, .visual-surface, .report-page-full, .report-page-brief { min-width:0; }
-  .outcome-groups { grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr)); }
-  .report-view-switcher { width:100%; }
-  .report-view-btn { flex:1; min-height:42px; }
-  .lang-btn, .toc-collapse { min-height:40px; }
-  .lang-btn { min-width:46px; }
-  .detail-expander>summary, .matrix-controls summary, .supporting-visual summary, .tribunal-more>summary { padding:7px 0; min-height:38px; display:flex; align-items:center; }
-  .full-report-toc nav { grid-template-columns:1fr; }
-  .full-chapter { width:100%; margin-bottom:38px; padding-bottom:38px; }
-  .full-chapter-header, .brief-block-header, .visual-heading { max-width:100%; }
-  .evidence-detail-grid, .source-detail-grid { grid-template-columns:1fr; }
-  .evidence-detail-grid dt, .evidence-detail-grid dd,
-  .source-detail-grid dt, .source-detail-grid dd { min-width:0; overflow-wrap:anywhere; }
-  .evidence-detail-grid dt, .source-detail-grid dt { padding-bottom:2px; }
-  .evidence-detail-grid dd, .source-detail-grid dd { padding-top:2px; }
-  .decision-hero { padding:20px 16px; }
-  .section-data, .section-decision, .section-narrative { width:100%; max-width:100%; }
-  .visual-surface, .outcome-separation, .trace-chain { max-width:100%; }
-  .chart-mount { height:clamp(240px,62vw,320px); }
-  .evidence-to-action { flex-direction:column; overflow:visible; }
-  .flow-arrow { transform:rotate(90deg); }
-  .matrix-wrap { width:100%; border:0; overflow:visible; }
-  .evidence-matrix thead { display:none; }
-  .evidence-matrix, .evidence-matrix tbody, .evidence-matrix tr, .evidence-matrix td { display:block; width:100%; }
-  .evidence-matrix tr { border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; padding:10px; background:var(--surface); }
-  .evidence-matrix td { border:0; padding:5px 0; }
-  .claim-cell { min-width:0; max-width:none; }
-}
 </style>
 </head>
 <body>
