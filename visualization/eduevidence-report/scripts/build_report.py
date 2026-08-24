@@ -3194,6 +3194,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .full-report-intro h2 {{ font-family:var(--font-head); margin:0 0 7px; font-size:1.8rem; }}
 .full-report-intro p {{ margin:0; color:var(--insufficient); }}
 .full-report-layout {{ position:relative; display:grid; width:100%; grid-template-columns:minmax(180px,240px) minmax(0,1fr); gap:clamp(24px,3vw,42px); align-items:start; }}
+/* 桌面双栏：内容列收口残余的行内可滚动溢出（clip 不产生滚动条也不破坏 sticky）。 */
+@media (min-width:981px) {{ .full-report-content {{ overflow-x:clip; }} }}
 .full-report-toc {{ position:sticky; top:18px; max-height:calc(100vh - 36px); overflow:auto; border-right:1px solid var(--border); padding-right:18px; }}
 .toc-head {{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }}
 .toc-head strong {{ font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--insufficient); }}
@@ -3257,6 +3259,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .full-report-layout {{ grid-template-columns:minmax(0,1fr); gap:18px; }}
   .brief-block-body > *, .outcome-separation, .visual-surface,
   .tribunal-grid > *, .hero-insights > *, .brief-source-grid > * {{ min-width:0; }}
+  /* 章节直接子元素（table-wrap / evidence-to-action 等）默认 min-width:auto，
+     会把来源表等宽内容的 min-content 一路传给 shell —— 显式放开收缩。
+     注意用 .table-wrap .data-table 同强度选择器，否则压不过基座 nowrap。 */
+  .full-chapter-body > *, .table-wrap, .evidence-to-action {{ min-width:0; max-width:100%; }}
+  .table-wrap .data-table th {{ white-space:normal; }}
+  .table-wrap .data-table th, .table-wrap .data-table td {{ overflow-wrap:anywhere; word-break:break-word; }}
+  /* 窄屏放弃 nowrap+省略号：让主单元格换行，否则行 min-content 撑破表格容器。 */
+  .table-wrap .data-table td.cell-main {{ white-space:normal; max-width:none; }}
+  /* 定义网格/范围卡片里的 snake_case 枚举值（如 frame.json 的
+     first_programming_course_no_prior_text_based_programming）是不可断行长
+     token，必须允许任意断行，否则 min-content 直接撑破窄屏。 */
+  .scope-card, .scope-text, .scope-grid dt, .scope-grid dd,
+  .evidence-detail-grid dd, .source-detail-grid dd,
+  .retrieval-grid article, .retrieval-grid li {{ min-width:0;
+      overflow-wrap:anywhere; }}
   .full-report-toc {{ position:relative; top:auto; max-height:none; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; }}
   .full-report-toc nav {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }}
   :root .full-report-layout.toc-collapsed {{ grid-template-columns:1fr; }}

@@ -161,7 +161,7 @@ motion/motion.css + motion/motion.js（data-lieflat reveal：滚入播放、
 ```
 edu/
 ├── SKILL.md                # 技能入口：EduEvidence 使用说明（Mode A 可独立理解）
-├── README.md / README.en.md# 双语说明（英文 / 中文）
+├── README.md / README.zh-CN.md  # 双语说明（英文 / 中文）
 ├── pyproject.toml          # 打包元数据（wheel 自带 CLI + engine；核心零第三方依赖）
 ├── install.sh              # 一键安装（本地 / 多 Agent Skill）+ 自检
 ├── skill/                  # 技能组件

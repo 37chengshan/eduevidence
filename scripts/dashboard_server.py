@@ -42,7 +42,7 @@ from zh_labels import OUTCOME_ZH, ACTION_ZH, STUDY_ZH, AUTHORITY_ZH, CONFIDENCE_
 # Friendly display names for known demo projects; everything else falls back to
 # the question text inside result.json so new projects need no manual entry.
 PROJECT_TITLES: Dict[str, str] = {
-    "ai-coding-assistant-50": "高校大一引入 AI 编程助手 (50篇实证杀手级 Demo)",
+    "ai-coding-assistant-evidence": "高校大一引入 AI 编程助手（真实文献旗舰示例）",
     "highschool-math-ai-tutor": "高中数学引入大模型自适应 AI Tutor 评估",
     "esl-academic-writing-ai": "大学 ESL 学术英语写作与同行评审 AI 评估",
     "ai-tutor": "大学高数课程 AI Tutor 评估",
@@ -235,39 +235,15 @@ def build_stats(projects: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 
 def get_aggregate_stats(projects: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """V2 兼容封装（旧 API/测试沿用）：build_stats 字段 + token/成本估算口径。"""
+    """V2 兼容封装（旧 API/测试沿用）：build_stats 字段。
+
+    Token / 成本矩阵已移除（provenance 纠偏）：历史版本在此返回硬编码的
+    假 token 用量与模型成本，没有任何真实运行记录支撑。运行时未采集
+    usage 前，这些指标一律如实标注 NOT_CAPTURED，不再虚构数值。
+    """
     stats = build_stats(projects)
-    total_tokens = sum(184500 if p["id"] == "ai-coding-assistant-50" else 42600
-                       for p in projects) or 227100
-    stats["total_tokens"] = total_tokens
-    stats["total_prompt_tokens"] = int(total_tokens * 0.75)
-    stats["total_completion_tokens"] = int(total_tokens * 0.25)
-    stats["total_evidence_nodes"] = stats["total_nodes"]
-    usd_to_cny = 7.25
-    stats["aggregate_costs"] = {
-        "DeepSeek-V3 / R1": {
-            "cost_usd": round((stats["total_prompt_tokens"] / 1e6) * 0.14
-                              + (stats["total_completion_tokens"] / 1e6) * 0.28, 4),
-            "cost_cny": 0.0,
-        },
-        "MiniMax-Text-01 (Biren)": {
-            "cost_usd": round((stats["total_prompt_tokens"] / 1e6) * 0.20
-                              + (stats["total_completion_tokens"] / 1e6) * 1.10, 4),
-            "cost_cny": 0.0,
-        },
-        "Claude-3-5-Sonnet": {
-            "cost_usd": round((stats["total_prompt_tokens"] / 1e6) * 3.00
-                              + (stats["total_completion_tokens"] / 1e6) * 15.00, 4),
-            "cost_cny": 0.0,
-        },
-        "GPT-4o": {
-            "cost_usd": round((stats["total_prompt_tokens"] / 1e6) * 2.50
-                              + (stats["total_completion_tokens"] / 1e6) * 10.00, 4),
-            "cost_cny": 0.0,
-        },
-    }
-    for entry in stats["aggregate_costs"].values():
-        entry["cost_cny"] = round(entry["cost_usd"] * usd_to_cny, 2)
+    stats["total_tokens"] = None
+    stats["usage_measurement_status"] = "NOT_CAPTURED"
     return stats
 
 

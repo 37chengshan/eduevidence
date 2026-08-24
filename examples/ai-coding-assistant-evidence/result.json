@@ -2,9 +2,10 @@
   "meta": {
     "skill": "eduevidence",
     "version": "5.2.0",
-    "generated_at": "2026-08-24T02:53:54.018859+00:00",
+    "generated_at": "2026-08-24T02:58:24.266810+00:00",
     "mode": "platform_native",
-    "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？"
+    "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
+    "data_origin": "manual_curated"
   },
   "execution": {
     "complexity": "M",

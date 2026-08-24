@@ -13,7 +13,7 @@
 
 ```text
 dist/eduevidence-submission/
-├── SKILL.md / README.md / README.en.md / LICENSE
+├── SKILL.md / README.md / README.zh-CN.md / LICENSE
 ├── CHANGELOG.md / pyproject.toml / install.sh / eduevidence_cli.py
 ├── engine/ domains/ scripts/ retrieval/ integrations/
 ├── schemas/ skill/ references/

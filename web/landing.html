@@ -14,10 +14,10 @@
   <!-- Global Fixed Background Grid Pattern Overlay -->
   <div class="global-grid-pattern" aria-hidden="true"></div>
 
-  <!-- Official Competition Platform Top Banner -->
+  <!-- Top Banner -->
   <div class="official-top-banner">
-    <strong>上海人工智能实验室 × 壁仞科技主办 · <a href="https://discovery.intern-ai.org.cn/scp/skill/650" target="_blank" style="color:#ffffff; text-decoration:underline;">书生科学发现平台 (Intern Discovery) Skill #650 ↗</a></strong><br>
-    聚焦生命科学、物质科学、地球科学、量子计算、模型与算子开发五大核心领域及开放自由赛道 · 面向真实科研场景开发科研 Skills/Agent
+    <strong>EduEvidence — 可审计的教育证据决策引擎 · <a href="https://github.com/37chengshan/eduevidence" target="_blank" style="color:#ffffff; text-decoration:underline;">GitHub 源码 ↗</a></strong><br>
+    从教育问题到有证据支撑的决策：真实文献核验 · 引擎化置信度 · 双语可审计报告
   </div>
 
   <!-- Left Vertical Edge-Docked Switcher Button -->
@@ -37,7 +37,6 @@
         <li><a href="#hero-section" class="nav-link-item">项目总览</a></li>
         <li><a href="#stacking-section" class="nav-link-item">9步规范协议</a></li>
         <li><a href="#accordion-section" class="nav-link-item">5套报告体系</a></li>
-        <li><a href="https://discovery.intern-ai.org.cn/scp/skill/650" target="_blank" class="nav-link-item">比赛 Skill ↗</a></li>
         <li><a href="https://github.com/37chengshan/eduevidence" target="_blank" class="nav-link-item">GitHub ↗</a></li>
       </ul>
       <button id="nav-launch-btn" class="nav-cta-btn">
@@ -106,7 +105,7 @@
           构建决策的 <span style="color:var(--brand-orange);">单一事实来源 (SSOT)</span>
         </h2>
         <p class="hero-lead-p">
-          超越主观直觉与零散主张，基于 50 篇顶刊实证文献合成、元分析森林图与交互式准实验回归沙盒。
+          超越主观直觉与零散主张：基于真实文献（DOI 逐条注册表核验）、引擎化置信度合成、元分析森林图与交互式准实验回归沙盒。
         </p>
         <button class="hero-cta-btn" onclick="document.getElementById('btn-to-studio').click();">
           <span>进入控制台 Studio</span>
@@ -185,35 +184,33 @@
                     <line x1="220" y1="10" x2="220" y2="85" stroke="rgba(255,255,255,0.2)" stroke-dasharray="2,2" stroke-width="1"/>
                     <text x="220" y="98" fill="#94A3B8" font-size="8" text-anchor="middle" font-family="monospace">0.0 (零效应线)</text>
                     
-                    <!-- Row 1: Bastani '25 -->
-                    <text x="10" y="24" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Bastani '25 (当堂提速)</text>
+                    <!-- Row 1: Bastani '25 PNAS -->
+                    <text x="10" y="24" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Bastani '25 练习成绩 (PNAS)</text>
                     <line x1="280" y1="21" x2="390" y2="21" stroke="#10B981" stroke-width="1.5" opacity="0.7"/>
                     <circle cx="340" cy="21" r="4" fill="#10B981"/>
-                    <text x="440" y="24" fill="#10B981" font-size="9" font-family="monospace" font-weight="bold">+0.68g</text>
+                    <text x="440" y="24" fill="#10B981" font-size="9" font-family="monospace" font-weight="bold">+48%</text>
 
-                    <!-- Row 2: Prather '24 -->
-                    <text x="10" y="46" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Prather '24 (语法补全)</text>
+                    <!-- Row 2: Peng '23 preprint RCT -->
+                    <text x="10" y="46" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Peng '23 任务提速 (n=95)</text>
                     <line x1="260" y1="43" x2="360" y2="43" stroke="#10B981" stroke-width="1.5" opacity="0.7"/>
                     <circle cx="310" cy="43" r="4" fill="#10B981"/>
-                    <text x="440" y="46" fill="#10B981" font-size="9" font-family="monospace" font-weight="bold">+0.54g</text>
+                    <text x="440" y="46" fill="#10B981" font-size="9" font-family="monospace" font-weight="bold">+55%</text>
 
-                    <!-- Row 3: Kazemitabaar '24 -->
-                    <text x="10" y="68" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Kazemi '24 (闭卷留存)</text>
+                    <!-- Row 3: Bastani '25 unguarded exam -->
+                    <text x="10" y="68" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Bastani '25 无护栏独立考试</text>
                     <line x1="140" y1="65" x2="200" y2="65" stroke="#EF4444" stroke-width="1.5" opacity="0.7"/>
                     <circle cx="170" cy="65" r="4" fill="#EF4444"/>
-                    <text x="440" y="68" fill="#EF4444" font-size="9" font-family="monospace" font-weight="bold">-0.28g</text>
+                    <text x="440" y="68" fill="#EF4444" font-size="9" font-family="monospace" font-weight="bold">−17%</text>
 
-                    <!-- Pooled Diamond Summary -->
-                    <polygon points="265,85 285,81 305,85 285,89" fill="#F59E0B"/>
                   </svg>
                 </div>
               </div>
             </div>
             
             <div class="card-bottom-bar">
-              <div class="card-bottom-pill">50 篇顶刊合成</div>
+              <div class="card-bottom-pill">8 项真实研究 · DOI 核验</div>
               <div class="card-bottom-pill">零 Snippet 幻觉</div>
-              <div class="card-bottom-pill orange">RE Pooled: +0.38g [0.24, 0.52]</div>
+              <div class="card-bottom-pill orange">PILOT 裁决 · 置信度可复算</div>
             </div>
           </div>
 
@@ -387,7 +384,7 @@
           <span class="acc-tag">Light · 智库典雅</span>
           <div class="acc-name">Claude Research</div>
           <p class="acc-desc">知性温润象牙白底、高信息密度排版与政策决策卡片，专为智库专家与政策制定者定制。</p>
-          <a href="/report?id=ai-coding-assistant-50&theme=claude_research" target="_blank" class="acc-open-btn">
+          <a href="/report?id=ai-coding-assistant-evidence&theme=claude_research" target="_blank" class="acc-open-btn">
             <span>在控制台中打开报告 ↗</span>
           </a>
         </div>
@@ -407,7 +404,7 @@
           <span class="acc-tag">Light · 学术顶刊</span>
           <div class="acc-name">Academic Paper</div>
           <p class="acc-desc">严谨双栏、规范统计表格与 LaTeX 公式渲染，对标 Nature/PNAS 出版标准。</p>
-          <a href="/report?id=ai-coding-assistant-50&theme=academic_paper" target="_blank" class="acc-open-btn">
+          <a href="/report?id=ai-coding-assistant-evidence&theme=academic_paper" target="_blank" class="acc-open-btn">
             <span>在控制台中打开报告 ↗</span>
           </a>
         </div>
@@ -427,7 +424,7 @@
           <span class="acc-tag">Light · 数据科学</span>
           <div class="acc-name">DataLab Light</div>
           <p class="acc-desc">清新现代数据仪表盘，突出效应量置信区间、平行趋势检验与异质性分布。</p>
-          <a href="/report?id=ai-coding-assistant-50&theme=datalab_light" target="_blank" class="acc-open-btn">
+          <a href="/report?id=ai-coding-assistant-evidence&theme=datalab_light" target="_blank" class="acc-open-btn">
             <span>在控制台中打开报告 ↗</span>
           </a>
         </div>
@@ -447,7 +444,7 @@
           <span class="acc-tag">Dark · 极客深色</span>
           <div class="acc-name">DataLab Dark</div>
           <p class="acc-desc">高对比度深色数据终端，适合沉浸式实证探查、拓扑图谱挖掘与遥测指标监控。</p>
-          <a href="/report?id=ai-coding-assistant-50&theme=datalab_dark" target="_blank" class="acc-open-btn">
+          <a href="/report?id=ai-coding-assistant-evidence&theme=datalab_dark" target="_blank" class="acc-open-btn">
             <span>在控制台中打开报告 ↗</span>
           </a>
         </div>
@@ -467,7 +464,7 @@
           <span class="acc-tag">Dark · 法庭终裁</span>
           <div class="acc-name">Tribunal Judge</div>
           <p class="acc-desc">高能视觉冲击，专为评委答辩、仲裁法庭裁决书与重大实证终局结论演示打造。</p>
-          <a href="/report?id=ai-coding-assistant-50&theme=presentation_judge" target="_blank" class="acc-open-btn">
+          <a href="/report?id=ai-coding-assistant-evidence&theme=presentation_judge" target="_blank" class="acc-open-btn">
             <span>在控制台中打开报告 ↗</span>
           </a>
         </div>
@@ -498,9 +495,8 @@
     </div>
 
     <div class="footer-bottom-bar">
-      <div>上海人工智能实验室 × 壁仞科技主办 · 书生科学发现平台 (Intern Discovery)</div>
+      <div>EduEvidence · 可审计的教育证据决策引擎（开源项目）</div>
       <div style="display:flex; flex-wrap:wrap; gap:24px;">
-        <a href="https://discovery.intern-ai.org.cn/scp/skill/650" target="_blank" style="color:inherit; text-decoration:none;">比赛 Skill #650 ↗</a>
         <a href="https://github.com/37chengshan/eduevidence" target="_blank" style="color:inherit; text-decoration:none;">GitHub 源码 ↗</a>
         <a href="/index.html" style="color:inherit; text-decoration:none;">进入控制台</a>
       </div>

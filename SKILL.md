@@ -10,7 +10,7 @@ description: "Evidence-based decisions for ANY educational & social science ques
 
 EduEvidence delivers the **EduEvidence Research Engine** — a persistent system transforming research questions into verifiable decisions. State lives in a unified **Project Workspace** (Project / Run / Revision / DecisionSnapshot) and a **Single Source of Truth (SSOT) Evidence Graph** (engine/evidence_graph.py), linking Papers, Quantitative Effect Sizes (g), Claims, Social Science Risks, and Shared Research Library knowledge.
 
-The canonical protocol below is the single authoritative definition (docs/architecture.md); every stage output is schema-gated (schemas/, 13 contracts).
+The canonical protocol below is the single authoritative definition (docs/architecture.md); every stage output is schema-gated (schemas/, 37 contracts across V1–V4 generations — counts are machine-audited in docs/metrics.json).
 
 **Schema 版本口径**：schemas/ 顶层 13 个 = V1 契约（evidence.schema.json 当前修订 1.1、education-frame / verdict 等）；schemas/v2/ 17 个 = V2 契约（evidence-link / research-intent / study / graph-revision / project 等）。文档与代理配置一律以此口径命名。
 
@@ -90,13 +90,24 @@ Present = 最终呈现层（不计入 9 步协议）
 
 ---
 
-## 🎯 Killer Demo Scenario: AI Coding Assistants in CS1
+## 🎯 Flagship Scenario: AI Coding Assistants in CS1
 
 **Question**: *Should first-year university C/Python students be allowed to use generative AI coding assistants?*
-- **50 Empirical Studies Synthesized**: PNAS 2025, ACM CHI, ICER, SIGCSE, ICSE, IEEE TSE.
-- **Empirical Paradox Discovered**: In-task speed +0.64g vs delayed solo exam -0.28g (WWC 5.0 Scaffolding Dependency Trap).
-- **Tribunal Verdict**: **PILOT** (Restricted 4-phase fading pilot; unconstrained adoption rejected).
-- **Causal Closed Loop**: 12-week Quasi-Experimental DID trial design + Classroom CSV data injection.
+
+`examples/ai-coding-assistant-evidence/` — every source is a real study with a
+registry-verified DOI (Crossref/DataCite audit trail: `benchmarks/doi-audit/report.md`):
+
+- **Real evidence base (8 sources)**: Bastani et al. PNAS 2025 field RCT,
+  Kazemitabaar et al. CHI 2023 novice RCT, Peng et al. 2023 professional-developer RCT
+  (preprint), plus benchmark/usability studies (JSS 2023, ICER 2022, UIST 2022, Koli 2023).
+- **Honest synthesis**: task performance improves reliably during AI access; unguarded
+  access harmed independent exam performance by −17% (PNAS 2025); guardrail design
+  (hints-not-answers) mitigates the harm.
+- **Tribunal Verdict**: **PILOT** (restricted 4-phase fading pilot) with engine-computed
+  confidence Moderate (0.586, policy 2026-08-12.v2) over 8 independent studies.
+- **Provenance badge**: data_origin=`manual_curated`. Other demo packs are badged
+  `synthetic` and must not be cited as evidence.
+- **Causal Closed Loop**: 12-week quasi-experimental DID trial design + Classroom CSV data injection.
 
 ---
 

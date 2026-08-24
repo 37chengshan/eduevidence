@@ -69,7 +69,7 @@ def test_studio_entry_and_api(server):
 
 def test_known_project_viz_and_reports(server):
     assert _get(server, "/api/projects/ai-coding-assistant/viz")[0] == 200
-    assert _get(server, "/api/projects/ai-coding-assistant-50/viz")[0] == 200
+    assert _get(server, "/api/projects/ai-coding-assistant-evidence/viz")[0] == 200
     assert _get(server, "/report?id=ai-coding-assistant&theme=claude")[0] == 200
     assert _get(server, "/report?id=ai-coding-assistant")[0] == 200
 
@@ -122,7 +122,7 @@ def test_unknown_path_404(server):
 
 def test_viz_payload_null_ci_not_zero(server):
     """Missing CI must surface as None/omitted, never coerced to 0 in payload."""
-    status, body = _get(server, "/api/projects/ai-coding-assistant-50/viz")
+    status, body = _get(server, "/api/projects/ai-coding-assistant-evidence/viz")
     assert status == 200
     data = json.loads(body)
     for item in data.get("forest", []):

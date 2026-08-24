@@ -37,6 +37,9 @@ jobs:
       - name: Version consistency gate (engine/versions.py is the authority)
         run: python scripts/check_version_consistency.py
 
+      - name: Metrics gate (docs/metrics.json must match repository reality)
+        run: python scripts/generate_metrics.py --check
+
       - name: Run tests (retry up to 2 times on transient failure)
         run: |
           attempts=0
@@ -65,8 +68,11 @@ jobs:
         run: |
           set -euo pipefail
           validate() { python scripts/validate_schema.py --schema "$1" --data "$2"; }
-          # Shared 7-file pack contract (all three packs ship these files).
-          for pack in ai-coding-assistant ai-tutor ai-writing-assistant; do
+          # Shared 7-file pack contract (all packs ship these files).
+          # ai-tutor / ai-writing-assistant are legacy packs;
+          # ai-coding-assistant-evidence is the real-literature flagship;
+          # esl/highschool-math are badged SYNTHETIC demos.
+          for pack in ai-coding-assistant ai-tutor ai-writing-assistant ai-coding-assistant-evidence; do
             validate schemas/verdict.schema.json         "examples/$pack/verdict.json"
             validate schemas/evidence.schema.json        "examples/$pack/evidence.jsonl"
             validate schemas/intervention.schema.json    "examples/$pack/intervention.json"
@@ -75,8 +81,9 @@ jobs:
             validate schemas/evaluation.schema.json      "examples/$pack/evaluation.json"
             validate schemas/report-result.schema.json   "examples/$pack/result.json"
           done
-          # ai-coding-assistant additionally ships the fetched source log.
+          # ai-coding-assistant ships the fetched source log; the evidence flagship ships its curated source log too.
           validate schemas/source.schema.json "examples/ai-coding-assistant/sources.jsonl"
+          validate schemas/source.schema.json "examples/ai-coding-assistant-evidence/sources.jsonl"
 
   upload-build:
     name: upload-build

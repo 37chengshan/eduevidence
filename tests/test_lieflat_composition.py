@@ -22,8 +22,11 @@ import build_figures as BF  # noqa: E402
 import build_report as BR  # noqa: E402
 from validate_schema import validate  # noqa: E402
 
-FIXTURE = ROOT / "examples" / "ai-coding-assistant-50" / "result.json"
+FIXTURE = ROOT / "examples" / "ai-coding-assistant-evidence" / "result.json"
 FIXTURE_13 = ROOT / "examples" / "ai-coding-assistant" / "result.json"
+# 数值型夹具：旗舰包为真实文献，摘要不暴露 g/SE 时 effect_size 按策略留空；
+# g/CI 的格式与追溯正确性用带完整数值的（已打 SYNTHETIC 徽章的）演示包验证。
+FIXTURE_NUMERIC = ROOT / "examples" / "highschool-math-ai-tutor" / "result.json"
 LAYOUT_SCHEMA = (ROOT / "visualization" / "eduevidence-report" / "schemas"
                  / "visual-layout.schema.json")
 
@@ -46,15 +49,18 @@ def _load(path):
 
 def test_ranked_effects_trace_to_evidence():
     """dot_cascade 提取器的 g 与 N 必须等于 evidence.effect_size / sample_size。"""
-    result = _load(FIXTURE)
+    result = _load(FIXTURE_NUMERIC)
     bundle, reason = CD.extract_ranked_effects(result, {}, "en")
     assert bundle is not None, reason
     source = {}
     for ev in result["evidence"]:
         es = ev.get("effect_size")
         if isinstance(es, dict) and es.get("value") is not None:
-            source[ev.get("study_label") or ev.get("evidence_id")] = (
-                float(es["value"]), float(ev.get("sample_size") or 0))
+            val = (float(es["value"]), float(ev.get("sample_size") or 0))
+            # 提取器标签回退链：study_label → study_id → evidence_id
+            for key in (ev.get("study_label"), ev.get("study_id"), ev.get("evidence_id")):
+                if key:
+                    source[key] = val
     for row in bundle["studies"]:
         label = row["label"]
         match = next((v for k, v in source.items() if k.startswith(label)), None)
@@ -85,7 +91,7 @@ def test_confidence_score_traces_to_decision():
 
 
 def test_forest_uses_g_and_ci():
-    result = _load(FIXTURE)
+    result = _load(FIXTURE_NUMERIC)
     bundle, reason = CD.extract_meta_forest(result, {"max_studies": 6}, "en")
     assert bundle is not None, reason
     assert all(isinstance(s["ci_lower"], float) for s in bundle["studies"])

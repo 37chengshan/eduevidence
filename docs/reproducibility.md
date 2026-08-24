@@ -1,6 +1,21 @@
 # EduEvidence 复现指南
 
-本指南确保任何人在全新环境中都能复现 EduEvidence 的校验、测试与 Benchmark 结果。全部命令以仓库根目录 `<repo-root>`（即 pyproject.toml 所在目录）为工作目录执行。
+> **复现范围声明（v5.2.0 起，R6 口径收敛）**：可复现承诺分两层，不得混谈。
+>
+> 1. **确定性层（完全可复现）**：schema 校验、置信度计算（规则化公式）、pre-verdict gate、
+>    meta-analysis/robustness 数学、报告烘焙与哈希链——同一输入在同一版本上逐字节可复现；
+>    本指南的三步走覆盖这一层。
+> 2. **LLM 层（有边界可复现）**：检索、抽取、挑战、裁决等依赖外部 LLM 的阶段不是逐字节
+>    确定的。其复现条件 = 模型版本 + temperature + prompt 版本 三者同时固定；当前仓库通过
+>    run manifest 记录这三项（如 `benchmarks/empirical/run-empirical-01/manifest.json` 的
+>    `temperature: 0.0`），但不承诺跨模型供应商的结果一致。
+>
+> 引擎对"证据是否真实"的立场：所有示例包在 `result.json.meta.data_origin` 与报告头徽章中
+> 如实标注数据来源（`real` / `manual_curated` / `synthetic` / `hybrid`）；引用的 DOI 经
+> `scripts/audit_dois.py` 对照 Crossref/DataCite 注册表核验（报告：
+> `benchmarks/doi-audit/report.md`）。标注 `synthetic` 的演示包不构成任何实证声明。
+
+本指南确保任何人在全新环境中都能复现 EduEvidence 确定性层的校验、测试与 Benchmark 结果。全部命令以仓库根目录 `<repo-root>`（即 pyproject.toml 所在目录）为工作目录执行。
 
 ## 〇、V2 Research Engine 复现
 
@@ -57,7 +72,7 @@ python scripts/validate_schema.py \
   --data examples/ai-coding-assistant/evidence.jsonl
 ```
 
-- `--schema`：指定任一顶层 Schema（schemas/ 下 13 个契约，如 education-frame / evidence / methodology / verdict / intervention / evaluation / report-result 等）；
+- `--schema`：指定任一顶层 Schema（schemas/ 下 37 个契约，跨 V1–V4 代际，如 education-frame / evidence / methodology / verdict / intervention / evaluation / report-result 等）；
 - `--data`：指定要校验的 JSON 或 JSONL 数据文件；
 - 主 Demo 示例数据位于 `examples/ai-coding-assistant/evidence.jsonl`，验证通过时应输出每条 evidence 的校验状态与 SUPPORTED/UNSUPPORTED 统计；
 - 合格线：**校验通过率 100%**，任一条未通过即非零退出码。

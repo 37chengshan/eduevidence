@@ -94,7 +94,7 @@ def test_lieflat_renders_only_validated_layout_entries():
     _sys.path.insert(0, str(ROOT / "visualization" / "eduevidence-report" / "scripts"))
     import build_report as _br
     import build_figures as _bf
-    result = _load("examples/ai-coding-assistant-50/result.json")
+    result = _load("examples/ai-coding-assistant-evidence/result.json")
     layout = _br.resolve_visual_layout(result)
     figures, meta = _bf.render_lieflat_gallery(result, "claude", "zh", layout["entries"])
     selected_ids = [s["chart_id"] for s in meta["selected"]]

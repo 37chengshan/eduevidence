@@ -48,7 +48,7 @@ done
 
 # 5) Main demo (ai-coding-assistant) + other runnable examples keep result/report.
 mkdir -p "$STAGING/examples"
-for d in ai-coding-assistant ai-coding-assistant-50; do
+for d in ai-coding-assistant ai-coding-assistant-evidence; do
   test -d "$ROOT/examples/$d" || continue
   rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store","figures"} \
     "$ROOT/examples/$d/" "$STAGING/examples/$d/"
@@ -77,7 +77,7 @@ cp "$ROOT/packaging/upload-layout.md" "$STAGING/upload-layout.md"
 
 # 7) READMEs.
 cp "$ROOT/README.md" "$STAGING/README.md"
-cp "$ROOT/README.en.md" "$STAGING/README.en.md"
+cp "$ROOT/README.zh-CN.md" "$STAGING/README.zh-CN.md"
 
 # 8) Leak cleanup (defense in depth; allowlist already excludes these).
 find "$STAGING" -name "__pycache__" -type d -prune -exec rm -rf {} + 2>/dev/null || true

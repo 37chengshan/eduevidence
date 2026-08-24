@@ -42,7 +42,7 @@ def test_static_layout_invariants_for_all_themes():
 def test_browser_layout_clean_all_viewports(tmp_path):
     """浏览器级：构建 5 主题报告，390/768/1280 × brief/full 全部无溢出、reveal 生效。"""
     # 直接复用已烘焙产物（更快、且与交付物一致）；无则现场构建
-    themes_dir = ROOT / "examples" / "ai-coding-assistant-50" / "reports-5themes"
+    themes_dir = ROOT / "examples" / "ai-coding-assistant-evidence" / "reports-5themes"
     if not list(themes_dir.glob("EduEvidence_Report_*.html")):
         import build_report as br  # noqa: F401  # scripts on path via conftest
         pytest.skip("无烘焙产物，跳过浏览器级实测")
@@ -67,7 +67,7 @@ def test_browser_layout_clean_all_viewports(tmp_path):
 def test_reveal_contract_in_built_html():
     """静态断言：烘焙 HTML 内的 motion.js 携带 reveal 契约（滚入播放 + 点击重播 +
     timer 清理），且入场错峰延迟存在（避免「只有点击才触发动画」的体验）。"""
-    theme_html = (ROOT / "examples" / "ai-coding-assistant-50" / "reports-5themes"
+    theme_html = (ROOT / "examples" / "ai-coding-assistant-evidence" / "reports-5themes"
                   / "EduEvidence_Report_claude.html")
     if not theme_html.exists():
         pytest.skip("无烘焙产物")

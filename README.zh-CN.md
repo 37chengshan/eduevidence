@@ -298,7 +298,7 @@ EduEvidence/  （= 一个 Skill 包）
 │  └─ visualization/         结果呈现层（ECharts / 信息图 / 学术图 / 双语 HTML Composer）
 │
 ├─ 质量保障
-│  ├─ tests/                 pytest 测试矩阵（682 个用例，56 个文件）
+│  ├─ tests/                 pytest 测试矩阵（752 个测试函数，73 个文件，见 docs/metrics.json）
 │  └─ benchmarks/            30 题 + 30 份金标注 + B0–B4 评测框架
 │
 └─ 演示与分发

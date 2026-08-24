@@ -137,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="EduEvidence five-theme report layout gate")
     parser.add_argument("--html-dir", nargs="+", default=None,
                         help="烘焙好的报告目录；提供后追加浏览器级实测（390/768/1280 × brief/full）")
-    parser.add_argument("--project", default="ai-coding-assistant-50",
+    parser.add_argument("--project", default="ai-coding-assistant-evidence",
                         help="--html-dir 缺省时使用的示例项目名")
     args = parser.parse_args(argv)
 

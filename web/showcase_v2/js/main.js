@@ -227,11 +227,11 @@ function initHashRouting(waveCtrl) {
         waveCtrl.triggerTransition(e, "console");
         setTimeout(() => {
           switchConsoleTab("report");
-          openReport("ai-coding-assistant-50", theme);
+          openReport("ai-coding-assistant-evidence", theme);
         }, 460);
       } else {
         switchSpace("console", "report");
-        openReport("ai-coding-assistant-50", theme);
+        openReport("ai-coding-assistant-evidence", theme);
       }
     });
   });

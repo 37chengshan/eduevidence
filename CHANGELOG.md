@@ -94,7 +94,7 @@
 ### Claude 风格本地控制台 (`scripts/dashboard_server.py`)
 - **浅色极简美学**：暖白底色 `#FAF9F6`、1px hairline 边框、`Instrument Serif` 衬线字体、呼吸感负空间
 - **实时事件流 (SSE)**：基于 `engine/events.py` 的 EventBus 内存总线实时推送 9 阶段执行日志
-- **Token 消耗与多模型成本矩阵**：实时比对 DeepSeek-V3/R1、Minimax 2.7（壁仞科技）、Claude 3.5 Sonnet 与 GPT-4o 成本
+- **Token 消耗与多模型成本矩阵**：实时比对 DeepSeek-V3/R1、Minimax 2.7、Claude 3.5 Sonnet 与 GPT-4o 成本
 - **混合多渠道检索诊断台**：支持 4 大免配置学术渠道与 AIHot 动态趋势渠道实时测试
 
 ### 出版级 HTML 报告与图表重构

@@ -1,6 +1,6 @@
 # EduEvidence
 
-> **🌐 English | [中文](README.en.md)**
+> **🌐 English | [中文](README.zh-CN.md)**
 
 ## EduEvidence Research Engine — Evidence-Based Education Decision Skill
 
@@ -259,6 +259,18 @@ Key metrics: Citation Support Precision / Unsupported Claim Rate / Contradiction
 
 Two more examples — AI writing assistant (`examples/ai-writing-assistant/`) and a calculus AI tutor (`examples/ai-tutor/`) — show the skill is not hard-coded to one question.
 
+**Example provenance (read before citing)**: every example pack carries a `data_origin`
+badge in its report header and in `result.json.meta`:
+
+- `examples/ai-coding-assistant-evidence/` — **flagship, real literature**: 8 sources with
+  registry-verified DOIs (Crossref/DataCite audit: `benchmarks/doi-audit/report.md`),
+  engine-computed confidence; data_origin=`manual_curated`.
+- `examples/ai-coding-assistant/`, `ai-tutor/`, `ai-writing-assistant/` — real-source
+  walkthrough packs.
+- `examples/esl-academic-writing-ai/`, `highschool-math-ai-tutor/` — **synthetic
+  demonstrations** (data_origin=`synthetic`). Their numbers and citations are illustrative,
+  not real studies; reports carry a loud SYNTHETIC badge. Do not cite them as evidence.
+
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
 After research completes, `result.json` is rendered into three visualization outputs by deterministic Python adapters. The adapters themselves use the standard library; the optional Web Studio chart enhancement has a separate browser dependency.
@@ -312,7 +324,7 @@ EduEvidence/  (= one Skill package)
 │                            bilingual HTML composer + V2 project surfaces)
 │
 ├─ Quality assurance
-│  ├─ tests/                 pytest test matrix (V1+V2+V3, 682 cases)
+│  ├─ tests/                 pytest test matrix (V1–V4, 752 test functions / 73 files — docs/metrics.json)
 │  └─ benchmarks/            V1 questions + benchmarks/v2/ (graph/contract metrics)
 │
 └─ Demos & distribution

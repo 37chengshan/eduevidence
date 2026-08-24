@@ -201,6 +201,12 @@ def enrich_writing_project():
 
 
 def enrich_coding_project():
+    """RETIRED (v5.2.0): targeted the removed fabricated pack ai-coding-assistant-50.
+
+    The dir-missing guard makes this a permanent no-op. Do not repoint it at
+    real packs — hand-written narrative injection without run records is what
+    the provenance policy forbids (docs/plans/v5.2-v6.0-iteration-plan.md R4).
+    """
     proj_dir = EXAMPLES_DIR / "ai-coding-assistant-50"
     if not proj_dir.exists():
         return
@@ -306,4 +312,4 @@ def enrich_coding_project():
 if __name__ == "__main__":
     enrich_math_project()
     enrich_writing_project()
-    enrich_coding_project()
+    # enrich_coding_project() retired with the fabricated ai-coding-assistant-50 pack.

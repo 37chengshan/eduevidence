@@ -136,7 +136,8 @@ def test_dashboard_scanner_and_token_cost_stats():
     assert len(projects) >= 1
     stats = get_aggregate_stats(projects)
     assert stats["total_projects"] == len(projects)
-    assert stats["total_tokens"] > 0
-    assert stats["total_prompt_tokens"] > 0
-    assert "DeepSeek-V3 / R1" in stats["aggregate_costs"]
-    assert stats["aggregate_costs"]["DeepSeek-V3 / R1"]["cost_cny"] > 0
+    # Provenance policy (v5.2.0): no run has recorded real token usage, so the
+    # aggregate must say NOT_CAPTURED instead of inventing numbers.
+    assert stats["total_tokens"] is None
+    assert stats["usage_measurement_status"] == "NOT_CAPTURED"
+    assert "aggregate_costs" not in stats

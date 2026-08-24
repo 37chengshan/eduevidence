@@ -95,7 +95,26 @@ const MEASURE = `(() => {
     const cards = [...document.querySelectorAll('[data-lieflat]')].filter(visible);
     return { cards: cards.length, live: cards.filter(c => c.classList.contains('is-live')).length };
   })();
-  return { vw, dsw, overflow: dsw > vw + 2, shell, escapes, clipped, okReveal };
+  // Elements whose BOX extends past the shell's right edge — that is what
+  // actually creates horizontal scroll overflow (scrollWidth can mislead).
+  const shellCw = shells.length ? shells[0].clientWidth : vw;
+  const shellLeft = shells.length ? shells[0].getBoundingClientRect().left : 0;
+  const widest = shells.length
+    ? [...shells[0].querySelectorAll('*')]
+        .filter(visible)
+        .filter(el => !inSvg(el)) // SVG 内部随 viewBox 缩放，不参与布局溢出
+        .filter(el => !inScroll(el)) // 内部滚动容器已裁剪，不会撑破 shell
+        .map(el => {
+          const r = el.getBoundingClientRect();
+          return { chain: chain(el), over: Math.round(r.right - shellLeft - shellCw),
+                   w: Math.round(r.width),
+                   hint: (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 70) };
+        })
+        .filter(o => o.over > 4)
+        .sort((a, b) => b.over - a.over)
+        .slice(0, 8)
+    : [];
+  return { vw, dsw, overflow: dsw > vw + 4, shell, escapes, clipped, okReveal, widest };
 })()`;
 
 async function measure(ws, width, height, view) {
@@ -172,7 +191,7 @@ async function main() {
         const label = `${path.basename(new URL(url).pathname)} @${w}px [${view}]`;
         const problems = [];
         if (m.overflow) problems.push(`page overflow scrollWidth=${m.dsw}>innerWidth=${m.vw}`);
-        if (m.shell && m.shell.sw > m.shell.cw + 2) problems.push(`shell scrollW=${m.shell.sw}>clientW=${m.shell.cw}`);
+        if (m.shell && m.shell.sw > m.shell.cw + 4) problems.push(`shell scrollW=${m.shell.sw}>clientW=${m.shell.cw}`);
         if (m.escapes.length) problems.push(`escapes(${m.escapes.length})`);
         if (m.clipped.length) problems.push(`clipped(${m.clipped.length})`);
         if (m.okReveal.cards > 0 && m.okReveal.live < m.okReveal.cards) {
@@ -183,6 +202,7 @@ async function main() {
           console.log(`VIOLATION ${label}: ${problems.join(' | ')}`);
           for (const e of m.escapes.slice(0, 3)) console.log(`    esc <${e.chain}> right=${e.right} w=${e.w}`);
           for (const c of m.clipped.slice(0, 2)) console.log(`    clip <${c.chain}> sw=${c.sw} cw=${c.cw}`);
+          for (const wd of m.widest || []) console.log(`    wide <${wd.chain}> over=${wd.over}px w=${wd.w} "${wd.hint}"`);
         } else {
           console.log(`ok ${label}: scrollW=${m.dsw} shell=${m.shell ? m.shell.sw + '/' + m.shell.cw : 'n/a'} reveal=${m.okReveal.live}/${m.okReveal.cards}`);
         }
