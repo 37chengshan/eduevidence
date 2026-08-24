@@ -1,0 +1,1251 @@
+{
+  "generated_at": "2026-08-24T10:33:04+0800",
+  "unique_dois": 88,
+  "counts": {
+    "mismatch": 35,
+    "not_found": 37,
+    "ok": 16
+  },
+  "results": [
+    {
+      "doi": "10.1002/tesq.3312",
+      "status": "mismatch",
+      "local_titles": [
+        "Scaffolding argumentation in L2 academic writing: An empirical evaluation of generative AI outline feedback",
+        "二语学术写作中的论证支架：生成式 AI 大纲反馈的实证评估"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": "English Language Teachers' Emotional Vulnerability in the Era of Self‐Branding on Social Media",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1007/978-3-031-64302-6_12",
+      "status": "mismatch",
+      "local_titles": [
+        "Socratic LLMs for Automated Tutoring in Computing: An Experimental Benchmark"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Automated Long Answer Grading with RiceChem Dataset",
+      "title_overlap": 0.143
+    },
+    {
+      "doi": "10.1007/s10639-024-12658-2",
+      "status": "not_found",
+      "local_titles": [
+        "Impact of ChatGPT Scaffolding on Academic Programming and Problem Formulation"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s10648-024-09881-4",
+      "status": "not_found",
+      "local_titles": [
+        "Meta-Analysis of Generative AI Interventions in STEM Higher Education"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s10649-024-10315-4",
+      "status": "not_found",
+      "local_titles": [
+        "Dynamic Geometry Construction and AI Epistemic Feedback: Transforming Mathematical Reasoning in Secondary School"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s11423-024-10350-3",
+      "status": "not_found",
+      "local_titles": [
+        "Longitudinal Impact of Unguided AI Homework Assistants on Secondary Mathematics Retention: A 16-Week Trial"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s11423-025-10382-x",
+      "status": "not_found",
+      "local_titles": [
+        "Bridging the Urban-Rural Mathematics Achievement Divide: Evaluating AI Tutors in Resource-Constrained County High Schools"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s11858-024-01567-8",
+      "status": "not_found",
+      "local_titles": [
+        "Instrumental Genesis and Algebraic-Geometric Duality in Digital Calculus Environments"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s11858-024-01602-w",
+      "status": "not_found",
+      "local_titles": [
+        "Curriculum Resources and AI Orchestration: A Cross-Regional Comparative Study in Chinese High Schools"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s40593-024-00362-7",
+      "status": "not_found",
+      "local_titles": [
+        "Adaptive Dialogue Agents for Rural High School Classrooms: Teacher-in-the-Loop Orchestration"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1007/s40593-024-00388-z",
+      "status": "not_found",
+      "local_titles": [
+        "Fading Scaffolding Protocols in AI-Enabled Mathematics Tutors: Preventing System Gaming and Sustaining Long-Term Problem Solving"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.asw.2024.100832",
+      "status": "mismatch",
+      "local_titles": [
+        "Hybrid AI-human peer review in university ESL courses: A randomized controlled trial of feedback quality and revision uptake",
+        "大学 ESL 课程中的 AI-人工混合同行评审：反馈质量与修改采纳的随机对照试验"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": "The associations among growth mindsets, the ideal L2 writing self, and L2 writing enjoyment and their impacts on L2 English writing performance: A gender difference perspective",
+      "title_overlap": 0.062
+    },
+    {
+      "doi": "10.1016/j.asw.2024.100845",
+      "status": "mismatch",
+      "local_titles": [
+        "Assessing the impact of AI text generation on unassisted synthesis writing ability in university EAP programs",
+        "评估 AI 文本生成对大学 EAP 项目中独立文献综合写作能力的影响"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": "Characteristics of students’ task representation and its association with argumentative integrated writing performance",
+      "title_overlap": 0.071
+    },
+    {
+      "doi": "10.1016/j.caeai.2024.100234",
+      "status": "mismatch",
+      "local_titles": [
+        "Evaluating Conceptual Drift in AI-Mediated Introductory Programming"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Large language models and automated essay scoring of English language learner writing: Insights into validity and reliability",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1016/j.compedu.2024.105088",
+      "status": "not_found",
+      "local_titles": [
+        "Immediate Task Velocity vs. Long-Term Procedural Competence: A Semester-Long Empirical Comparison of High School AI Tutoring"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.compedu.2024.105118",
+      "status": "not_found",
+      "local_titles": [
+        "Measuring the Retention Gap: Longitudinal Assessment of AI Assisted vs Manual Coding Cohorts"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.compedu.2024.105156",
+      "status": "not_found",
+      "local_titles": [
+        "Evaluating Student Algorithmic Design Transfer Following AI Assisted Lab Practice"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.compedu.2025.104920",
+      "status": "not_found",
+      "local_titles": [
+        "Step-Level Adaptive Hinting in High School Analytic Geometry: An In-Class Randomized Controlled Trial"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.compedu.2025.104990",
+      "status": "not_found",
+      "local_titles": [
+        "Automated genre move analysis for EAP research article introductions: Formative evaluation and student uptake",
+        "EAP 研究论文引言自动化体裁语步分析：形成性评估与学生采纳"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.compedu.2025.105210",
+      "status": "not_found",
+      "local_titles": [
+        "The Scaffolding Dependency Trap: Examining Attrition and Unassisted Retention in AI Math Learning Platforms"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.edurev.2024.100584",
+      "status": "not_found",
+      "local_titles": [
+        "Automated writing evaluation in second language education: A systematic review and meta-analysis of cognitive and linguistic outcomes",
+        "二语教育中的自动写作评估：认知与语言结果的系统综述与元分析"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.esp.2024.03.002",
+      "status": "mismatch",
+      "local_titles": [
+        "AI 增强文献综述写作中的文献整合与学术诚信",
+        "Source integration and academic integrity in AI-augmented literature reviews"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": "The contracts word list: Integral vocabulary for reading and writing English contracts",
+      "title_overlap": 0.111
+    },
+    {
+      "doi": "10.1016/j.jslw.2024.101092",
+      "status": "not_found",
+      "local_titles": [
+        "Cognitive offloading and retention in L2 composition: When automated feedback undermines unassisted writing",
+        "二语写作中的认知卸载与保持：自动反馈削弱独立写作能力的机制"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.jss.2023.111734",
+      "status": "ok",
+      "local_titles": [
+        "GitHub Copilot AI Pair Programmer: Asset or Liability?"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "GitHub Copilot AI pair programmer: Asset or Liability?",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.1016/j.learninstruc.2024.101890",
+      "status": "mismatch",
+      "local_titles": [
+        "From Example-Based Learning to Socratic AI Dialogue: Boundary Conditions for Effective Self-Explanation in Mathematics"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": "Elementary English learners’ engagement with automated feedback",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1016/j.system.2025.103280",
+      "status": "not_found",
+      "local_titles": [
+        "Preserving authorial voice through metacognitive critique logs in AI-mediated academic writing",
+        "通过元认知批判日志在 AI 介导学术写作中保持作者声音"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1016/j.system.2025.103350",
+      "status": "not_found",
+      "local_titles": [
+        "Socratic dialogue prompts vs. direct auto-correction: Differential impacts on L2 student self-efficacy and voice",
+        "苏格拉底式对话提示 vs 直接自动纠错：对二语学生自我效能与作者声音的差异性影响"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1017/S095834402400018X",
+      "status": "not_found",
+      "local_titles": [
+        "Cohesion diagnostics and lexical sophistication in second language writing with intelligent tutoring support",
+        "智能辅导支持下二语写作的篇章连贯诊断与词汇复杂性"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1037/edu0000845",
+      "status": "mismatch",
+      "local_titles": [
+        "Cognitive Load and Generative AI in STEM Education: Splitting Attention vs. Guided Focus"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": "Event-related potentials of belief-bias reasoning predict critical thinking.",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1037/edu0000892",
+      "status": "mismatch",
+      "local_titles": [
+        "The transfer paradox: Evaluating unassisted solo writing following AI-scaffolded writing instruction",
+        "迁移悖论：评估 AI 支架写作教学后脱离工具的独立写作能力"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": "Socioeconomic gaps in specific mathematical skills at different ages in primary school.",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1073/pnas.2412345122",
+      "status": "not_found",
+      "local_titles": [
+        "Generative AI in Education: Evidence from a Randomized Controlled Trial in High Schools and Universities"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1073/pnas.2422633122",
+      "status": "ok",
+      "local_titles": [],
+      "files": [
+        "examples/ai-coding-assistant/evidence.jsonl",
+        "examples/ai-coding-assistant/result.json",
+        "examples/ai-coding-assistant/result.zh.json",
+        "examples/ai-coding-assistant/sources.jsonl",
+        "examples/ai-tutor/evidence.jsonl",
+        "examples/ai-tutor/result.json",
+        "examples/ai-writing-assistant/evidence.jsonl",
+        "examples/ai-writing-assistant/result.json"
+      ],
+      "crossref_title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1080/03075079.2024.2398011",
+      "status": "not_found",
+      "local_titles": [
+        "Developing academic phraseology and discipline-specific collocations: An empirical trial of AI concordance prompts",
+        "发展学术语块与学科特定搭配：AI 语料搭配提示词的实证试验"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1080/07294360.2024.2341102",
+      "status": "not_found",
+      "local_titles": [
+        "Examining critical thinking stance and epistemic positioning in GenAI-assisted undergraduate essays",
+        "考察生成式 AI 辅助本科生议论文中的批判性思维立场与认识论定位"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1080/23311983.2024.2392388",
+      "status": "ok",
+      "local_titles": [],
+      "files": [
+        "examples/ai-coding-assistant/result.json",
+        "examples/ai-coding-assistant/result.zh.json"
+      ],
+      "crossref_title": "Balancing AI and authenticity: EFL students’ experiences with ChatGPT in academic writing",
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1093/applin/amad056",
+      "status": "mismatch",
+      "local_titles": [
+        "Stylistic homogenization and authorial voice erosion among L2 writers using automated sentence polishers",
+        "使用自动句子润色工具二语写作者的文体同质化与作者声音侵蚀"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": "Notes On Contributors",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1109/FIE58773.2023.10343201",
+      "status": "mismatch",
+      "local_titles": [
+        "Student Perception and Reliance on AI Coding Tools: A Multi-Institutional Survey"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "The Evolution of Team Coordination Commitments in the Context of Computational Projects",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1109/FIE61694.2024.1083421",
+      "status": "not_found",
+      "local_titles": [
+        "Evaluating Student Over-Reliance on AI Generated Code Across 4 Semesters"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1109/MSR59073.2023.00078",
+      "status": "mismatch",
+      "local_titles": [
+        "Large Language Models and Simple, Stupid Bugs"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Helm Charts for Kubernetes Applications: Evolution, Outdatedness and Security Risks",
+      "title_overlap": 0.111
+    },
+    {
+      "doi": "10.1109/TE.2024.3382109",
+      "status": "not_found",
+      "local_titles": [
+        "Measuring the Impact of AI Tutors on Introductory Engineering Education"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1109/TLT.2024.3361201",
+      "status": "not_found",
+      "local_titles": [
+        "Scaffolding Prompting vs Direct Solution Delivery in Novice CS1 Labs"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1109/TLT.2024.3371902",
+      "status": "not_found",
+      "local_titles": [
+        "Automated Feedback Generation for Novice Syntax Errors with Socratic Dialogue"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1109/TSE.2024.3391024",
+      "status": "not_found",
+      "local_titles": [
+        "Assessing the Quality of Code Explanations Generated by Large Language Models"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3491101.3519665",
+      "status": "ok",
+      "local_titles": [
+        "Expectation vs. Experience: Evaluating the Usability of Code Generation Tools Powered by Large Language Models"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Expectation vs. Experience: Evaluating the Usability of Code Generation Tools Powered by Large Language Models",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.1145/3501385.3543957",
+      "status": "ok",
+      "local_titles": [
+        "Automatic Generation of Programming Exercises and Code Explanations Using Large Language Models"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Automatic Generation of Programming Exercises and Code Explanations Using Large Language Models",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.1145/3510457.3513042",
+      "status": "mismatch",
+      "local_titles": [
+        "Is GitHub Copilot a Substitute for Human Pair Programmers? An Empirical Study"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Strategies for reuse and sharing among data scientists in software teams",
+      "title_overlap": 0.1
+    },
+    {
+      "doi": "10.1145/3520312.3534864",
+      "status": "ok",
+      "local_titles": [
+        "Productivity Assessment of Neural Code Completion"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Productivity assessment of neural code completion",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.1145/3544548.3580919",
+      "status": "ok",
+      "local_titles": [],
+      "files": [
+        "examples/ai-coding-assistant/evidence.jsonl",
+        "examples/ai-coding-assistant/result.json",
+        "examples/ai-coding-assistant/result.zh.json",
+        "examples/ai-coding-assistant/sources.jsonl",
+        "examples/ai-tutor/evidence.jsonl",
+        "examples/ai-tutor/result.json"
+      ],
+      "crossref_title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3544548.3581388",
+      "status": "mismatch",
+      "local_titles": [
+        "Studying the Effect of AI Code Generators on Novice Programmers"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Why Johnny Can’t Prompt: How Non-AI Experts Try (and Fail) to Design LLM Prompts",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3545945.3569785",
+      "status": "mismatch",
+      "local_titles": [
+        "Experiences from Using Explanation-Generating AI Tools in an Introductory Programming Course"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Experiences from Using Code Explanations Generated by Large Language Models in a Web Software Development E-Book",
+      "title_overlap": 0.455
+    },
+    {
+      "doi": "10.1145/3545945.3569830",
+      "status": "ok",
+      "local_titles": [
+        "Using GitHub Copilot to Solve Introductory Programming Problems"
+      ],
+      "files": [
+        "examples/ai-coding-assistant/result.json",
+        "examples/ai-coding-assistant/result.zh.json",
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Using GitHub Copilot to Solve Simple Programming Problems",
+      "title_overlap": 0.875
+    },
+    {
+      "doi": "10.1145/3545947.3576366",
+      "status": "not_found",
+      "local_titles": [
+        "Programming Is Hard - Or at Least It Used to Be: Educational Opportunities and Challenges of AI Code Generation"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3568813.3600138",
+      "status": "mismatch",
+      "local_titles": [
+        "It's Weird That it Knows What I Want: Usability and Metacognition in AI-Assisted Programming"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "From \"Ban It Till We Understand It\" to \"Resistance is Futile\": How University Programming Instructors Plan to Adapt as More Students Use AI Code Generation and Explanation Tools such as ChatGPT and GitHub Copilot",
+      "title_overlap": 0.182
+    },
+    {
+      "doi": "10.1145/3581641.3584037",
+      "status": "ok",
+      "local_titles": [
+        "The Programmer's Assistant: Conversational Interaction with a Large Language Model for Software Development"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "The Programmer’s Assistant: Conversational Interaction with a Large Language Model for Software Development",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.1145/3586030",
+      "status": "ok",
+      "local_titles": [
+        "Grounded Copilot: How Programmers Interact with Code-Generating Models"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Grounded Copilot: How Programmers Interact with Code-Generating Models",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.1145/3587102.3588785",
+      "status": "ok",
+      "local_titles": [
+        "Comparing Code Explanations Created by Students and Large Language Models"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Comparing Code Explanations Created by Students and Large Language Models",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.1145/3587102.3588801",
+      "status": "mismatch",
+      "local_titles": [
+        "Evaluating the Usability and Helpfulness of LLM-Generated Python Hints"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Diversity-focused Course Design for Computer Science Students: Incorporating Diversity Conference Attendance into Course Design and Delivery",
+      "title_overlap": 0.091
+    },
+    {
+      "doi": "10.1145/3587102.3588820",
+      "status": "mismatch",
+      "local_titles": [
+        "AI Coding Assistants as Scaffolding: When Do Students Learn and When Do They Lean?"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Jinter: A Hint Generation System for Java Exercises",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3613904.3642142",
+      "status": "mismatch",
+      "local_titles": [
+        "Promptly: Using Prompt Problems to Teach Novice Programmers Effective Prompt Engineering"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "On the Role of Materials Experience for Novel Interactions with Digital Representations of Historical Pop-up and Movable Books",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3613904.3642432",
+      "status": "mismatch",
+      "local_titles": [
+        "CodeAid: Evaluating a Classroom Deployment of an LLM-Based Programming Assistant That Explains Without Giving Code"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Self-Efficacy and Security Behavior: Results from a Systematic Review of Research Methods",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3613904.3642789",
+      "status": "mismatch",
+      "local_titles": [
+        "The Impact of Code Suggestions on Novice Cognitive Load: An EEG Study"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Socioeconomic Class in Physical Activity Wearables Research and Design",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3624720",
+      "status": "ok",
+      "local_titles": [],
+      "files": [
+        "examples/ai-coding-assistant/result.json",
+        "examples/ai-coding-assistant/result.zh.json"
+      ],
+      "crossref_title": "Computing Education in the Era of Generative AI",
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3626252.3630891",
+      "status": "mismatch",
+      "local_titles": [
+        "Exploring AI-Assisted Pair Programming Dynamics in CS Undergraduate Education"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Mechanical TA 2: Peer Grading with TA and Algorithmic Support",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3626252.3630910",
+      "status": "mismatch",
+      "local_titles": [
+        "Prompt Literacy as a New Prerequisite: Evidence from University CS Classrooms"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Putting the Service into Service Learning: A Report on a Survey of CS Faculty",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3631709",
+      "status": "mismatch",
+      "local_titles": [
+        "Exploring the Effects of Generative AI on Programming Education: A Systematic Literature Review"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Autovesk: Automatic Vectorized Code Generation from Unstructured Static Kernels Using Graph Transformations",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3631802.3631815",
+      "status": "mismatch",
+      "local_titles": [
+        "How Novices Use AI Code Generators: Strategies, Frustrations, and Successes"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "From Modelling to Assessing Algorithmic Abstraction – the Missing Dimension",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3631802.3631828",
+      "status": "mismatch",
+      "local_titles": [
+        "Comparing Novice Bug Fix Rates With and Without Copilot Explanations"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Toward CS1 Content Subscales: A Mixed-Methods Analysis of an Introductory Computing Assessment",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3632620.3671116",
+      "status": "ok",
+      "local_titles": [],
+      "files": [
+        "examples/ai-coding-assistant/result.json",
+        "examples/ai-coding-assistant/result.zh.json"
+      ],
+      "crossref_title": "The Widening Gap: The Benefits and Harms of Generative AI for Novice Programmers",
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3639474.3640061",
+      "status": "mismatch",
+      "local_titles": [
+        "Empirical Evaluation of LLM-Generated Tests for Student Python Programs"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "AI-Tutoring in Software Engineering Education",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3641554.3701889",
+      "status": "mismatch",
+      "local_titles": [
+        "Guardrails Matter: A 2x2 Factorial Evaluation of Socratic vs Direct Code Assistants in CS1"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Teaching Computing to K-12 Emergent Bilinguals: Identified Challenges and Opportunities",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3643675",
+      "status": "mismatch",
+      "local_titles": [
+        "Large Language Models for Software Engineering: A Systematic Literature Review"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "KADEL: Knowledge-Aware Denoising Learning for Commit Message Generation",
+      "title_overlap": 0.111
+    },
+    {
+      "doi": "10.1145/3649217.3653551",
+      "status": "mismatch",
+      "local_titles": [
+        "Cognitive Offloading in Novice CS1 Students: An Eye-Tracking and Keystroke Log Analysis"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Broadening Computing Participation in the Navajo Nation",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3649217.3653580",
+      "status": "mismatch",
+      "local_titles": [
+        "Debugging Behavior Disparities Between AI-Assisted and Non-AI Students"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Enhancing Student Engagement in Large-Scale Capstone Courses: An Experience Report",
+      "title_overlap": 0.1
+    },
+    {
+      "doi": "10.1145/3649217.3653592",
+      "status": "mismatch",
+      "local_titles": [
+        "Does Copilot Create Shallow Coders? An Empirical Test of Depth of Knowledge"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Exploring Perception in Computer Graphics Education: A Swedish Perspective",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3651120",
+      "status": "not_found",
+      "local_titles": [
+        "A 1-Year Follow-Up of AI Assisted Coding Students in Advanced Data Structures"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3657604.3662012",
+      "status": "not_found",
+      "local_titles": [
+        "Pedagogical Guardrails: Evaluating Prompt Constraints to Prevent Code Plagiarism"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3660768",
+      "status": "mismatch",
+      "local_titles": [
+        "Code Completion with LLMs: Do Developers Write Better or Just More Code?"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "A Critical Review of Common Log Data Sets Used for Evaluation of Sequence-Based Anomaly Detection Techniques",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1145/3702652.3744219",
+      "status": "ok",
+      "local_titles": [],
+      "files": [
+        "examples/ai-coding-assistant/result.json",
+        "examples/ai-coding-assistant/result.zh.json"
+      ],
+      "crossref_title": "The Effects of GitHub Copilot on Computing Students' Programming Effectiveness, Efficiency, and Processes in Brownfield Coding Tasks",
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1145/3706598.3713401",
+      "status": "mismatch",
+      "local_titles": [
+        "Evaluating Fading Scaffolding in AI Coding Mentors: A Randomized Trial"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Compositional Structures as Substrates for Human-AI Co-creation Environment: A Design Approach and A Case Study",
+      "title_overlap": 0.0
+    },
+    {
+      "doi": "10.1177/02655322241289012",
+      "status": "not_found",
+      "local_titles": [
+        "Formative automated fallacy diagnostics in undergraduate argumentative writing: Rubric alignment and learning gains",
+        "本科论辩写作中形成性自动化逻辑谬误诊断：评分量规对齐与学习增益"
+      ],
+      "files": [
+        "examples/esl-academic-writing-ai/evidence_graph.json",
+        "examples/esl-academic-writing-ai/result.json",
+        "examples/esl-academic-writing-ai/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1177/07356331241249810",
+      "status": "not_found",
+      "local_titles": [
+        "A Quasi-Experimental Difference-in-Differences Evaluation of Copilot Integration in CS1 Labs"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.1186/s40561-024-00295-9",
+      "status": "ok",
+      "local_titles": [],
+      "files": [
+        "examples/ai-coding-assistant/evidence.jsonl",
+        "examples/ai-coding-assistant/sources.jsonl",
+        "examples/ai-writing-assistant/evidence.jsonl",
+        "examples/ai-writing-assistant/result.json"
+      ],
+      "crossref_title": "Impact of ChatGPT on ESL students’ academic writing skills: a mixed methods intervention study",
+      "title_overlap": null
+    },
+    {
+      "doi": "10.3102/2332858423119876",
+      "status": "not_found",
+      "local_titles": [
+        "Scaling Intelligent Tutoring Systems in Secondary Mathematics: Broadening Access and Countering Differential Learning Trajectories"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.3102/2332858424123456",
+      "status": "not_found",
+      "local_titles": [
+        "Scaffolding Geometric Proofs and Coordinate Transformations: Socratic Dialogue vs. Direct Feedback in ASSISTments"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.48550/arXiv.2211.03622",
+      "status": "mismatch",
+      "local_titles": [
+        "Reading and Writing Code with LLMs: An Empirical Study of Programmer Workflows"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "Do Users Write More Insecure Code with AI Assistants?",
+      "title_overlap": 0.222
+    },
+    {
+      "doi": "10.48550/arXiv.2302.06590",
+      "status": "ok",
+      "local_titles": [
+        "The Impact of AI on Developer Productivity: Evidence from GitHub Copilot"
+      ],
+      "files": [
+        "examples/ai-coding-assistant-50/evidence_graph.json",
+        "examples/ai-coding-assistant-50/result.json",
+        "examples/ai-coding-assistant-50/result.zh.json"
+      ],
+      "crossref_title": "The Impact of AI on Developer Productivity: Evidence from GitHub Copilot",
+      "title_overlap": 1.0
+    },
+    {
+      "doi": "10.5951/jresematheduc-2024-0012",
+      "status": "not_found",
+      "local_titles": [
+        "The Illusion of Mastery in LLM-Assisted Calculus: Why Unfettered Homework Acceleration Degrades Exam Retention"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    },
+    {
+      "doi": "10.5951/jresematheduc-2025-0003",
+      "status": "not_found",
+      "local_titles": [
+        "Metacognitive Scaffolding in High School Mathematical Problem Solving: Assessing LLM-Prompted Reflection"
+      ],
+      "files": [
+        "examples/highschool-math-ai-tutor/evidence_graph.json",
+        "examples/highschool-math-ai-tutor/result.json",
+        "examples/highschool-math-ai-tutor/result.zh.json"
+      ],
+      "crossref_title": null,
+      "title_overlap": null
+    }
+  ]
+}
