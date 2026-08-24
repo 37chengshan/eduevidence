@@ -35,6 +35,10 @@ from typing import Any, List, Optional
 USER_AGENT = "EduEvidence-Research-Agent/4.0 (+https://eduevidence.ai)"
 DEFAULT_TIMEOUT = 12
 
+from engine.log import get_log  # noqa: E402
+
+log = get_log("search")
+
 
 @dataclass
 class SearchHit:
@@ -460,12 +464,14 @@ class MultiSearchRouter:
         if not all_hits:
             try:
                 from retrieval.corpus_store import DomainCorpusStore
+                log.info("external channels empty; falling back to offline corpus query=%r", query)
                 all_hits = DomainCorpusStore.search_offline(query, limit=limit)
             except Exception:
                 pass
 
         # 5. Sort by score descending (academic papers prioritized)
         all_hits.sort(key=lambda x: (x.score, x.citation_count or 0), reverse=True)
+        log.debug("search query=%r academic_only=%s hits=%d", query, academic_only, len(all_hits))
         return all_hits[:limit]
 
 

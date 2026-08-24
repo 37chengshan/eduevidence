@@ -40,6 +40,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import logging
 import os
 import sys
 from pathlib import Path
@@ -54,6 +55,9 @@ from run_workspace import (RESOURCE_POLICY_VERSION, STAGES, RunWorkspace,  # noq
                            load_json, load_jsonl, next_run_id, save_jsonl)
 from pre_verdict_gate import apply_enforcement, evaluate_workspace  # noqa: E402
 from engine.versions import ENGINE_VERSION  # noqa: E402
+from engine.log import enable_console_logging, get_log  # noqa: E402
+
+log = get_log("orchestrator")
 
 DEPTH_ALIASES = {"quick": "S", "standard": "M", "deep": "L"}
 DEPTHS = ("S", "M", "L")
@@ -573,6 +577,7 @@ def run_stage(ws: RunWorkspace, stage: str, *, demo_pack: Path | None = None) ->
     from ``demo_pack`` (demo/test mode) or handed off via a task brief.
     """
     ws.trace("stage_started", stage=stage)
+    log.info("stage=%s run=%s start", stage, ws.run_id)
     spec = STAGE_SPEC[stage]
     question = ws.load_manifest().get("question", "")
     artifact_path = ws.path / spec["artifact"]
@@ -1426,6 +1431,9 @@ def main(argv: list[str] | None = None) -> int:
     p_lnt.set_defaults(func=_cmd_lint)
 
     args = parser.parse_args(argv)
+    if os.environ.get("EDUEVIDENCE_LOG_LEVEL"):
+        # Opt-in engine/retrieval diagnostics (E4): EDUEVIDENCE_LOG_LEVEL=INFO/DEBUG
+        enable_console_logging(getattr(logging, os.environ["EDUEVIDENCE_LOG_LEVEL"].upper(), logging.INFO))
     try:
         return args.func(args)
     except FileNotFoundError as exc:

@@ -37,6 +37,9 @@ from retrieval.validate import (
     resolves_to_private,
     validate_fetch_result,
 )
+from engine.log import get_log
+
+log = get_log("fetch")
 
 FETCH_PROVIDERS = ("builtin", "jina_reader", "defuddle", "markdown_new", "raw_html")
 JINA_READER_PREFIX = "https://r.jina.ai/"
@@ -362,10 +365,12 @@ def fetch_url(
             break
         try:
             status, body, resolved_url = _PROVIDER_FETCHERS[provider](url, timeout)
-        except (_BodyTooLarge, urllib.error.URLError, OSError, ValueError):
+        except (_BodyTooLarge, urllib.error.URLError, OSError, ValueError) as exc:
             result.fallback_chain.append(f"{provider}:error")
+            log.debug("provider error provider=%s url=%s err=%s", provider, url, exc)
             continue
         result.fallback_chain.append(f"{provider}:{status}")
+        log.debug("provider attempt provider=%s status=%s url=%s", provider, status, url)
 
         # Security gate: a public request that resolves (directly or via DNS)
         # to a private network must abort the whole chain.
@@ -377,6 +382,8 @@ def fetch_url(
                     "checks": {"private_target": True, "http_success": False},
                     "issues": ["fetch resolved to a private/local network; chain aborted"],
                 }
+                log.warning("private-target abort provider=%s url=%s resolved=%s",
+                            provider, url, resolved_url)
                 return result.to_dict()
 
         cand = _build_candidate(
@@ -405,6 +412,7 @@ def fetch_url(
         if best_partial is not None:
             _copy_candidate(result, best_partial, status="FETCH_PARTIAL")
             result.fallback_used = True
+            log.info("FETCH_PARTIAL url=%s chain=%s", url, result.fallback_chain)
         else:
             result.fetch_status = "FETCH_FAILED"
             result.validation = {
@@ -412,6 +420,7 @@ def fetch_url(
                 "checks": {"http_success": False, "body_length_ok": False},
                 "issues": ["all providers failed"],
             }
+            log.warning("FETCH_FAILED url=%s chain=%s", url, result.fallback_chain)
 
     return result.to_dict()
 
