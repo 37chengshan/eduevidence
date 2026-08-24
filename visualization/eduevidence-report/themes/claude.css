@@ -46,6 +46,9 @@
 :root[data-theme="claude"] .full-report-toc a { border-left:1px solid var(--border); padding:8px 0 8px 13px; background:transparent; }
 :root[data-theme="claude"] .full-report-toc a.active { border-left:2px solid var(--primary); background:transparent; color:var(--text); }
 :root[data-theme="claude"] .full-report-content { max-width:900px; }
+@media (max-width:980px) {
+  :root[data-theme="claude"] .full-report-layout { grid-template-columns:minmax(0,1fr); gap:28px; }
+}
 :root[data-theme="claude"] .full-chapter { border-bottom:0; margin-bottom:72px; padding-bottom:0; }
 :root[data-theme="claude"] .full-chapter-header { max-width:760px; margin-bottom:30px; }
 :root[data-theme="claude"] .full-chapter-header h2 { font-size:1.8rem; font-weight:500; }

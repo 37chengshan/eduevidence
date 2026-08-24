@@ -2,7 +2,7 @@
   "result_sha256": "d6b814a179e6495c5d0ef8b8450c4dc881de5a9b892eb70f58ca56e2b9c8c8bd",
   "result_zh_sha256": "48ba9c59c3fbd18b6afcc0540a7eca16d13969e5bc9e913c7be9c9119c382cf4",
   "renderer_version": "1.0.0",
-  "git_commit": "aaf69610483fdb0682b634539cd37420a49c59b6",
+  "git_commit": "af625134ea8f0d2766f79d303668d2703b81da81",
   "evidence_count": 50,
   "source_count": 50,
   "themes": [

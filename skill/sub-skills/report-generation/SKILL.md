@@ -33,6 +33,13 @@ Every chart is rendered as **pure self-contained inline SVG** following the bake
 
 Dark themes draw on the theme's `card_bg`; text contrast is checked against the theme palette (≥4.5:1 for body/labels). The chart structure is identical across light/dark — only colors change.
 
+### 2.4 排版守则（五主题统一约束）
+五个烘焙主题的排版必须通过 `scripts/lint_report_layout.py`（静态不变量 + 浏览器级
+390/768/1280 × brief/full 实测）：轨道 `minmax(0,1fr)` / `minmax(min(Npx,100%),1fr)`、
+主题自带移动端媒体覆写、禁止裸 `1fr` 与固定 px 最小值 auto-fit、表格外包 `overflow-x:auto`。
+详见 `visualization/eduevidence-report/references/layout-constraints.md`；合入前重烘焙 15 份报告
+并跑 `tests/test_report_layout_mobile.py`。
+
 ## 3. Outputs
 1. **5 Baked Report Themes**: `claude` / `academic` / `datalab` / `datalab-dark` / `presentation`.
    - Theme is chosen **at generation time**; single-file offline self-contained (zero CDN).

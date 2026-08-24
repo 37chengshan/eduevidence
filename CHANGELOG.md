@@ -3,6 +3,40 @@
 所有显著变更均记录于此。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)；版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
 
+## [5.1.1] — 2026-08-23
+
+> 排版修复 + 五主题布局约束门（含手机端）。
+
+### Judge（presentation）主题排版问题排查与修复
+- 根因一（移动端/平板横向裁切）：`:root[data-theme="X"]`（特异性 0,2,0）压过基座
+  `@media (max-width:980px)`（0,1,0）——presentation 的 `full-report-layout` 在 390px 仍为
+  `230px 104px` 两列，内容列被挤到 104px；datalab/dark/presentation 的 `outcome-groups`
+  `repeat(auto-fit,minmax(240px,1fr))` 内在尺寸爆炸，768px 平板第二列结果消失在视口外
+  （shell scrollWidth 1025 > 768）。
+- 修复范式：基座断点改 `minmax(0,1fr)` + 网格 item `min-width:0` 安全网；全部 5 主题
+  `auto-fit` 轨道改 `minmax(min(Npx,100%),1fr)`；三主题 `report-page-brief`/`full-report-layout`
+  自带 `@media ≤980` 覆写（同主题文件内，等特异性后声明生效）；`scope-grid`/`method-audit-grid`
+  同样处理。
+- 结果：18 份报告（3 示例 × 5 主题 + 3 主报告 + 13 篇示例）× 390/768/1280 × brief/full
+  浏览器实测 114 项全部无溢出、无裁切。
+
+### 展开动画「只有点击才触发」体验修复
+- 根因：首屏卡片在页面加载瞬间即播完动画（用户未看到），滚动中又常被错过，感知为
+  "只有点击才动"。`motion.js` 新增入场错峰：页面加载 1.5s 内命中的卡片按
+  `140ms + (index%6)*130ms` 逐个播放入场（draw-in 可见）；滚动进入与点击重播立即执行；
+  `prefers-reduced-motion`/无 JS 仍然静态可见。
+
+### 五主题排版约束机制（skill + 脚本 + 测试）
+- 新建 `scripts/lint_report_layout.py`：静态不变量审计（裸 1fr 轨道、无移动端覆写的双列
+  grid、固定 px 最小值 auto-fit 均为违规）+ 可选浏览器级门（调 `check_mobile_layout.js`）。
+- 新建 `visualization/eduevidence-report/scripts/check_mobile_layout.js`：零依赖 Node CDP
+  实测（390/768/1280 × brief/full）：页面无横向溢出、可见 shell 无裁切、逃逸元素排除
+  滚动容器/SVG 内部、画廊 reveal 契约（滚入全部 is-live）。
+- 新建 `tests/test_report_layout_mobile.py`：静态门必跑；浏览器级门在有 Chrome+Node 时跑，
+  否则 skip；reveal 契约静态断言。
+- 文档：新增 `visualization/eduevidence-report/references/layout-constraints.md`（守则 + 教训 +
+  验收清单）；`component-catalog.md` §10/§11 与 `report-generation` sub-skill §2.4 引用守则。
+
 ## [5.1.0] — 2026-08-22
 
 > Present 层大改造：**AI 自由组合 Lieflat 图表 + 5 套主题文案排版优化（含展开动画）**。

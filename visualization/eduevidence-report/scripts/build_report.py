@@ -3099,7 +3099,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .visual-heading {{ max-width:760px; margin-bottom:18px; }} .visual-heading h3 {{ font-size:1.15rem; margin-bottom:6px; }}
 .visual-heading p {{ color:var(--insufficient); margin:0; }}
 .outcome-separation {{ margin:10px 0 24px; }}
-.outcome-groups {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }}
+.outcome-groups {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:14px; }}
 .outcome-group {{ padding:16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface2); }}
 .outcome-group h3 {{ margin:0 0 10px; }} .outcome-group ul {{ list-style:none; margin:0; padding:0; }}
 .outcome-group li {{ display:flex; flex-direction:column; gap:7px; padding:9px 0; border-top:1px solid var(--border); }}
@@ -3234,7 +3234,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .decision-hero, .tribunal-card, .trace-chain-card, .action-node, .method-audit-item {{ box-shadow:none !important; background:#fff !important; }}
   a {{ color:#000; text-decoration:underline; }} }}
 @media (max-width:980px) {{
-  .full-report-layout {{ grid-template-columns:1fr; gap:18px; }}
+  /* 网格 item 收缩安全：阻止子内容 min-content 把 1fr 轨道撑破（移动端/平板横向裁切）。 */
+  .full-report-layout {{ grid-template-columns:minmax(0,1fr); gap:18px; }}
+  .brief-block-body > *, .outcome-separation, .visual-surface,
+  .tribunal-grid > *, .hero-insights > *, .brief-source-grid > * {{ min-width:0; }}
   .full-report-toc {{ position:relative; top:auto; max-height:none; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; }}
   .full-report-toc nav {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }}
   :root .full-report-layout.toc-collapsed {{ grid-template-columns:1fr; }}
@@ -3250,6 +3253,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .report-header .meta, .brief-source h3, .claim-cell, .detail-body, .source-detail-grid dd {{ overflow-wrap:anywhere; word-break:break-word; }}
   .data-table {{ font-size:.78rem; }}
   .hero-insights, .tribunal-grid, .scope-grid, .retrieval-grid, .brief-source-grid, .method-audit-grid {{ grid-template-columns:1fr; }}
+  /* 网格收缩安全：1fr 轨道 min 改 0、auto-fit 轨道 min 随容器收缩(min(180px,100%))，
+     阻断固定 px 最小值 -> min-content 爆炸 -> 移动端横向溢出 的链条。 */
+  .full-report-content, .full-chapter, .full-chapter-body, .brief-block-body,
+  .outcome-separation, .visual-surface, .report-page-full, .report-page-brief {{ min-width:0; }}
+  .outcome-groups {{ grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr)); }}
   .report-view-switcher {{ width:100%; }}
   .report-view-btn {{ flex:1; min-height:42px; }}
   .lang-btn, .toc-collapse {{ min-height:40px; }}
@@ -3259,6 +3267,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .full-chapter {{ width:100%; margin-bottom:38px; padding-bottom:38px; }}
   .full-chapter-header, .brief-block-header, .visual-heading {{ max-width:100%; }}
   .evidence-detail-grid, .source-detail-grid {{ grid-template-columns:1fr; }}
+  .evidence-detail-grid dt, .evidence-detail-grid dd,
+  .source-detail-grid dt, .source-detail-grid dd {{ min-width:0; overflow-wrap:anywhere; }}
   .evidence-detail-grid dt, .source-detail-grid dt {{ padding-bottom:2px; }}
   .evidence-detail-grid dd, .source-detail-grid dd {{ padding-top:2px; }}
   .decision-hero {{ padding:20px 16px; }}

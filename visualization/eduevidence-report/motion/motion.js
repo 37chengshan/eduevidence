@@ -62,17 +62,29 @@
     lfTimers[id] = [];
   }
 
-  function replayLieflat(box) {
+  // Entrance choreography: cards revealed shortly after load (already in the
+  // viewport) get a short visual stagger so the draw-in is actually seen —
+  // without this, the load-time reveal finishes before the user looks and the
+  // charts appear static until clicked. Scrolled-in and click reveals play
+  // immediately.
+  var bootTime = Date.now();
+  function revealDelay(box, index) {
+    var fresh = Date.now() - bootTime < 1500;
+    if (!fresh) return 40;
+    return 140 + ((index % 6) * 130);
+  }
+
+  function replayLieflat(box, delay) {
     var id = box.dataset.lfId;
+    delay = (delay === undefined ? 40 : delay);
     clearLfTimers(id);
     box.classList.remove('is-live');
     // force reflow so the re-added class restarts the CSS animations
     void box.offsetWidth;
-    var raf = null;
     var tid = setTimeout(function () {
       box.classList.add('is-live');
       lfTimers[id] = lfTimers[id].filter(function (t) { return t !== tid; });
-    }, 0);
+    }, delay);
     lfTimers[id].push(tid);
   }
 
@@ -82,13 +94,14 @@
     var lfObserver = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        replayLieflat(entry.target);
+        var index = lfBoxes.indexOf(entry.target);
+        replayLieflat(entry.target, revealDelay(entry.target, index));
         obs.unobserve(entry.target);
       });
     }, {threshold:.3});
     lfBoxes.forEach(function (box) { lfObserver.observe(box); });
   }
-  lfBoxes.forEach(function (box) {
-    box.addEventListener('click', function () { replayLieflat(box); });
+  lfBoxes.forEach(function (box, index) {
+    box.addEventListener('click', function () { replayLieflat(box, 0); });
   });
 })();

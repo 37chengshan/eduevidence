@@ -33,3 +33,17 @@ docs/superpowers/
 # generated 5-theme report copies
 examples/**/reports-5themes*/
 upload/
+
+# Local agent/session tooling
+.agents/
+.opencode/
+.mimosa/
+.zcode/
+
+# Large local media & vendored skill libraries
+video-bilibili/
+visualization/lieflat-charts/
+garden-gpt-image-2/
+
+# Local release artifacts (regenerable via packaging/make_upload.sh)
+EduEvidence_Web_Studio.zip

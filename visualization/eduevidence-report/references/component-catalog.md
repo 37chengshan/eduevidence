@@ -127,6 +127,11 @@ conflicts · trace · applicability · intervention · evaluation · sources
 - 页面功能与 Evidence 展开能力。
 - Meaningful Visualization Gate。
 
+**排版守则（硬性，见 `references/layout-constraints.md`）**：主题规则特殊性高于基座断点——
+凡 ≥2 列含 px 最小值的 `grid-template-columns`，主题必须自带 `@media (max-width:980px)` 覆写；
+轨道用 `minmax(0,1fr)` 或 `minmax(min(Npx,100%),1fr)`，禁止裸 `1fr` 与固定 px 最小值 auto-fit。
+改动后跑 `scripts/lint_report_layout.py`（静态 + 浏览器级 390/768/1280 × brief/full）。
+
 ## 11. 自检
 
 - [ ] 同一 result 生成五种主题，数据与章节内容覆盖完全一致。
@@ -136,3 +141,5 @@ conflicts · trace · applicability · intervention · evaluation · sources
 - [ ] 无 JS 时核心研究内容仍存在于 HTML。
 - [ ] 打印只输出完整报告并暴露 detail 内容。
 - [ ] Outcome visual 使用 `effect_direction`，不是 Claim support。
+- [ ] `lint_report_layout.py` PASS：五主题静态不变量 + 浏览器级（390/768/1280 × brief/full）无溢出、reveal 生效。
+- [ ] 手机（390px）与平板（768px）实测：无横向滚动、无裁切、图表完整、点击重播动画正常。

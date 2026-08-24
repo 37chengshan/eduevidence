@@ -56,6 +56,9 @@
 :root[data-theme="academic"] .full-report-toc { border-right:1px solid #777; padding-right:14px; }
 :root[data-theme="academic"] .full-report-toc a { border:0; border-bottom:1px dotted #bbb; padding:7px 0; font-size:.77rem; }
 :root[data-theme="academic"] .full-report-toc a.active { border-left:0; background:transparent; font-weight:700; color:#000; }
+@media (max-width:980px) {
+  :root[data-theme="academic"] .full-report-layout { grid-template-columns:minmax(0,1fr); }
+}
 :root[data-theme="academic"] .full-report-content { max-width:740px; }
 :root[data-theme="academic"] .full-chapter { border-bottom:0; margin-bottom:50px; padding-bottom:0; }
 :root[data-theme="academic"] .full-chapter-header { max-width:none; border-bottom:1px solid #444; padding-bottom:7px; margin-bottom:18px; }
@@ -67,7 +70,7 @@
 :root[data-theme="academic"] .method-audit-item,
 :root[data-theme="academic"] .brief-source,
 :root[data-theme="academic"] .detail-body { border-radius:0; background:#fff; box-shadow:none; }
-:root[data-theme="academic"] .method-audit-grid { grid-template-columns:1fr; gap:0; }
+:root[data-theme="academic"] .method-audit-grid { grid-template-columns:minmax(0,1fr); gap:0; }
 :root[data-theme="academic"] .method-audit-item { border-width:0 0 1px 0; padding:9px 0; }
 :root[data-theme="academic"] .evidence-detail-grid dt,
 :root[data-theme="academic"] .evidence-detail-grid dd { border-color:#999; }
