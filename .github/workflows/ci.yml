@@ -34,6 +34,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e '.[dev]'
 
+      - name: Version consistency gate (engine/versions.py is the authority)
+        run: python scripts/check_version_consistency.py
+
       - name: Run tests (retry up to 2 times on transient failure)
         run: |
           attempts=0

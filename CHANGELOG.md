@@ -3,6 +3,17 @@
 所有显著变更均记录于此。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)；版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
 
+## [5.2.0] — 2026-08-24
+
+> 可信度修复版：示例 provenance 纠偏 + 版本/口径单一权威（依据 docs/plans/v5.2-v6.0-iteration-plan.md）。
+
+### 版本治理
+- `engine/versions.py` 成为唯一版本权威；`engine/__init__.py` 的死值 2.0.0 改为 re-export。
+- 新增 `scripts/check_version_consistency.py` 并纳入 CI：versions.py ↔ pyproject ↔ CHANGELOG 头条目 ↔ SKILL.md 标题一致性校验。
+
+### 示例 provenance 纠偏（随本版后续提交补充）
+
+
 ## [5.1.1] — 2026-08-23
 
 > 排版修复 + 五主题布局约束门（含手机端）。

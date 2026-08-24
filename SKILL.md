@@ -3,7 +3,7 @@ name: eduevidence
 description: "Evidence-based decisions for ANY educational & social science question — whether, when, and how to adopt a teaching method, curriculum change, AI tool, or policy intervention. Orchestrates modular sub-skills for literature review, methodology bias audit (WWC 5.0 / GRADE), SSOT causal evidence graph construction, gap lens discovery, pre-registered trial design, and empirical DID data re-injection."
 ---
 
-# EduEvidence 5.0 — Universal Evidence-Based Decision Skill
+# EduEvidence 5.2 — Universal Evidence-Based Decision Skill
 
 > **AI4SS Track | 科艺融合 · 通用智能**
 > **From Empirical Questions to Evidence-Based Decisions & Causal Trial Loops.**

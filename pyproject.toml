@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eduevidence"
-version = "4.0.0"
+version = "5.2.0"
 description = "Evidence-Based Education Decision Skill — from any education question (teaching methods, curriculum, assessment, learning interventions, AI tools) to an evidence-based decision."
 readme = "README.md"
 requires-python = ">=3.10"
