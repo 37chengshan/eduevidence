@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduEvidence 5.0 · 基于证据的教育与社科决策引擎</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+
+  <!-- Global Fixed Background Grid Pattern Overlay -->
+  <div class="global-grid-pattern" aria-hidden="true"></div>
+
+  <!-- Official Competition Platform Top Banner -->
+  <div class="official-top-banner">
+    <strong>上海人工智能实验室 × 壁仞科技主办 · <a href="https://discovery.intern-ai.org.cn/scp/skill/650" target="_blank" style="color:#ffffff; text-decoration:underline;">书生科学发现平台 (Intern Discovery) Skill #650 ↗</a></strong><br>
+    聚焦生命科学、物质科学、地球科学、量子计算、模型与算子开发五大核心领域及开放自由赛道 · 面向真实科研场景开发科研 Skills/Agent
+  </div>
+
+  <!-- Left Vertical Edge-Docked Switcher Button -->
+  <button id="btn-to-studio" class="docked-to-studio" title="进入控制台 Studio">
+    <span class="pulse-dot"></span>
+    <span class="docked-vertical-text">进入控制台</span>
+    <span style="font-size:0.75rem; color:var(--brand-orange); margin-top:2px;">➔</span>
+  </button>
+
+  <!-- 3.1 Responsive Floating Pill Navbar -->
+  <div class="floating-navbar-container">
+    <header class="floating-navbar" id="floating-navbar">
+      <a href="/landing.html" class="nav-logo">
+        <span>EDU</span><span class="logo-dim">EVIDENCE</span>
+      </a>
+      <ul class="nav-links-desktop">
+        <li><a href="#hero-section" class="nav-link-item">项目总览</a></li>
+        <li><a href="#stacking-section" class="nav-link-item">9步规范协议</a></li>
+        <li><a href="#accordion-section" class="nav-link-item">5套报告体系</a></li>
+        <li><a href="https://discovery.intern-ai.org.cn/scp/skill/650" target="_blank" class="nav-link-item">比赛 Skill ↗</a></li>
+        <li><a href="https://github.com/37chengshan/eduevidence" target="_blank" class="nav-link-item">GitHub ↗</a></li>
+      </ul>
+      <button id="nav-launch-btn" class="nav-cta-btn">
+        <span>进入控制台 ➔</span>
+      </button>
+    </header>
+  </div>
+
+  <!-- 3.2 Hero Section (Scroll-Driven Interactive Masterpiece · 400vh) -->
+  <section class="hero-scroll-container" id="hero-section">
+    <div class="hero-sticky-viewport" id="hero-sticky-viewport">
+      
+      <!-- Background looping video: bg1_jgni8n.mp4 -->
+      <video class="hero-bg-video" autoplay loop muted playsinline>
+        <source src="https://strvid.nyc3.cdn.digitaloceanspaces.com/cloudinary/bg1_jgni8n.mp4" type="video/mp4">
+      </video>
+
+      <!-- Concentric Scaling Circles (Four concentric rings scaling consecutively) -->
+      <div class="concentric-circles-wrap" id="concentric-circles-wrap">
+        <div class="concentric-circle circle-4" id="circle-4"></div>
+        <div class="concentric-circle circle-3" id="circle-3"></div>
+        <div class="concentric-circle circle-2" id="circle-2"></div>
+        <div class="concentric-circle circle-1" id="circle-1">
+          <!-- Masked background video inside circle 1: bg4_hzaahu.mp4 -->
+          <video class="circle-1-video" autoplay loop muted playsinline>
+            <source src="https://strvid.nyc3.cdn.digitaloceanspaces.com/cloudinary/bg4_hzaahu.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <!-- Symmetrical Top-and-Bottom Stacked Hero Typography -->
+      <div class="hero-giant-typography" id="hero-giant-typography">
+        <span class="giant-line-top">EDU</span>
+        <span class="giant-line-bottom">EVIDENCE</span>
+      </div>
+
+      <!-- Content Reveal Sequence 1: (Scroll 0.08 -> 0.38) -->
+      <div class="hero-content-sequence content-seq-1" id="content-seq-1">
+        <div class="hero-sub-label">AI FOR SOCIAL SCIENCE · 自由赛道 · 科研智慧提炼</div>
+        <h1 class="hero-main-h1">
+          面向教育与社会科学重大决策的<br>
+          <span style="color:var(--brand-orange);">通用实证研究引擎</span>
+        </h1>
+        <p class="hero-lead-p">
+          将教育与人文社科实证研究方法论提炼为标准化 AI Skill · 9 步规范协议 · 13 项 JSON Schema 强契约 · WWC 5.0 方法学审计 · 田野数据 DID 因果闭环
+        </p>
+        <div class="hero-pills-wrap">
+          <span class="hero-pill-badge">9 步规范协议</span>
+          <span class="hero-pill-badge">13 项 Schema 强契约</span>
+          <span class="hero-pill-badge">WWC 5.0 偏倚审计</span>
+          <span class="hero-pill-badge">DID 因果自愈闭环</span>
+        </div>
+        <div>
+          <button id="hero-btn-studio" class="hero-cta-btn">
+            <span>进入控制台 (Live Studio)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content Reveal Sequence 2: (Scroll 0.38 -> 0.70) -->
+      <div class="hero-content-sequence content-seq-2" id="content-seq-2">
+        <div class="hero-sub-label">EVIDENCE-BASED DECISION &amp; INTERVENTION</div>
+        <h2 class="hero-main-h1" style="font-size:clamp(2.2rem, 4.5vw, 4.2rem);">
+          从实证分歧到循证裁决<br>
+          构建决策的 <span style="color:var(--brand-orange);">单一事实来源 (SSOT)</span>
+        </h2>
+        <p class="hero-lead-p">
+          超越主观直觉与零散主张，基于 50 篇顶刊实证文献合成、元分析森林图与交互式准实验回归沙盒。
+        </p>
+        <button class="hero-cta-btn" onclick="document.getElementById('btn-to-studio').click();">
+          <span>进入控制台 Studio</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- Scroll hint indicator -->
+      <div class="hero-scroll-hint" id="hero-scroll-hint">
+        <span>向下滚动探索实证引擎</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3.3 Services Section (3D Stacking Cards · 300vh, -mt-[100vh]) -->
+  <section class="stacking-section-container" id="stacking-section">
+    <div class="stacking-sticky-viewport">
+      <div class="stacking-inner-layout">
+        
+        <!-- Left static text column -->
+        <div class="stacking-text-col">
+          <span class="stacking-sec-tag">Canonical Protocol</span>
+          <h2 class="stacking-sec-h2">
+            端到端 9 步规范<br>
+            <span style="color:var(--brand-orange);">实证流水线架构</span>
+          </h2>
+          <p class="stacking-sec-p">
+            遵循「无证据奠基禁止产生新研究设计」冻结科学规则，全流程由 13 项顶层 JSON Schema 强类型约束，构建从实证检索到干预评价的完整闭环。
+          </p>
+          <div style="font-size:0.85rem; color:var(--slate-400);">
+            ↓ 向下滚动浏览 3 大核心架构分层
+          </div>
+        </div>
+
+        <!-- Right Stacking Cards Absolute Wrapper -->
+        <div class="stacking-cards-wrapper" id="stacking-cards-wrapper">
+          
+          <!-- Card 1: bg-slate-800, Video: bg5_yx7j4k.mp4 -->
+          <div class="stack-card stack-card-1" id="stack-card-1">
+            <video class="card-bg-video" autoplay loop muted playsinline>
+              <source src="https://strvid.nyc3.cdn.digitaloceanspaces.com/cloudinary/bg5_yx7j4k.mp4" type="video/mp4">
+            </video>
+            <div class="card-content-layer">
+              <div class="card-num">01 / STEP 1-6</div>
+              <div class="card-title">Research Core · 证据纪律核心</div>
+              <div class="card-desc">
+                遵循「无证据奠基禁止产生新研究设计」铁律。强制执行全文 Fetch/Validate 校验，拒绝 snippet 幻觉。
+              </div>
+
+              <!-- 6-Step Protocol Pills Flow -->
+              <div class="card-flow-pipeline">
+                <span class="card-step-badge">1. 框定 Frame</span>
+                <span class="card-flow-arrow">➔</span>
+                <span class="card-step-badge">2. 检索 Retrieve</span>
+                <span class="card-flow-arrow">➔</span>
+                <span class="card-step-badge">3. 抽取 Extract</span>
+                <span class="card-flow-arrow">➔</span>
+                <span class="card-step-badge">4. 质询 Challenge</span>
+                <span class="card-flow-arrow">➔</span>
+                <span class="card-step-badge">5. 偏倚审计 Audit</span>
+                <span class="card-flow-arrow">➔</span>
+                <span class="card-step-badge highlight">6. 裁决 Adjudicate</span>
+              </div>
+
+              <!-- Lieflat Mini Meta-Analysis / Forest Plot Telemetry Box -->
+              <div class="card-viz-box">
+                <div class="card-viz-header">
+                  <span>Lieflat 元分析森林图 (DerSimonian-Laird RE Model)</span>
+                  <span class="viz-status-tag">WWC 5.0 护栏已激活</span>
+                </div>
+                <div style="padding:8px 4px 4px;">
+                  <svg viewBox="0 0 480 105" width="100%" height="100%" style="display:block;">
+                    <!-- Zero line -->
+                    <line x1="220" y1="10" x2="220" y2="85" stroke="rgba(255,255,255,0.2)" stroke-dasharray="2,2" stroke-width="1"/>
+                    <text x="220" y="98" fill="#94A3B8" font-size="8" text-anchor="middle" font-family="monospace">0.0 (零效应线)</text>
+                    
+                    <!-- Row 1: Bastani '25 -->
+                    <text x="10" y="24" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Bastani '25 (当堂提速)</text>
+                    <line x1="280" y1="21" x2="390" y2="21" stroke="#10B981" stroke-width="1.5" opacity="0.7"/>
+                    <circle cx="340" cy="21" r="4" fill="#10B981"/>
+                    <text x="440" y="24" fill="#10B981" font-size="9" font-family="monospace" font-weight="bold">+0.68g</text>
+
+                    <!-- Row 2: Prather '24 -->
+                    <text x="10" y="46" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Prather '24 (语法补全)</text>
+                    <line x1="260" y1="43" x2="360" y2="43" stroke="#10B981" stroke-width="1.5" opacity="0.7"/>
+                    <circle cx="310" cy="43" r="4" fill="#10B981"/>
+                    <text x="440" y="46" fill="#10B981" font-size="9" font-family="monospace" font-weight="bold">+0.54g</text>
+
+                    <!-- Row 3: Kazemitabaar '24 -->
+                    <text x="10" y="68" fill="#F8FAFC" font-size="9" font-family="sans-serif" font-weight="600">Kazemi '24 (闭卷留存)</text>
+                    <line x1="140" y1="65" x2="200" y2="65" stroke="#EF4444" stroke-width="1.5" opacity="0.7"/>
+                    <circle cx="170" cy="65" r="4" fill="#EF4444"/>
+                    <text x="440" y="68" fill="#EF4444" font-size="9" font-family="monospace" font-weight="bold">-0.28g</text>
+
+                    <!-- Pooled Diamond Summary -->
+                    <polygon points="265,85 285,81 305,85 285,89" fill="#F59E0B"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-bottom-bar">
+              <div class="card-bottom-pill">50 篇顶刊合成</div>
+              <div class="card-bottom-pill">零 Snippet 幻觉</div>
+              <div class="card-bottom-pill orange">RE Pooled: +0.38g [0.24, 0.52]</div>
+            </div>
+          </div>
+
+          <!-- Card 2: bg-slate-700, Video: bg2_zvj76l.mp4 -->
+          <div class="stack-card stack-card-2" id="stack-card-2">
+            <video class="card-bg-video" autoplay loop muted playsinline>
+              <source src="https://strvid.nyc3.cdn.digitaloceanspaces.com/cloudinary/bg2_zvj76l.mp4" type="video/mp4">
+            </video>
+            <div class="card-content-layer">
+              <div class="card-num">02 / STEP 7-9</div>
+              <div class="card-title">Decision Extension · 证据到行动</div>
+              <div class="card-desc">
+                从科学裁决到政策干预落地。构建 4 阶段渐退支架协议与硬性熔断阈值，严格规避学生依赖陷阱。
+              </div>
+
+              <!-- 4-Phase Scaffold Pipeline Bar -->
+              <div class="card-fading-scaffold">
+                <div class="scaffold-col">
+                  <div class="scaffold-phase-tag">PHASE 1</div>
+                  <div class="scaffold-name">零代码生成</div>
+                  <div class="scaffold-sub">纯手写基线</div>
+                </div>
+                <div class="scaffold-arrow">➔</div>
+                <div class="scaffold-col">
+                  <div class="scaffold-phase-tag">PHASE 2</div>
+                  <div class="scaffold-name">概念解释支架</div>
+                  <div class="scaffold-sub">伪代码引导</div>
+                </div>
+                <div class="scaffold-arrow">➔</div>
+                <div class="scaffold-col">
+                  <div class="scaffold-phase-tag">PHASE 3</div>
+                  <div class="scaffold-name">语法纠错辅助</div>
+                  <div class="scaffold-sub">Bug 溯源拦截</div>
+                </div>
+                <div class="scaffold-arrow">➔</div>
+                <div class="scaffold-col highlight">
+                  <div class="scaffold-phase-tag">PHASE 4</div>
+                  <div class="scaffold-name">独立实战迁移</div>
+                  <div class="scaffold-sub">无 AI 终考</div>
+                </div>
+              </div>
+
+              <!-- Lieflat Fading Scaffolding & Stop-Loss Gauge SVG -->
+              <div class="card-viz-box">
+                <div class="card-viz-header">
+                  <span>Lieflat 渐退双曲线与熔断风控仪表 (Scaffolding Dynamics)</span>
+                  <span class="viz-status-tag red">实时风控监测</span>
+                </div>
+                <div style="padding:8px 4px 4px;">
+                  <svg viewBox="0 0 480 100" width="100%" height="100%" style="display:block;">
+                    <!-- Axis -->
+                    <line x1="30" y1="80" x2="450" y2="80" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                    
+                    <!-- AI Assistance Curve (Fading Down) -->
+                    <path d="M 40,25 Q 180,35 280,65 T 440,78" fill="none" stroke="#F59E0B" stroke-width="2"/>
+                    <circle cx="40" cy="25" r="3" fill="#F59E0B"/><circle cx="280" cy="65" r="3" fill="#F59E0B"/><circle cx="440" cy="78" r="3" fill="#F59E0B"/>
+                    <text x="50" y="20" fill="#F59E0B" font-size="8" font-weight="bold">AI 支架渐退曲线</text>
+
+                    <!-- Student Solo Mastery Curve (Rising Up) -->
+                    <path d="M 40,75 Q 180,65 280,35 T 440,22" fill="none" stroke="#10B981" stroke-width="2"/>
+                    <circle cx="40" cy="75" r="3" fill="#10B981"/><circle cx="280" cy="35" r="3" fill="#10B981"/><circle cx="440" cy="22" r="3" fill="#10B981"/>
+                    <text x="340" y="18" fill="#10B981" font-size="8" font-weight="bold">独立解题心智内化</text>
+
+                    <!-- Stop Threshold Warning Dotted Line -->
+                    <line x1="280" y1="10" x2="280" y2="80" stroke="#EF4444" stroke-dasharray="3,2" stroke-width="1.2"/>
+                    <rect x="235" y="84" width="90" height="14" rx="3" fill="rgba(239,68,68,0.2)"/>
+                    <text x="280" y="94" fill="#EF4444" font-size="7.5" font-weight="bold" text-anchor="middle">熔断红线: 留存下滑&gt;15%</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-bottom-bar">
+              <div class="card-bottom-pill">最小可验证试点 (PILOT)</div>
+              <div class="card-bottom-pill">4维评价矩阵 (基线/练习/留存/迁移)</div>
+              <div class="card-bottom-pill orange">规避支架依赖</div>
+            </div>
+          </div>
+
+          <!-- Card 3: bg-brand-orange, Video: bg3_fqnvi9.mp4 -->
+          <div class="stack-card stack-card-3" id="stack-card-3">
+            <video class="card-bg-video" autoplay loop muted playsinline>
+              <source src="https://strvid.nyc3.cdn.digitaloceanspaces.com/cloudinary/bg3_fqnvi9.mp4" type="video/mp4">
+            </video>
+            <div class="card-content-layer">
+              <div class="card-num">03 / CAUSAL LOOP</div>
+              <div class="card-title">Decision-to-Outcome · 因果自愈闭环</div>
+              <div class="card-desc">
+                真实课堂 CSV 田野数据接入。从 PII 隐私脱敏到 DID 双重差分准实验，证据图谱自动版本化自愈。
+              </div>
+
+              <!-- Causal Loop 4 Steps (Single-line compact flow) -->
+              <div class="card-flow-pipeline dark-flow">
+                <span class="card-step-badge dark">田野 CSV</span>
+                <span class="card-flow-arrow dark">➔</span>
+                <span class="card-step-badge dark">PII 隐私脱敏</span>
+                <span class="card-flow-arrow dark">➔</span>
+                <span class="card-step-badge dark">DID 因果回归</span>
+                <span class="card-flow-arrow dark">➔</span>
+                <span class="card-step-badge dark highlight-dark">不可变快照 rev-N</span>
+              </div>
+
+              <!-- Lieflat DID Parallel Trend Pure SVG Box -->
+              <div class="card-viz-box dark-box">
+                <div class="card-viz-header dark">
+                  <span>Lieflat 双重差分 (DID) 平行趋势与因果增益</span>
+                  <span class="viz-status-tag green">自愈裁决已收敛</span>
+                </div>
+                <div style="padding:8px 4px 4px;">
+                  <svg viewBox="0 0 480 100" width="100%" height="100%" style="display:block;">
+                    <!-- Split Line: Intervention Launch -->
+                    <line x1="200" y1="10" x2="200" y2="80" stroke="rgba(255,255,255,0.4)" stroke-dasharray="2,2" stroke-width="1"/>
+                    <text x="200" y="92" fill="#FFFFFF" opacity="0.8" font-size="7.5" text-anchor="middle">干预实施点 (t = 8周)</text>
+
+                    <!-- Control Group (Dashed baseline) -->
+                    <path d="M 30,70 L 200,60 L 440,50" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
+                    <text x="445" y="53" fill="rgba(255,255,255,0.7)" font-size="7.5">对照班</text>
+
+                    <!-- Treatment Group with Confidence Area -->
+                    <polygon points="200,60 440,16 440,28 200,60" fill="#FFFFFF" fill-opacity="0.15"/>
+                    <path d="M 30,70 L 200,60 L 440,22" fill="none" stroke="#FFFFFF" stroke-width="2.2"/>
+                    <circle cx="30" cy="70" r="3" fill="#FFFFFF"/><circle cx="200" cy="60" r="3" fill="#FFFFFF"/><circle cx="440" cy="22" r="4" fill="#FFFFFF"/>
+                    <text x="445" y="24" fill="#FFFFFF" font-size="8" font-weight="bold">干预班 (+8.50分)</text>
+
+                    <!-- Lift Callout Bracket -->
+                    <line x1="430" y1="24" x2="430" y2="48" stroke="#FFFFFF" stroke-width="1"/>
+                    <text x="375" y="38" fill="#FFFFFF" font-size="8" font-weight="bold">DID Lift: +8.50</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-bottom-bar dark-bar">
+              <div class="card-bottom-pill dark">机器可读 Diff 对比</div>
+              <div class="card-bottom-pill dark">单一事实来源 (SSOT)</div>
+              <div class="card-bottom-pill white">因果自愈闭环完成</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3.4 5-Panel Horizontal Accordion Section (Interactive Native Dynamic SVG Visuals) -->
+  <section class="accordion-section" id="accordion-section">
+    <div class="accordion-head-wrap">
+      <span class="stacking-sec-tag">Publication Themes</span>
+      <h2 class="stacking-sec-h2">5 套生成时烘焙报告体系</h2>
+      <p class="stacking-sec-p" style="margin-bottom:0;">
+        生成时烘焙定稿 · 单文件双语无缝分发 · 离线零 CDN 依赖 · 鼠标悬停探索不同出版排版质感
+      </p>
+    </div>
+
+    <div class="accordion-container">
+      
+      <!-- 1. Claude Research -->
+      <div class="accordion-panel active" data-theme="claude_research">
+        <img class="accordion-bg-img" src="assets/theme_claude.svg" alt="Claude Research Theme Preview">
+        <div class="accordion-overlay"></div>
+        
+        <!-- Collapsed Indicator -->
+        <div class="accordion-collapsed-tab">
+          <span class="collapsed-num-pill">01</span>
+          <span class="collapsed-vertical-title">Claude Research</span>
+        </div>
+        
+        <!-- Expanded Content -->
+        <div class="accordion-content">
+          <span class="acc-tag">Light · 智库典雅</span>
+          <div class="acc-name">Claude Research</div>
+          <p class="acc-desc">知性温润象牙白底、高信息密度排版与政策决策卡片，专为智库专家与政策制定者定制。</p>
+          <a href="/report?id=ai-coding-assistant-50&theme=claude_research" target="_blank" class="acc-open-btn">
+            <span>在控制台中打开报告 ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. Academic Paper -->
+      <div class="accordion-panel" data-theme="academic_paper">
+        <img class="accordion-bg-img" src="assets/theme_academic.svg" alt="Academic Paper Theme Preview">
+        <div class="accordion-overlay"></div>
+        
+        <div class="accordion-collapsed-tab">
+          <span class="collapsed-num-pill">02</span>
+          <span class="collapsed-vertical-title">Academic Paper</span>
+        </div>
+        
+        <div class="accordion-content">
+          <span class="acc-tag">Light · 学术顶刊</span>
+          <div class="acc-name">Academic Paper</div>
+          <p class="acc-desc">严谨双栏、规范统计表格与 LaTeX 公式渲染，对标 Nature/PNAS 出版标准。</p>
+          <a href="/report?id=ai-coding-assistant-50&theme=academic_paper" target="_blank" class="acc-open-btn">
+            <span>在控制台中打开报告 ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. DataLab Light -->
+      <div class="accordion-panel" data-theme="datalab_light">
+        <img class="accordion-bg-img" src="assets/theme_datalab_light.svg" alt="DataLab Light Theme Preview">
+        <div class="accordion-overlay"></div>
+        
+        <div class="accordion-collapsed-tab">
+          <span class="collapsed-num-pill">03</span>
+          <span class="collapsed-vertical-title">DataLab Light</span>
+        </div>
+        
+        <div class="accordion-content">
+          <span class="acc-tag">Light · 数据科学</span>
+          <div class="acc-name">DataLab Light</div>
+          <p class="acc-desc">清新现代数据仪表盘，突出效应量置信区间、平行趋势检验与异质性分布。</p>
+          <a href="/report?id=ai-coding-assistant-50&theme=datalab_light" target="_blank" class="acc-open-btn">
+            <span>在控制台中打开报告 ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. DataLab Dark -->
+      <div class="accordion-panel" data-theme="datalab_dark">
+        <img class="accordion-bg-img" src="assets/theme_datalab_dark.svg" alt="DataLab Dark Theme Preview">
+        <div class="accordion-overlay"></div>
+        
+        <div class="accordion-collapsed-tab">
+          <span class="collapsed-num-pill">04</span>
+          <span class="collapsed-vertical-title">DataLab Dark</span>
+        </div>
+        
+        <div class="accordion-content">
+          <span class="acc-tag">Dark · 极客深色</span>
+          <div class="acc-name">DataLab Dark</div>
+          <p class="acc-desc">高对比度深色数据终端，适合沉浸式实证探查、拓扑图谱挖掘与遥测指标监控。</p>
+          <a href="/report?id=ai-coding-assistant-50&theme=datalab_dark" target="_blank" class="acc-open-btn">
+            <span>在控制台中打开报告 ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 5. Tribunal Judge -->
+      <div class="accordion-panel" data-theme="presentation_judge">
+        <img class="accordion-bg-img" src="assets/theme_presentation.svg" alt="Tribunal Judge Theme Preview">
+        <div class="accordion-overlay"></div>
+        
+        <div class="accordion-collapsed-tab">
+          <span class="collapsed-num-pill">05</span>
+          <span class="collapsed-vertical-title">Tribunal Judge</span>
+        </div>
+        
+        <div class="accordion-content">
+          <span class="acc-tag">Dark · 法庭终裁</span>
+          <div class="acc-name">Tribunal Judge</div>
+          <p class="acc-desc">高能视觉冲击，专为评委答辩、仲裁法庭裁决书与重大实证终局结论演示打造。</p>
+          <a href="/report?id=ai-coding-assistant-50&theme=presentation_judge" target="_blank" class="acc-open-btn">
+            <span>在控制台中打开报告 ↗</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3.5 Footer Section (Video Text Mask / Knockout Text · h-screen) -->
+  <footer class="footer-mask-section">
+    <div class="footer-top-meta">
+      <div style="font-size:1.1rem; font-weight:800; letter-spacing:0.05em;">
+        EDUEVIDENCE <span style="color:var(--brand-orange);">5.0</span>
+      </div>
+      <div style="font-size:0.85rem; color:rgba(255,255,255,0.7);">
+        AI for Social Science · 书生国智科探挑战赛自由赛道
+      </div>
+    </div>
+
+    <!-- Video Mask Knockout Text -->
+    <div class="footer-mask-wrap">
+      <video class="footer-bg-video" autoplay loop muted playsinline>
+        <source src="https://strvid.nyc3.cdn.digitaloceanspaces.com/cloudinary/bg1_jgni8n.mp4" type="video/mp4">
+      </video>
+      <a href="/index.html" class="footer-knockout-text" id="footer-knockout-btn" title="点击进入控制台">
+        ENTER STUDIO.
+      </a>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <div>上海人工智能实验室 × 壁仞科技主办 · 书生科学发现平台 (Intern Discovery)</div>
+      <div style="display:flex; flex-wrap:wrap; gap:24px;">
+        <a href="https://discovery.intern-ai.org.cn/scp/skill/650" target="_blank" style="color:inherit; text-decoration:none;">比赛 Skill #650 ↗</a>
+        <a href="https://github.com/37chengshan/eduevidence" target="_blank" style="color:inherit; text-decoration:none;">GitHub 源码 ↗</a>
+        <a href="/index.html" style="color:inherit; text-decoration:none;">进入控制台</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="landing.js"></script>
+</body>
+</html>

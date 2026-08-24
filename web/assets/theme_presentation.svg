@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="judgeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A0D0A"/>
+      <stop offset="60%" stop-color="#2D110B"/>
+      <stop offset="100%" stop-color="#0A0504"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="50%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <filter id="goldGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      @keyframes balanceTilt {
+        0%, 100% { transform: rotate(-4deg); }
+        50% { transform: rotate(-8deg); }
+      }
+      .anim-scales-beam { transform-origin: 250px 48px; animation: balanceTilt 3.5s infinite ease-in-out; }
+    </style>
+  </defs>
+  
+  <rect width="600" height="450" fill="url(#judgeBg)"/>
+  <rect x="15" y="15" width="570" height="420" rx="8" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.6"/>
+  
+  <!-- Header: Tribunal Arbitration Seal -->
+  <g transform="translate(40, 25)">
+    <rect width="105" height="20" rx="4" fill="#F24D29"/>
+    <text x="52" y="14" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="9" font-weight="900" text-anchor="middle">TRIBUNAL JUDGE</text>
+    <text x="120" y="15" fill="#FFFFFF" font-family="'Newsreader', Georgia, serif" font-size="14" font-weight="bold">AI 教学干预仲裁法庭终局裁决书</text>
+    <text x="0" y="32" fill="#94A3B8" font-family="sans-serif" font-size="9.5">CS1 编程教育大模型干预实证审查 · 50 篇顶刊合成</text>
+  </g>
+  
+  <!-- Animated Scales of Justice Card (520px wide) -->
+  <g transform="translate(40, 68)">
+    <rect width="520" height="120" rx="8" fill="#140A08" stroke="url(#goldGrad)" stroke-width="1.2"/>
+    
+    <!-- Balance Beam Graphic -->
+    <g class="anim-scales-beam">
+      <line x1="130" y1="42" x2="370" y2="20" stroke="url(#goldGrad)" stroke-width="2.2"/>
+      
+      <!-- Left Pan (Speed: +0.64g) -->
+      <line x1="130" y1="42" x2="130" y2="70" stroke="#FBBF24" stroke-width="1"/>
+      <path d="M 110 70 Q 130 84 150 70 Z" fill="#10B981" opacity="0.9"/>
+      <text x="130" y="94" fill="#10B981" font-family="sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">+0.64g 任务提速</text>
+      
+      <!-- Right Pan (Exam: -0.28g) -->
+      <line x1="370" y1="20" x2="370" y2="48" stroke="#FBBF24" stroke-width="1"/>
+      <path d="M 350 48 Q 370 62 390 48 Z" fill="#EF4444" opacity="0.9"/>
+      <text x="370" y="72" fill="#EF4444" font-family="sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">-0.28g 概念留存</text>
+    </g>
+    
+    <!-- Center Support Pillar -->
+    <g transform="translate(250, 25)">
+      <line x1="0" y1="0" x2="0" y2="45" stroke="url(#goldGrad)" stroke-width="2"/>
+      <polygon points="-7,45 7,45 0,38" fill="url(#goldGrad)"/>
+      <circle cx="0" cy="0" r="5" fill="url(#goldGrad)" filter="url(#goldGlow)"/>
+    </g>
+  </g>
+  
+  <!-- Verdict Plaque (520px wide) -->
+  <g transform="translate(40, 198)">
+    <rect width="520" height="135" rx="8" fill="#26100B" stroke="#F24D29" stroke-width="1.2"/>
+    <text x="16" y="22" fill="#FBBF24" font-family="'Newsreader', Georgia, serif" font-size="12" font-weight="bold">法庭终审结论：准予限制性 4 阶段渐退支架试点 (PILOT ONLY)</text>
+    <text x="16" y="42" fill="#E2E8F0" font-family="sans-serif" font-size="9.5">
+      • 驳回全面放开（ADOPT）主张：防范练习期即时提速造成的「支架依赖陷阱」；
+    </text>
+    <text x="16" y="58" fill="#E2E8F0" font-family="sans-serif" font-size="9.5">
+      • 附带判令：强制实施 Phase 1 零代码生成 + Phase 4 独立迁移考核。
+    </text>
+    
+    <!-- 3 Mini Seals -->
+    <g transform="translate(16, 74)">
+      <rect x="0" y="0" width="150" height="40" rx="4" fill="#1C0D0A" stroke="#4A2218"/>
+      <text x="75" y="16" fill="#94A3B8" font-family="sans-serif" font-size="7.5" text-anchor="middle">EVIDENCE SYNTHESIS</text>
+      <text x="75" y="30" fill="#FBBF24" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" text-anchor="middle">50 Studies / 77 Claims</text>
+      
+      <rect x="168" y="0" width="150" height="40" rx="4" fill="#1C0D0A" stroke="#4A2218"/>
+      <text x="243" y="16" fill="#94A3B8" font-family="sans-serif" font-size="7.5" text-anchor="middle">AUDIT VERDICT</text>
+      <text x="243" y="30" fill="#10B981" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" text-anchor="middle">WWC 5.0 PASSED</text>
+      
+      <rect x="336" y="0" width="150" height="40" rx="4" fill="#1C0D0A" stroke="#4A2218"/>
+      <text x="411" y="16" fill="#94A3B8" font-family="sans-serif" font-size="7.5" text-anchor="middle">JUDICIAL CERTAINTY</text>
+      <text x="411" y="30" fill="#F24D29" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" text-anchor="middle">Confidence: 84.2%</text>
+    </g>
+  </g>
+</svg>

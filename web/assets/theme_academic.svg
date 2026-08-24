@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <style>
+      @keyframes acadPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); filter: drop-shadow(0 0 4px #2563EB); }
+      }
+      .anim-diamond-acad { transform-origin: 385px 200px; animation: acadPulse 2.8s infinite ease-in-out; }
+    </style>
+  </defs>
+  
+  <rect width="600" height="450" fill="#FFFFFF"/>
+  
+  <!-- Academic Journal Header -->
+  <g transform="translate(40, 25)">
+    <text x="0" y="10" fill="#64748B" font-family="'Times New Roman', serif" font-size="9" font-style="italic">PROCEEDINGS OF THE SOCIAL SCIENCE EVIDENCE TRIBUNAL (VOL. 28)</text>
+    <line x1="0" y1="16" x2="520" y2="16" stroke="#0F172A" stroke-width="1.2"/>
+    <text x="0" y="34" fill="#0F172A" font-family="'Times New Roman', serif" font-size="14" font-weight="bold">Causal Inference in AI Programming Education: Multi-Level Meta-Analysis</text>
+    <text x="0" y="48" fill="#475569" font-family="'Times New Roman', serif" font-size="10">EduEvidence Collaborative · WWC 5.0 Empirical Review (50 Studies Synthesized)</text>
+    <line x1="0" y1="54" x2="520" y2="54" stroke="#E2E8F0" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Core Meta-Analysis Table (Formal 3-line Academic Table) -->
+  <g transform="translate(40, 90)">
+    <rect width="520" height="175" fill="#FAFAFA" stroke="#E2E8F0" stroke-width="1"/>
+    
+    <!-- Table Top Line -->
+    <line x1="14" y1="26" x2="506" y2="26" stroke="#0F172A" stroke-width="1.2"/>
+    <text x="14" y="18" fill="#0F172A" font-family="'Times New Roman', serif" font-size="11" font-weight="bold">TABLE 1. RANDOM EFFECTS SYNTHESIS (DerSimonian-Laird, I² = 38.4%)</text>
+    
+    <text x="14" y="38" fill="#475569" font-family="sans-serif" font-size="9" font-weight="bold">Study &amp; Venue</text>
+    <text x="170" y="38" fill="#475569" font-family="sans-serif" font-size="9" font-weight="bold">Sample</text>
+    <text x="250" y="38" fill="#475569" font-family="sans-serif" font-size="9" font-weight="bold">Hedges' g</text>
+    <text x="350" y="38" fill="#475569" font-family="sans-serif" font-size="9" font-weight="bold">95% Confidence Interval</text>
+    <line x1="14" y1="44" x2="506" y2="44" stroke="#0F172A" stroke-width="0.8"/>
+    
+    <!-- Row 1 -->
+    <text x="14" y="62" fill="#1E293B" font-family="sans-serif" font-size="9">Bastani et al. (PNAS 2025)</text>
+    <text x="170" y="62" fill="#64748B" font-family="sans-serif" font-size="9">N = 240</text>
+    <text x="250" y="62" fill="#059669" font-family="sans-serif" font-size="9" font-weight="bold">+0.68g</text>
+    <text x="350" y="62" fill="#64748B" font-family="sans-serif" font-size="9">[0.51, 0.85]</text>
+    
+    <!-- Row 2 -->
+    <text x="14" y="84" fill="#1E293B" font-family="sans-serif" font-size="9">Prather et al. (CHI 2024)</text>
+    <text x="170" y="84" fill="#64748B" font-family="sans-serif" font-size="9">N = 180</text>
+    <text x="250" y="84" fill="#059669" font-family="sans-serif" font-size="9" font-weight="bold">+0.54g</text>
+    <text x="350" y="84" fill="#64748B" font-family="sans-serif" font-size="9">[0.36, 0.72]</text>
+    
+    <!-- Row 3 -->
+    <text x="14" y="106" fill="#1E293B" font-family="sans-serif" font-size="9">Kazemitabaar et al. (ICER 2024)</text>
+    <text x="170" y="106" fill="#64748B" font-family="sans-serif" font-size="9">N = 150</text>
+    <text x="250" y="106" fill="#DC2626" font-family="sans-serif" font-size="9" font-weight="bold">-0.28g</text>
+    <text x="350" y="106" fill="#64748B" font-family="sans-serif" font-size="9">[-0.44, -0.12]</text>
+    
+    <line x1="14" y1="118" x2="506" y2="118" stroke="#0F172A" stroke-width="1"/>
+    
+    <!-- Pooled Summary Row with Diamond -->
+    <text x="14" y="138" fill="#0F172A" font-family="sans-serif" font-size="10" font-weight="bold">Pooled Summary (RE)</text>
+    <polygon class="anim-diamond-acad" points="375,135 385,129 395,135 385,141" fill="#2563EB"/>
+    <text x="506" y="138" fill="#2563EB" font-family="monospace" font-size="10" font-weight="bold" text-anchor="end">+0.38g [0.24, 0.52]</text>
+    
+    <!-- Statistical note -->
+    <text x="14" y="160" fill="#64748B" font-family="'Times New Roman', serif" font-size="9" font-style="italic">
+      DID Quasi-Experiment: δ̂ = +8.50 pts (p &lt; 0.001) · Egger's Bias Test: t = 0.82 (p = 0.42)
+    </text>
+  </g>
+  
+  <!-- Academic Verdict Box -->
+  <g transform="translate(40, 275)">
+    <rect width="520" height="60" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+    <text x="14" y="22" fill="#0F172A" font-family="'Times New Roman', serif" font-size="11" font-weight="bold">CONCLUSION: RESTRICTED 4-PHASE FADING PILOT</text>
+    <text x="14" y="42" fill="#475569" font-family="sans-serif" font-size="9.5">
+      WWC 5.0 Standards Met Without Reservations · 13 Schema Contracts Verified (Confidence: 84.2%)
+    </text>
+  </g>
+</svg>

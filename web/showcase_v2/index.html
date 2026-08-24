@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduEvidence 5.0 · 通用社科实证决策引擎与交互控制台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. Expanding Circular Wave Transition (向右扩散光幕转场)
+       ======================================================================== -->
+  <div id="transition-wave" aria-hidden="true"></div>
+
+  <!-- Left-Docked Switcher on Landing Page -->
+  <button id="btn-to-console" class="docked-left-switcher" title="点击丝滑向右扩散切换至实证控制台">
+    <span class="switcher-pulse-dot"></span>
+    <span>进入控制台 Studio ➔</span>
+  </button>
+
+  <!-- ========================================================================
+       2. Landing Page Space (炫技介绍空间 · MotionSite.ai 级别视差动效)
+       ======================================================================== -->
+  <div id="view-landing" class="active-space">
+
+    <!-- Floating Pill Navbar -->
+    <header class="floating-navbar" id="floating-landing-nav">
+      <a href="#landing" class="nav-brand">
+        <span class="brand-badge-pill">E</span>
+        <span>EduEvidence <span class="text-terracotta">5.0</span></span>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#section-paradox" class="nav-link">实证悖论</a></li>
+          <li><a href="#section-protocol" class="nav-link">9步规范协议</a></li>
+          <li><a href="#section-themes" class="nav-link">5套报告主题</a></li>
+          <li><a href="/lieflat/lupi" target="_blank" class="nav-link" title="查看 Lieflat Charts 图表品味法典画廊">🎨 Lieflat 图表库 ↗</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <div class="theme-toggle-group">
+          <button class="theme-btn active" data-theme-btn="light">Light</button>
+          <button class="theme-btn" data-theme-btn="dark">Dark</button>
+        </div>
+        <button id="nav-launch-btn" class="btn-launch-nav">
+          <span>⚡ 控制台</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section (Scroll Scrubbing & Giant Typography) -->
+    <section class="hero-scroll-track" id="hero-scroll-container">
+      <div class="hero-sticky-viewport">
+        <!-- Concentric Scaling Circles / Causal Lens -->
+        <div class="hero-concentric-circles" id="hero-center-circle">
+          <div class="circle-ring"></div>
+          <div class="circle-ring-2"></div>
+        </div>
+
+        <!-- Giant Typography Layer -->
+        <div class="hero-giant-typography" id="hero-giant-title">
+          E D U <span class="orange-letter">[ E ]</span> V I D E N C E
+        </div>
+
+        <!-- Reveal Sequence 1: 0.12 -> 0.52 -->
+        <div class="hero-content-reveal" id="hero-content-reveal-1">
+          <h1 class="hero-tagline serif-text">
+            From Empirical Questions<br>
+            to <span class="text-terracotta">Evidence-Based Decisions</span>.
+          </h1>
+          <p class="hero-sub">
+            面向教育与社会科学重大决策的通用实证引擎 · 契约门控 · 悖论消解 · 因果推断闭环
+          </p>
+          <div class="hero-live-ticker">
+            <span class="ticker-chip">📚 50+ 顶刊实证研究合成</span>
+            <span class="ticker-chip">🛡️ 13 项 JSON Schema 契约门控</span>
+            <span class="ticker-chip">⚖️ WWC 5.0 方法学偏倚审计</span>
+            <span class="ticker-chip">🔄 田野课堂 DID 回归回注</span>
+          </div>
+        </div>
+
+        <!-- Reveal Sequence 2: 0.48 -> 1.0 -->
+        <div class="hero-content-reveal" id="hero-content-reveal-2">
+          <h2 class="hero-tagline serif-text">
+            超越主观直觉与零散炒作<br>
+            构建教育决策的 <span class="text-terracotta">单一事实来源 (SSOT)</span>
+          </h2>
+          <p class="hero-sub">
+            点击左侧悬浮胶囊，即刻进入全功能交互控制台，体验实时元分析森林图与 DID 教学干预沙盒。
+          </p>
+        </div>
+
+        <div class="scroll-indicator">
+          <span>Scroll to Explore</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: CS1 AI Coding Assistant Paradox Comparison -->
+    <section class="landing-section" id="section-paradox">
+      <div class="section-header">
+        <span class="section-tag">Killer Demo Case</span>
+        <h2 class="section-title serif-text">高校 CS1 引入 AI 编程助手的实证悖论</h2>
+        <p class="section-desc">
+          基于 PNAS 2025、ACM CHI、ICER、SIGCSE 等 50 篇实证文献合成，揭示「任务内提速」与「独立考核退步」的认知鸿沟。
+        </p>
+      </div>
+
+      <div class="paradox-container">
+        <div class="paradox-split-row">
+          <!-- Left: In-task Speed -->
+          <div class="paradox-card card-speed" id="paradox-split-left">
+            <div>
+              <span class="paradox-badge badge-speed">⚡ 任务内完成速度 (In-Task)</span>
+              <div class="paradox-stat-num stat-speed-color" id="paradox-speed-val">+0.64g</div>
+              <p class="text-slate font-medium text-sm">95% CI: [+0.48, +0.80] · p < 0.001 (极显著提速)</p>
+            </div>
+            <p class="text-muted text-xs">
+              学生编写代码耗时大幅下降，主观体验极佳，快速生成并通过基础测试用例。
+            </p>
+          </div>
+
+          <!-- Right: Delayed Exam -->
+          <div class="paradox-card card-exam" id="paradox-split-right">
+            <div>
+              <span class="paradox-badge badge-exam">⚠️ 独立闭卷考核 (Delayed Solo)</span>
+              <div class="paradox-stat-num stat-exam-color" id="paradox-exam-val">-0.28g</div>
+              <p class="text-slate font-medium text-sm">95% CI: [-0.42, -0.14] · p = 0.003 (显著下滑)</p>
+            </div>
+            <p class="text-muted text-xs">
+              脱离 AI 辅助后，学生独立调试与心智模型构建能力出现断崖式衰减。
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Comparison Slider -->
+        <div class="paradox-slider-wrap">
+          <label for="paradox-range-slider" class="text-xs font-semibold text-muted">拖动滑块对比实证效应比重：</label>
+          <input type="range" id="paradox-range-slider" class="paradox-range" min="0" max="100" value="50">
+        </div>
+
+        <!-- WWC 5.0 Trap & Verdict Banner -->
+        <div class="paradox-insight-banner">
+          <div>
+            <div class="font-bold text-sm text-terracotta" style="margin-bottom: 4px;">WWC 5.0 偏倚审计核心洞察：支架依赖陷阱 (Scaffolding Dependency Trap)</div>
+            <p class="text-xs text-slate-200" style="max-width: 680px; line-height: 1.5;">
+              语法提示词掌握 ≠ 心智模型形成。法庭终局裁决：<strong>PILOT</strong>（限制性 4 阶段渐退式试点），严禁一刀切全面放开或全面封禁！
+            </p>
+          </div>
+          <div class="insight-verdict-pill">法庭裁决：PILOT 试点</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: 3D Stacking Cards (9-Step Canonical Protocol) -->
+    <section class="stack-scroll-track" id="section-protocol">
+      <div class="stack-sticky-view">
+        <div class="stack-cards-wrapper" id="protocol-stack-container">
+          <!-- Card 1: Research Core -->
+          <div class="stack-card" style="z-index: 3;">
+            <div class="stack-card-head">
+              <div>
+                <span class="tag tag-terracotta font-bold">Step 1 ~ 6</span>
+                <h3 class="stack-card-title serif-text">🔬 Research Core · 证据纪律核心</h3>
+                <p class="stack-card-desc">
+                  Frame → Retrieve → Extract → Challenge → Audit → Adjudicate。
+                  13 项 JSON Schema 强制门控，DerSimonian-Laird 随机效应模型与 Egger 偏倚检验。
+                </p>
+              </div>
+              <div class="stack-card-num">01</div>
+            </div>
+            <div class="stack-pill-grid">
+              <span class="stack-flow-step">1. 课题边界 Frame</span>
+              <span class="stack-flow-step">2. 全文检索 Retrieve</span>
+              <span class="stack-flow-step">3. 效应量提取 Extract</span>
+              <span class="stack-flow-step">4. 反方辩驳 Challenge</span>
+              <span class="stack-flow-step">5. 方法学审计 Audit (WWC 5.0)</span>
+              <span class="stack-flow-step">6. 法庭裁决 Adjudicate</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Decision Extension -->
+          <div class="stack-card" style="z-index: 2;">
+            <div class="stack-card-head">
+              <div>
+                <span class="tag tag-emerald font-bold">Step 7 ~ 9</span>
+                <h3 class="stack-card-title serif-text">⚖️ Decision Extension · 证据到行动</h3>
+                <p class="stack-card-desc">
+                  Applicability → Intervene → Evaluate。
+                  从单纯的学术综述跨越到真实教学政策落地，构建 4 阶段渐退干预与 4 维成效追踪。
+                </p>
+              </div>
+              <div class="stack-card-num">02</div>
+            </div>
+            <div class="stack-pill-grid">
+              <span class="stack-flow-step">7. 适用性政策 Applicability</span>
+              <span class="stack-flow-step">8. 试验设计 Intervene (4阶段支架)</span>
+              <span class="stack-flow-step">9. 成效评估 Evaluate (基/后/保持/迁移)</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Causal Closed-Loop -->
+          <div class="stack-card" style="z-index: 1;">
+            <div class="stack-card-head">
+              <div>
+                <span class="tag tag-amber font-bold">Causal Loop</span>
+                <h3 class="stack-card-title serif-text">🔄 Causal Closed-Loop · 实证因果自愈闭环</h3>
+                <p class="stack-card-desc">
+                  Gap Grounding → Trial Design → DID Regression → Graph Revision。
+                  基于真实课堂田野 CSV 数据的双重差分回归回注，实现决策系统的自主进化。
+                </p>
+              </div>
+              <div class="stack-card-num">03</div>
+            </div>
+            <div class="stack-pill-grid">
+              <span class="stack-flow-step">知识缺口定位 (Gap ID)</span>
+              <span class="stack-flow-step">预注册准实验设计</span>
+              <span class="stack-flow-step">DID 双重差分 OLS 拟合</span>
+              <span class="stack-flow-step">SSOT 证据图谱更新</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: 5 Themes Interactive Accordion -->
+    <section class="landing-section" id="section-themes">
+      <div class="section-header">
+        <span class="section-tag">Theme Variants</span>
+        <h2 class="section-title serif-text">5 套烘焙主题报告画廊</h2>
+        <p class="section-desc">
+          生成时烘焙定稿 · 悬停平滑展开 · 点击即刻在控制台阅读器中沉浸式预览
+        </p>
+      </div>
+
+      <div class="theme-accordion-row">
+        <!-- 1. Claude Research -->
+        <div class="theme-accordion-item theme-claude active">
+          <div>
+            <span class="theme-card-tag">Light · 智库典雅</span>
+            <div class="theme-card-name serif-text">Claude Research</div>
+            <p class="theme-card-desc">知性温润、高信息密度排版，适合智库专家与政策制定者。</p>
+          </div>
+          <button class="accordion-launch-btn btn-open-theme-report" data-theme="claude_research">在控制台中查看 ➔</button>
+        </div>
+
+        <!-- 2. Academic Paper -->
+        <div class="theme-accordion-item theme-academic">
+          <div>
+            <span class="theme-card-tag">Light · 学术顶刊</span>
+            <div class="theme-card-name serif-text">Academic Paper</div>
+            <p class="theme-card-desc">严谨双栏、LaTeX 公式与规范学术图表，对标 Nature/PNAS 标准。</p>
+          </div>
+          <button class="accordion-launch-btn btn-open-theme-report" data-theme="academic_paper">在控制台中查看 ➔</button>
+        </div>
+
+        <!-- 3. DataLab Light -->
+        <div class="theme-accordion-item theme-datalab-light">
+          <div>
+            <span class="theme-card-tag">Light · 现代数据科学</span>
+            <div class="theme-card-name serif-text">DataLab Light</div>
+            <p class="theme-card-desc">清晰明快的数据仪表盘，突出效应量置信区间与统计量分布。</p>
+          </div>
+          <button class="accordion-launch-btn btn-open-theme-report" data-theme="datalab_light">在控制台中查看 ➔</button>
+        </div>
+
+        <!-- 4. DataLab Dark -->
+        <div class="theme-accordion-item theme-datalab-dark">
+          <div>
+            <span class="theme-card-tag">Dark · 极客深色</span>
+            <div class="theme-card-name serif-text">DataLab Dark</div>
+            <p class="theme-card-desc">高对比度暗黑数据终端，适合沉浸式实证探查与图谱挖掘。</p>
+          </div>
+          <button class="accordion-launch-btn btn-open-theme-report" data-theme="datalab_dark">在控制台中查看 ➔</button>
+        </div>
+
+        <!-- 5. Presentation / Judge -->
+        <div class="theme-accordion-item theme-judge-dark">
+          <div>
+            <span class="theme-card-tag">Dark · 法庭终裁</span>
+            <div class="theme-card-name serif-text">Judge / Tribunal</div>
+            <p class="theme-card-desc">高能视觉冲击，专为评委答辩与重大实证裁决打造。</p>
+          </div>
+          <button class="accordion-launch-btn btn-open-theme-report" data-theme="presentation_judge">在控制台中查看 ➔</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Landing Footer -->
+    <footer class="landing-footer">
+      <div class="footer-giant-knockout">EVIDENCE-BASED</div>
+      <div class="footer-inner">
+        <div>
+          <div style="font-weight:800; font-size:1.1rem; margin-bottom:4px;">EduEvidence 5.0 Research Studio</div>
+          <div style="font-size:0.8rem; color:var(--slate-400);">AI for Social Science · 书生国智科探挑战赛自由赛道</div>
+        </div>
+        <div style="font-size:0.8rem; color:var(--slate-400);">
+          <span>Schema-Gated · Contract-Driven · Local Zero-Build</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+
+  <!-- ========================================================================
+       3. Console Studio Space (实证控制台空间 · 深度交互工作台)
+       ======================================================================== -->
+  <div id="view-console">
+
+    <!-- Console Left Sidebar -->
+    <aside class="console-sidebar" id="console-sidebar">
+      <div>
+        <div class="console-brand-head">
+          <button class="btn-sidebar-collapse" id="console-collapse-btn" title="收起/展开侧边栏">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="brand-texts">
+            <div style="font-weight:800; font-size:0.95rem; color:var(--text-primary);">EduEvidence 5.0</div>
+            <div style="font-size:0.72rem; color:var(--text-muted);">Research Studio</div>
+          </div>
+        </div>
+
+        <nav class="console-nav-list">
+          <button class="console-nav-item active" data-view="dashboard">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+            <span>📊 仪表盘总览</span>
+          </button>
+          <button class="console-nav-item" data-view="viz">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+            <span>🌲 森林图与图谱</span>
+          </button>
+          <button class="console-nav-item" data-view="did">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.281m5.94 2.28l-.24 6.37"/></svg>
+            <span>📈 Live DID 沙盒</span>
+          </button>
+          <button class="console-nav-item" data-view="report">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            <span>📑 5套报告阅读器</span>
+          </button>
+          <button class="console-nav-item" data-view="wizard">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
+            <span>🚀 9步向导推演</span>
+          </button>
+          <a href="/lieflat/lupi" target="_blank" class="console-nav-item" style="text-decoration:none;" title="查看 Lieflat 图表品味法典">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l9.402-9.402"/></svg>
+            <span>🎨 Lieflat 画廊 ↗</span>
+          </a>
+        </nav>
+      </div>
+
+      <div>
+        <button id="btn-to-landing" class="btn-back-to-landing" title="丝滑向右扩散切换回介绍页">
+          <span>🌟 返回炫技介绍页</span>
+        </button>
+        <div class="sidebar-foot-text" style="font-size:0.72rem; color:var(--text-muted); text-align:center; margin-top:10px;">
+          Local Engine · V5.0
+        </div>
+      </div>
+    </aside>
+
+    <!-- Console Main Viewport -->
+    <main class="console-main">
+      <header class="console-topbar">
+        <div class="console-topbar-title">
+          EduEvidence Studio <span>/ 实证决策分析工作台</span>
+        </div>
+        <div class="theme-toggle-group">
+          <button class="theme-btn active" data-theme-btn="light">Light</button>
+          <button class="theme-btn" data-theme-btn="dark">Dark</button>
+        </div>
+      </header>
+
+      <div class="console-content-viewport">
+
+        <!-- Tab 1: Dashboard -->
+        <div id="console-view-dashboard" class="console-tab-view active">
+          <div class="grid-cols-4" id="dash-kpis"></div>
+
+          <div class="grid-cols-3">
+            <div class="console-card">
+              <h3>裁决类型分布</h3>
+              <div id="chart-verdict" class="chart-box"></div>
+            </div>
+            <div class="console-card">
+              <h3>证据方向占比</h3>
+              <div id="chart-direction" class="chart-box"></div>
+            </div>
+            <div class="console-card">
+              <h3>跨课题实证规模</h3>
+              <div id="chart-cross" class="chart-box"></div>
+            </div>
+          </div>
+
+          <div class="console-card" style="margin-bottom: 24px;">
+            <h3>实证课题速览</h3>
+            <div class="proj-cards" id="proj-cards" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;"></div>
+          </div>
+
+          <div class="console-card">
+            <h3>实证课题资产矩阵 (SSOT Contract Matrix)</h3>
+            <div style="overflow-x:auto;">
+              <table class="data-table" id="dash-table">
+                <thead>
+                  <tr>
+                    <th>课题 ID</th>
+                    <th>研究命题</th>
+                    <th>证据数</th>
+                    <th>支持 / 反驳 / 中性</th>
+                    <th>均值效应量 (g)</th>
+                    <th>法庭裁决</th>
+                    <th>置信度</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Forest Plot & SSOT Graph -->
+        <div id="console-view-viz" class="console-tab-view">
+          <div class="console-card" style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <label for="viz-project-select" style="font-size:0.85rem; font-weight:700;">选择研究课题：</label>
+              <select id="viz-project-select" style="padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-surface); font-size:0.85rem;"></select>
+            </div>
+            <div id="viz-kpis" style="display:flex; gap:12px; flex-wrap:wrap; font-size:0.82rem;"></div>
+          </div>
+
+          <div id="viz-question" class="serif-text" style="font-size:1.15rem; font-weight:600; margin-bottom:20px; color:var(--text-primary);"></div>
+
+          <div class="grid-cols-2">
+            <!-- Forest Plot -->
+            <div class="console-card" style="grid-column: span 2;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>交互式元分析森林图 (DerSimonian-Laird Random Effects)</h3>
+                <div class="preset-chip-row" style="margin-bottom:0;">
+                  <button class="forest-filter-chip active" data-filter="all">全部文献</button>
+                  <button class="forest-filter-chip" data-filter="speed">任务内速度</button>
+                  <button class="forest-filter-chip" data-filter="exam">独立考核留存</button>
+                  <button class="forest-filter-chip" data-filter="wwc">WWC 5.0 高评级</button>
+                </div>
+              </div>
+              <div id="forest-plot" class="chart-box"></div>
+            </div>
+
+            <!-- Effect Size Distribution -->
+            <div class="console-card">
+              <h3>效应量分布直方图 (Effect Size Hedges' g)</h3>
+              <div id="chart-effect-dist" class="chart-box"></div>
+            </div>
+
+            <!-- Outcome Mapping -->
+            <div class="console-card">
+              <h3>结果维度方向对比 (Outcome Dimension)</h3>
+              <div id="chart-outcome" class="chart-box"></div>
+            </div>
+
+            <!-- SSOT Graph -->
+            <div class="console-card" style="grid-column: span 2;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>
+                  SSOT 因果证据图谱 (Single Source of Truth)
+                  <span style="font-size:0.75rem; font-weight:400; color:var(--text-muted); margin-left:8px;">点击任意节点查看详细证据抽屉</span>
+                </h3>
+                <button class="tag tag-terracotta" id="graph-reload" style="cursor:pointer; border:none;">↻ 重新布局</button>
+              </div>
+              <div id="chart-graph" class="chart-box tall"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Live DID Sandbox -->
+        <div id="console-view-did" class="console-tab-view">
+          <div class="grid-cols-3">
+            <!-- Left Controls -->
+            <div class="console-card">
+              <h3>🎛️ DID 准实验干预参数</h3>
+              
+              <div style="font-size:0.8rem; font-weight:600; margin-bottom:8px; color:var(--text-muted);">快速载入实证课题预设：</div>
+              <div class="preset-chip-row">
+                <button class="did-preset-btn active" data-preset="cs1">CS1 编程助手 (N=200)</button>
+                <button class="did-preset-btn" data-preset="tutor">高数 AI Tutor (N=180)</button>
+                <button class="did-preset-btn" data-preset="writing">AI 写作助手 (N=140)</button>
+              </div>
+
+              <div class="sandbox-controls">
+                <div class="control-group">
+                  <div class="control-label-row">
+                    <span>干预周期 (Weeks)</span>
+                    <span id="did-param-weeks-val" class="font-mono text-terracotta">12 周</span>
+                  </div>
+                  <input type="range" id="did-param-weeks" class="did-slider" min="6" max="20" value="12">
+                </div>
+
+                <div class="control-group">
+                  <div class="control-label-row">
+                    <span>干预启动周 (Intervention Week)</span>
+                    <span id="did-param-intervene-val" class="font-mono text-terracotta">5 周</span>
+                  </div>
+                  <input type="range" id="did-param-intervene" class="did-slider" min="2" max="10" value="5">
+                </div>
+
+                <div class="control-group">
+                  <div class="control-label-row">
+                    <span>干预提振幅度 (Treatment Lift)</span>
+                    <span id="did-param-lift-val" class="font-mono text-terracotta">8.5 分</span>
+                  </div>
+                  <input type="range" id="did-param-lift" class="did-slider" min="0" max="20" step="0.5" value="8.5">
+                </div>
+
+                <div class="control-group">
+                  <div class="control-label-row">
+                    <span>样本总量 (Sample Size N)</span>
+                    <span id="did-param-sample-val" class="font-mono text-terracotta">200 人</span>
+                  </div>
+                  <input type="range" id="did-param-sample" class="did-slider" min="50" max="500" step="10" value="200">
+                </div>
+
+                <div class="control-group">
+                  <div class="control-label-row">
+                    <span>随机扰动噪声 (Noise Level)</span>
+                    <span id="did-param-noise-val" class="font-mono text-terracotta">3</span>
+                  </div>
+                  <input type="range" id="did-param-noise" class="did-slider" min="1" max="10" value="3">
+                </div>
+
+                <button id="did-run-btn" class="btn-launch-nav" style="width:100%; justify-content:center; margin-top:8px;">
+                  ⚡ 重新运行 DID 回归拟合
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Chart & Stats -->
+            <div class="console-card" style="grid-column: span 2;">
+              <h3>📈 双重差分平行趋势图 (Difference-in-Differences Parallel Trends)</h3>
+              <div id="chart-did-trends" class="chart-box tall" style="height: 380px;"></div>
+
+              <div class="grid-cols-4" style="margin-top: 20px; margin-bottom: 16px;">
+                <div class="kpi-box">
+                  <div class="kpi-box-label">因果净效应 (DID Δ)</div>
+                  <div id="did-stat-delta" class="kpi-box-val text-terracotta">+8.50 分</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-box-label">效应量 (Hedges' g)</div>
+                  <div id="did-stat-g" class="kpi-box-val text-emerald">+0.58g</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-box-label">p 检验值 (p-value)</div>
+                  <div id="did-stat-p" class="kpi-box-val">&lt; 0.001</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-box-label">拟合优度 (R²)</div>
+                  <div id="did-stat-r2" class="kpi-box-val">84.7%</div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-size:0.85rem; font-weight:700;">2×2 均值差分对照表</span>
+                  <span id="did-stat-wwc" class="tag tag-emerald">Meets Standards</span>
+                </div>
+                <table class="data-table">
+                  <thead>
+                    <tr><th>实验分组</th><th>干预前基线 (Pre)</th><th>干预后表现 (Post)</th><th>组内前后差值</th></tr>
+                  </thead>
+                  <tbody id="did-2x2-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: 5 Themes Report Browser -->
+        <div id="console-view-report" class="console-tab-view">
+          <div style="display:grid; grid-template-columns: 280px 1fr; gap: 20px; height: calc(100vh - 150px);">
+            <div class="console-card" style="overflow-y:auto;">
+              <h3 style="margin-bottom:12px;">课题报告列表</h3>
+              <div id="report-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+
+            <div class="console-card" style="display:flex; flex-direction:column; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:12px;">
+                <div>
+                  <div id="report-current-title" class="serif-text font-bold" style="font-size:1.1rem;"></div>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">主题生成时烘焙 · 支持中英文即时切换</div>
+                </div>
+                <div class="preset-chip-row" id="report-variant-chips" style="margin-bottom:0;"></div>
+              </div>
+
+              <div style="flex:1; position:relative; border-radius:12px; overflow:hidden; border:1px solid var(--border);">
+                <div id="report-loading" style="position:absolute; inset:0; background:var(--bg-surface); display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.9rem;">
+                  <span>报告渲染中...</span>
+                </div>
+                <iframe id="report-frame" title="Evidence Report Viewer" style="width:100%; height:100%; border:none;"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: 9-Step Wizard Simulator -->
+        <div id="console-view-wizard" class="console-tab-view">
+          <div class="grid-cols-2">
+            <!-- Left Input -->
+            <div class="console-card">
+              <h3>🚀 9 步规范实证流水线推演向导</h3>
+              <p class="text-xs text-muted" style="margin-bottom:16px;">
+                基于 13 项 JSON Schema 强契约门控，模拟从命题边界、全文抓取、偏倚审计到法庭终裁的全流程。
+              </p>
+
+              <div style="font-size:0.8rem; font-weight:600; margin-bottom:6px;">选择预设议题：</div>
+              <div class="preset-chip-row">
+                <button class="wizard-preset-chip active" data-q="高校大一计算机系引入 AI 编程助手评估" data-domain="Higher Education / CS1" data-complexity="M">CS1 AI 编程助手</button>
+                <button class="wizard-preset-chip" data-q="中小学语文教学中引入 AI 写作助手是否有效？" data-domain="K12 语文写作 / 人文社科" data-complexity="M">中小学 AI 写作助手</button>
+                <button class="wizard-preset-chip" data-q="大学高数课程中 AI Tutor 的自适应练习干预效果" data-domain="Higher Ed / Mathematics" data-complexity="L">大学高数 AI Tutor</button>
+              </div>
+
+              <div class="control-group" style="margin-bottom:12px;">
+                <label for="wizard-question-input" class="text-xs font-semibold text-muted">实证研究问题 (Question)：</label>
+                <textarea id="wizard-question-input" rows="3" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg-surface); font-size:0.85rem; font-family:var(--font-sans);">高校大一计算机系引入 AI 编程助手评估</textarea>
+              </div>
+
+              <div class="grid-cols-2" style="margin-bottom:12px;">
+                <div class="control-group">
+                  <label for="wizard-domain-input" class="text-xs font-semibold text-muted">学科领域 (Domain)：</label>
+                  <input type="text" id="wizard-domain-input" value="Higher Education / CS1" style="padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg-surface); font-size:0.85rem;">
+                </div>
+                <div class="control-group">
+                  <label for="wizard-complexity-select" class="text-xs font-semibold text-muted">复杂度门控 (Complexity Gate)：</label>
+                  <select id="wizard-complexity-select" style="padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg-surface); font-size:0.85rem;">
+                    <option value="S">S - Quick Fact (快速简报)</option>
+                    <option value="M" selected>M - Standard Review (八角色标准)</option>
+                    <option value="L">L - Deep Causal Cycle (深度因果闭环)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button id="wizard-simulate-btn" class="btn-launch-nav" style="width:100%; justify-content:center; padding:12px;">
+                ⚡ 启动 9 步全契约推演 (Simulate Protocol)
+              </button>
+
+              <div style="margin-top:20px;">
+                <div style="font-size:0.8rem; font-weight:700; margin-bottom:8px;">实时契约流水线终端日志：</div>
+                <div id="wizard-terminal-logs" class="terminal-box">[Ready] EduEvidence Protocol Engine initialized. Awaiting task trigger...</div>
+              </div>
+            </div>
+
+            <!-- Right Timeline & Verdict -->
+            <div class="console-card">
+              <div id="wizard-status-banner" style="font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:16px;">
+                等待启动推演...
+              </div>
+
+              <div id="wizard-steps-timeline" style="max-height: 480px; overflow-y:auto; padding-right:6px;"></div>
+
+              <div id="wizard-verdict-box" style="display:none; margin-top:20px; background:linear-gradient(135deg, rgba(242, 77, 41, 0.1) 0%, var(--bg-surface) 100%); border:1px solid var(--brand-orange); border-radius:14px; padding:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                  <span style="font-weight:800; font-size:1.05rem;">🏛️ 法庭终局裁决结果 (Tribunal Verdict)</span>
+                  <span id="wizard-verdict-tag" class="tag tag-terracotta font-bold text-base">PILOT</span>
+                </div>
+                <div class="grid-cols-3" style="margin-bottom:12px;">
+                  <div class="kpi-box">
+                    <div class="kpi-box-label">综合效应量</div>
+                    <div id="wizard-pooled-g" class="kpi-box-val text-terracotta">+0.38g</div>
+                  </div>
+                  <div class="kpi-box">
+                    <div class="kpi-box-label">裁决置信度</div>
+                    <div id="wizard-conf-score" class="kpi-box-val text-emerald">82%</div>
+                  </div>
+                  <div class="kpi-box">
+                    <div class="kpi-box-label">契约校验率</div>
+                    <div class="kpi-box-val font-mono">13 / 13</div>
+                  </div>
+                </div>
+                <div style="font-size:0.82rem; color:var(--text-secondary);">
+                  <strong>行动计划：</strong><span id="wizard-action-plan">8周渐退式支架试点 + 真实课堂评价量表驱动</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Slide-Out Node Details Drawer for SSOT Graph -->
+    <div id="graph-node-drawer" class="node-drawer">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border); padding-bottom:12px;">
+          <h4 id="drawer-node-title" class="serif-text font-bold" style="font-size:1.1rem;">节点详情</h4>
+          <button id="drawer-close-btn" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">✕</button>
+        </div>
+        <div id="drawer-node-body"></div>
+      </div>
+      <div style="font-size:0.75rem; color:var(--text-muted); text-align:center;">
+        SSOT Evidence Graph · Immutable Snapshot
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Main ES6 Entry Point -->
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

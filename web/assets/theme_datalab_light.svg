@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="dlLightBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#EFF6FF"/>
+    </linearGradient>
+    <filter id="shadowDL">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0284C7" flood-opacity="0.08"/>
+    </filter>
+    <style>
+      @keyframes pulseDotLift {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px #0284C7); }
+        50% { transform: scale(1.3); filter: drop-shadow(0 0 8px #0284C7); }
+      }
+      .anim-dot-lift { transform-origin: 440px 175px; animation: pulseDotLift 2s infinite ease-in-out; }
+    </style>
+  </defs>
+  
+  <rect width="600" height="450" fill="url(#dlLightBg)"/>
+  
+  <!-- Header -->
+  <g transform="translate(40, 25)">
+    <rect width="95" height="18" rx="9" fill="#E0F2FE"/>
+    <text x="47" y="13" fill="#0284C7" font-family="'Inter', sans-serif" font-size="9" font-weight="700" text-anchor="middle">DATALAB LIGHT</text>
+    <text x="105" y="14" fill="#0F172A" font-family="'Inter', sans-serif" font-size="15" font-weight="800">AI Coding Assistants in CS1 (N=50)</text>
+    <text x="0" y="32" fill="#64748B" font-family="'Inter', sans-serif" font-size="10">Data Science Telemetry &amp; DID Causal Sandbox</text>
+  </g>
+  
+  <!-- 3 Metric Cards (520px wide) -->
+  <g transform="translate(40, 68)" filter="url(#shadowDL)">
+    <!-- KPI 1 -->
+    <rect x="0" y="0" width="160" height="60" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="12" y="20" fill="#64748B" font-family="'Inter', sans-serif" font-size="8.5" font-weight="600">OVERALL EFFECT</text>
+    <text x="12" y="46" fill="#0284C7" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="800">+0.58g</text>
+    <text x="90" y="46" fill="#10B981" font-family="'Inter', sans-serif" font-size="9.5" font-weight="700">▲ High Lift</text>
+    
+    <!-- KPI 2 -->
+    <rect x="180" y="0" width="160" height="60" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="192" y="20" fill="#64748B" font-family="'Inter', sans-serif" font-size="8.5" font-weight="600">PARALLEL TREND R²</text>
+    <text x="192" y="46" fill="#0F172A" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="800">84.7%</text>
+    <text x="270" y="46" fill="#64748B" font-family="'Inter', sans-serif" font-size="9">p &lt; 0.001</text>
+    
+    <!-- KPI 3 -->
+    <rect x="360" y="0" width="160" height="60" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="372" y="20" fill="#64748B" font-family="'Inter', sans-serif" font-size="8.5" font-weight="600">STUDIES SYNTHESIZED</text>
+    <text x="372" y="46" fill="#F24D29" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="800">50</text>
+    <text x="405" y="46" fill="#64748B" font-family="'Inter', sans-serif" font-size="9">Peer-Reviewed</text>
+  </g>
+  
+  <!-- Interactive DID Chart (520px wide) -->
+  <g transform="translate(40, 138)" filter="url(#shadowDL)">
+    <rect width="520" height="195" rx="8" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="14" y="20" fill="#0F172A" font-family="'Inter', sans-serif" font-size="11" font-weight="700">Multi-Arm Treatment vs Control Trajectories (DID)</text>
+    <text x="350" y="20" fill="#64748B" font-family="'Inter', sans-serif" font-size="9">● Control   ● AI Fading Scaffold</text>
+    
+    <!-- Grid lines -->
+    <line x1="30" y1="45" x2="490" y2="45" stroke="#F1F5F9" stroke-width="1"/>
+    <line x1="30" y1="80" x2="490" y2="80" stroke="#F1F5F9" stroke-width="1"/>
+    <line x1="30" y1="115" x2="490" y2="115" stroke="#F1F5F9" stroke-width="1"/>
+    <line x1="30" y1="150" x2="490" y2="150" stroke="#E2E8F0" stroke-width="1"/>
+    
+    <!-- Control Trend (Gray Dashed) -->
+    <polyline points="40,125 120,121 200,117 280,113 360,109 440,105" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4,3"/>
+    
+    <!-- Intervention Line -->
+    <line x1="200" y1="35" x2="200" y2="150" stroke="#F24D29" stroke-width="1.2" stroke-dasharray="3,3"/>
+    <rect x="165" y="32" width="70" height="14" rx="3" fill="#FEE2E2"/>
+    <text x="200" y="42" fill="#EF4444" font-family="'Inter', sans-serif" font-size="7.5" font-weight="700" text-anchor="middle">Intervention W5</text>
+    
+    <!-- Treatment Trend (Cyan Solid) -->
+    <polyline points="40,126 120,122 200,118 280,80 360,55 440,42" fill="none" stroke="#0284C7" stroke-width="2.8"/>
+    
+    <!-- Confidence Band Area -->
+    <polygon points="200,118 280,72 360,47 440,34 440,50 360,63 280,88 200,118" fill="#0284C7" fill-opacity="0.15"/>
+    
+    <!-- Highlight Animated Dot -->
+    <circle class="anim-dot-lift" cx="440" cy="42" r="5" fill="#0284C7" stroke="#FFFFFF" stroke-width="1.8"/>
+    <rect x="405" y="14" width="70" height="18" rx="4" fill="#0F172A"/>
+    <text x="440" y="26" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="700" text-anchor="middle">+8.5 pts</text>
+    
+    <!-- Bottom Verdict Strip -->
+    <text x="14" y="175" fill="#0284C7" font-family="'Inter', sans-serif" font-size="10" font-weight="700">PILOT VERDICT: 4-Phase Fading Scaffold</text>
+    <text x="506" y="175" fill="#64748B" font-family="'Inter', sans-serif" font-size="9" text-anchor="end">Confidence: 84.2% · WWC 5.0 High Rigor</text>
+  </g>
+</svg>

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="claudeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF7F2"/>
+      <stop offset="100%" stop-color="#F3ECE0"/>
+    </linearGradient>
+    <filter id="claudeShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#3A3833" flood-opacity="0.06"/>
+    </filter>
+    <style>
+      @keyframes claudePulse {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px #5E8A6A); }
+        50% { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(94, 138, 106, 0.6)); }
+      }
+      .anim-diamond-claude { transform-origin: 385px 200px; animation: claudePulse 2.8s infinite ease-in-out; }
+    </style>
+  </defs>
+  
+  <rect width="600" height="450" fill="url(#claudeBg)"/>
+  
+  <!-- Header -->
+  <g transform="translate(40, 25)">
+    <rect width="85" height="18" rx="9" fill="#F3E4DC"/>
+    <text x="42" y="13" fill="#B8694A" font-family="Georgia, serif" font-size="9" font-weight="bold" text-anchor="middle">CLAUDE</text>
+    <text x="95" y="14" fill="#3A3833" font-family="Georgia, serif" font-size="15" font-weight="bold">AI Coding Assistants in CS1 (N=50)</text>
+    <text x="0" y="32" fill="#8A867E" font-family="sans-serif" font-size="10">Policy Dossier · Warm Ivory Intellectual Research Style</text>
+  </g>
+  
+  <!-- Core Forest Plot Card -->
+  <g transform="translate(40, 68)" filter="url(#claudeShadow)">
+    <rect width="520" height="185" rx="8" fill="#FFFFFF" stroke="#E5DFD3"/>
+    
+    <!-- Table Header -->
+    <text x="16" y="20" fill="#3A3833" font-family="Georgia, serif" font-size="11" font-weight="bold">RANDOM EFFECTS SYNTHESIS (DerSimonian-Laird)</text>
+    <line x1="16" y1="28" x2="504" y2="28" stroke="#E5DFD3" stroke-width="1"/>
+    
+    <!-- Row 1 -->
+    <text x="16" y="48" fill="#3A3833" font-family="sans-serif" font-size="10" font-weight="600">Bastani et al. ('25)</text>
+    <text x="160" y="48" fill="#8A867E" font-family="sans-serif" font-size="9">In-Task Speed</text>
+    <line x1="260" y1="45" x2="430" y2="45" stroke="#E5DFD3" stroke-width="1"/>
+    <line x1="380" y1="45" x2="430" y2="45" stroke="#5E8A6A" stroke-width="2"/>
+    <circle cx="410" cy="45" r="3.5" fill="#5E8A6A"/>
+    <text x="504" y="48" fill="#5E8A6A" font-family="monospace" font-size="10" font-weight="bold" text-anchor="end">+0.68g</text>
+    
+    <!-- Row 2 -->
+    <text x="16" y="76" fill="#3A3833" font-family="sans-serif" font-size="10" font-weight="600">Prather et al. ('24)</text>
+    <text x="160" y="76" fill="#8A867E" font-family="sans-serif" font-size="9">Syntax Assistance</text>
+    <line x1="260" y1="73" x2="430" y2="73" stroke="#E5DFD3" stroke-width="1"/>
+    <line x1="355" y1="73" x2="415" y2="73" stroke="#5E8A6A" stroke-width="2"/>
+    <circle cx="390" cy="73" r="3.5" fill="#5E8A6A"/>
+    <text x="504" y="76" fill="#5E8A6A" font-family="monospace" font-size="10" font-weight="bold" text-anchor="end">+0.54g</text>
+    
+    <!-- Row 3 -->
+    <text x="16" y="104" fill="#3A3833" font-family="sans-serif" font-size="10" font-weight="600">Kazemitabaar ('24)</text>
+    <text x="160" y="104" fill="#8A867E" font-family="sans-serif" font-size="9">Solo Exam</text>
+    <line x1="260" y1="101" x2="430" y2="101" stroke="#E5DFD3" stroke-width="1"/>
+    <line x1="280" y1="101" x2="330" y2="101" stroke="#B8694A" stroke-width="2"/>
+    <circle cx="305" cy="101" r="3.5" fill="#B8694A"/>
+    <text x="504" y="104" fill="#B8694A" font-family="monospace" font-size="10" font-weight="bold" text-anchor="end">-0.28g</text>
+    
+    <!-- Zero axis -->
+    <line x1="340" y1="32" x2="340" y2="120" stroke="#8A867E" stroke-dasharray="2,2" stroke-width="1"/>
+    <line x1="16" y1="116" x2="504" y2="116" stroke="#E5DFD3" stroke-width="1"/>
+    
+    <!-- Summary Diamond -->
+    <text x="16" y="138" fill="#3A3833" font-family="Georgia, serif" font-size="10" font-weight="bold">Pooled Summary (RE)</text>
+    <polygon class="anim-diamond-claude" points="375,135 385,129 395,135 385,141" fill="#5E8A6A"/>
+    <text x="504" y="138" fill="#5E8A6A" font-family="monospace" font-size="10" font-weight="bold" text-anchor="end">+0.38g [0.24, 0.52]</text>
+    
+    <!-- Direction Annotations -->
+    <text x="260" y="165" fill="#B8694A" font-family="sans-serif" font-size="8">← Favors Control</text>
+    <text x="430" y="165" fill="#5E8A6A" font-family="sans-serif" font-size="8" text-anchor="end">Favors AI Lift →</text>
+  </g>
+  
+  <!-- Verdict Card -->
+  <g transform="translate(40, 265)" filter="url(#claudeShadow)">
+    <rect width="520" height="70" rx="8" fill="#FFFFFF" stroke="#E5DFD3"/>
+    <rect x="14" y="12" width="85" height="18" rx="4" fill="#F4EADA"/>
+    <text x="56" y="24" fill="#C99A4A" font-family="sans-serif" font-size="9" font-weight="bold" text-anchor="middle">PILOT ONLY</text>
+    <text x="108" y="25" fill="#3A3833" font-family="Georgia, serif" font-size="12" font-weight="bold">4-Phase Fading Scaffold Protocol</text>
+    <text x="14" y="48" fill="#6A665E" font-family="sans-serif" font-size="10">
+      WWC 5.0 High Rigor Passed · 13/13 Schemas Verified · Confidence: 84.2%
+    </text>
+  </g>
+</svg>
