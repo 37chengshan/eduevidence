@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>通用 Deep Research vs EduEvidence — 引用可验证性对比</title>
+<style>
+  :root { --bg:#F7F4ED; --surface:#FFFFFF; --text:#3A3833; --primary:#B8694A;
+          --ok:#166534; --bad:#991b1b; --border:#E5E0D5; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.65; }
+  .wrap { max-width:1080px; margin:0 auto; padding:32px 20px 64px; }
+  h1 { font-size:1.6rem; margin:.2em 0 .4em; }
+  .lead { color:#6B675F; max-width:46em; }
+  table { width:100%; border-collapse:collapse; background:var(--surface);
+          border:1px solid var(--border); margin:22px 0; font-size:.95rem; }
+  th,td { border:1px solid var(--border); padding:10px 12px; text-align:left;
+          vertical-align:top; overflow-wrap:anywhere; }
+  th { background:#FCFAF6; white-space:normal; }
+  td.dim { color:#8A857B; width:24%; }
+  .pill { display:inline-block; padding:1px 9px; border-radius:999px; font-size:.72rem;
+          border:1px solid var(--border); margin-left:6px; }
+  .pill.ok { color:var(--ok); border-color:#16a34a55; background:rgba(22,163,74,.08); }
+  .pill.bad { color:var(--bad); border-color:#dc262688; background:rgba(220,38,38,.10); font-weight:700; }
+  ol.cites { padding-left:1.2em; margin:.4em 0; }
+  ol.cites li { margin:.25em 0; font-size:.88rem; }
+  a { color:var(--primary); }
+  .note { background:#FCFAF6; border:1px dashed var(--border); padding:12px 14px;
+          border-radius:8px; font-size:.88rem; color:#6B675F; }
+  code { background:#FCFAF6; border:1px solid var(--border); border-radius:5px;
+         padding:1px 6px; font-size:.85em; overflow-wrap:anywhere; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>同一问题，两种研究：通用 Deep Research vs EduEvidence</h1>
+  <p class="lead">问题：<strong>大一 C 语言课程是否应该允许学生使用生成式 AI 编程助手？</strong>
+    左列是通用 deep-research 类工具的典型产出形态；右列是 EduEvidence 旗舰示例
+    <code>examples/ai-coding-assistant-evidence/</code> 的实际产出。所有差异点都以
+    本仓库可复核的工件为准（以实测为准，不引用未核验的第三方评测）。</p>
+
+  <table>
+    <tr><th style="width:22%">维度</th><th>通用 Deep Research（典型形态）</th><th>EduEvidence（本仓库实测行为）</th></tr>
+    <tr><td class="dim">引用真实性</td>
+        <td>模型生成参考文献，幻觉/错配无法被使用者当场发现；官方文档亦承认存在事实性幻觉。</td>
+        <td>每条来源带注册表核验徽章：8/8 DOI 通过 Crossref/DataCite 存在性 + 标题匹配
+            （<code>citation_check.json</code> 留痕）。<span class="pill ok">DOI ✓ ×8</span></td></tr>
+    <tr><td class="dim">证据与结论的关系</td>
+        <td>叙述式总结，"任务提速"与"学习提升"常被混写为一句乐观结论。</td>
+        <td>强制 Outcome Separation：任务表现（+48%/+55%）与独立考试成绩（无护栏 −17%）
+            分列不同 outcome，规则禁止把前者当后者（task≠learning 铁律入 gate）。</td></tr>
+    <tr><td class="dim">置信度</td>
+        <td>无量化置信度，或输出不可复算的"信心表述"。</td>
+        <td>确定性公式可复算：Moderate / 0.586 / policy 2026-08-12.v2，
+            分解项（质量/一致性/直接性/数量/罚分）逐项可审计。</td></tr>
+    <tr><td class="dim">决策可用性</td>
+        <td>给"综述"，不给"能不能上"的决定与止损条件。</td>
+        <td>裁决 = PILOT（限制性四阶段渐退试点），附 stop conditions 与 no-AI 迁移评估设计。</td></tr>
+    <tr><td class="dim">事后失效</td>
+        <td>文献被撤稿后报告静默过期。</td>
+        <td><code>scripts/retraction_watch.py</code> 持续监控已引 DOI，撤稿即出 diff 报告；
+            已知撤稿元分析（Wang &amp; Fan 2025）作为内置演示场景。</td></tr>
+  </table>
+
+  <h2>现场小实验：引用列表能被逐条点开验证吗？</h2>
+  <p>旗舰示例的 8 条来源全部给出注册表可解析的 DOI——随机点开任意一条即可核对标题：</p>
+  <ol class="cites">
+    <li>Bastani et al. 2025, PNAS — <a href="https://doi.org/10.1073/pnas.2422633122">10.1073/pnas.2422633122</a><span class="pill ok">DOI ✓</span></li>
+    <li>Kazemitabaar et al. 2023, CHI — <a href="https://doi.org/10.1145/3544548.3580919">10.1145/3544548.3580919</a><span class="pill ok">DOI ✓</span></li>
+    <li>Peng et al. 2023 (preprint) — <a href="https://doi.org/10.48550/arXiv.2302.06590">10.48550/arXiv.2302.06590</a><span class="pill ok">DOI ✓</span></li>
+    <li>Yetistiren et al. 2023, JSS — <a href="https://doi.org/10.1016/j.jss.2023.111734">10.1016/j.jss.2023.111734</a><span class="pill ok">DOI ✓</span></li>
+    <li>Finnie-Ansley et al. 2022, ICER — <a href="https://doi.org/10.1145/3545945.3569830">10.1145/3545945.3569830</a><span class="pill ok">DOI ✓</span></li>
+    <li>解释对比研究 2023, Koli Calling — <a href="https://doi.org/10.1145/3587102.3588785">10.1145/3587102.3588785</a><span class="pill ok">DOI ✓</span></li>
+    <li>Vaithilingam et al. 2022, UIST — <a href="https://doi.org/10.1145/3491101.3519665">10.1145/3491101.3519665</a><span class="pill ok">DOI ✓</span></li>
+    <li>Marzuki et al. 2024, Smart Learning Env. — <a href="https://doi.org/10.1186/s40561-024-00295-9">10.1186/s40561-024-00295-9</a><span class="pill ok">DOI ✓</span></li>
+  </ol>
+  <p>作为对照：一个"编造但看起来合理"的引用长这样 ——
+    Bastani et al., PNAS 2025, <code>10.1073/pnas.2412345122</code>
+    <span class="pill bad">404 Not Found</span>　（这正是 v5.1 及之前旗舰示例里真实存在过的伪造 DOI，
+    已在 v5.2.0 全量审计中清除；审计方法与完整清单见
+    <code>benchmarks/doi-audit/report.md</code>。）</p>
+
+  <div class="note">
+    边界声明：EduEvidence 不声称比通用工具"更聪明"。它做的是把<strong>可验证性、
+    结果分离与决策纪律</strong>做成流水线强制项。确定性层完全可复现；LLM 层的复现边界
+    见 <code>docs/reproducibility.md</code>。合成演示包一律带 SYNTHETIC 徽章。
+  </div>
+
+  <p style="margin-top:28px"><a href="landing.html">← 返回项目主页</a> ·
+    <a href="https://github.com/37chengshan/eduevidence">GitHub 源码 ↗</a></p>
+</div>
+</body>
+</html>

@@ -274,6 +274,16 @@ badge in its report header and in `result.json.meta`:
   demonstrations** (data_origin=`synthetic`). Their numbers and citations are illustrative,
   not real studies; reports carry a loud SYNTHETIC badge. Do not cite them as evidence.
 
+### Start your own research in ~30 minutes
+
+```bash
+python3 scripts/quickstart.py "你的教育研究问题"          # creates runs/<id> + NEXT_STEPS.md
+# hand the LLM stages to your AI agent per NEXT_STEPS.md, then finish with:
+python3 scripts/orchestrator.py adjudicate --project runs/<id>
+bash scripts/bake_pack.sh <pack_dir>                     # 5-theme bilingual report
+python3 scripts/citation_check.py --pack <pack_dir> --write-back   # DOI ✓ badges
+```
+
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
 After research completes, `result.json` is rendered into three visualization outputs by deterministic Python adapters. The adapters themselves use the standard library; the optional Web Studio chart enhancement has a separate browser dependency.
