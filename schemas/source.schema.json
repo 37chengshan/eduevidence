@@ -170,6 +170,14 @@
       "type": "object",
       "description": "结构化扩展字段的统一容器（P1-01）。未列入本 schema 的字段必须放在这里，禁止在顶层新增属性。",
       "additionalProperties": true
+    },
+    "doi_verified": {
+      "type": "boolean",
+      "description": "True when the DOI resolved against Crossref/DataCite and the registered title matches (engine.citation_check)."
+    },
+    "retracted": {
+      "type": "boolean",
+      "description": "True when the registry marks this work as retracted."
     }
   },
   "definitions": {

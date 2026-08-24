@@ -2227,6 +2227,11 @@ def render_sources(result: dict, lang: str, ui: dict, expandable: bool = False) 
         url = safe_http_url(raw_url)
         location = (f"<a href='{esc(url)}'>{esc(url)}</a>" if url else esc(raw_url))
         title = esc(s.get("title"))
+        # E6 引用核验徽章：数据来自 engine.citation_check（Crossref/DataCite）。
+        if s.get("retracted"):
+            title += ' <span class="cite-badge cite-retracted">RETRACTED</span>'
+        elif s.get("doi_verified"):
+            title += f' <span class="cite-badge cite-ok">{esc(ui.get("cite_doi_ok", "DOI ✓"))}</span>'
         if expandable:
             title += (f'<details class="source-expander detail-expander"><summary>{esc(ui["expand_source"])}</summary>'
                       f'{render_source_detail(s, lang, ui)}</details>')
@@ -3061,6 +3066,9 @@ ul.can li, ul.uncertain li, ul.cannot li {{ list-style:none; margin:6px 0; paddi
                             white-space:nowrap; }}
 .data-table tbody tr:nth-child(even) {{ background:var(--surface2); }}
 .data-table tbody tr:hover {{ background:var(--primary-soft, #F3E4DC); }}
+.cite-badge {{ display:inline-block; margin-left:6px; padding:1px 7px; border-radius:999px; font-size:.66rem; border:1px solid var(--border); vertical-align:middle; }}
+.cite-badge.cite-ok {{ color:#166534; border-color:#16a34a55; background:rgba(22,163,74,.08); }}
+.cite-badge.cite-retracted {{ color:#991b1b; border-color:#dc262688; background:rgba(220,38,38,.10); font-weight:700; }}
 .raw-tag {{ display:inline-block; margin-left:6px; font-size:.68rem; color:var(--insufficient);
            background:var(--surface2); border:1px solid var(--border); border-radius:4px;
            padding:0 5px; vertical-align:1px; font-family:'SF Mono',Menlo,monospace; }}

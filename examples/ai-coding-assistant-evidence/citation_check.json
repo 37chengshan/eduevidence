@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-08-24T12:39:14+0800",
+  "checked": 8,
+  "bad": 0,
+  "results": [
+    {
+      "file": "sources.jsonl",
+      "doi": "10.1145/3544548.3580919",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "title_overlap": 1.0
+    },
+    {
+      "file": "sources.jsonl",
+      "doi": "10.1073/pnas.2422633122",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "title_overlap": 1.0
+    },
+    {
+      "file": "sources.jsonl",
+      "doi": "10.1186/s40561-024-00295-9",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "Impact of ChatGPT on ESL students’ academic writing skills: a mixed methods intervention study",
+      "title_overlap": 1.0
+    },
+    {
+      "file": "sources.jsonl",
+      "doi": "10.48550/arXiv.2302.06590",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "The Impact of AI on Developer Productivity: Evidence from GitHub Copilot",
+      "title_overlap": 1.0
+    },
+    {
+      "file": "sources.jsonl",
+      "doi": "10.1016/j.jss.2023.111734",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "GitHub Copilot AI pair programmer: Asset or Liability?",
+      "title_overlap": 1.0
+    },
+    {
+      "file": "sources.jsonl",
+      "doi": "10.1145/3545945.3569830",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "Using GitHub Copilot to Solve Simple Programming Problems",
+      "title_overlap": 0.875
+    },
+    {
+      "file": "sources.jsonl",
+      "doi": "10.1145/3587102.3588785",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "Comparing Code Explanations Created by Students and Large Language Models",
+      "title_overlap": 1.0
+    },
+    {
+      "file": "sources.jsonl",
+      "doi": "10.1145/3491101.3519665",
+      "status": "ok",
+      "doi_verified": true,
+      "retracted": false,
+      "registry_title": "Expectation vs. Experience: Evaluating the Usability of Code Generation Tools Powered by Large Language Models",
+      "title_overlap": 1.0
+    }
+  ]
+}

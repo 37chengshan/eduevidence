@@ -1,8 +1,8 @@
 {
-  "result_sha256": "3352f6ebf3358e705ce47a94dfe659c1c1cbde97545cab368afd43321fdab65e",
-  "result_zh_sha256": "34a5b58752c24b833b814be3edab55ffd1d9653f97847bb47d2ec2ba5868d88f",
+  "result_sha256": "b498e00a88080c0645a9f0c2f4f513dc916f1ec4a2c6c69592363c99adb5dc17",
+  "result_zh_sha256": "0b14bf748bf92008a7813cc1aa7db3e30b5ad726e85b5f408b2cebc2dcb94b1c",
   "renderer_version": "1.0.0",
-  "git_commit": "6d4a1e99d37d783b9aca9028fe08e83c74c55e3b",
+  "git_commit": "980605ebaf75fab04608caf8a2fd9a88b2544b66",
   "evidence_count": 12,
   "source_count": 8,
   "themes": [

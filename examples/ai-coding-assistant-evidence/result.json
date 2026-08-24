@@ -2,7 +2,7 @@
   "meta": {
     "skill": "eduevidence",
     "version": "5.2.0",
-    "generated_at": "2026-08-24T02:58:24.266810+00:00",
+    "generated_at": "2026-08-24T04:39:14.576951+00:00",
     "mode": "platform_native",
     "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
     "data_origin": "manual_curated"
@@ -499,7 +499,9 @@
       "doi": "10.1145/3544548.3580919",
       "canonical_url": "https://dl.acm.org/doi/10.1145/3544548.3580919",
       "authority_level": "tier1_paper_doi",
-      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919"
+      "source_location": "https://dl.acm.org/doi/10.1145/3544548.3580919",
+      "doi_verified": true,
+      "retracted": false
     },
     {
       "source_id": "S-2025-bastani",
@@ -508,7 +510,9 @@
       "doi": "10.1073/pnas.2422633122",
       "canonical_url": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
       "authority_level": "tier1_paper_doi",
-      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122"
+      "source_location": "https://www.pnas.org/doi/10.1073/pnas.2422633122",
+      "doi_verified": true,
+      "retracted": false
     },
     {
       "source_id": "S-2024-marzuki",
@@ -517,7 +521,9 @@
       "doi": "10.1186/s40561-024-00295-9",
       "canonical_url": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
       "authority_level": "tier1_paper_doi",
-      "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9"
+      "source_location": "https://link.springer.com/article/10.1186/s40561-024-00295-9",
+      "doi_verified": true,
+      "retracted": false
     },
     {
       "source_id": "S-2023-peng",
@@ -526,7 +532,9 @@
       "doi": "10.48550/arXiv.2302.06590",
       "canonical_url": "https://doi.org/10.48550/arXiv.2302.06590",
       "authority_level": "tier2_academic_database",
-      "source_location": "https://arxiv.org/abs/2302.06590"
+      "source_location": "https://arxiv.org/abs/2302.06590",
+      "doi_verified": true,
+      "retracted": false
     },
     {
       "source_id": "S-2023-yetistiren",
@@ -535,7 +543,9 @@
       "doi": "10.1016/j.jss.2023.111734",
       "canonical_url": "https://doi.org/10.1016/j.jss.2023.111734",
       "authority_level": "tier1_paper_doi",
-      "source_location": "https://doi.org/10.1016/j.jss.2023.111734"
+      "source_location": "https://doi.org/10.1016/j.jss.2023.111734",
+      "doi_verified": true,
+      "retracted": false
     },
     {
       "source_id": "S-2022-finnie-ansley",
@@ -544,7 +554,9 @@
       "doi": "10.1145/3545945.3569830",
       "canonical_url": "https://dl.acm.org/doi/10.1145/3545945.3569830",
       "authority_level": "tier1_paper_doi",
-      "source_location": "https://dl.acm.org/doi/10.1145/3545945.3569830"
+      "source_location": "https://dl.acm.org/doi/10.1145/3545945.3569830",
+      "doi_verified": true,
+      "retracted": false
     },
     {
       "source_id": "S-2023-explanations-compare",
@@ -553,7 +565,9 @@
       "doi": "10.1145/3587102.3588785",
       "canonical_url": "https://dl.acm.org/doi/10.1145/3587102.3588785",
       "authority_level": "tier1_paper_doi",
-      "source_location": "https://dl.acm.org/doi/10.1145/3587102.3588785"
+      "source_location": "https://dl.acm.org/doi/10.1145/3587102.3588785",
+      "doi_verified": true,
+      "retracted": false
     },
     {
       "source_id": "S-2022-vaithilingam",
@@ -562,7 +576,9 @@
       "doi": "10.1145/3491101.3519665",
       "canonical_url": "https://dl.acm.org/doi/10.1145/3491101.3519665",
       "authority_level": "tier1_paper_doi",
-      "source_location": "https://dl.acm.org/doi/10.1145/3491101.3519665"
+      "source_location": "https://dl.acm.org/doi/10.1145/3491101.3519665",
+      "doi_verified": true,
+      "retracted": false
     }
   ],
   "evidence": [
