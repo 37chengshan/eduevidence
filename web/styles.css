@@ -744,3 +744,27 @@ select:hover { border-bottom-color: var(--text-muted); }
 }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
+/* ---------- 返回首页动画（与落地页进入控制台的向外波浪区分） ---------- */
+#return-wave {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  z-index: 99999;
+  pointer-events: none;
+  transform: translateY(101%);
+  opacity: 0;
+  background: linear-gradient(to top,
+    #2E2A22 0%,
+    #C56344 32%,
+    #EDB79B 62%,
+    #FDFCF8 100%);
+  will-change: transform, opacity;
+}
+.leaving-page {
+  transition: opacity 0.4s var(--ease), filter 0.4s var(--ease);
+  opacity: 0.78;
+  filter: saturate(0.85) brightness(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  #return-wave { display: none; }
+}
+

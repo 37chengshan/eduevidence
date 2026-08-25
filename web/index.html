@@ -38,6 +38,11 @@
       </button>
 
       <div class="nav-divider"></div>
+
+      <a href="#" class="nav-item nav-item-landing" id="btn-back-to-landing" title="返回首页" style="text-decoration:none;">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+        <span style="font-weight:600; color:var(--text-primary);">返回首页 ➔</span>
+      </a>
     </nav>
 
     <div class="sidebar-footer">
@@ -49,6 +54,10 @@
     <header class="topbar">
       <div class="topbar-title">EduEvidence Web Studio <span>/ 实证决策引擎</span></div>
       <div style="display:flex; align-items:center; gap:10px;">
+        <a href="#" id="topbar-to-landing" class="btn-topbar-landing" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; padding:6px 12px; border-radius:8px; border:1px solid var(--border); font-size:0.82rem; font-weight:600; color:var(--text-secondary); background:var(--bg-surface); transition:all var(--dur-fast) ease;">
+          <span style="color:var(--accent);">✨</span>
+          <span>返回首页 ↗</span>
+        </a>
         <div class="theme-toggle">
         <button class="theme-btn active" data-theme-btn="light">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-2.25l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg> Light
@@ -153,6 +162,10 @@
   </div>
 
   <div class="toast" id="toast"></div>
+
+  <!-- 返回首页收拢动画幕布（由 js/main.js 驱动） -->
+  <div id="return-wave" aria-hidden="true"></div>
+
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

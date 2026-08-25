@@ -362,6 +362,8 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(data)))
+        # 允许落地页（独立静态源）跨源探测/拉取只读 API 与控制台资源
+        self.send_header("Access-Control-Allow-Origin", "*")
         if extra_headers:
             for name, value in extra_headers.items():
                 self.send_header(name, value)

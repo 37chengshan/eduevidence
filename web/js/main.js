@@ -154,8 +154,78 @@ function loadProjects() {
   });
 }
 
+function landingCandidates() {
+  const list = [];
+  const hostname = window.location.hostname || "127.0.0.1";
+  const origin = window.location.origin;
+  // 从落地页跳转过来时，document.referrer 就是最可靠的首页地址
+  if (document.referrer && document.referrer.includes("landing.html")) list.push(document.referrer);
+  // 同源优先（旧式单服务器部署时 dashboard/landing 同源）
+  list.push(origin + "/landing.html");
+  // 否则探测本机 8870-8879 静态托管
+  for (let port = 8870; port <= 8879; port++) {
+    list.push("http://" + hostname + ":" + port + "/landing.html");
+  }
+  return Array.from(new Set(list));
+}
+
+function wireLandingLinks() {
+  const anchors = $$("#btn-back-to-landing, #topbar-to-landing");
+  if (!anchors.length) return;
+  const fallback = window.location.origin + "/landing.html";
+  (async () => {
+    let target = null;
+    for (const url of landingCandidates()) {
+      try {
+        const r = await fetch(url, { method: "GET", cache: "no-store" });
+        if (r.ok) { target = url; break; }
+      } catch (e) {
+        /* 端口未监听 / 跨源被拒，试下一个 */
+      }
+    }
+    anchors.forEach(a => { a.href = target || fallback; });
+  })();
+}
+
+// 返回首页动画：纸面幕布自下而上收拢（与落地页进入控制台的向外热浪区分）。
+// 动画结束后跳转到 wireLandingLinks() 解析出的落地页地址。
+function initReturnHome() {
+  const anchors = $$("#btn-back-to-landing, #topbar-to-landing");
+  if (!anchors.length) return;
+  let wave = document.getElementById("return-wave");
+  if (!wave) {
+    wave = document.createElement("div");
+    wave.id = "return-wave";
+    wave.setAttribute("aria-hidden", "true");
+    document.body.appendChild(wave);
+  }
+  const fallback = window.location.origin + "/landing.html";
+  anchors.forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const raw = a.getAttribute("href");
+      const target = (raw && raw !== "#") ? a.href : fallback;
+
+      // 幕布初始在屏幕外，双重 rAF 确保首帧状态先渲染
+      wave.style.transition = "none";
+      wave.style.transform = "translateY(101%)";
+      wave.style.opacity = "1";
+      document.body.classList.add("leaving-page");
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          wave.style.transition = "transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.25s ease 0.55s";
+          wave.style.transform = "translateY(0)";
+        });
+      });
+      setTimeout(() => { window.location.href = target; }, 620);
+    });
+  });
+}
+
 function init() {
   initSidebar();
+  wireLandingLinks();
+  initReturnHome();
   
   // Theme toggle: simplified to Light / Dark
   $$(".theme-btn").forEach(b => {
