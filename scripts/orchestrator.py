@@ -10,14 +10,14 @@ stages); the two deterministic stages it executes locally are:
   adjudicate  — Pre-Verdict Gate (scripts/pre_verdict_gate.py) + deterministic
                 confidence (scripts/compute_confidence.py) producing
                 final_verdict.json from raw_verdict.json + evidence.jsonl
-  present     — assemble result.json from the workspace artifacts
+  projection  — assemble result.json and renderable projections from artifacts
                 (decision = final_verdict.json; claims carry claim_id per
                 report-result.schema.json)
 
 Stage machine (execution_plan.json / state.json):
 
   frame -> retrieve -> extract -> challenge -> audit -> adjudicate
-       -> intervene -> evaluate -> present
+       -> applicability -> intervene -> evaluate -> projection
 
 Each stage writes exactly one primary artifact and is schema-gated against
 schemas/*. When the artifact is missing the orchestrator either seeds it from
@@ -70,9 +70,10 @@ STAGE_SPEC: dict[str, dict[str, Any]] = {
     "challenge": {"artifact": "skeptic.json",     "schema": None,                          "jsonl": False, "local": False},
     "audit":     {"artifact": "methodology.json", "schema": "methodology.schema.json",     "jsonl": False, "local": False},
     "adjudicate": {"artifact": "final_verdict.json", "schema": "verdict.schema.json",      "jsonl": False, "local": True},
+    "applicability": {"artifact": "applicability.json", "schema": None, "jsonl": False, "local": False},
     "intervene": {"artifact": "intervention.json", "schema": "intervention.schema.json",   "jsonl": False, "local": False},
     "evaluate":  {"artifact": "evaluation.json",  "schema": "evaluation.schema.json",      "jsonl": False, "local": False},
-    "present":   {"artifact": "result.json",      "schema": "report-result.schema.json",   "jsonl": False, "local": True},
+    "projection": {"artifact": "result.json",      "schema": "report-result.schema.json",   "jsonl": False, "local": True},
 }
 
 #: Phase 33 — canonical failure -> handling-action mapping. Extends the
@@ -143,11 +144,14 @@ _STAGE_BRIEFS: dict[str, str] = {
     "adjudicate": ("Judge the evidence: write raw_verdict.json (model verdict). The orchestrator "
                    "then runs the Pre-Verdict Gate and deterministic confidence to produce "
                    "final_verdict.json."),
+    "applicability": ("Assess whether supported effects apply to the target population, setting, "
+                      "implementation constraints and outcomes; write applicability.json. Do not "
+                      "upgrade a decision merely because evidence is present."),
     "intervene": ("Design the minimal verifiable teaching intervention (phased pilot, "
                   "stop conditions, evidence alignment); write intervention.json."),
     "evaluate": ("Design the evaluation plan (baseline/post/retention/transfer, task vs learning "
                  "separation); write evaluation.json."),
-    "present": ("Translate result.json into result.zh.json and render report_spec.json / "
+    "projection": ("Translate result.json into result.zh.json and render report_spec.json / "
                 "report.html via the visualization layer."),
 }
 
@@ -179,6 +183,7 @@ def init_run(
     run_id: str | None = None,
     approve_agent_mcp: bool = False,
     scp_available: bool | None = None,
+    approval_record: dict | None = None,
 ) -> RunWorkspace:
     """Create the run workspace + manifest + planning artifacts (Phase 11-13)."""
     depth = DEPTH_ALIASES.get(depth, depth)
@@ -275,6 +280,16 @@ def init_run(
         "reason": ("user-approved via --approve-agent-mcp"
                    if approve_agent_mcp else "not yet approved; runs in platform-native mode"),
     }
+    if approval_record:
+        agent_mcp_approval["approval_global_path"] = str(_global_approval_path())
+        agent_mcp_approval["role_mapping_hash"] = approval_record.get("role_mapping_hash")
+        agent_mcp_approval["roles"] = approval_record.get("roles", {})
+        agent_mcp_approval["approved_at"] = _utc_now()
+        agent_mcp_approval["reason"] = "user-confirmed role mapping (global approval, hash-verified)"
+    elif approve_agent_mcp:
+        agent_mcp_approval["reason"] = (
+            "user-approved via --approve-agent-mcp (boolean only; a role mapping "
+            "in the global approval is required before any spawn)")
 
     for name, data in (("capability_plan", capability_plan),
                        ("resource_plan", resource_plan),
@@ -306,11 +321,11 @@ def schema_gate(ws: RunWorkspace, stage: str) -> dict[str, Any]:
     spec = STAGE_SPEC[stage]
     artifact = spec["artifact"]
     schema_name = spec["schema"]
-    if schema_name is None:  # challenge: light parseability contract
+    if schema_name is None:  # lightweight parseability contract
         data = load_json(ws.path / artifact)
         ok = bool(data) and isinstance(data, dict)
         return {"passed": ok, "stage": stage, "artifact": artifact,
-                "schema": None, "issues": [] if ok else ["skeptic.json missing or unparseable"]}
+                "schema": None, "issues": [] if ok else [f"{artifact} missing or unparseable"]}
 
     from validate_schema import SchemaError, Validator
 
@@ -520,14 +535,14 @@ def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, An
     }
 
 
-def _run_present(ws: RunWorkspace, manifest: dict[str, Any], question: str,
-                 demo_pack: Path | None = None) -> dict[str, Any]:
-    """Local present: assemble + validate result.json, seed render artifacts."""
+def _run_projection(ws: RunWorkspace, manifest: dict[str, Any], question: str,
+                    demo_pack: Path | None = None) -> dict[str, Any]:
+    """Build projections after science; this is not a scientific protocol stage."""
     required = ("final_verdict.json", "intervention.json", "evaluation.json")
     missing = [name for name in required if not (ws.path / name).is_file()
                or not load_json(ws.path / name)]
     if missing:
-        ws.write_brief("present", question, _STAGE_BRIEFS["present"])
+        ws.write_brief("projection", question, _STAGE_BRIEFS["projection"])
         return {"status": "pending",
                 "detail": f"missing prerequisite artifacts: {', '.join(missing)}"}
 
@@ -550,7 +565,7 @@ def _run_present(ws: RunWorkspace, manifest: dict[str, Any], question: str,
     result = _assemble_result(ws, manifest)
     (ws.path / "result.json").write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    gate = schema_gate(ws, "present")
+    gate = schema_gate(ws, "projection")
     if not gate["passed"]:
         return {"status": "failed", "detail": f"result.json schema gate: {gate['issues']}"}
     missing_render = [n for n in ("result.zh.json", "report_spec.json", "report.html")
@@ -576,6 +591,10 @@ def run_stage(ws: RunWorkspace, stage: str, *, demo_pack: Path | None = None) ->
     Deterministic stages execute locally; external stages are either seeded
     from ``demo_pack`` (demo/test mode) or handed off via a task brief.
     """
+    # Compatibility for callers of the retired name. State/manifests only
+    # record ``projection`` from this point forward.
+    if stage == "present":
+        stage = "projection"
     ws.trace("stage_started", stage=stage)
     log.info("stage=%s run=%s start", stage, ws.run_id)
     spec = STAGE_SPEC[stage]
@@ -598,8 +617,8 @@ def run_stage(ws: RunWorkspace, stage: str, *, demo_pack: Path | None = None) ->
     # local deterministic stages
     if stage == "adjudicate":
         result = _run_adjudicate(ws, question, demo_pack=demo_pack)
-    elif stage == "present":
-        result = _run_present(ws, ws.load_manifest(), question, demo_pack=demo_pack)
+    elif stage == "projection":
+        result = _run_projection(ws, ws.load_manifest(), question, demo_pack=demo_pack)
     else:
         # demo/test seeding
         if demo_pack is not None:
@@ -666,6 +685,21 @@ def _seed_from_demo(ws: RunWorkspace, stage: str, demo_pack: Path) -> dict[str, 
         if (pack / "methodology.json").is_file():
             (ws.path / "methodology.json").write_bytes((pack / "methodology.json").read_bytes())
             return {"seeded": True, "detail": "methodology.json seeded from demo pack"}
+    elif stage == "applicability":
+        if (pack / "applicability.json").is_file():
+            (ws.path / "applicability.json").write_bytes((pack / "applicability.json").read_bytes())
+        else:
+            verdict = load_json(ws.path / "final_verdict.json") or load_json(pack / "verdict.json")
+            value = verdict.get("applicability") if isinstance(verdict, dict) else None
+            # A demo can only carry the decision's existing applicability
+            # boundary; absence remains explicit rather than inferred.
+            payload = value if isinstance(value, dict) and value else {
+                "status": "NOT_CAPTURED",
+                "reason": "demo pack does not provide an applicability assessment",
+            }
+            (ws.path / "applicability.json").write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return {"seeded": True, "detail": "applicability.json seeded from decision boundary (demo)"}
     elif stage == "intervene":
         if (pack / "intervention.json").is_file():
             (ws.path / "intervention.json").write_bytes((pack / "intervention.json").read_bytes())
@@ -732,6 +766,9 @@ def interactive_agent_mcp_setup(approved: bool) -> bool:
 
     保留 GitHub 版全部行为（--approve-agent-mcp 旗标、agent_mcp_approval.json、
     safe_spawn 门）；此处只补 run 启动时的交互提示层。非交互终端直接返回原值。
+    新增：Agent MCP 可用时，生成角色→CLI→模型推荐表，询问用户是否采用并
+    固化到全局 ~/.eduevidence/agent_mcp_approval.json（含 hash 防篡改）；
+    确认后返回 True，调用方可把该记录带入本次 run 的批准工件。
     """
     if approved:
         return True
@@ -779,13 +816,77 @@ def interactive_agent_mcp_setup(approved: bool) -> bool:
             return False
 
     answer = input("是否启用 Agent MCP 增强模式（推荐）？[Y/n] ").strip().lower()
-    return answer not in ("n", "no")
+    if answer in ("n", "no"):
+        return False
+
+    # Agent MCP 可用：生成推荐表并询问是否固化到全局（简短的 8 角色表）。
+    approved_now, _ = _confirm_global_approval()
+    return approved_now
+
+
+def _global_approval_path() -> Path:
+    """全局用户批准文件：EDUEVIDENCE_HOME 优先，缺省 ~/.eduevidence。"""
+    home = Path(os.environ.get("EDUEVIDENCE_HOME", "~/.eduevidence")).expanduser()
+    return home / "agent_mcp_approval.json"
+
+
+def _confirm_global_approval() -> tuple[bool, dict | None]:
+    """构建角色推荐表 → 展示 → 询问 → 固化；返回 (approved, approval_record)。
+
+    - available CLIs 只扫描本机真实存在的（omp/codex/claude/grok/opencode），
+      不猜模型；无任何可用 CLI 时回退为布尔批准。
+    - 任何展示内容都只来自已验证模型清单；推荐行缺少 cli/model 的角色
+      不进映射（safe_spawn 会对该角色保持关闭）。
+    - 用户确认后写 ~/.eduevidence/agent_mcp_approval.json（含 role_mapping_hash），
+      后续 run 加载并校验：映射变更即失效，需重新确认。
+    """
+    import shutil as _shutil
+    from integrations.agent_mcp import (build_recommendation_table,
+                                        scan_available_models, write_approval)
+
+    allowed_clis = [c for c in ("omp", "codex", "claude", "grok", "opencode")
+                    if _shutil.which(c)]
+    if not allowed_clis:
+        return True, None
+    inventory = scan_available_models(allowed_clis, timeout=20)
+    table = build_recommendation_table(allowed_clis, inventory)
+    rows = [r for r in table["recommendations"] if r.get("cli") and r.get("model")]
+    if not rows:
+        print("[startup] 未能从已安装 CLI 解析到已验证模型；按布尔批准启用。")
+        return True, None
+
+    print("[startup] 角色 → CLI / 模型 推荐表（仅基于本机扫描到的可用模型，无固定推荐）：")
+    for r in rows:
+        print(f"    {r['role']:<20} → {r['cli']} / {r['model']}")
+    summary = table.get("summary", {})
+    print(f"    cross_model_review(反证异族复核): {summary.get('cross_model_review', 'unknown')}"
+          f" ｜ 角色数: {summary.get('role_count', len(rows))}")
+    answer = input("采用推荐表并固化到全局批准文件？[Y/n] ").strip().lower()
+    if answer in ("n", "no"):
+        print("[startup] 未固化；本次以平台原生模式运行（可用 --approve-agent-mcp 跳过询问）。")
+        return False, None
+    roles = {r["role"]: {"cli": r["cli"], "model": r["model"]} for r in rows}
+    path = _global_approval_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    record = write_approval(path, roles, sorted(allowed_clis))
+    print(f"[startup] 已固化 → {path}")
+    return True, record
+
+
+def load_global_approval() -> dict | None:
+    """加载全局批准文件（missing/corrupt -> None；有效期交由
+    integrations.agent_mcp.is_approval_current 判定）。"""
+    from integrations.agent_mcp import load_approval
+    return load_approval(_global_approval_path())
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
     approve = args.approve_agent_mcp or interactive_agent_mcp_setup(args.approve_agent_mcp)
+    approval_record = None
+    if approve:
+        approval_record = load_global_approval()
     ws = init_run(Path(args.runs_dir), args.question, depth=args.depth, run_id=args.run_id,
-                  approve_agent_mcp=approve)
+                  approve_agent_mcp=approve, approval_record=approval_record)
     print(f"workspace created: {ws.path}")
     print(f"manifest: {json.dumps(ws.load_manifest(), ensure_ascii=False, indent=2)}")
     if args.dry_run:
@@ -984,9 +1085,15 @@ def _cmd_synthesize(args) -> int:
 def _cmd_benchmark(args) -> int:
     import benchmark_v3 as bv3
     if args.action == "run":
-        return bv3.main(["run", "--baselines", args.baselines, "--questions", args.questions,
-                         "--repeats", str(args.repeats), "--driver", args.driver,
-                         "--out", args.out, "--budget-tokens", str(args.budget)])
+        argv = ["run", "--baselines", args.baselines, "--questions", args.questions,
+                "--repeats", str(args.repeats), "--out", args.out,
+                "--budget-tokens", str(args.budget), "--model", args.model,
+                "--thinking", args.thinking]
+        if getattr(args, "ids", None):
+            argv.extend(["--ids", args.ids])
+        if args.driver:
+            argv.extend(["--driver", args.driver])
+        return bv3.main(argv)
     if args.action == "eval":
         return bv3.main(["eval", "--run", args.run, "--annotations", args.annotations])
     if args.action == "report":
@@ -1172,6 +1279,17 @@ def _cmd_report(args) -> int:
     return 0
 
 
+def _cmd_export(args) -> int:
+    from engine.judge_pack import export_judge_pack
+    from engine.project import ProjectWorkspace
+    project = ProjectWorkspace.open(_home(args), args.project)
+    output = Path(args.out) if args.out else project.path / "exports" / "judge-pack"
+    manifest = export_judge_pack(project, output)
+    print(json.dumps({"output": str(output), "files": len(manifest["copied_files"]),
+                      "missing_categories": manifest["missing_categories"]}, ensure_ascii=False))
+    return 0
+
+
 def _cmd_migrate(args) -> int:
     from engine.migration import migrate_v1_pack
     result = migrate_v1_pack(args.pack, home=_home(args), title=args.title)
@@ -1192,6 +1310,17 @@ def _cmd_search(args) -> int:
     hits = search_evidence(args.query, limit=args.limit, academic_only=args.academic)
     print(json.dumps(hits, indent=2, ensure_ascii=False))
     return 0
+
+
+def _cmd_search_plan(args) -> int:
+    from search_provenance import main as search_plan_main
+    argv = [args.query, "--out", str(args.out), "--domain", args.domain,
+            "--limit", str(args.limit), "--channel", args.channel, "--policy", args.policy]
+    for concept in args.concept:
+        argv.extend(["--concept", concept])
+    for synonym in args.synonym:
+        argv.extend(["--synonym", synonym])
+    return search_plan_main(argv)
 
 
 def _cmd_did(args) -> int:
@@ -1329,6 +1458,13 @@ def main(argv: list[str] | None = None) -> int:
     p_report.add_argument("--home", default=None)
     p_report.set_defaults(func=_cmd_report)
 
+    p_export = sub.add_parser("export", help="export a project evidence pack")
+    p_export.add_argument("kind", choices=["judge-pack"])
+    p_export.add_argument("project", help="project id")
+    p_export.add_argument("--home", default=None)
+    p_export.add_argument("--out", default=None)
+    p_export.set_defaults(func=_cmd_export)
+
 
     p_pilot = sub.add_parser("pilot", help="V3 Decision-to-Outcome Loop")
     p_pilot.add_argument("action", choices=["register", "import", "analyze-link", "redecide"])
@@ -1363,11 +1499,15 @@ def main(argv: list[str] | None = None) -> int:
     p_bench.add_argument("action", choices=["run", "eval", "report"])
     p_bench.add_argument("--baselines", default="B2_standard_agent,B3_eduevidence_single")
     p_bench.add_argument("--questions", default="benchmarks/questions.jsonl")
+    p_bench.add_argument("--ids", default=None, help="comma-separated question ids to run")
     p_bench.add_argument("--repeats", type=int, default=3)
     p_bench.add_argument("--driver", default=None, choices=["api", "cli", "sim"],
                          help="api | cli (omp) | sim (harness validation only); default: auto (api > cli > sim)")
     p_bench.add_argument("--out", default="benchmarks/empirical/run-001")
     p_bench.add_argument("--budget", type=int, default=1000000)
+    p_bench.add_argument("--model", default="",
+                        help="model for --driver cli (required; no unconfirmed default)")
+    p_bench.add_argument("--thinking", default="max", choices=["low", "high", "max"])
     p_bench.add_argument("--run", default=None, help="run dir (eval/report)")
     p_bench.add_argument("--annotations", default="benchmarks/annotations")
     p_bench.add_argument("--report", default="benchmarks/empirical/v3-report.md")
@@ -1413,6 +1553,17 @@ def main(argv: list[str] | None = None) -> int:
     p_srch.add_argument("--limit", type=int, default=10)
     p_srch.add_argument("--academic", action="store_true", help="academic only")
     p_srch.set_defaults(func=_cmd_search)
+
+    p_sp = sub.add_parser("search-plan", help="audited, bounded search with provenance export")
+    p_sp.add_argument("query", help="research question")
+    p_sp.add_argument("--out", required=True, type=Path)
+    p_sp.add_argument("--domain", default="education", choices=["education", "policy"])
+    p_sp.add_argument("--concept", action="append", default=[])
+    p_sp.add_argument("--synonym", action="append", default=[])
+    p_sp.add_argument("--limit", type=int, default=10)
+    p_sp.add_argument("--channel", default="all", choices=["all", "academic", "web"])
+    p_sp.add_argument("--policy", default="2026.09")
+    p_sp.set_defaults(func=_cmd_search_plan)
 
     p_did = sub.add_parser("did", help="run DID regression on classroom CSV")
     p_did.add_argument("csv", type=Path, help="CSV file path")

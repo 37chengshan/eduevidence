@@ -3,6 +3,19 @@
 所有显著变更均记录于此。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)；版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
 
+## [6.0.0] — 2026-08-31
+
+> Competition kernel convergence: Workflow → Capability → Contract.
+
+### Decision-grade control plane
+- Canonical runtime protocol now includes Applicability; report generation is a Projection outside scientific stages.
+- Added three user-facing workflow entries, durable Project/Run event storage, content-addressed immutable artifacts, and a judge-pack export.
+- Added auditable search plans, bounded provider-attempt records, counter-evidence query coverage, and screening exports.
+- Aligned submission CI with `dist/eduevidence-submission` and reduced report H1 scale across all five baked themes.
+ - Root `SKILL.md` replaced with the decision-grade English operating contract (workflow routing, scientific gates, applicability / projection semantics) plus a bilingual tooling contract appendix that keeps lint / version / metrics / release gates stable.
+ - Startup approval loop: on `run`, recommend a role to CLI to model table built only from scanned, user-usable models, ask for confirmation, and persist the hash-verified mapping to `~/.eduevidence/agent_mcp_approval.json` for reuse by later runs.
+ - Fail-closed model discipline: `safe_spawn` / `cross_model_review` refuse any unapproved CLI/model; benchmark and judge drivers no longer ship a default model (explicit `--model` or `EDUEVIDENCE_LLM_MODEL` required).
+
 ## [5.2.0] — 2026-08-24
 
 > 可信度修复版：示例 provenance 纠偏 + 版本/口径单一权威（依据 docs/plans/v5.2-v6.0-iteration-plan.md）。

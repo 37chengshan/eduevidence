@@ -1,7 +1,7 @@
 {
-  "engine_version": "5.2.0",
-  "test_functions": 762,
-  "test_files": 74,
+  "engine_version": "6.0.0",
+  "test_functions": 778,
+  "test_files": 80,
   "schema_count": 37,
   "reference_doc_count": 15,
   "gold_annotation_count": 30,

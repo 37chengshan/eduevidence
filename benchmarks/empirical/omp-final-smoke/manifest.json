@@ -1,0 +1,42 @@
+{
+  "run_id": "run-20260831-114152",
+  "run_mode": "empirical",
+  "created_at": "2026-08-31T11:41:52.847323+00:00",
+  "questions_version": "06056a1",
+  "baselines": [
+    "B3_eduevidence_single"
+  ],
+  "repeats": 1,
+  "budget_tokens": 50000,
+  "environment": {
+    "driver": "cli",
+    "model_family": "opencode-go/deepseek-v4-flash",
+    "model_version": "opencode-go/deepseek-v4-flash",
+    "temperature": 0.0,
+    "tools": [
+      "host agent tools"
+    ],
+    "search_provider": "host_tools",
+    "agent_mcp_used": false
+  },
+  "attempts": [
+    {
+      "attempt_id": "Q01-B3_eduevidence_single-a1",
+      "question_id": "Q01",
+      "baseline": "B3_eduevidence_single",
+      "attempt": 1,
+      "status": "completed",
+      "error": null,
+      "started_at": "2026-08-31T11:41:52.869226+00:00",
+      "finished_at": "2026-08-31T11:49:52.507742+00:00",
+      "prompt_tokens": 527,
+      "completion_tokens": 3021,
+      "latency_s": 479.63,
+      "cost_usd": null,
+      "artifacts": [
+        "Q01-B3_eduevidence_single-a1.response.json"
+      ]
+    }
+  ],
+  "notes": "empirical run; see per-attempt artifacts"
+}

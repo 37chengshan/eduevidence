@@ -128,7 +128,7 @@ def test_resume_reruns_completed_stage_with_lost_artifact(tmp_path):
     state = ws.load_state()
     assert state["status"] == "completed"
     assert (ws.path / "result.json").is_file()
-    assert state["stages"]["present"]["status"] == "completed"
+    assert state["stages"]["projection"]["status"] == "completed"
     # completed stages stay completed (no re-seeding side effects)
     assert state["stages"]["frame"]["status"] == "completed"
 

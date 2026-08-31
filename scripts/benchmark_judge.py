@@ -45,7 +45,7 @@ from benchmark_evaluator import extract_json_block  # noqa: E402
 
 JUDGE_DIMS = ("citation_support", "outcome_correctness", "scope_calibration",
               "contradiction_handling", "decision_calibration")
-DEFAULT_JUDGE_MODEL = "deepseek-v4-flash"
+DEFAULT_JUDGE_MODEL = ""  # 无默认：judge 模型必须显式指定或经 EDUEVIDENCE_LLM_MODEL 提供
 DEFAULT_LIMIT = 60
 HEURISTIC_METRICS = ("outcome_separation_accuracy", "decision_calibration",
                      "contradiction_recall", "contradiction_precision",
@@ -514,7 +514,7 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--questions", default="benchmarks/questions.jsonl")
     p_run.add_argument("--annotations", default="benchmarks/annotations")
     p_run.add_argument("--model", default=DEFAULT_JUDGE_MODEL)
-    p_run.add_argument("--thinking", default="minimal")
+    p_run.add_argument("--thinking", default="max", choices=["low", "high", "max"])
     p_run.add_argument("--limit", type=int, default=DEFAULT_LIMIT,
                        help="max completed attempts to judge (default 60; <=0 = unlimited)")
     p_run.set_defaults(func=_cmd_run)

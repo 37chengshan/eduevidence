@@ -104,32 +104,33 @@ jobs:
       - name: Build upload package
         run: bash packaging/make_upload.sh
 
-      - name: SKILL.md parity (upload must equal repo SKILL.md)
-        run: diff -u SKILL.md upload/SKILL.md
+      - name: SKILL.md parity (submission must equal repo SKILL.md)
+        run: diff -u SKILL.md dist/eduevidence-submission/SKILL.md
 
       - name: Zero-leak scan
         run: |
           set -euo pipefail
           # 1) Local-only files/dirs must not ship (make_upload.sh strips them).
-          test ! -e upload/docs/competition-brief.md
-          test ! -e upload/docs/superpowers
-          test ! -e upload/benchmarks/baselines
-          test ! -e upload/packaging
-          test ! -e "upload/examples/ai-coding-assistant/reports-5themes_副本"
-          if find upload -name '*副本*' | grep -q .; then
-            echo "::error::macOS copy artifacts leaked into upload/"
-            find upload -name '*副本*'
+          submission=dist/eduevidence-submission
+          test ! -e "$submission/docs/competition-brief.md"
+          test ! -e "$submission/docs/superpowers"
+          test ! -e "$submission/benchmarks/baselines"
+          test ! -e "$submission/packaging"
+          test ! -e "$submission/examples/ai-coding-assistant/reports-5themes_副本"
+          if find "$submission" -name '*副本*' | grep -q .; then
+            echo "::error::macOS copy artifacts leaked into submission package"
+            find "$submission" -name '*副本*'
             exit 1
           fi
           # 2) Content canaries from the local-only competition brief.
           #    (科艺融合 appears in the public v4-roadmap doc, so the canary uses
           #    brief-exclusive strings only.)
-          if grep -rIl '壁仞' upload/ | grep -q .; then
-            echo "::error::local competition brief content leaked into upload/ (壁仞)"
+          if grep -rIl '壁仞' "$submission" | grep -q .; then
+            echo "::error::local competition brief content leaked into submission package (壁仞)"
             exit 1
           fi
-          if grep -rIl 'interndiscovery@pjlab.org.cn' upload/ | grep -q .; then
-            echo "::error::local competition brief content leaked into upload/ (官方邮箱)"
+          if grep -rIl 'interndiscovery@pjlab.org.cn' "$submission" | grep -q .; then
+            echo "::error::local competition brief content leaked into submission package (官方邮箱)"
             exit 1
           fi
           echo "zero-leak scan OK"

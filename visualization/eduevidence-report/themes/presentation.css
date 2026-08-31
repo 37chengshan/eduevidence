@@ -31,7 +31,7 @@
 :root[data-theme="presentation"] .report-brand-row { margin-bottom:12px; }
 :root[data-theme="presentation"] .report-brand { color:var(--primary); text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; }
 :root[data-theme="presentation"] .generated-theme-chip { background:#242A33; border-color:#3C4450; color:#B8C0CB; }
-:root[data-theme="presentation"] .report-header h1 { max-width:980px; font-size:clamp(1.5rem,2.6vw,2.1rem); line-height:1.08; letter-spacing:-.022em; }
+:root[data-theme="presentation"] .report-header h1 { max-width:980px; font-size:clamp(1.35rem,2vw,1.7rem); line-height:1.08; letter-spacing:-.022em; }
 :root[data-theme="presentation"] .report-header .meta { margin:10px 0 0; color:var(--text-muted); font-size:.86rem; overflow-wrap:anywhere; }
 :root[data-theme="presentation"] .report-view-switcher { display:inline-flex; margin-top:18px; padding:4px; border:1px solid var(--border); border-radius:999px; background:#12151A; }
 :root[data-theme="presentation"] .report-view-btn { min-height:36px; border:0; background:transparent; color:#BBC2CC; padding:7px 15px; }
@@ -114,7 +114,7 @@
   :root[data-theme="presentation"] .controls { width:calc(100% - 24px); border-radius:10px; }
   :root[data-theme="presentation"] .report-shell { padding-left:14px; padding-right:14px; }
   :root[data-theme="presentation"] .report-header { padding:18px 16px; border-radius:12px; }
-  :root[data-theme="presentation"] .report-header h1 { font-size:1.25rem; }
+  :root[data-theme="presentation"] .report-header h1 { font-size:1.2rem; }
   :root[data-theme="presentation"] .brief-block { padding:18px 16px; }
   :root[data-theme="presentation"] .brief-decision { padding:0; }
   :root[data-theme="presentation"] .brief-decision .decision-hero { min-height:0; padding:24px 18px; border-radius:13px; }

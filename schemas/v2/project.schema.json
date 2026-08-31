@@ -13,9 +13,9 @@
   "properties": {
     "project_id": { "type": "string", "pattern": "^PRJ-" },
     "title": { "type": "string", "minLength": 1 },
-    "domain": { "type": "string", "enum": ["education"] },
+    "domain": { "type": "string", "enum": ["education", "policy"] },
     "question": { "type": "string", "minLength": 1 },
-    "research_mode": { "type": "string", "enum": ["evidence_review", "full_research_cycle"] },
+    "research_mode": { "type": "string", "enum": ["evidence_review", "decision_and_pilot", "evaluate_and_update", "full_research_cycle"] },
     "decision_target": {
       "type": "string",
       "enum": ["evidence_review", "teaching_decision", "teaching_pilot", "evaluation_plan", "research_cycle"]

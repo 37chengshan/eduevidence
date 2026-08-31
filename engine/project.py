@@ -62,7 +62,7 @@ class ProjectWorkspace:
 
     @classmethod
     def create(cls, home: Path, *, question: str, title: str,
-               research_mode: str) -> "ProjectWorkspace":
+               research_mode: str, domain: str = "education") -> "ProjectWorkspace":
         home = Path(home).expanduser().resolve()
         project_id = new_project_id(question)
         path = home / "projects" / project_id
@@ -72,7 +72,7 @@ class ProjectWorkspace:
         manifest = {
             "project_id": project_id,
             "title": title,
-            "domain": "education",
+            "domain": domain,
             "question": question,
             "research_mode": research_mode,
             "decision_target": _default_decision_target(research_mode),

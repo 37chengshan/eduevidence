@@ -17,7 +17,7 @@ body { margin:0; background:var(--bg); color:var(--text);
 .controls { width:calc(100% - 36px); max-width:1200px; margin:0 auto 16px; padding:12px clamp(0px,1vw,12px); display:flex; gap:18px; flex-wrap:wrap; align-items:center;
             border-bottom:1px solid var(--border); }
 .report-header { border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; }
-.report-header h1 { font-family:var(--font-head); font-size:1.9rem; margin:0 0 8px; color:var(--text); }
+.report-header h1 { font-family:var(--font-head); font-size:1.55rem; margin:0 0 8px; color:var(--text); }
 .report-header .meta { color:var(--insufficient); font-size:.85rem; }
 .lang-switcher { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 .lang-switcher span { font-size:.82rem; color:var(--insufficient); }
@@ -300,7 +300,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .controls { width:calc(100% - 24px); margin-bottom:10px; padding-left:8px; padding-right:8px; }
   .report-shell { width:100%; padding:12px 14px 56px; }
   .report-header { width:100%; }
-  .report-header h1 { font-size:1.55rem; overflow-wrap:anywhere; }
+  .report-header h1 { font-size:1.3rem; overflow-wrap:anywhere; }
   .report-header .meta, .brief-source h3, .claim-cell, .detail-body, .source-detail-grid dd { overflow-wrap:anywhere; word-break:break-word; }
   .data-table { font-size:.78rem; }
   .hero-insights, .tribunal-grid, .scope-grid, .retrieval-grid, .brief-source-grid, .method-audit-grid { grid-template-columns:1fr; }

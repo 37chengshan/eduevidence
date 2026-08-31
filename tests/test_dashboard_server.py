@@ -65,6 +65,7 @@ def test_studio_entry_and_api(server):
     data = json.loads(body)
     assert data["stats"]["total_projects"] >= 3
     assert _get(server, "/api/labels")[0] == 200
+    assert _get(server, "/api/research/projects")[0] == 200
 
 
 def test_known_project_viz_and_reports(server):

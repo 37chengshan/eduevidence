@@ -176,15 +176,17 @@ class CliDriver:
 
     name = "cli"
 
-    def __init__(self, model: str | None = None, thinking: str = "minimal",
+    def __init__(self, model: str | None = None, thinking: str = "max",
                  timeout: int = 600):
-        self.model = model or os.environ.get("EDUEVIDENCE_LLM_MODEL", "deepseek-v4-flash")
+        # 无确认模型即 fail-closed：模型必须来自显式 --model 或
+        # EDUEVIDENCE_LLM_MODEL，绝不静默使用未确认的默认模型。
+        self.model = model or os.environ.get("EDUEVIDENCE_LLM_MODEL", "")
         self.thinking = thinking
         self.timeout = timeout
 
     def available(self) -> bool:
         import shutil
-        return shutil.which("omp") is not None
+        return bool(self.model) and shutil.which("omp") is not None
 
     def call(self, prompt: str, *, no_tools: bool = False) -> tuple[str, dict]:
         import subprocess
@@ -246,11 +248,11 @@ class SimDriver:
         )
 
 
-def make_driver(name: str) -> Any:
+def make_driver(name: str, *, model: str | None = None, thinking: str = "max") -> Any:
     if name == "api":
         return ApiDriver()
     if name == "cli":
-        return CliDriver()
+        return CliDriver(model=model, thinking=thinking)
     if name == "sim":
         return SimDriver()
     raise ValueError(f"unknown driver: {name}")
@@ -265,9 +267,10 @@ def _now_iso() -> str:
 
 def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                   out_dir: Path, driver_name: str, budget_tokens: int | None,
-                  temperature: float = 0.0, resume: bool = False) -> dict[str, Any]:
+                  temperature: float = 0.0, resume: bool = False,
+                  model: str | None = None, thinking: str = "max") -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    driver = make_driver(driver_name)
+    driver = make_driver(driver_name, model=model, thinking=thinking)
     if not driver.available():
         raise RuntimeError(
             f"driver '{driver_name}' unavailable (api needs EDUEVIDENCE_LLM_MODEL "
@@ -479,7 +482,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
         baselines=baselines, repeats=args.repeats,
         out_dir=Path(args.out), driver_name=args.driver,
         budget_tokens=args.budget_tokens, temperature=args.temperature,
-        resume=args.resume)
+        resume=args.resume, model=args.model, thinking=args.thinking)
     return 0
 
 
@@ -508,6 +511,10 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--out", required=True)
     p_run.add_argument("--budget-tokens", type=int, default=DEFAULT_BUDGET_TOKENS)
     p_run.add_argument("--temperature", type=float, default=0.0)
+    p_run.add_argument("--model", default="",
+                       help="OMP model for --driver cli (required; env EDUEVIDENCE_LLM_MODEL accepted; no unconfirmed default)")
+    p_run.add_argument("--thinking", default="max", choices=["low", "high", "max"],
+                       help="reasoning effort for --driver cli")
     p_run.add_argument("--resume", action="store_true",
                        help="skip attempts whose response artifacts already exist in --out")
     p_run.set_defaults(func=_cmd_run)

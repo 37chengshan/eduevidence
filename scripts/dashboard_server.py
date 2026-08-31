@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import http.server
 import json
+import os
 import sys
 import urllib.parse
 from pathlib import Path
@@ -27,11 +28,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 WEB_DIR = ROOT / "web"
 EXAMPLES_DIR = ROOT / "examples"
+RESEARCH_HOME = Path(os.environ.get("EDUEVIDENCE_HOME", ROOT / ".eduevidence"))
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from engine.evidence_graph import EvidenceGraph  # noqa: E402
+from engine.research_service import ResearchService  # noqa: E402
 
 import sys as _sys
 _VIZ_SCRIPTS = ROOT / "visualization" / "eduevidence-report" / "scripts"
@@ -410,6 +413,35 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
         if path == "/api/projects":
             projects = scan_local_projects()
             self._send_json({"projects": projects, "stats": build_stats(projects)})
+            return
+
+        if path == "/api/research/projects":
+            self._send_json({"projects": ResearchService(RESEARCH_HOME).projects()})
+            return
+
+        if path.startswith("/api/research/projects/"):
+            suffix = urllib.parse.unquote(path[len("/api/research/projects/"):]).strip("/")
+            parts = suffix.split("/")
+            project_id = parts[0]
+            if not project_id.startswith("PRJ-"):
+                self._send_json({"error": "unknown project"}, 404)
+                return
+            service = ResearchService(RESEARCH_HOME)
+            try:
+                if len(parts) == 2 and parts[1] == "runs":
+                    self._send_json({"runs": service.runs(project_id)})
+                    return
+                if len(parts) == 2 and parts[1] == "artifacts":
+                    self._send_json({"artifacts": service.artifacts(project_id)})
+                    return
+                if len(parts) == 2 and parts[1] == "events":
+                    after = int(query.get("after_seq", ["0"])[0])
+                    self._send_json({"events": service.events(project_id, after_seq=max(after, 0))})
+                    return
+            except (FileNotFoundError, ValueError):
+                self._send_json({"error": "unknown project"}, 404)
+                return
+            self._send_json({"error": "not found"}, 404)
             return
 
         if path == "/api/labels":

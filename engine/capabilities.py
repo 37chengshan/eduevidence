@@ -18,6 +18,7 @@ class CapabilitySpec:
     output_contracts: tuple[str, ...]
     deterministic_local: bool
     scientific_gate: str | None
+    workflow_ids: tuple[str, ...] = ()
 
 
 _REGISTRY: dict[str, CapabilitySpec] = {}

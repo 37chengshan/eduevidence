@@ -15,7 +15,7 @@
     "project_id": { "type": "string", "pattern": "^PRJ-" },
     "purpose": { "type": "string", "minLength": 1 },
     "started_at": { "type": "string", "format": "date-time" },
-    "status": { "type": "string", "enum": ["running", "completed", "failed", "aborted"] },
+    "status": { "type": "string", "enum": ["queued", "running", "waiting_for_user", "waiting_for_user_data", "waiting_for_executor", "waiting_for_tool", "waiting_for_review", "blocked_scientific_gate", "blocked_contract_error", "completed", "failed_recoverable", "failed_terminal", "cancelled", "failed", "aborted"] },
     "graph_revision_before": { "type": "integer", "minimum": 0 },
     "graph_revision_after": { "type": ["integer", "null"], "minimum": 0 },
     "capabilities": {

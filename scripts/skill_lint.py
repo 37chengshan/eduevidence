@@ -102,7 +102,7 @@ def lint_skill() -> list[str]:
     # 7. task-briefs 模板（编排链补全）
     brief_dir = ROOT / "skill" / "task-briefs"
     stage_briefs = ["frame", "retrieve", "extract", "challenge", "audit",
-                    "adjudicate", "intervene", "evaluate", "present"]
+                    "adjudicate", "applicability", "intervene", "evaluate", "projection"]
     if not brief_dir.exists():
         errors.append("skill/task-briefs/ is missing (orchestration chain)")
     else:

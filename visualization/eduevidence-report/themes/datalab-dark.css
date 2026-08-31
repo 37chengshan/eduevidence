@@ -22,7 +22,7 @@
   width:100%; max-width:none; margin:0 0 22px; padding:18px 20px;
   border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow);
 }
-:root[data-theme="datalab-dark"] .report-header h1 { max-width:1100px; font-size:clamp(1.55rem,2.6vw,2.15rem); line-height:1.22; }
+:root[data-theme="datalab-dark"] .report-header h1 { max-width:1100px; font-size:clamp(1.4rem,2vw,1.75rem); line-height:1.22; }
 :root[data-theme="datalab-dark"] .report-header .meta { margin:8px 0 0; font-size:.85rem; color:var(--text-muted); }
 :root[data-theme="datalab-dark"] .report-brand-row { margin-bottom:8px; }
 :root[data-theme="datalab-dark"] .report-brand { color:var(--primary); text-transform:uppercase; letter-spacing:.08em; font-size:.83rem; }
@@ -134,7 +134,7 @@
   :root[data-theme="datalab-dark"] .controls { width:calc(100% - 24px); padding:8px 10px; }
   :root[data-theme="datalab-dark"] .report-shell { padding-left:14px; padding-right:14px; }
   :root[data-theme="datalab-dark"] .report-header { padding:15px 14px; }
-  :root[data-theme="datalab-dark"] .report-header h1 { font-size:1.45rem; }
+  :root[data-theme="datalab-dark"] .report-header h1 { font-size:1.3rem; }
   :root[data-theme="datalab-dark"] .brief-block { padding:15px 14px; }
   :root[data-theme="datalab-dark"] .brief-decision { padding:0; }
   :root[data-theme="datalab-dark"] .brief-decision .brief-block-header { padding:15px 14px 0; }

@@ -46,14 +46,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-SKILL_VERSION = "1.0.0"
+from engine.versions import CONFIDENCE_POLICY_VERSION, ENGINE_VERSION
+from engine.workflows import execution_stages
+
+# Kept as an import-compatible name for existing integrations.  Engine version
+# is the sole source of truth for new manifests.
+SKILL_VERSION = ENGINE_VERSION
 RESOURCE_POLICY_VERSION = "2026-08-12.v1"
 
 #: Ordered EvidenceFlow stages the orchestrator routes through.
-STAGES = [
-    "frame", "retrieve", "extract", "challenge", "audit",
-    "adjudicate", "intervene", "evaluate", "present",
-]
+STAGES = list(execution_stages())
 
 #: Every artifact a run workspace owns (dirs end with '/').
 WORKSPACE_FILES: list[str] = [
@@ -61,7 +63,7 @@ WORKSPACE_FILES: list[str] = [
     "capability_plan.json", "resource_plan.json", "execution_plan.json",
     "model_inventory.json", "agent_mcp_approval.json",
     "frame.json", "sources.jsonl", "fetch/", "evidence.jsonl", "skeptic.json",
-    "methodology.json", "raw_verdict.json", "final_verdict.json",
+    "methodology.json", "raw_verdict.json", "final_verdict.json", "applicability.json",
     "intervention.json", "evaluation.json", "result.json", "result.zh.json",
     "report_spec.json", "report.html", "trace.jsonl",
 ]
@@ -77,6 +79,7 @@ EMPTY_SEED: dict[str, str] = {
     "evidence.jsonl": "",
     "skeptic.json": "{}",
     "methodology.json": "{}",
+    "applicability.json": "{}",
     "raw_verdict.json": "{}",
     "final_verdict.json": "{}",
     "intervention.json": "{}",
@@ -189,7 +192,7 @@ def build_manifest(
         "agent_mcp_available": agent_mcp_available,
         "agent_mcp_approved": agent_mcp_approved,
         "resource_policy_version": RESOURCE_POLICY_VERSION,
-        "confidence_policy_version": "2026-08-12.v2",
+        "confidence_policy_version": CONFIDENCE_POLICY_VERSION,
     }
 
 
@@ -249,7 +252,14 @@ class RunWorkspace:
 
     def load_state(self) -> dict[str, Any]:
         state = load_json(self.state_path)
+        # Read old workspaces without treating a presentation record as a
+        # scientific stage. New writes only use the canonical projection name.
+        legacy = (state.get("stages") or {}).pop("present", None)
+        if legacy and "projection" not in state.get("stages", {}):
+            state.setdefault("stages", {})["projection"] = legacy
         state.setdefault("stages", {s: {"status": "pending"} for s in STAGES})
+        for stage in STAGES:
+            state["stages"].setdefault(stage, {"status": "pending"})
         return state
 
     def save_state(self, updates: dict[str, Any] | None = None) -> dict[str, Any]:
