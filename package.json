@@ -1,0 +1,50 @@
+{
+  "name": "eduevidence",
+  "version": "5.2.0",
+  "description": "Evidence-Based Education Decision Skill — from any education question to an auditable, evidence-grounded decision.",
+  "license": "MIT",
+  "author": "EduEvidence Contributors",
+  "homepage": "https://github.com/37chengshan/eduevidence#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/37chengshan/eduevidence.git"
+  },
+  "bugs": {
+    "url": "https://github.com/37chengshan/eduevidence/issues"
+  },
+  "keywords": [
+    "education",
+    "evidence",
+    "skill",
+    "ai-agent",
+    "claude",
+    "cursor",
+    "codex",
+    "research"
+  ],
+  "bin": {
+    "eduevidence": "bin/eduevidence.js"
+  },
+  "files": [
+    "bin/",
+    "SKILL.md",
+    "install.sh",
+    "eduevidence_cli.py",
+    "pyproject.toml",
+    "LICENSE",
+    "README.md",
+    "README.zh-CN.md",
+    "engine/",
+    "domains/",
+    "skill/",
+    "references/",
+    "schemas/",
+    "scripts/",
+    "retrieval/",
+    "integrations/",
+    "visualization/eduevidence-report/"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

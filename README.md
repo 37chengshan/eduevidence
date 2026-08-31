@@ -34,6 +34,17 @@ turns education questions into evidence-grounded decisions.
 
 ## Quick Install
 
+**npm (recommended for Skill install)**
+
+```bash
+npm install -g eduevidence
+eduevidence skill                  # interactive: pick your agent (claude / cursor / codex / …)
+eduevidence skill --list-hosts     # or preview all supported agents first
+# non-interactive: eduevidence skill --host cursor
+```
+
+**git clone (full dev setup + examples)**
+
 ```bash
 git clone https://github.com/37chengshan/eduevidence.git
 cd eduevidence
@@ -57,8 +68,19 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 > Once installed, your host agent (Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …) can auto-load this Skill when it receives teaching-decision questions.
 
 ```bash
+npm install -g eduevidence
+eduevidence skill                  # interactive host picker (default)
+eduevidence skill --list-hosts
+eduevidence skill --dry-run
+eduevidence skill --host cursor    # optional: skip the menu
+```
+
+Or from a git clone:
+
+```bash
 bash install.sh --skill              # interactive: choose which agent to install to
 bash install.sh --list-hosts         # list supported agents and skill locations
+bash install.sh --skill --host claude
 bash install.sh --skill --dry-run    # preview only, write nothing
 ```
 
@@ -77,6 +99,7 @@ Before writing, the script automatically backs up any existing skill directory (
 
 | Agent | Detection path | Skill install location |
 |---|---|---|
+| Cursor | `~/.cursor` | `~/.cursor/skills/eduevidence/` |
 | Claude Code | `~/.claude` | `~/.claude/skills/eduevidence/` (project `.claude/skills/` when no user-level config) |
 | Codex | `~/.codex` or `codex` command | `~/.agents/skills/` (falls back to `~/.codex/skills/`, `~/.codex/prompts/`) |
 | OMP | `~/.omp` | `~/.omp/agent/skills/eduevidence/` |

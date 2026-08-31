@@ -19,7 +19,16 @@ EduEvidence 面向教师、教学研究者与教学管理者，把"是否采用�
 
 ## 快速安装
 
-**方式一：curl 一键安装**
+**方式一：npm（推荐 — 安装为 Agent Skill）**
+
+```bash
+npm install -g eduevidence
+eduevidence skill                  # 交互式选择宿主（默认）
+eduevidence skill --list-hosts     # 或先查看全部宿主与落点
+# 非交互：eduevidence skill --host cursor
+```
+
+**方式二：curl 一键安装**
 
 > ⚠️ 供应链提示（E7）：curl 直跑等于执行远端脚本。更稳妥的方式是**方式二 clone 后
 > 先审阅再安装**；若坚持直跑，建议把 URL 固定到具体 commit 并先下载审阅。
@@ -32,7 +41,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/
 副作用披露：会在 `~/.eduevidence/env` 写入 `AGENT_MCP_INSTALLED=1` 声明；
 `--skill` 模式覆盖已有 skill 前自动备份。
 
-**方式二：git clone**
+**方式三：git clone**
 
 ```bash
 git clone https://github.com/37chengshan/eduevidence.git
@@ -58,9 +67,20 @@ open examples/ai-coding-assistant/EduEvidence_Report.html
 > 安装后，你的宿主 Agent（Claude Code / OMP / Codex / OpenCode / Kimi / ZCode / OpenClaw / Harness / Grok / Copilot / Cline …）就能在收到教学决策类问题时自动装载本 Skill。
 
 ```bash
+npm install -g eduevidence
+eduevidence skill                  # 交互式选择宿主（默认）
+eduevidence skill --list-hosts
+eduevidence skill --dry-run
+eduevidence skill --host cursor    # 可选：跳过菜单，直接指定宿主
+```
+
+或从 git clone 目录：
+
+```bash
 bash install.sh --skill              # 交互式选择安装到哪个 Agent
 bash install.sh --list-hosts         # 查看支持的 Agent 与 Skill 落点
-bash install.sh --skill --dry-run    # 只预览将执行的变更，不写入
+bash install.sh --skill --host claude
+bash install.sh --skill --dry-run    # 只预览不写入
 ```
 
 也可以不经 clone 直接远程执行（⚠️ 供应链提示见上：优先 clone + 审阅；直跑请固定 commit）：
@@ -75,6 +95,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/
 
 | Agent | 探测路径 | Skill 安装落点 |
 |---|---|---|
+| Cursor | `~/.cursor` | `~/.cursor/skills/eduevidence/` |
 | Claude Code | `~/.claude` | `~/.claude/skills/eduevidence/`（无用户级配置则装到项目 `.claude/skills/`）|
 | Codex | `~/.codex` 或 `codex` 命令 | `~/.agents/skills/`（兼容 `~/.codex/skills/`、`~/.codex/prompts/`）|
 | OMP | `~/.omp` | `~/.omp/agent/skills/eduevidence/` |

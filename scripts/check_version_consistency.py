@@ -5,6 +5,7 @@ Fails (exit 1) when the declared versions drift apart:
 
 - engine/versions.py  ENGINE_VERSION            <- authority
 - pyproject.toml      [project] version
+- package.json        version
 - CHANGELOG.md        first `## [x.y.z]` heading
 - SKILL.md            `# EduEvidence X.Y` title (major.minor only)
 
@@ -22,6 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 VERSIONS_PY_RE = re.compile(r'^ENGINE_VERSION\s*=\s*"(\d+\.\d+\.\d+)"', re.M)
 PYPROJECT_RE = re.compile(r'^version\s*=\s*"(\d+\.\d+\.\d+)"', re.M)
+PACKAGE_JSON_RE = re.compile(r'"version"\s*:\s*"(\d+\.\d+\.\d+)"')
 CHANGELOG_RE = re.compile(r"^##\s*\[(\d+\.\d+\.\d+)\]", re.M)
 SKILL_TITLE_RE = re.compile(r"^#\s*EduEvidence\s+(\d+\.\d+)", re.M)
 
@@ -59,6 +61,13 @@ def main() -> int:
         check_full("pyproject.toml", pp.group(1))
     else:
         errors.append("cannot parse version from pyproject.toml")
+
+    # -- package.json --------------------------------------------------------
+    pj = PACKAGE_JSON_RE.search(_read("package.json"))
+    if pj:
+        check_full("package.json", pj.group(1))
+    else:
+        errors.append("cannot parse version from package.json")
 
     # -- CHANGELOG.md ---------------------------------------------------------
     cl = CHANGELOG_RE.search(_read("CHANGELOG.md"))

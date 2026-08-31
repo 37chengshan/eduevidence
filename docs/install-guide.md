@@ -20,14 +20,20 @@ integrations/        Agent MCP 增强层 + Smart Web Fetch 集成
 visualization/       HTML 渲染器（5 主题双语报告）
 ```
 
-## 1. 快速安装（人类用户，二选一）
+## 1. 快速安装（人类用户，三选一）
 
 ```bash
-# 方式 A：curl 一键（自动 clone 到 ./eduevidence 并安装）
+# 方式 A：npm（推荐 — 安装为 Agent Skill，无需 clone 仓库）
+npm install -g eduevidence
+eduevidence skill                  # 交互式选择宿主（claude / cursor / codex / all / custom …）
+eduevidence skill --list-hosts
+# 非交互：eduevidence skill --host cursor
+
+# 方式 B：curl 一键（自动 clone 到 ./eduevidence 并安装）
 # ⚠️ 供应链提示：curl 直跑等于执行远端脚本；更稳妥用方式 B，或把 URL 固定到具体 commit 并先审阅
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/37chengshan/eduevidence/main/install.sh)"
 
-# 方式 B：git clone（推荐——可先审阅 install.sh 再执行）
+# 方式 C：git clone（推荐——可先审阅 install.sh 再执行）
 git clone https://github.com/37chengshan/eduevidence.git && cd eduevidence
 bash install.sh
 ```
@@ -38,8 +44,19 @@ bash install.sh
 ## 2. 安装为 Skill（AI Agent 用户）
 
 ```bash
+npm install -g eduevidence
+eduevidence skill                  # 交互式（默认）
+eduevidence skill --list-hosts
+eduevidence skill --dry-run
+eduevidence skill --host claude    # 非交互，可选
+```
+
+或从 git clone / npm 包目录：
+
+```bash
 bash install.sh --skill              # 交互式选择安装到哪个 Agent
 bash install.sh --list-hosts         # 查看支持的 Agent 与 Skill 落点
+bash install.sh --skill --host claude
 bash install.sh --skill --dry-run    # 只预览不写入
 ```
 
@@ -47,6 +64,7 @@ bash install.sh --skill --dry-run    # 只预览不写入
 
 | Agent | 探测路径 | Skill 安装落点 |
 |---|---|---|
+| Cursor | `~/.cursor` | `~/.cursor/skills/eduevidence/` |
 | Claude Code | `~/.claude` | `~/.claude/skills/eduevidence/` |
 | Codex | `~/.codex` | `~/.agents/skills/`（兼容 `~/.codex/skills/`） |
 | OMP | `~/.omp` | `~/.omp/agent/skills/eduevidence/` |

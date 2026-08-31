@@ -18,6 +18,10 @@
 #   bash install.sh --list-hosts       # 显示支持的宿主 Agent 与 Skill 落点
 #   bash install.sh --dry-run          # 只预览将执行的变更，不写入任何文件
 #   bash install.sh --skill --dry-run  # 预览 Skill 安装（仍会交互选择宿主）
+#   bash install.sh --skill --host claude          # 非交互：安装到指定宿主
+#   bash install.sh --skill --host all             # 非交互：安装到全部宿主
+#   bash install.sh --skill --dest ~/.cursor/skills  # 非交互：自定义 skill 根目录
+#   bash install.sh --skill --skill-only --host claude  # 仅复制 Skill，跳过 venv/pytest
 set -euo pipefail
 
 REPO_URL="https://github.com/37chengshan/eduevidence"
@@ -48,12 +52,36 @@ INSTALL_DEV=""
 HAS_DEV_FLAG=0
 MODE="local"      # local | skill | list
 DRY_RUN=0
+HOST_CHOICE=""
+DEST_ROOT=""
+SKILL_ONLY=0
 while [ $# -gt 0 ]; do
     case "$1" in
         --dev)        INSTALL_DEV="--dev"; HAS_DEV_FLAG=1; shift ;;
         --skill)      MODE="skill"; shift ;;
+        --skill-only) SKILL_ONLY=1; MODE="skill"; shift ;;
         --list-hosts) MODE="list"; shift ;;
         --dry-run)    DRY_RUN=1; shift ;;
+        --host)
+            HOST_CHOICE="${2:-}"
+            if [ -z "$HOST_CHOICE" ]; then
+                echo "ERROR: --host 需要参数（如 claude / codex / all）" >&2
+                exit 1
+            fi
+            MODE="skill"
+            shift 2
+            ;;
+        --dest)
+            DEST_ROOT="${2:-}"
+            if [ -z "$DEST_ROOT" ]; then
+                echo "ERROR: --dest 需要 skill 根目录参数" >&2
+                exit 1
+            fi
+            DEST_ROOT="${DEST_ROOT%/}"
+            DEST_ROOT="${DEST_ROOT/#\~/$HOME}"
+            MODE="skill"
+            shift 2
+            ;;
         *) echo "ERROR: 未知参数: $1" >&2; exit 1 ;;
     esac
 done
@@ -63,13 +91,14 @@ if [ "$MODE" = "local" ] && [ "$HAS_DEV_FLAG" -eq 0 ]; then
 fi
 
 # ---------- 宿主 Agent 表 ----------
-HOSTS=(claude codex omp opencode kimi zcode openclaw harness grok copilot cline)
+HOSTS=(claude codex cursor omp opencode kimi zcode openclaw harness grok copilot cline)
 
 # 探测宿主是否已安装（尽力而为；未探测到不阻塞安装，只做提示）
 host_detect() {
     case "$1" in
         claude)   [ -d "$HOME/.claude" ] || [ -f "$HOME/.claude.json" ] ;;
         codex)    [ -d "$HOME/.codex" ] || command -v codex >/dev/null 2>&1 ;;
+        cursor)   [ -d "$HOME/.cursor" ] ;;
         omp)      [ -d "$HOME/.omp" ] ;;
         opencode) [ -d "$HOME/.config/opencode" ] || command -v opencode >/dev/null 2>&1 ;;
         kimi)     [ -d "${KIMI_CODE_HOME:-$HOME/.kimi-code}" ] || command -v kimi >/dev/null 2>&1 ;;
@@ -105,6 +134,7 @@ host_skill_root() {
                 echo "$HOME/.agents/skills"
             fi
             ;;
+        cursor)   echo "$HOME/.cursor/skills" ;;
         omp)      echo "$HOME/.omp/agent/skills" ;;
         opencode) echo "$HOME/.config/opencode/skills" ;;
         kimi)     echo "${KIMI_CODE_HOME:-$HOME/.kimi-code}/skills" ;;
@@ -316,8 +346,58 @@ custom_install() {
     install_to_dir "$dir/$SKILL_NAME"
 }
 
+# 非交互：--host / --dest 指定落点
+skill_install_noninteractive() {
+    local choice="$1"
+    case "$choice" in
+        all)
+            for h in "${HOSTS[@]}"; do install_one_host "$h"; done
+            print_universal_prompt
+            ;;
+        local)
+            echo "==> 仅本地安装：安装 pytest 并运行测试"
+            if [ "$DRY_RUN" -eq 1 ]; then
+                echo "    [dry-run] 将执行: pip install -e '.[dev]' && pytest -q"
+            else
+                pip install --quiet -e '.[dev]'
+                pytest -q
+            fi
+            write_agent_mcp_env
+            ;;
+        custom)
+            echo "ERROR: 非交互模式请使用 --dest <skill根目录>" >&2
+            exit 1
+            ;;
+        *)
+            local found=0 h
+            for h in "${HOSTS[@]}"; do
+                [ "$h" = "$choice" ] && found=1
+            done
+            if [ "$found" -eq 0 ]; then
+                echo "ERROR: 无效宿主: $choice（bash install.sh --list-hosts 查看列表）" >&2
+                exit 1
+            fi
+            install_one_host "$choice"
+            print_universal_prompt
+            ;;
+    esac
+}
+
 # 交互式选择宿主并安装 Skill
 skill_install() {
+    if [ -n "$DEST_ROOT" ]; then
+        echo "==> 安装 Skill 到自定义目录"
+        echo "    目标目录: $DEST_ROOT/$SKILL_NAME"
+        install_to_dir "$DEST_ROOT/$SKILL_NAME"
+        print_universal_prompt
+        return 0
+    fi
+    if [ -n "$HOST_CHOICE" ]; then
+        echo "    已选择: $HOST_CHOICE"
+        skill_install_noninteractive "$HOST_CHOICE"
+        return 0
+    fi
+
     local i=1 choice="" mark=""
     echo ""
     echo "==> 选择安装到哪个宿主 Agent（Skill 落点见: bash install.sh --list-hosts）："
@@ -411,7 +491,12 @@ case "$MODE" in
         list_hosts
         ;;
     skill)
-        local_setup
+        if [ "$SKILL_ONLY" -eq 1 ] || [ -n "$HOST_CHOICE" ] || [ -n "$DEST_ROOT" ]; then
+            echo "==> Skill-only 安装（跳过 venv / pytest）"
+            write_agent_mcp_env
+        else
+            local_setup
+        fi
         skill_install
         star_prompt
         ;;
