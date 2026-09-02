@@ -1,0 +1,102 @@
+/* web/mobile-studio.css — 手机端专用，不影响桌面端 (>768px) */
+@media (max-width: 768px) {
+  body { flex-direction: column; height: auto; min-height: 100dvh; overflow: auto; }
+  /* Sidebar 变成抽屉 */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 86vw;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(0.16,1,0.3,1);
+    z-index: 100;
+    box-shadow: 8px 0 32px rgba(0,0,0,0.18);
+    height: 100dvh;
+  }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .sidebar.collapsed { width: 280px; transform: translateX(-100%); }
+  .sidebar.collapsed.mobile-open { transform: translateX(0); width: 280px; }
+  .sidebar.mobile-open .brand-texts,
+  .sidebar.mobile-open .brand-badge,
+  .sidebar.mobile-open .nav::before,
+  .sidebar.mobile-open .foot-text,
+  .sidebar.mobile-open .nav-item span { opacity: 1 !important; pointer-events: auto !important; }
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.38);
+    backdrop-filter: blur(2px);
+    z-index: 90;
+  }
+  .mobile-overlay.show { display: block; }
+  /* Topbar */
+  .topbar {
+    padding: 0 12px 0 14px;
+    height: 56px;
+    gap: 8px;
+  }
+  .topbar-title { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-title span { display: none; }
+  .btn-topbar-landing { display: none !important; }
+  .theme-toggle { padding: 2px; }
+  .theme-btn { padding: 5px 10px; font-size: 0.72rem; }
+  .mobile-menu-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    border-radius: 10px;
+    color: var(--text-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  /* Content */
+  .content { padding: 0 14px 20px; }
+  .main { min-width: 0; overflow: visible; }
+  .main::before { display: none; }
+  /* KPI 网格 2列 */
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .kpi-value { font-size: 1.35rem; }
+  .kpi { padding: 12px; }
+  /* 仪表盘 3 列变 1 列 */
+  .dash-row-3 { grid-template-columns: 1fr; gap: 12px; }
+  .proj-cards { grid-template-columns: 1fr; }
+  /* viz */
+  .viz-grid { grid-template-columns: 1fr; gap: 14px; }
+  .viz-grid .span-2 { grid-column: span 1; }
+  .viz-toolbar { flex-direction: column; align-items: stretch; gap: 12px; }
+  .viz-toolbar label { font-size: 0.85rem; }
+  select { min-width: 0; width: 100%; font-size: 0.92rem; }
+  .viz-kpis { margin-left: 0; gap: 10px; }
+  .viz-question { font-size: 1.05rem; }
+  .chart { height: 220px; }
+  .chart.tall { height: 300px; }
+  /* 报告布局堆叠 */
+  .report-layout { grid-template-columns: 1fr; height: auto; min-height: auto; gap: 14px; }
+  .report-list { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 12px 0; max-height: 220px; display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+  .report-item { flex: 0 0 72vw; max-width: 260px; white-space: normal; border-left: none; border-bottom: 2px solid transparent; margin-bottom: 0; }
+  .report-item.active { border-left: none; border-bottom-color: var(--accent); }
+  .report-viewer { min-height: 520px; }
+  .report-viewer-head { padding: 14px 14px 0; }
+  .chip-row { gap: 12px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .iframe-wrap { min-height: 480px; }
+  /* 表格横向滚动 */
+  table.matrix { font-size: 0.82rem; }
+  table.matrix th, table.matrix td { padding: 10px 10px; white-space: nowrap; }
+  /* 隐藏桌面收起按钮在手机端 */
+  .collapse-btn { display: none; }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .report-list { gap: 6px; }
+  .report-item { flex-basis: 80vw; }
+}
+@media (min-width: 769px) {
+  .mobile-menu-btn, .mobile-overlay { display: none !important; }
+}

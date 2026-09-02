@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="landing.css">
+  <link rel="stylesheet" href="mobile-landing.css">
 </head>
 <body>
 
@@ -43,6 +44,15 @@
       <button id="nav-launch-btn" class="nav-cta-btn">
         <span>进入控制台 ➔</span>
       </button>
+      <button id="nav-hamburger" class="nav-hamburger" aria-label="展开菜单" aria-expanded="false" style="display:none;"><span></span></button>
+      <nav id="mobile-nav-menu" class="mobile-nav-menu" aria-hidden="true">
+        <a href="#hero-section">项目总览</a>
+        <a href="#stacking-section">9步规范协议</a>
+        <a href="#accordion-section">5套报告体系</a>
+        <a href="comparison.html">vs Deep Research</a>
+        <a href="https://github.com/37chengshan/eduevidence" target="_blank">GitHub ↗</a>
+        <a href="studio.html" style="background:var(--brand-orange);color:#fff;margin-top:6px;text-align:center;border-radius:12px;">进入控制台 →</a>
+      </nav>
     </header>
   </div>
 
@@ -504,6 +514,9 @@
     </div>
   </footer>
 
-  <script src="landing.js"></script>
+  <script>
+(function(){var btn=document.getElementById('nav-hamburger'),menu=document.getElementById('mobile-nav-menu');if(!btn||!menu)return;btn.addEventListener('click',function(){var open=menu.classList.toggle('open');btn.classList.toggle('open',open);btn.setAttribute('aria-expanded',open?'true':'false');menu.setAttribute('aria-hidden',open?'false':'true');});menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu.classList.remove('open');btn.classList.remove('open');btn.setAttribute('aria-expanded','false');});});document.addEventListener('click',function(e){if(!menu.classList.contains('open'))return;if(menu.contains(e.target)||btn.contains(e.target))return;menu.classList.remove('open');btn.classList.remove('open');});})();
+</script>
+<script src="landing.js"></script>
 </body>
 </html>
