@@ -1,0 +1,123 @@
+{
+  "id": "ai-writing-assistant",
+  "title": "AI 写作助手评估",
+  "question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？应当如何引入？",
+  "verdict": "pilot",
+  "confidence": 0.55,
+  "forest": [],
+  "effect_sizes": [],
+  "outcome_mapping": [
+    {
+      "outcome_type": "knowledge_gain",
+      "support": 2,
+      "contradict": 0,
+      "neutral": 0
+    },
+    {
+      "outcome_type": "engagement",
+      "support": 2,
+      "contradict": 0,
+      "neutral": 0
+    },
+    {
+      "outcome_type": "independent_problem_solving",
+      "support": 1,
+      "contradict": 1,
+      "neutral": 0
+    },
+    {
+      "outcome_type": "assignment_score",
+      "support": 1,
+      "contradict": 0,
+      "neutral": 0
+    },
+    {
+      "outcome_type": "ai_dependency",
+      "support": 1,
+      "contradict": 0,
+      "neutral": 0
+    }
+  ],
+  "direction_counts": {
+    "support": 7,
+    "contradict": 1,
+    "neutral": 0
+  },
+  "labels": {
+    "outcomes": {
+      "knowledge_gain": "知识获得",
+      "concept_understanding": "概念理解",
+      "retention": "记忆保持",
+      "transfer": "迁移能力",
+      "independent_problem_solving": "独立问题解决",
+      "completion_time": "完成时间",
+      "accuracy": "正确率",
+      "code_quality": "代码质量",
+      "assignment_score": "作业成绩",
+      "engagement": "参与度",
+      "motivation": "学习动机",
+      "cognitive_load": "认知负荷",
+      "help_seeking": "求助行为",
+      "metacognition": "元认知",
+      "ai_dependency": "AI 依赖",
+      "over_reliance": "过度依赖",
+      "reduced_effort": "努力下降",
+      "reduced_transfer": "迁移下降",
+      "academic_integrity_risk": "学术诚信风险",
+      "false_confidence": "虚假自信",
+      "learning_gain": "学习收获",
+      "task_performance": "任务表现",
+      "programming_skill": "编程技能",
+      "writing_skill": "写作技能"
+    },
+    "actions": {
+      "adopt": "全面采用",
+      "ADOPT": "全面采用",
+      "pilot": "试点验证",
+      "PILOT": "试点验证",
+      "reject": "不建议采用",
+      "REJECT": "不建议采用",
+      "insufficient_evidence": "证据不足",
+      "INSUFFICIENT": "证据不足",
+      "INSUFFICIENT_EVIDENCE": "证据不足"
+    },
+    "studies": {
+      "rct": "随机对照试验",
+      "randomized_controlled_trial": "随机对照试验",
+      "randomized controlled trial (rct)": "随机对照试验",
+      "quasi_experiment": "准实验",
+      "quasi_experimental": "准实验",
+      "quasi-experimental did": "准实验（双重差分）",
+      "did": "双重差分",
+      "literature_review": "文献综述",
+      "literature review": "文献综述",
+      "systematic_review": "系统综述",
+      "observational": "观察性研究",
+      "mixed_methods": "混合方法",
+      "case_study": "案例研究",
+      "longitudinal": "纵向研究",
+      "meta_analysis": "元分析",
+      "survey": "调查",
+      "qualitative": "质性研究",
+      "correlational": "相关研究"
+    },
+    "authority": {
+      "tier1_paper_doi": "T1 DOI 可验证论文",
+      "tier1_peer_reviewed": "T1 同行评议论文",
+      "tier1_peer_reviewed_journal": "T1 同行评议期刊",
+      "tier2_peer_reviewed": "T2 同行评议论文",
+      "tier2_peer_reviewed_conference": "T2 同行评议会议",
+      "tier3_peer_reviewed": "T3 专业机构成果",
+      "tier3_professional_institution": "T3 专业机构",
+      "tier4_reputable_media": "T4 权威媒体",
+      "tier5_unverified": "T5 未验证"
+    },
+    "confidence": {
+      "High": "高",
+      "Moderate": "中",
+      "Low": "低",
+      "Insufficient": "不足"
+    }
+  },
+  "graph": null
+}

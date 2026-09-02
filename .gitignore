@@ -47,3 +47,4 @@ garden-gpt-image-2/
 
 # Local release artifacts (regenerable via packaging/make_upload.sh)
 EduEvidence_Web_Studio.zip
+dist_gh_pages/

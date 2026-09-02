@@ -1,0 +1,226 @@
+{
+  "projects": [
+    {
+      "id": "ai-coding-assistant",
+      "title": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
+      "title_zh": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
+      "domain": "education",
+      "question": "We are considering allowing students to use generative AI coding assistants in the first-year C programming course. Will it actually improve learning outcomes? How should it be introduced?",
+      "verdict": "pilot",
+      "confidence": 0.612,
+      "evidence_count": 13,
+      "forest_count": 0,
+      "effect_count": 0,
+      "mean_effect_size": null,
+      "direction_counts": {
+        "support": 12,
+        "contradict": 0,
+        "neutral": 1
+      },
+      "has_graph": false,
+      "node_count": 0,
+      "html_report_path": "/Users/cc/edu/examples/ai-coding-assistant/EduEvidence_Report.html",
+      "report_variants": [
+        {
+          "theme": "academic",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_academic.html"
+        },
+        {
+          "theme": "claude",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_claude.html"
+        },
+        {
+          "theme": "datalab-dark",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_datalab-dark.html"
+        },
+        {
+          "theme": "datalab",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_datalab.html"
+        },
+        {
+          "theme": "presentation",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_presentation.html"
+        }
+      ]
+    },
+    {
+      "id": "ai-coding-assistant-evidence",
+      "title": "高校大一引入 AI 编程助手（真实文献旗舰示例）",
+      "title_zh": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
+      "domain": "education",
+      "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
+      "verdict": "pilot",
+      "confidence": 0.586,
+      "evidence_count": 12,
+      "forest_count": 0,
+      "effect_count": 0,
+      "mean_effect_size": null,
+      "direction_counts": {
+        "support": 7,
+        "contradict": 2,
+        "neutral": 3
+      },
+      "has_graph": false,
+      "node_count": 0,
+      "html_report_path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/EduEvidence_Report.html",
+      "report_variants": [
+        {
+          "theme": "academic",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_academic.html"
+        },
+        {
+          "theme": "claude",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_claude.html"
+        },
+        {
+          "theme": "datalab-dark",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_datalab-dark.html"
+        },
+        {
+          "theme": "datalab",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_datalab.html"
+        },
+        {
+          "theme": "presentation",
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_presentation.html"
+        }
+      ]
+    },
+    {
+      "id": "ai-tutor",
+      "title": "大学高数课程 AI Tutor 评估",
+      "title_zh": null,
+      "domain": "education",
+      "question": "大学高等数学课程是否应该使用 AI Tutor（GPT-4 等生成式 AI 辅导工具）辅助学习？它是否真的有助于概念理解与独立解题，还是只是把学生变成拐杖使用者？",
+      "verdict": "pilot",
+      "confidence": 0.534,
+      "evidence_count": 6,
+      "forest_count": 0,
+      "effect_count": 0,
+      "mean_effect_size": null,
+      "direction_counts": {
+        "support": 4,
+        "contradict": 1,
+        "neutral": 1
+      },
+      "has_graph": false,
+      "node_count": 0,
+      "html_report_path": null,
+      "report_variants": []
+    },
+    {
+      "id": "ai-writing-assistant",
+      "title": "AI 写作助手评估",
+      "title_zh": null,
+      "domain": "education",
+      "question": "大学学术写作课是否应该允许学生使用 AI 写作助手（如 ChatGPT）辅助写作并提供形成性反馈？应当如何引入？",
+      "verdict": "pilot",
+      "confidence": 0.55,
+      "evidence_count": 8,
+      "forest_count": 0,
+      "effect_count": 0,
+      "mean_effect_size": null,
+      "direction_counts": {
+        "support": 7,
+        "contradict": 1,
+        "neutral": 0
+      },
+      "has_graph": false,
+      "node_count": 0,
+      "html_report_path": null,
+      "report_variants": []
+    },
+    {
+      "id": "esl-academic-writing-ai",
+      "title": "大学 ESL 学术英语写作与同行评审 AI 评估",
+      "title_zh": "在高等教育学术英语写作（ESL / EAP）课程中，允许本科生使用 AI 写作与同行评审辅助系统，是否提升学术论证质量与批判性思维？是否存在过度",
+      "domain": "education",
+      "question": "In undergraduate ESL/EAP academic English writing courses, does allowing students to use generative AI writing and peer-review assistants improve argumentative essay quality and critical thinking, and what are the over-reliance and originality risks?",
+      "verdict": "PILOT",
+      "confidence": 0.88,
+      "evidence_count": 16,
+      "forest_count": 16,
+      "effect_count": 32,
+      "mean_effect_size": 0.269,
+      "direction_counts": {
+        "support": 11,
+        "contradict": 5,
+        "neutral": 0
+      },
+      "has_graph": true,
+      "node_count": 43,
+      "html_report_path": "/Users/cc/edu/examples/esl-academic-writing-ai/EduEvidence_Report.html",
+      "report_variants": [
+        {
+          "theme": "academic",
+          "path": "/Users/cc/edu/examples/esl-academic-writing-ai/reports-5themes/EduEvidence_Report_academic.html"
+        },
+        {
+          "theme": "claude",
+          "path": "/Users/cc/edu/examples/esl-academic-writing-ai/reports-5themes/EduEvidence_Report_claude.html"
+        },
+        {
+          "theme": "datalab-dark",
+          "path": "/Users/cc/edu/examples/esl-academic-writing-ai/reports-5themes/EduEvidence_Report_datalab-dark.html"
+        },
+        {
+          "theme": "datalab",
+          "path": "/Users/cc/edu/examples/esl-academic-writing-ai/reports-5themes/EduEvidence_Report_datalab.html"
+        },
+        {
+          "theme": "presentation",
+          "path": "/Users/cc/edu/examples/esl-academic-writing-ai/reports-5themes/EduEvidence_Report_presentation.html"
+        }
+      ]
+    },
+    {
+      "id": "highschool-math-ai-tutor",
+      "title": "高中数学引入大模型自适应 AI Tutor 评估",
+      "title_zh": "在高中国家课程标准高中数学（解析几何与微积分初步）教学中，引入基于大语言模型的自适应 AI Tutor 进行课后个性化辅导，是否显著提高学生的数",
+      "domain": "education",
+      "question": "Should generative AI adaptive tutors be introduced for after-school personalized learning in high school mathematics (analytic geometry and calculus)? Does it improve conceptual modeling vs procedural calculation, and what is the urban-rural equity impact?",
+      "verdict": "PILOT",
+      "confidence": 0.88,
+      "evidence_count": 16,
+      "forest_count": 16,
+      "effect_count": 32,
+      "mean_effect_size": 0.29,
+      "direction_counts": {
+        "support": 16,
+        "contradict": 0,
+        "neutral": 0
+      },
+      "has_graph": true,
+      "node_count": 44,
+      "html_report_path": "/Users/cc/edu/examples/highschool-math-ai-tutor/EduEvidence_Report.html",
+      "report_variants": [
+        {
+          "theme": "academic",
+          "path": "/Users/cc/edu/examples/highschool-math-ai-tutor/reports-5themes/EduEvidence_Report_academic.html"
+        },
+        {
+          "theme": "datalab-dark",
+          "path": "/Users/cc/edu/examples/highschool-math-ai-tutor/reports-5themes/EduEvidence_Report_datalab-dark.html"
+        },
+        {
+          "theme": "datalab",
+          "path": "/Users/cc/edu/examples/highschool-math-ai-tutor/reports-5themes/EduEvidence_Report_datalab.html"
+        },
+        {
+          "theme": "presentation",
+          "path": "/Users/cc/edu/examples/highschool-math-ai-tutor/reports-5themes/EduEvidence_Report_presentation.html"
+        },
+        {
+          "theme": "claude",
+          "path": "/Users/cc/edu/examples/highschool-math-ai-tutor/reports-5themes/report_claude.html"
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "total_projects": 6,
+    "total_evidence": 71,
+    "total_effect_sizes": 64,
+    "total_nodes": 87
+  }
+}

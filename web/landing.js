@@ -191,27 +191,42 @@
     `;
     document.body.appendChild(waveOverlay);
 
+    function isStaticHost() {
+      return window.location.hostname.includes("github.io") || window.location.hostname.includes("gitee.io");
+    }
+    function pagesBase() {
+      const p = window.location.pathname || "/";
+      if (p.startsWith("/eduevidence/")) return "/eduevidence/";
+      return "/";
+    }
     // 控制台 (dashboard_server) 可能与落地页不同源：
     // 探测一个能应答 /api/projects 的 Studio 基址（同源优先，其次 8765-8774 默认端口段），
     // 保证「进入控制台」落到的永远是带数据的控制台，而不是静态服务器上的空壳 /index.html。
+    // 在 GitHub Pages 静态托管下，直接使用同源的 /studio/ 子路径。
     let studioBase = window.location.origin;
-    (async () => {
-      const candidates = [window.location.origin];
-      for (let i = 0; i < 10; i++) {
-        candidates.push("http://" + (window.location.hostname || "127.0.0.1") + ":" + (8765 + i));
-      }
-      for (const base of candidates) {
-        try {
-          const r = await fetch(base + "/api/projects", { method: "GET", cache: "no-store" });
-          if (r.ok && (r.headers.get("content-type") || "").includes("json")) {
-            studioBase = base;
-            break;
-          }
-        } catch (e) {
-          /* 端口未监听 / 跨源被拒，试下一个 */
+    let studioPath = "/index.html";
+    if (isStaticHost()) {
+      studioBase = window.location.origin;
+      studioPath = pagesBase() + "studio.html";
+    } else {
+      (async () => {
+        const candidates = [window.location.origin];
+        for (let i = 0; i < 10; i++) {
+          candidates.push("http://" + (window.location.hostname || "127.0.0.1") + ":" + (8765 + i));
         }
-      }
-    })();
+        for (const base of candidates) {
+          try {
+            const r = await fetch(base + "/api/projects", { method: "GET", cache: "no-store" });
+            if (r.ok && (r.headers.get("content-type") || "").includes("json")) {
+              studioBase = base;
+              break;
+            }
+          } catch (e) {
+            /* 端口未监听 / 跨源被拒，试下一个 */
+          }
+        }
+      })();
+    }
 
     function triggerTransition(targetUrl, e) {
       const btn = e ? e.currentTarget : document.getElementById("btn-to-studio");
@@ -242,7 +257,13 @@
     launchBtns.forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-        triggerTransition((studioBase || window.location.origin) + "/index.html", e);
+        let target;
+        if (typeof studioPath !== "undefined" && studioPath !== "/index.html" && (window.location.hostname.includes("github.io") || window.location.hostname.includes("gitee.io"))) {
+          target = studioBase + studioPath;
+        } else {
+          target = (studioBase || window.location.origin) + "/index.html";
+        }
+        triggerTransition(target, e);
       });
     });
   }

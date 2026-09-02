@@ -4,6 +4,22 @@ import { disposeAllCharts, resizeVisible } from './charts.js';
 import { renderDashboard } from './dashboard.js';
 import { renderVizHeader, renderForest, renderEffectDist, renderOutcome, renderGraph } from './viz.js';
 
+function getPagesBaseMain() {
+  const p = window.location.pathname || "/";
+  if (p.startsWith("/eduevidence/")) return "/eduevidence/";
+  return "/";
+}
+function isStaticHosting() {
+  return window.location.hostname.includes("github.io") || window.location.hostname.includes("gitee.io");
+}
+function staticReportUrl(id, theme) {
+  const base = getPagesBaseMain();
+  const safeTheme = theme || "default";
+  let filename = "EduEvidence_Report.html";
+  if (safeTheme !== "default") filename = "EduEvidence_Report_" + safeTheme + ".html";
+  return window.location.origin + base + "reports/" + encodeURIComponent(id) + "/" + filename;
+}
+
 function setTheme(theme) {
   const prev = state.theme;
   state.theme = theme;
@@ -110,8 +126,26 @@ function refreshReportFrame() {
   if (!p || !p.html_report_path) return;
   const loading = $("#report-loading");
   if (loading) loading.classList.remove("hidden");
-  $("#report-frame").src = "/report?id=" + encodeURIComponent(p.id) +
-    "&theme=" + encodeURIComponent(state.currentReportTheme || "default");
+  // On GitHub Pages (static) the /report endpoint does not exist; use pre-baked HTML under /reports/
+  // Also fall back to static when live API is not reachable (detected via hostname).
+  let src;
+  if (isStaticHosting()) {
+    src = staticReportUrl(p.id, state.currentReportTheme || "default");
+  } else {
+    src = "/report?id=" + encodeURIComponent(p.id) +
+      "&theme=" + encodeURIComponent(state.currentReportTheme || "default");
+  }
+  const frame = $("#report-frame");
+  frame.src = src;
+  // If live /report 404s (e.g. static preview), retry once with static URL
+  frame.onerror = null;
+  let retried = false;
+  frame.addEventListener("error", () => {
+    if (!retried && !isStaticHosting()) {
+      retried = true;
+      frame.src = staticReportUrl(p.id, state.currentReportTheme || "default");
+    }
+  }, { once: true });
 }
 
 function renderVizSelect() {
@@ -158,6 +192,14 @@ function landingCandidates() {
   const list = [];
   const hostname = window.location.hostname || "127.0.0.1";
   const origin = window.location.origin;
+  const base = getPagesBaseMain();
+  // GitHub Pages: landing lives at base ("/eduevidence/")
+  if (isStaticHosting()) {
+    list.push(origin + base);
+    list.push(origin + base + "landing.html");
+    if (document.referrer && document.referrer.includes("eduevidence")) list.push(document.referrer);
+    return Array.from(new Set(list));
+  }
   // 从落地页跳转过来时，document.referrer 就是最可靠的首页地址
   if (document.referrer && document.referrer.includes("landing.html")) list.push(document.referrer);
   // 同源优先（旧式单服务器部署时 dashboard/landing 同源）
@@ -172,7 +214,8 @@ function landingCandidates() {
 function wireLandingLinks() {
   const anchors = $$("#btn-back-to-landing, #topbar-to-landing");
   if (!anchors.length) return;
-  const fallback = window.location.origin + "/landing.html";
+  const base = getPagesBaseMain();
+  const fallback = isStaticHosting() ? (window.location.origin + base) : (window.location.origin + "/landing.html");
   (async () => {
     let target = null;
     for (const url of landingCandidates()) {
@@ -199,7 +242,8 @@ function initReturnHome() {
     wave.setAttribute("aria-hidden", "true");
     document.body.appendChild(wave);
   }
-  const fallback = window.location.origin + "/landing.html";
+  const base = getPagesBaseMain();
+  const fallback = isStaticHosting() ? (window.location.origin + base) : (window.location.origin + "/landing.html");
   anchors.forEach(a => {
     a.addEventListener("click", (e) => {
       e.preventDefault();

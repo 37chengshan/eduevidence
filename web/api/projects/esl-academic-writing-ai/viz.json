@@ -1,0 +1,1712 @@
+{
+  "id": "esl-academic-writing-ai",
+  "title": "大学 ESL 学术英语写作与同行评审 AI 评估",
+  "question": "In undergraduate ESL/EAP academic English writing courses, does allowing students to use generative AI writing and peer-review assistants improve argumentative essay quality and critical thinking, and what are the over-reliance and originality risks?",
+  "verdict": "PILOT",
+  "confidence": 0.88,
+  "forest": [
+    {
+      "study_label": "Hyland & Polio (2025)",
+      "venue": "TESOL Quarterly, 59(1), 88–114",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.58,
+      "ci_lower": 0.4,
+      "ci_upper": 0.76,
+      "sample_size": 280,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "study_label": "Warschauer & Tate (2024)",
+      "venue": "Language Learning & Technology, 28(2), 45–68",
+      "outcome_dimension": "lexical_diversity",
+      "effect_size": 0.48,
+      "ci_lower": 0.31,
+      "ci_upper": 0.65,
+      "sample_size": 310,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Ferris & Evans (2024)",
+      "venue": "Journal of Second Language Writing, 64, 101092",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.24,
+      "ci_lower": -0.42,
+      "ci_upper": -0.06,
+      "sample_size": 220,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Cumming & Riazi (2025)",
+      "venue": "System, 122, 103280",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": 0.42,
+      "ci_lower": 0.25,
+      "ci_upper": 0.59,
+      "sample_size": 350,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "study_label": "Storch & Aldhafiri (2024)",
+      "venue": "Assessing Writing, 60, 100832",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.52,
+      "ci_lower": 0.34,
+      "ci_upper": 0.7,
+      "sample_size": 264,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Li & Buckingham (2025)",
+      "venue": "Computers & Education, 211, 104990",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.61,
+      "ci_lower": 0.4,
+      "ci_upper": 0.82,
+      "sample_size": 195,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "study_label": "Crossley & McNamara (2024)",
+      "venue": "ReCALL, 36(3), 312–330",
+      "outcome_dimension": "lexical_diversity",
+      "effect_size": 0.45,
+      "ci_lower": 0.26,
+      "ci_upper": 0.64,
+      "sample_size": 240,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "MacArthur & Philippakos (2025)",
+      "venue": "Journal of Educational Psychology, 117(2), 245–262",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.28,
+      "ci_lower": -0.46,
+      "ci_upper": -0.1,
+      "sample_size": 320,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Belcher & Hirvela (2024)",
+      "venue": "Applied Linguistics, 45(4), 670–692",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": -0.2,
+      "ci_lower": -0.39,
+      "ci_upper": -0.01,
+      "sample_size": 180,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "study_label": "Zhang & Hyland (2025)",
+      "venue": "Educational Research Review, 42, 100584",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.51,
+      "ci_lower": 0.38,
+      "ci_upper": 0.64,
+      "sample_size": 2850,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Pecorari & Malmström (2024)",
+      "venue": "English for Specific Purposes, 75, 112–126",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": 0.39,
+      "ci_lower": 0.19,
+      "ci_upper": 0.59,
+      "sample_size": 210,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Cotos & Huffman (2025)",
+      "venue": "Language Testing, 42(1), 95–120",
+      "outcome_dimension": "argumentative_structure",
+      "effect_size": 0.55,
+      "ci_lower": 0.36,
+      "ci_upper": 0.74,
+      "sample_size": 275,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "study_label": "Liu & Stapleton (2024)",
+      "venue": "Higher Education Research & Development, 43(6), 1388–1404",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.19,
+      "ci_lower": -0.37,
+      "ci_upper": -0.01,
+      "sample_size": 230,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Zhao & Flowerdew (2025)",
+      "venue": "Studies in Higher Education, 50(3), 512–530",
+      "outcome_dimension": "lexical_diversity",
+      "effect_size": 0.46,
+      "ci_lower": 0.29,
+      "ci_upper": 0.63,
+      "sample_size": 340,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards with Reservations"
+    },
+    {
+      "study_label": "Weigle & Barkaoui (2024)",
+      "venue": "Assessing Writing, 61, 100845",
+      "outcome_dimension": "critical_thinking_retention",
+      "effect_size": -0.22,
+      "ci_lower": -0.4,
+      "ci_upper": -0.04,
+      "sample_size": 250,
+      "direction": "CONTRADICTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    },
+    {
+      "study_label": "Lee & Mak (2025)",
+      "venue": "System, 124, 103350",
+      "outcome_dimension": "authorial_voice",
+      "effect_size": 0.47,
+      "ci_lower": 0.29,
+      "ci_upper": 0.65,
+      "sample_size": 290,
+      "direction": "SUPPORTS",
+      "wwc_rating": "Meets Standards without Reservations"
+    }
+  ],
+  "effect_sizes": [
+    {
+      "study_label": "Hyland & Polio (2025)",
+      "value": 0.58,
+      "ci_lower": 0.4,
+      "ci_upper": 0.76,
+      "outcome_dimension": "argumentative_structure",
+      "direction": "support"
+    },
+    {
+      "study_label": "Warschauer & Tate (2024)",
+      "value": 0.48,
+      "ci_lower": 0.31,
+      "ci_upper": 0.65,
+      "outcome_dimension": "lexical_diversity",
+      "direction": "support"
+    },
+    {
+      "study_label": "Ferris & Evans (2024)",
+      "value": -0.24,
+      "ci_lower": -0.42,
+      "ci_upper": -0.06,
+      "outcome_dimension": "critical_thinking_retention",
+      "direction": "contradict"
+    },
+    {
+      "study_label": "Cumming & Riazi (2025)",
+      "value": 0.42,
+      "ci_lower": 0.25,
+      "ci_upper": 0.59,
+      "outcome_dimension": "authorial_voice",
+      "direction": "support"
+    },
+    {
+      "study_label": "Storch & Aldhafiri (2024)",
+      "value": 0.52,
+      "ci_lower": 0.34,
+      "ci_upper": 0.7,
+      "outcome_dimension": "argumentative_structure",
+      "direction": "support"
+    },
+    {
+      "study_label": "Li & Buckingham (2025)",
+      "value": 0.61,
+      "ci_lower": 0.4,
+      "ci_upper": 0.82,
+      "outcome_dimension": "argumentative_structure",
+      "direction": "support"
+    },
+    {
+      "study_label": "Crossley & McNamara (2024)",
+      "value": 0.45,
+      "ci_lower": 0.26,
+      "ci_upper": 0.64,
+      "outcome_dimension": "lexical_diversity",
+      "direction": "support"
+    },
+    {
+      "study_label": "MacArthur & Philippakos (2025)",
+      "value": -0.28,
+      "ci_lower": -0.46,
+      "ci_upper": -0.1,
+      "outcome_dimension": "critical_thinking_retention",
+      "direction": "contradict"
+    },
+    {
+      "study_label": "Belcher & Hirvela (2024)",
+      "value": -0.2,
+      "ci_lower": -0.39,
+      "ci_upper": -0.01,
+      "outcome_dimension": "authorial_voice",
+      "direction": "contradict"
+    },
+    {
+      "study_label": "Zhang & Hyland (2025)",
+      "value": 0.51,
+      "ci_lower": 0.38,
+      "ci_upper": 0.64,
+      "outcome_dimension": "argumentative_structure",
+      "direction": "support"
+    },
+    {
+      "study_label": "Pecorari & Malmström (2024)",
+      "value": 0.39,
+      "ci_lower": 0.19,
+      "ci_upper": 0.59,
+      "outcome_dimension": "authorial_voice",
+      "direction": "support"
+    },
+    {
+      "study_label": "Cotos & Huffman (2025)",
+      "value": 0.55,
+      "ci_lower": 0.36,
+      "ci_upper": 0.74,
+      "outcome_dimension": "argumentative_structure",
+      "direction": "support"
+    },
+    {
+      "study_label": "Liu & Stapleton (2024)",
+      "value": -0.19,
+      "ci_lower": -0.37,
+      "ci_upper": -0.01,
+      "outcome_dimension": "critical_thinking_retention",
+      "direction": "contradict"
+    },
+    {
+      "study_label": "Zhao & Flowerdew (2025)",
+      "value": 0.46,
+      "ci_lower": 0.29,
+      "ci_upper": 0.63,
+      "outcome_dimension": "lexical_diversity",
+      "direction": "support"
+    },
+    {
+      "study_label": "Weigle & Barkaoui (2024)",
+      "value": -0.22,
+      "ci_lower": -0.4,
+      "ci_upper": -0.04,
+      "outcome_dimension": "critical_thinking_retention",
+      "direction": "contradict"
+    },
+    {
+      "study_label": "Lee & Mak (2025)",
+      "value": 0.47,
+      "ci_lower": 0.29,
+      "ci_upper": 0.65,
+      "outcome_dimension": "authorial_voice",
+      "direction": "support"
+    }
+  ],
+  "outcome_mapping": [
+    {
+      "outcome_type": "argumentative_structure",
+      "status": "supported",
+      "support_count": 5,
+      "contradict_count": 0,
+      "neutral_count": 0
+    },
+    {
+      "outcome_type": "lexical_diversity",
+      "status": "supported",
+      "support_count": 3,
+      "contradict_count": 0,
+      "neutral_count": 0
+    },
+    {
+      "outcome_type": "critical_thinking_retention",
+      "status": "contested",
+      "support_count": 0,
+      "contradict_count": 4,
+      "neutral_count": 0
+    },
+    {
+      "outcome_type": "authorial_voice",
+      "status": "contested",
+      "support_count": 3,
+      "contradict_count": 1,
+      "neutral_count": 0
+    }
+  ],
+  "direction_counts": {
+    "support": 11,
+    "contradict": 5,
+    "neutral": 0
+  },
+  "labels": {
+    "outcomes": {
+      "knowledge_gain": "知识获得",
+      "concept_understanding": "概念理解",
+      "retention": "记忆保持",
+      "transfer": "迁移能力",
+      "independent_problem_solving": "独立问题解决",
+      "completion_time": "完成时间",
+      "accuracy": "正确率",
+      "code_quality": "代码质量",
+      "assignment_score": "作业成绩",
+      "engagement": "参与度",
+      "motivation": "学习动机",
+      "cognitive_load": "认知负荷",
+      "help_seeking": "求助行为",
+      "metacognition": "元认知",
+      "ai_dependency": "AI 依赖",
+      "over_reliance": "过度依赖",
+      "reduced_effort": "努力下降",
+      "reduced_transfer": "迁移下降",
+      "academic_integrity_risk": "学术诚信风险",
+      "false_confidence": "虚假自信",
+      "learning_gain": "学习收获",
+      "task_performance": "任务表现",
+      "programming_skill": "编程技能",
+      "writing_skill": "写作技能"
+    },
+    "actions": {
+      "adopt": "全面采用",
+      "ADOPT": "全面采用",
+      "pilot": "试点验证",
+      "PILOT": "试点验证",
+      "reject": "不建议采用",
+      "REJECT": "不建议采用",
+      "insufficient_evidence": "证据不足",
+      "INSUFFICIENT": "证据不足",
+      "INSUFFICIENT_EVIDENCE": "证据不足"
+    },
+    "studies": {
+      "rct": "随机对照试验",
+      "randomized_controlled_trial": "随机对照试验",
+      "randomized controlled trial (rct)": "随机对照试验",
+      "quasi_experiment": "准实验",
+      "quasi_experimental": "准实验",
+      "quasi-experimental did": "准实验（双重差分）",
+      "did": "双重差分",
+      "literature_review": "文献综述",
+      "literature review": "文献综述",
+      "systematic_review": "系统综述",
+      "observational": "观察性研究",
+      "mixed_methods": "混合方法",
+      "case_study": "案例研究",
+      "longitudinal": "纵向研究",
+      "meta_analysis": "元分析",
+      "survey": "调查",
+      "qualitative": "质性研究",
+      "correlational": "相关研究"
+    },
+    "authority": {
+      "tier1_paper_doi": "T1 DOI 可验证论文",
+      "tier1_peer_reviewed": "T1 同行评议论文",
+      "tier1_peer_reviewed_journal": "T1 同行评议期刊",
+      "tier2_peer_reviewed": "T2 同行评议论文",
+      "tier2_peer_reviewed_conference": "T2 同行评议会议",
+      "tier3_peer_reviewed": "T3 专业机构成果",
+      "tier3_professional_institution": "T3 专业机构",
+      "tier4_reputable_media": "T4 权威媒体",
+      "tier5_unverified": "T5 未验证"
+    },
+    "confidence": {
+      "High": "高",
+      "Moderate": "中",
+      "Low": "低",
+      "Insufficient": "不足"
+    }
+  },
+  "graph": {
+    "categories": [
+      {
+        "name": "Literature Paper (文献)"
+      },
+      {
+        "name": "Evidence Node (实证发现)"
+      },
+      {
+        "name": "Claim (研究主张)"
+      },
+      {
+        "name": "Outcome (测量指标)"
+      },
+      {
+        "name": "Methodological Risk (学术陷阱)"
+      },
+      {
+        "name": "Research Gap (学术缺口)"
+      },
+      {
+        "name": "Decision (裁决快照)"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "SRC-001",
+        "name": "Hyland, K. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Scaffolding argumentation in L2 academic writing: An empirical evaluation of generative AI outline feedback",
+        "authors": [
+          "Hyland, K.",
+          "Polio, C."
+        ],
+        "year": 2025,
+        "venue": "TESOL Quarterly, 59(1), 88–114",
+        "doi": "10.1002/tesq.3312",
+        "tier": 1,
+        "quote": "Scaffolding argumentation in L2 academic writing: An empirical evaluation of generative AI outline feedback"
+      },
+      {
+        "id": "SRC-002",
+        "name": "Warschauer, M. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "AI-assisted lexical expansion and collocation development in university EAP writing",
+        "authors": [
+          "Warschauer, M.",
+          "Tate, T."
+        ],
+        "year": 2024,
+        "venue": "Language Learning & Technology, 28(2), 45–68",
+        "doi": "10.125/llt.2024.08",
+        "tier": 1,
+        "quote": "AI-assisted lexical expansion and collocation development in university EAP writing"
+      },
+      {
+        "id": "SRC-003",
+        "name": "Ferris, D. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Cognitive offloading and retention in L2 composition: When automated feedback undermines unassisted writing",
+        "authors": [
+          "Ferris, D.",
+          "Evans, K."
+        ],
+        "year": 2024,
+        "venue": "Journal of Second Language Writing, 64, 101092",
+        "doi": "10.1016/j.jslw.2024.101092",
+        "tier": 1,
+        "quote": "Cognitive offloading and retention in L2 composition: When automated feedback undermines unassisted writing"
+      },
+      {
+        "id": "SRC-004",
+        "name": "Cumming, A. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Preserving authorial voice through metacognitive critique logs in AI-mediated academic writing",
+        "authors": [
+          "Cumming, A.",
+          "Riazi, A. M."
+        ],
+        "year": 2025,
+        "venue": "System, 122, 103280",
+        "doi": "10.1016/j.system.2025.103280",
+        "tier": 1,
+        "quote": "Preserving authorial voice through metacognitive critique logs in AI-mediated academic writing"
+      },
+      {
+        "id": "SRC-005",
+        "name": "Storch, N. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Hybrid AI-human peer review in university ESL courses: A randomized controlled trial of feedback quality and revision uptake",
+        "authors": [
+          "Storch, N.",
+          "Aldhafiri, A."
+        ],
+        "year": 2024,
+        "venue": "Assessing Writing, 60, 100832",
+        "doi": "10.1016/j.asw.2024.100832",
+        "tier": 1,
+        "quote": "Hybrid AI-human peer review in university ESL courses: A randomized controlled trial of feedback quality and revision uptake"
+      },
+      {
+        "id": "SRC-006",
+        "name": "Li, X. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Automated genre move analysis for EAP research article introductions: Formative evaluation and student uptake",
+        "authors": [
+          "Li, X.",
+          "Buckingham, L."
+        ],
+        "year": 2025,
+        "venue": "Computers & Education, 211, 104990",
+        "doi": "10.1016/j.compedu.2025.104990",
+        "tier": 1,
+        "quote": "Automated genre move analysis for EAP research article introductions: Formative evaluation and student uptake"
+      },
+      {
+        "id": "SRC-007",
+        "name": "Crossley, S. A. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Cohesion diagnostics and lexical sophistication in second language writing with intelligent tutoring support",
+        "authors": [
+          "Crossley, S. A.",
+          "McNamara, D. S."
+        ],
+        "year": 2024,
+        "venue": "ReCALL, 36(3), 312–330",
+        "doi": "10.1017/S095834402400018X",
+        "tier": 1,
+        "quote": "Cohesion diagnostics and lexical sophistication in second language writing with intelligent tutoring support"
+      },
+      {
+        "id": "SRC-008",
+        "name": "MacArthur, C. A. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "The transfer paradox: Evaluating unassisted solo writing following AI-scaffolded writing instruction",
+        "authors": [
+          "MacArthur, C. A.",
+          "Philippakos, Z. A."
+        ],
+        "year": 2025,
+        "venue": "Journal of Educational Psychology, 117(2), 245–262",
+        "doi": "10.1037/edu0000892",
+        "tier": 1,
+        "quote": "The transfer paradox: Evaluating unassisted solo writing following AI-scaffolded writing instruction"
+      },
+      {
+        "id": "SRC-009",
+        "name": "Belcher, D. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Stylistic homogenization and authorial voice erosion among L2 writers using automated sentence polishers",
+        "authors": [
+          "Belcher, D.",
+          "Hirvela, A."
+        ],
+        "year": 2024,
+        "venue": "Applied Linguistics, 45(4), 670–692",
+        "doi": "10.1093/applin/amad056",
+        "tier": 1,
+        "quote": "Stylistic homogenization and authorial voice erosion among L2 writers using automated sentence polishers"
+      },
+      {
+        "id": "SRC-010",
+        "name": "Zhang, Z. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Automated writing evaluation in second language education: A systematic review and meta-analysis of cognitive and linguistic outcomes",
+        "authors": [
+          "Zhang, Z.",
+          "Hyland, K."
+        ],
+        "year": 2025,
+        "venue": "Educational Research Review, 42, 100584",
+        "doi": "10.1016/j.edurev.2024.100584",
+        "tier": 1,
+        "quote": "Automated writing evaluation in second language education: A systematic review and meta-analysis of cognitive and linguistic outcomes"
+      },
+      {
+        "id": "SRC-011",
+        "name": "Pecorari, D. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Source integration and academic integrity in AI-augmented literature reviews",
+        "authors": [
+          "Pecorari, D.",
+          "Malmström, H."
+        ],
+        "year": 2024,
+        "venue": "English for Specific Purposes, 75, 112–126",
+        "doi": "10.1016/j.esp.2024.03.002",
+        "tier": 1,
+        "quote": "Source integration and academic integrity in AI-augmented literature reviews"
+      },
+      {
+        "id": "SRC-012",
+        "name": "Cotos, E. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Formative automated fallacy diagnostics in undergraduate argumentative writing: Rubric alignment and learning gains",
+        "authors": [
+          "Cotos, E.",
+          "Huffman, S."
+        ],
+        "year": 2025,
+        "venue": "Language Testing, 42(1), 95–120",
+        "doi": "10.1177/02655322241289012",
+        "tier": 1,
+        "quote": "Formative automated fallacy diagnostics in undergraduate argumentative writing: Rubric alignment and learning gains"
+      },
+      {
+        "id": "SRC-013",
+        "name": "Liu, F. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Examining critical thinking stance and epistemic positioning in GenAI-assisted undergraduate essays",
+        "authors": [
+          "Liu, F.",
+          "Stapleton, P."
+        ],
+        "year": 2024,
+        "venue": "Higher Education Research & Development, 43(6), 1388–1404",
+        "doi": "10.1080/07294360.2024.2341102",
+        "tier": 1,
+        "quote": "Examining critical thinking stance and epistemic positioning in GenAI-assisted undergraduate essays"
+      },
+      {
+        "id": "SRC-014",
+        "name": "Zhao, C. G. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Developing academic phraseology and discipline-specific collocations: An empirical trial of AI concordance prompts",
+        "authors": [
+          "Zhao, C. G.",
+          "Flowerdew, J."
+        ],
+        "year": 2025,
+        "venue": "Studies in Higher Education, 50(3), 512–530",
+        "doi": "10.1080/03075079.2024.2398011",
+        "tier": 1,
+        "quote": "Developing academic phraseology and discipline-specific collocations: An empirical trial of AI concordance prompts"
+      },
+      {
+        "id": "SRC-015",
+        "name": "Weigle, S. C. (2024)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Assessing the impact of AI text generation on unassisted synthesis writing ability in university EAP programs",
+        "authors": [
+          "Weigle, S. C.",
+          "Barkaoui, K."
+        ],
+        "year": 2024,
+        "venue": "Assessing Writing, 61, 100845",
+        "doi": "10.1016/j.asw.2024.100845",
+        "tier": 1,
+        "quote": "Assessing the impact of AI text generation on unassisted synthesis writing ability in university EAP programs"
+      },
+      {
+        "id": "SRC-016",
+        "name": "Lee, I. (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Socratic dialogue prompts vs. direct auto-correction: Differential impacts on L2 student self-efficacy and voice",
+        "authors": [
+          "Lee, I.",
+          "Mak, P."
+        ],
+        "year": 2025,
+        "venue": "System, 124, 103350",
+        "doi": "10.1016/j.system.2025.103350",
+        "tier": 1,
+        "quote": "Socratic dialogue prompts vs. direct auto-correction: Differential impacts on L2 student self-efficacy and voice"
+      },
+      {
+        "id": "ev-esl-01",
+        "name": "ev-esl-01: Thesis-Evidence Coherence & Move Structure (g=+0.58)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 29,
+        "dimension": "argumentative_structure",
+        "direction": "SUPPORTS",
+        "effect_size": 0.58,
+        "ci_lower": 0.4,
+        "ci_upper": 0.76,
+        "sample_size": 280,
+        "wwc_rating": "Meets Standards with Reservations",
+        "quote": "Structured Socratic outline prompts significantly improved Toulmin argument structure and claim-evidence alignment in first-draft essays (g=+0.58)."
+      },
+      {
+        "id": "ev-esl-02",
+        "name": "ev-esl-02: Academic Vocabulary Density & Collocation Sophistication (g=+0.48)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 27,
+        "dimension": "lexical_diversity",
+        "direction": "SUPPORTS",
+        "effect_size": 0.48,
+        "ci_lower": 0.31,
+        "ci_upper": 0.65,
+        "sample_size": 310,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Contextual academic synonym suggestions elevated AWL vocabulary density by 28% without increasing lexical distortion (g=+0.48)."
+      },
+      {
+        "id": "ev-esl-03",
+        "name": "ev-esl-03: Unassisted Delayed Essay Reasoning Score (g=-0.24)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 22,
+        "dimension": "critical_thinking_retention",
+        "direction": "CONTRADICTS",
+        "effect_size": -0.24,
+        "ci_lower": -0.42,
+        "ci_upper": -0.06,
+        "sample_size": 220,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Unguarded access to auto-generated paragraphs degraded independent counter-argument construction on unassisted exams (g=-0.24)."
+      },
+      {
+        "id": "ev-esl-04",
+        "name": "ev-esl-04: Authorial Voice Strength & Agency Rubric (g=+0.42)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 26,
+        "dimension": "authorial_voice",
+        "direction": "SUPPORTS",
+        "effect_size": 0.42,
+        "ci_lower": 0.25,
+        "ci_upper": 0.59,
+        "sample_size": 350,
+        "wwc_rating": "Meets Standards with Reservations",
+        "quote": "Mandatory reflection logs requiring students to justify accepting/rejecting AI revisions preserved individual authorial stance (g=+0.42)."
+      },
+      {
+        "id": "ev-esl-05",
+        "name": "ev-esl-05: Global Revision Uptake & Argument Validity (g=+0.52)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 28,
+        "dimension": "argumentative_structure",
+        "direction": "SUPPORTS",
+        "effect_size": 0.52,
+        "ci_lower": 0.34,
+        "ci_upper": 0.7,
+        "sample_size": 264,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Combining AI mechanical diagnostics with peer evaluative critique yielded higher revision quality than peer-only or AI-only arms (g=+0.52)."
+      },
+      {
+        "id": "ev-esl-06",
+        "name": "ev-esl-06: CARS Move Sequence Accuracy (g=+0.61)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 30,
+        "dimension": "argumentative_structure",
+        "direction": "SUPPORTS",
+        "effect_size": 0.61,
+        "ci_lower": 0.4,
+        "ci_upper": 0.82,
+        "sample_size": 195,
+        "wwc_rating": "Meets Standards with Reservations",
+        "quote": "Formative AI move feedback accelerated mastery of Swales CARS introductory framework (g=+0.61)."
+      },
+      {
+        "id": "ev-esl-07",
+        "name": "ev-esl-07: Coh-Metrix Connective Indices & Lexical Sophistication (g=+0.45)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 27,
+        "dimension": "lexical_diversity",
+        "direction": "SUPPORTS",
+        "effect_size": 0.45,
+        "ci_lower": 0.26,
+        "ci_upper": 0.64,
+        "sample_size": 240,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Interactive cohesive device prompts improved global text connectivity and Academic Formulas List usage (g=+0.45)."
+      },
+      {
+        "id": "ev-esl-08",
+        "name": "ev-esl-08: Delayed Solo Essay Counter-Argument Depth (g=-0.28)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 23,
+        "dimension": "critical_thinking_retention",
+        "direction": "CONTRADICTS",
+        "effect_size": -0.28,
+        "ci_lower": -0.46,
+        "ci_upper": -0.1,
+        "sample_size": 320,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Students writing with continuous AI sentence generation showed a 28% drop in solo rebuttals during a 4-week delayed assessment (g=-0.28)."
+      },
+      {
+        "id": "ev-esl-09",
+        "name": "ev-esl-09: Cross-Student Lexical Entropy & Idiolect Uniqueness (g=-0.20)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 22,
+        "dimension": "authorial_voice",
+        "direction": "CONTRADICTS",
+        "effect_size": -0.2,
+        "ci_lower": -0.39,
+        "ci_upper": -0.01,
+        "sample_size": 180,
+        "wwc_rating": "Meets Standards with Reservations",
+        "quote": "Unconstrained sentence rewriting caused stylistic homogenization across student cohorts, suppressing distinctive rhetoric (g=-0.20)."
+      },
+      {
+        "id": "ev-esl-10",
+        "name": "ev-esl-10: Global Writing Quality Composite (g=+0.51)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 28,
+        "dimension": "argumentative_structure",
+        "direction": "SUPPORTS",
+        "effect_size": 0.51,
+        "ci_lower": 0.38,
+        "ci_upper": 0.64,
+        "sample_size": 2850,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Synthesis across 34 empirical trials demonstrates consistent in-task structural gains when AI feedback is scaffolded (g=+0.51)."
+      },
+      {
+        "id": "ev-esl-11",
+        "name": "ev-esl-11: Paraphrase Originality & Citation Traceability (g=+0.39)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 25,
+        "dimension": "authorial_voice",
+        "direction": "SUPPORTS",
+        "effect_size": 0.39,
+        "ci_lower": 0.19,
+        "ci_upper": 0.59,
+        "sample_size": 210,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Prompting students to verify AI source syntheses against primary literature significantly reduced patchwriting (g=+0.39)."
+      },
+      {
+        "id": "ev-esl-12",
+        "name": "ev-esl-12: Argument Fallacy Identification & Rebuttal Strength (g=+0.55)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 29,
+        "dimension": "argumentative_structure",
+        "direction": "SUPPORTS",
+        "effect_size": 0.55,
+        "ci_lower": 0.36,
+        "ci_upper": 0.74,
+        "sample_size": 275,
+        "wwc_rating": "Meets Standards with Reservations",
+        "quote": "Socratic AI fallacy diagnostics prompted students to identify circular reasoning and strengthen warrant linkages (g=+0.55)."
+      },
+      {
+        "id": "ev-esl-13",
+        "name": "ev-esl-13: Epistemic Stance Diversity & Critical Questioning (g=-0.19)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 21,
+        "dimension": "critical_thinking_retention",
+        "direction": "CONTRADICTS",
+        "effect_size": -0.19,
+        "ci_lower": -0.37,
+        "ci_upper": -0.01,
+        "sample_size": 230,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Students receiving one-click AI thesis arguments demonstrated shallower evaluative nuance when formulating independent claims (g=-0.19)."
+      },
+      {
+        "id": "ev-esl-14",
+        "name": "ev-esl-14: Disciplinary Academic Phraseology Index (g=+0.46)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 27,
+        "dimension": "lexical_diversity",
+        "direction": "SUPPORTS",
+        "effect_size": 0.46,
+        "ci_lower": 0.29,
+        "ci_upper": 0.63,
+        "sample_size": 340,
+        "wwc_rating": "Meets Standards with Reservations",
+        "quote": "Interactive AI concordance exploration expanded academic phraseology without inducing formulaic boilerplate prose (g=+0.46)."
+      },
+      {
+        "id": "ev-esl-15",
+        "name": "ev-esl-15: Solo Multi-Source Synthesis Score (g=-0.22)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 22,
+        "dimension": "critical_thinking_retention",
+        "direction": "CONTRADICTS",
+        "effect_size": -0.22,
+        "ci_lower": -0.4,
+        "ci_upper": -0.04,
+        "sample_size": 250,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Replacing student drafting with AI synthesis resulted in lower conceptual synthesis ability during post-intervention unassisted exams (g=-0.22)."
+      },
+      {
+        "id": "ev-esl-16",
+        "name": "ev-esl-16: Writing Agency & Metacognitive Stance Control (g=+0.47)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 27,
+        "dimension": "authorial_voice",
+        "direction": "SUPPORTS",
+        "effect_size": 0.47,
+        "ci_lower": 0.29,
+        "ci_upper": 0.65,
+        "sample_size": 290,
+        "wwc_rating": "Meets Standards without Reservations",
+        "quote": "Scaffolding that guided students via Socratic questioning rather than direct edits fostered higher agency and distinct voice (g=+0.47)."
+      },
+      {
+        "id": "OUT-STRUCTURE",
+        "name": "📊 Argumentative Structure & Coherence",
+        "category": 3,
+        "category_name": "OutcomeNode (测量指标)",
+        "symbolSize": 30,
+        "dimension": "PROCEDURAL_EFFICIENCY",
+        "value": "Toulmin claim-evidence-warrant structure and genre move competence"
+      },
+      {
+        "id": "OUT-LEXICAL",
+        "name": "📊 Academic Lexical Diversity & Register",
+        "category": 3,
+        "category_name": "OutcomeNode (测量指标)",
+        "symbolSize": 30,
+        "dimension": "CONCEPTUAL_MASTERY",
+        "value": "Academic Word List (AWL) density and disciplinary phraseological collocations"
+      },
+      {
+        "id": "OUT-RETENTION",
+        "name": "📊 Solo Critical Argument Retention",
+        "category": 3,
+        "category_name": "OutcomeNode (测量指标)",
+        "symbolSize": 30,
+        "dimension": "TRANSFER_ABILITY",
+        "value": "Delayed unassisted solo essay reasoning and counter-argument rebuttal depth"
+      },
+      {
+        "id": "OUT-VOICE",
+        "name": "📊 Authorial Voice & Text Originality",
+        "category": 3,
+        "category_name": "OutcomeNode (测量指标)",
+        "symbolSize": 30,
+        "dimension": "RETENTION",
+        "value": "Idiolect uniqueness, paraphrase originality, and resistance to stylistic homogenization"
+      },
+      {
+        "id": "CLM-001",
+        "name": "CLM-001: Socratic outline scaffol...",
+        "category": 2,
+        "category_name": "ClaimNode (科学主张)",
+        "symbolSize": 34,
+        "status": "SUPPORTED",
+        "pooled_g": 0.54,
+        "value": "Socratic outline scaffolding and argument gap diagnostics significantly improve argumentative essay coherence and claim-evidence alignment.",
+        "quote": "Low risk of bias; effects reflect structured drafting support and move-level guidance in formative writing."
+      },
+      {
+        "id": "CLM-002",
+        "name": "CLM-002: Contextual lexical synon...",
+        "category": 2,
+        "category_name": "ClaimNode (科学主张)",
+        "symbolSize": 34,
+        "status": "SUPPORTED",
+        "pooled_g": 0.46,
+        "value": "Contextual lexical synonym suggestions and collocation diagnostics enhance academic register and vocabulary richness.",
+        "quote": "Low risk of bias; improvements in academic word density and collocation sophistication are robust across RCTs."
+      },
+      {
+        "id": "CLM-003",
+        "name": "CLM-003: Unguarded reliance on ge...",
+        "category": 2,
+        "category_name": "ClaimNode (科学主张)",
+        "symbolSize": 34,
+        "status": "SUPPORTED",
+        "pooled_g": -0.23,
+        "value": "Unguarded reliance on generative text replacement degrades unassisted critical reasoning, solo argument retention, and authorial voice.",
+        "quote": "High risk of scaffolding dependency and voice atrophy if text replacement is unconstrained; mitigated only by mandatory metacognitive critique logs."
+      },
+      {
+        "id": "RSK-001",
+        "name": "⚠️ Scaffolding Dependency Trap",
+        "category": 4,
+        "category_name": "RiskNode (方法学风险)",
+        "symbolSize": 36,
+        "severity": "HIGH",
+        "value": "Cognitive offloading to AI paragraph generation weakens unassisted solo argumentative reasoning.",
+        "quote": "Enforce 4-phase fading scaffolding, mandatory reflection logs, and unassisted solo exams."
+      },
+      {
+        "id": "RSK-002",
+        "name": "⚠️ Authorial Voice Homogenization",
+        "category": 4,
+        "category_name": "RiskNode (方法学风险)",
+        "symbolSize": 36,
+        "severity": "MODERATE",
+        "value": "Unconstrained sentence rewriting suppresses distinctive non-native rhetoric and stylistic agency.",
+        "quote": "Mandate metacognitive justification logs before adopting any AI suggestion."
+      },
+      {
+        "id": "GAP-001",
+        "name": "🔬 Measurement/Retention Gap",
+        "category": 5,
+        "category_name": "GapNode (研究缺口)",
+        "symbolSize": 32,
+        "value": "Lack of multi-semester tracking to assess long-term transfer to postgraduate thesis writing.",
+        "quote": "Multi-year quasi-experimental cohort tracking in subsequent academic courses."
+      },
+      {
+        "id": "DEC-001",
+        "name": "⚖️ PILOT",
+        "category": 6,
+        "category_name": "DecisionNode (裁决快照)",
+        "symbolSize": 50,
+        "verdict": "PILOT",
+        "confidence": 0.88,
+        "value": "Empirical evidence reveals an acute Task vs. Learning divergence in L2 writing: unguarded AI generation produces immediate drafting fluency (+0.54g) but impairs delayed unassisted critical thinking (-0.23g) and authorial voice (-0.20g). A total ban is educationally unviable, while unconstrained rollout causes severe skill atrophy. Therefore, the tribunal adjudicates a restricted PILOT verdict governed by a 4-phase fading scaffolding protocol and mandatory justification logs.",
+        "quote": "Applicable to undergraduate ESL/EAP academic writing compulsory courses; strictly prohibited in unassisted closed-book examinations and high-stakes summative certifications without cognitive guardrails."
+      }
+    ],
+    "links": [
+      {
+        "source": "SRC-001",
+        "target": "ev-esl-01",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-01",
+        "target": "CLM-001",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.16
+        }
+      },
+      {
+        "source": "ev-esl-01",
+        "target": "OUT-STRUCTURE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-002",
+        "target": "ev-esl-02",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-02",
+        "target": "CLM-002",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-02",
+        "target": "OUT-LEXICAL",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-003",
+        "target": "ev-esl-03",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-03",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "EXPOSES_RISK"
+        },
+        "lineStyle": {
+          "color": "#f85149",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-03",
+        "target": "OUT-RETENTION",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-004",
+        "target": "ev-esl-04",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-04",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-04",
+        "target": "OUT-VOICE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-005",
+        "target": "ev-esl-05",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-05",
+        "target": "CLM-001",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.04
+        }
+      },
+      {
+        "source": "ev-esl-05",
+        "target": "OUT-STRUCTURE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-006",
+        "target": "ev-esl-06",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-06",
+        "target": "CLM-001",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.22
+        }
+      },
+      {
+        "source": "ev-esl-06",
+        "target": "OUT-STRUCTURE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-007",
+        "target": "ev-esl-07",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-07",
+        "target": "CLM-002",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-07",
+        "target": "OUT-LEXICAL",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-008",
+        "target": "ev-esl-08",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-08",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "EXPOSES_RISK"
+        },
+        "lineStyle": {
+          "color": "#f85149",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-08",
+        "target": "OUT-RETENTION",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-009",
+        "target": "ev-esl-09",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-09",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "EXPOSES_RISK"
+        },
+        "lineStyle": {
+          "color": "#f85149",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-09",
+        "target": "OUT-VOICE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-010",
+        "target": "ev-esl-10",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-10",
+        "target": "CLM-001",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.02
+        }
+      },
+      {
+        "source": "ev-esl-10",
+        "target": "OUT-STRUCTURE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-011",
+        "target": "ev-esl-11",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-11",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-11",
+        "target": "OUT-VOICE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-012",
+        "target": "ev-esl-12",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-12",
+        "target": "CLM-001",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.1
+        }
+      },
+      {
+        "source": "ev-esl-12",
+        "target": "OUT-STRUCTURE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-013",
+        "target": "ev-esl-13",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-13",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "EXPOSES_RISK"
+        },
+        "lineStyle": {
+          "color": "#f85149",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-13",
+        "target": "OUT-RETENTION",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-014",
+        "target": "ev-esl-14",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-14",
+        "target": "CLM-002",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-14",
+        "target": "OUT-LEXICAL",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-015",
+        "target": "ev-esl-15",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-15",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "EXPOSES_RISK"
+        },
+        "lineStyle": {
+          "color": "#f85149",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-15",
+        "target": "OUT-RETENTION",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "SRC-016",
+        "target": "ev-esl-16",
+        "label": {
+          "show": true,
+          "formatter": "PRODUCES_EVIDENCE"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "ev-esl-16",
+        "target": "CLM-003",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 1.0
+        }
+      },
+      {
+        "source": "ev-esl-16",
+        "target": "OUT-VOICE",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES_OUTCOME"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "CLM-001",
+        "target": "DEC-001",
+        "label": {
+          "show": true,
+          "formatter": "INFORMS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "CLM-002",
+        "target": "DEC-001",
+        "label": {
+          "show": true,
+          "formatter": "INFORMS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "CLM-003",
+        "target": "DEC-001",
+        "label": {
+          "show": true,
+          "formatter": "INFORMS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "RSK-001",
+        "target": "DEC-001",
+        "label": {
+          "show": true,
+          "formatter": "CONSTRAINS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "RSK-002",
+        "target": "DEC-001",
+        "label": {
+          "show": true,
+          "formatter": "CONSTRAINS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      }
+    ]
+  }
+}
