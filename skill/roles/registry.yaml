@@ -1,0 +1,45 @@
+roles:
+  education-planner:
+    responsibility: framing completeness and scope
+    stages: [frame]
+    capabilities: [research-planning]
+    critical_path: true
+  evidence-retriever:
+    responsibility: source acquisition and provenance
+    stages: [retrieve]
+    capabilities: [literature-review, full-text-fetch, source-validation]
+  evidence-analyst:
+    responsibility: structured finding extraction
+    stages: [extract]
+    capabilities: [evidence-extraction]
+  skeptic:
+    responsibility: independent counter-evidence coverage
+    stages: [challenge]
+    capabilities: [contradiction-analysis, counter-retrieval]
+    independence_required: true
+    critical_path: true
+  method-reviewer:
+    responsibility: methodology and construct-validity appraisal
+    stages: [audit]
+    capabilities: [methodology-audit]
+    independence_required: true
+    critical_path: true
+  evidence-judge:
+    responsibility: evidence-bounded adjudication and applicability
+    stages: [adjudicate, applicability]
+    capabilities: [evidence-review, decision-adjudication, applicability]
+    critical_path: true
+  intervention-designer:
+    responsibility: grounded intervention or pilot design
+    stages: [intervene]
+    capabilities: [study-design, intervention-design]
+  evaluation-designer:
+    responsibility: estimable evaluation and update logic
+    stages: [evaluate]
+    capabilities: [evaluation-design, data-analysis]
+
+execution:
+  max_parallel_workers: 6
+  split_by: evidence_axis
+  single_writer: lead-orchestrator
+  recursive_swarm: false
