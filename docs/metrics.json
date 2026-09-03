@@ -1,12 +1,11 @@
 {
   "engine_version": "6.0.0",
-  "test_functions": 778,
-  "test_files": 80,
-  "schema_count": 37,
-  "reference_doc_count": 15,
+  "test_functions": 810,
+  "test_files": 88,
+  "schema_count": 47,
+  "reference_doc_count": 19,
   "gold_annotation_count": 30,
   "example_packs": [
-    "ai-coding-assistant",
     "ai-coding-assistant-evidence",
     "ai-tutor",
     "ai-writing-assistant",
