@@ -3,6 +3,7 @@ import json
 import os
 import shlex
 import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from .core import (
@@ -28,12 +29,7 @@ def _run_json(command: str, cwd: Path, env=None) -> dict:
 
 
 class DailyEvolutionRunner:
-    """Run branch-only autoresearch against an external, pre-authorized agent.
-
-    The runner never chooses or authorizes a model. Agent and evaluator commands
-    are explicit inputs. Commands run without a shell, and the runner never
-    merges, pushes, releases or deploys.
-    """
+    """Run bounded branch-only autoresearch against an external approved agent."""
 
     def __init__(self, repo: str | Path, *, profile: DailyProfile | None = None):
         self.repo = Path(repo).resolve()
@@ -50,18 +46,23 @@ class DailyEvolutionRunner:
         statuses: list[str] = []
         spent = 0.0
         best = None
+        stop_reason = "completed"
+        started = time.monotonic()
 
         for index in range(1, self.profile.max_experiments + 1):
             if spent >= self.profile.max_cost_usd:
+                stop_reason = "cost_budget_exhausted"
+                break
+            elapsed_minutes = (time.monotonic() - started) / 60
+            if elapsed_minutes >= self.profile.max_wall_minutes:
+                stop_reason = "wall_time_exhausted"
                 break
             experiment_id = f"EXP-{index:04d}"
             env = os.environ.copy()
-            env.update(
-                {
-                    "EDUEVIDENCE_EXPERIMENT_ID": experiment_id,
-                    "EDUEVIDENCE_PROGRAM": str(workspace.path / "autoevolve" / "program.md"),
-                }
-            )
+            env.update({
+                "EDUEVIDENCE_EXPERIMENT_ID": experiment_id,
+                "EDUEVIDENCE_PROGRAM": str(workspace.path / "autoevolve" / "program.md"),
+            })
             candidate = None
             try:
                 proposal = _run_json(agent_command, workspace.path, env)
@@ -113,6 +114,7 @@ class DailyEvolutionRunner:
                 log.append(experiment, description=str(exc))
                 statuses.append("CRASH")
             if plateau.plateau(statuses):
+                stop_reason = "plateau"
                 break
 
         report = {
@@ -123,7 +125,9 @@ class DailyEvolutionRunner:
             "statuses": statuses,
             "best_experiment_id": best,
             "cost": spent,
+            "wall_minutes": round((time.monotonic() - started) / 60, 3),
             "plateau": plateau.plateau(statuses),
+            "stop_reason": stop_reason,
             "promotion": "branch_only",
         }
         (workspace.path / "autoevolve" / "daily-report.json").write_text(
