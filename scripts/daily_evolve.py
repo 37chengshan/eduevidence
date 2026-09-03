@@ -13,12 +13,14 @@ def main(argv=None):
     parser.add_argument("--max-experiments", type=int, default=20)
     parser.add_argument("--max-cost-usd", type=float, default=5)
     parser.add_argument("--max-wall-minutes", type=int, default=180)
+    parser.add_argument("--push-branch", action="store_true")
     args = parser.parse_args(argv)
     profile = DailyProfile(args.max_experiments, args.max_cost_usd, args.max_wall_minutes)
     report = DailyEvolutionRunner(args.repo, profile=profile).run(
         agent_command=args.agent_command,
         eval_command=args.eval_command,
         run_tag=args.run_tag,
+        push_branch=args.push_branch,
     )
     print(json.dumps(report, indent=2))
     return 0
