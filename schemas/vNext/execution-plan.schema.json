@@ -1,0 +1,1 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["complexity","tasks","max_parallel_workers"],"properties":{"complexity":{"enum":["S","M","L"]},"tasks":{"type":"array","items":{"$ref":"task-spec.schema.json"}},"max_parallel_workers":{"type":"integer","minimum":0,"maximum":6},"plan_id":{"type":["string","null"]}},"additionalProperties":false}
