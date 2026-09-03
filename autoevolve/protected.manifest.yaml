@@ -1,0 +1,24 @@
+protected:
+  - benchmarks/annotations/**
+  - benchmarks/holdout/**
+  - benchmarks/evaluator/**
+  - schemas/**
+  - references/scientific-invariants.md
+  - scripts/pre_verdict_gate.py
+  - scripts/compute_confidence.py
+  - tests/scientific_invariants/**
+
+mutable:
+  safe:
+    - skill/workflows/**
+    - skill/agents/**
+    - skill/sub-skills/**
+    - retrieval/**
+    - references/presentation/**
+  controlled:
+    - engine/semantics.py
+    - engine/gaps.py
+    - scripts/complexity_gate.py
+    - engine/orchestration.py
+
+promotion: branch_only
