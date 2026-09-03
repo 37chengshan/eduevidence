@@ -1,0 +1,54 @@
+name: EduEvidence Daily Evolution
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 18 * * *"
+
+permissions:
+  contents: write
+
+env:
+  AGENT_COMMAND: ${{ vars.EDUEVIDENCE_EVOLVE_AGENT_COMMAND }}
+  EVAL_COMMAND: ${{ vars.EDUEVIDENCE_EVOLVE_EVAL_COMMAND }}
+
+jobs:
+  evolve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e '.[dev]'
+      - name: Check opt-in configuration
+        id: configured
+        run: |
+          if [ -n "$AGENT_COMMAND" ] && [ -n "$EVAL_COMMAND" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Daily evolution is disabled until both repository variables are configured."
+          fi
+      - name: Configure git identity
+        if: steps.configured.outputs.enabled == 'true'
+        run: |
+          git config user.name "eduevidence-autoresearch"
+          git config user.email "autoresearch@users.noreply.github.com"
+      - name: Run bounded evolution and push experiment branch only
+        if: steps.configured.outputs.enabled == 'true'
+        run: |
+          python scripts/daily_evolve.py \
+            --repo . \
+            --agent-command "$AGENT_COMMAND" \
+            --eval-command "$EVAL_COMMAND" \
+            --max-experiments 20 \
+            --max-cost-usd 5 \
+            --max-wall-minutes 180 \
+            --push-branch
+
+# This workflow never opens or merges a PR and never deploys/releases.
+# The configured agent/evaluator are external, pre-authorized commands.
