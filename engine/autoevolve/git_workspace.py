@@ -62,3 +62,9 @@ class GitWorkspace:
         _run(self.path, "add", "-A")
         _run(self.path, "commit", "-m", message)
         return _run(self.path, "rev-parse", "HEAD", capture=True)
+
+    def push(self, remote: str = "origin") -> None:
+        """Push only this experiment branch. Never force-push or merge."""
+        if not self.branch.startswith("autoresearch/"):
+            raise ValueError("only autoresearch branches may be pushed by autoevolve")
+        _run(self.path, "push", "-u", remote, self.branch)
