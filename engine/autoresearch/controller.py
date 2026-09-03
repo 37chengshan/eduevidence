@@ -1,0 +1,129 @@
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Any, Callable
+from .contracts import (
+    IterationStatus,
+    ResearchBudget,
+    ResearchExperimentType,
+    ResearchIteration,
+    ResearchStrategy,
+)
+from .gap_priority import GapPriority, rank_gaps
+from .saturation import detect_saturation, transition_to_empirical
+
+
+@dataclass(frozen=True)
+class StepResult:
+    iteration: ResearchIteration
+    priority: GapPriority
+    next_action: str
+    rationale: tuple[str, ...]
+
+
+class EvidenceAutoresearchController:
+    """Bounded gap-to-evidence loop controller.
+
+    The injected executor returns staging evidence only. Canonical GraphRevision
+    writes stay behind the caller-provided single-writer callback.
+    """
+
+    def __init__(self, *, max_iterations: int = 5):
+        if not 1 <= max_iterations <= 50:
+            raise ValueError("max_iterations must be 1..50")
+        self.max_iterations = max_iterations
+
+    def select_gap(
+        self, gaps: list[dict[str, Any]], decision: dict[str, Any] | None = None
+    ) -> GapPriority:
+        ranked = rank_gaps(
+            [g for g in gaps if str(g.get("status", "open")).lower() not in {"resolved"}],
+            decision=decision,
+        )
+        if not ranked:
+            raise ValueError("no unresolved KnowledgeGap available")
+        return ranked[0]
+
+    def build_strategy(self, priority: GapPriority, gap: dict[str, Any]) -> ResearchStrategy:
+        gap_type = str(gap.get("gap_type", ""))
+        experiment_type = (
+            ResearchExperimentType.COUNTER_EVIDENCE_RETRIEVAL
+            if gap_type == "unresolved_conflict"
+            else ResearchExperimentType.TARGETED_RETRIEVAL
+        )
+        hypothesis = (
+            f"Targeted search for {gap_type or 'gap'} will find evidence that materially "
+            f"improves directness or resolves {priority.gap_id}."
+        )
+        return ResearchStrategy(
+            f"STRAT-{priority.gap_id}-{experiment_type.value.lower()}",
+            experiment_type,
+            hypothesis,
+            "decision_relevant_evidence",
+            ResearchBudget(),
+        )
+
+    def step(
+        self,
+        *,
+        project_id: str,
+        base_graph_revision: int,
+        gaps: list[dict[str, Any]],
+        decision: dict[str, Any] | None,
+        history: list[dict[str, Any]],
+        executor: Callable[[ResearchStrategy, dict[str, Any]], dict[str, Any]],
+        graph_commit: Callable[[list[str]], int] | None = None,
+        decision_snapshot_id: str | None = None,
+        ethics_feasible: bool = False,
+    ) -> StepResult:
+        priority = self.select_gap(gaps, decision)
+        gap = next(g for g in gaps if str(g.get("gap_id")) == priority.gap_id)
+        strategy = self.build_strategy(priority, gap)
+        iteration = ResearchIteration(
+            f"RIT-{len(history) + 1:04d}",
+            project_id,
+            base_graph_revision,
+            priority.gap_id,
+            strategy,
+        )
+        outcome = executor(strategy, gap)
+        valid = list(dict.fromkeys(outcome.get("validated_evidence_ids") or []))
+        iteration.validated_evidence_ids = valid
+        iteration.candidate_sources = list(outcome.get("candidate_sources") or [])
+        iteration.search_attempts = list(outcome.get("search_attempts") or [])
+        iteration.negative_search_ids = list(outcome.get("negative_search_ids") or [])
+        iteration.evidence_gain = dict(outcome.get("evidence_gain") or {})
+
+        if valid:
+            if graph_commit is None:
+                raise ValueError("validated evidence requires single-writer graph_commit callback")
+            iteration.new_graph_revision = graph_commit(valid)
+            iteration.decision_snapshot_id = decision_snapshot_id
+            iteration.complete(IterationStatus.COMPLETED_GAIN)
+            return StepResult(
+                iteration, priority, "re_adjudicate", ("validated evidence appended",)
+            )
+
+        iteration.complete(IterationStatus.COMPLETED_NO_GAIN)
+        combined = history + [iteration.as_dict()]
+        saturation = detect_saturation(combined)
+        empirical, reasons = transition_to_empirical(
+            dvi_band=priority.dvi_band.value,
+            decision_material=priority.dvi_band.value == "HIGH",
+            unresolved=True,
+            saturation=saturation,
+            ethics_feasible=ethics_feasible,
+        )
+        if empirical:
+            iteration.status = IterationStatus.EMPIRICAL_NEEDED
+            return StepResult(iteration, priority, "empirical_evidence_needed", reasons)
+        if saturation.saturated:
+            iteration.status = IterationStatus.SEARCH_SATURATED
+            return StepResult(
+                iteration, priority, "stop_search_saturated", saturation.rationale
+            )
+        return StepResult(
+            iteration,
+            priority,
+            "next_iteration",
+            ("no validated evidence in this bounded iteration",),
+        )
