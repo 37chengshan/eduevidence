@@ -22,9 +22,7 @@ def _run_json(command: str, cwd: Path, env=None) -> dict:
     argv = shlex.split(command)
     if not argv:
         raise ValueError("empty command")
-    completed = subprocess.run(
-        argv, cwd=cwd, check=True, text=True, capture_output=True, env=env
-    )
+    completed = subprocess.run(argv, cwd=cwd, check=True, text=True, capture_output=True, env=env)
     return json.loads(completed.stdout)
 
 
@@ -36,7 +34,14 @@ class DailyEvolutionRunner:
         self.profile = profile or DailyProfile()
         self.profile.validate()
 
-    def run(self, *, agent_command: str, eval_command: str, run_tag: str | None = None) -> dict:
+    def run(
+        self,
+        *,
+        agent_command: str,
+        eval_command: str,
+        run_tag: str | None = None,
+        push_branch: bool = False,
+    ) -> dict:
         tag = run_tag or datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
         workspace = GitWorkspace.create(self.repo, tag)
         log = ExperimentLog(workspace.path / "autoevolve")
@@ -53,8 +58,7 @@ class DailyEvolutionRunner:
             if spent >= self.profile.max_cost_usd:
                 stop_reason = "cost_budget_exhausted"
                 break
-            elapsed_minutes = (time.monotonic() - started) / 60
-            if elapsed_minutes >= self.profile.max_wall_minutes:
+            if (time.monotonic() - started) / 60 >= self.profile.max_wall_minutes:
                 stop_reason = "wall_time_exhausted"
                 break
             experiment_id = f"EXP-{index:04d}"
@@ -117,6 +121,10 @@ class DailyEvolutionRunner:
                 stop_reason = "plateau"
                 break
 
+        pushed = False
+        if push_branch and best is not None:
+            workspace.push()
+            pushed = True
         report = {
             "run_tag": tag,
             "branch": workspace.branch,
@@ -129,6 +137,7 @@ class DailyEvolutionRunner:
             "plateau": plateau.plateau(statuses),
             "stop_reason": stop_reason,
             "promotion": "branch_only",
+            "branch_pushed": pushed,
         }
         (workspace.path / "autoevolve" / "daily-report.json").write_text(
             json.dumps(report, indent=2) + "\n", encoding="utf-8"
