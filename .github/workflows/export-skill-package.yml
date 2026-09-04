@@ -1,0 +1,50 @@
+name: Export Skill Package
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/export-skill-package.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build canonical submission closure
+        run: bash packaging/make_upload.sh
+      - name: Validate Skill entrypoint
+        run: |
+          python - <<'PY'
+          import re, yaml
+          from pathlib import Path
+          p = Path('dist/eduevidence-submission/SKILL.md')
+          text = p.read_text(encoding='utf-8')
+          m = re.match(r'^---\n(.*?)\n---', text, re.S)
+          assert m, 'missing frontmatter'
+          fm = yaml.safe_load(m.group(1))
+          assert fm.get('name') and fm.get('description')
+          assert Path('dist/eduevidence-submission/agents/openai.yaml').is_file()
+          print('skill entrypoint OK')
+          PY
+      - name: Create exact skill.zip
+        run: |
+          cd dist
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root = Path('eduevidence-submission')
+          with zipfile.ZipFile('skill.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(root.rglob('*')):
+                  if p.is_file():
+                      z.write(p, p.relative_to(root.parent))
+          print(Path('skill.zip').stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eduevidence-skill-export
+          path: dist/skill.zip
+          if-no-files-found: error
+          retention-days: 1
