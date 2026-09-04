@@ -1,0 +1,4 @@
+interface:
+  display_name: "EduEvidence"
+  short_description: "Decision-grade evidence research, bounded pilots, and living decision updates"
+  brand_color: "#D97757"
