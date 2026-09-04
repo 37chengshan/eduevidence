@@ -48,6 +48,11 @@ class EvalSnapshot:
     complexity: float
     repeats: int = 1
     noise_floor: float = 0.0
+    dev_passed: bool = False
+    holdout_passed: bool = False
+    adversarial_passed: bool = False
+    holdout_isolation_verified: bool = False
+    eval_suite_hash: str = ""
 
 
 @dataclass
@@ -128,8 +133,6 @@ class ProtectedManifest:
         if not path.is_file():
             return cls()
         protected, safe, controlled = _parse_manifest(path)
-        # The protection manifest must protect itself and the evaluator control
-        # plane; inject hard defaults even if a human-edited manifest omitted one.
         merged_protected = tuple(dict.fromkeys((*protected, *PROTECTED_DEFAULTS)))
         return cls(
             merged_protected,
@@ -188,6 +191,24 @@ class ProtectedManifest:
         return digest.hexdigest()
 
 
+def _promotion_evidence_ready(baseline: EvalSnapshot, candidate: EvalSnapshot) -> tuple[bool, str]:
+    if not baseline.eval_suite_hash or baseline.eval_suite_hash != candidate.eval_suite_hash:
+        return False, "baseline/candidate eval suite hash missing or mismatched"
+    required = (
+        baseline.dev_passed,
+        baseline.holdout_passed,
+        baseline.adversarial_passed,
+        baseline.holdout_isolation_verified,
+        candidate.dev_passed,
+        candidate.holdout_passed,
+        candidate.adversarial_passed,
+        candidate.holdout_isolation_verified,
+    )
+    if not all(required):
+        return False, "DEV/HOLDOUT/adversarial gates and holdout isolation are required for automatic KEEP"
+    return True, ""
+
+
 def promote(
     baseline: EvalSnapshot,
     candidate: EvalSnapshot,
@@ -223,10 +244,16 @@ def promote(
         if regressions:
             return "REJECT", "within noise floor with regression: " + ",".join(regressions)
         if candidate.complexity < baseline.complexity - simplicity_tolerance:
+            ready, why = _promotion_evidence_ready(baseline, candidate)
+            if not ready:
+                return "HUMAN_REVIEW", why
             return "KEEP", "equivalent research quality with simpler implementation"
         return "RETEST", "candidate delta is within empirical noise floor"
 
     if delta > noise and not regressions:
+        ready, why = _promotion_evidence_ready(baseline, candidate)
+        if not ready:
+            return "HUMAN_REVIEW", why
         return "KEEP", "material research-quality improvement without Pareto regression"
     return "HUMAN_REVIEW", "Pareto trade-off: " + ",".join(regressions or ["mixed metrics"])
 
