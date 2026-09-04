@@ -33,7 +33,7 @@ class EvidenceAutoresearchController:
             [
                 g for g in gaps
                 if str(g.get("status", "open")).lower()
-                not in {"resolved", "low_decision_value"}
+                not in {"resolved", "low_decision_value", "search_saturated", "empirical_needed"}
             ],
             decision=decision,
         )
@@ -105,7 +105,7 @@ class EvidenceAutoresearchController:
         decision: dict[str, Any] | None,
         history: list[dict[str, Any]],
         executor: Callable[[ResearchStrategy, dict[str, Any]], dict[str, Any]],
-        graph_commit: Callable[[list[str]], int] | None = None,
+        graph_commit: Callable[[list[str]], int | None] | None = None,
         decision_snapshot_id: str | None = None,
         ethics_feasible: bool = False,
     ) -> StepResult:
@@ -126,18 +126,31 @@ class EvidenceAutoresearchController:
         if valid:
             if graph_commit is None:
                 raise ValueError("validated evidence requires single-writer graph_commit callback")
-            iteration.new_graph_revision = graph_commit(valid)
-            iteration.decision_snapshot_id = decision_snapshot_id
-            iteration.complete(IterationStatus.COMPLETED_GAIN)
-            return StepResult(iteration, priority, "re_adjudicate", ("validated evidence appended",))
+            committed_revision = graph_commit(valid)
+            if committed_revision is not None and committed_revision > base_graph_revision:
+                iteration.new_graph_revision = committed_revision
+                iteration.decision_snapshot_id = decision_snapshot_id
+                iteration.complete(IterationStatus.COMPLETED_GAIN)
+                return StepResult(
+                    iteration,
+                    priority,
+                    "re_adjudicate",
+                    ("validated evidence appended; re-adjudication required before another research iteration",),
+                )
+            iteration.evidence_gain = {
+                **iteration.evidence_gain,
+                "duplicate_only": True,
+                "unique_eligible_evidence": 0,
+            }
 
         iteration.complete(IterationStatus.COMPLETED_NO_GAIN)
         combined = history + [iteration.as_dict()]
+        gap_history = [row for row in combined if row.get("gap_id") == priority.gap_id]
         available = {item.value for item in self.strategy_types_for(gap)}
-        saturation = detect_saturation(combined, available_strategy_types=available)
+        saturation = detect_saturation(gap_history, available_strategy_types=available)
         empirical, reasons = transition_to_empirical(
             dvi_band=priority.dvi_band.value,
-            decision_material=priority.dvi_band.value == "HIGH",
+            decision_material=priority.decision_material,
             unresolved=True,
             saturation=saturation,
             ethics_feasible=ethics_feasible,
@@ -152,5 +165,5 @@ class EvidenceAutoresearchController:
             iteration,
             priority,
             "next_iteration",
-            ("no validated evidence in this bounded iteration",),
+            ("no new validated evidence in this bounded iteration",),
         )
