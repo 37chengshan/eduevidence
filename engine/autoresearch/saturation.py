@@ -11,32 +11,53 @@ class SaturationResult:
     rationale: tuple[str, ...]
 
 
+def _is_low_yield(row: dict[str, Any]) -> bool:
+    gain = row.get("evidence_gain") or {}
+    unique = int(gain.get("unique_eligible_evidence", 0) or 0)
+    direct = int(gain.get("direct_outcome_findings", 0) or 0)
+    delta = float(gain.get("decision_boundary_delta", 0) or 0)
+    duplicate_rate = float(gain.get("duplicate_rate", 0) or 0)
+    candidate_sources = row.get("candidate_sources") or []
+    no_candidates = len(candidate_sources) == 0
+    return (
+        unique == 0
+        and direct == 0
+        and abs(delta) < 1e-12
+        and (duplicate_rate >= 0.5 or no_candidates)
+    )
+
+
 def detect_saturation(
     iterations: list[dict[str, Any]],
     *,
     min_consecutive: int = 2,
     available_strategy_types: set[str] | None = None,
 ) -> SaturationResult:
+    """Detect bounded secondary-search saturation.
+
+    Strategy diversity is computed across the full history for the gap, while
+    the low-yield condition is intentionally a trailing streak. Empty searches
+    count as low-yield even when duplicate_rate is zero; otherwise a provider
+    returning no candidates could keep the loop alive forever.
+    """
+    attempted_all = {
+        str((row.get("strategy") or {}).get("experiment_type", ""))
+        for row in iterations
+        if str((row.get("strategy") or {}).get("experiment_type", ""))
+    }
     streak = 0
-    rationale: list[str] = []
-    attempted: set[str] = set()
     for row in reversed(iterations):
-        strat = row.get("strategy", {})
-        attempted.add(str(strat.get("experiment_type", "")))
-        gain = row.get("evidence_gain") or {}
-        unique = int(gain.get("unique_eligible_evidence", 0) or 0)
-        direct = int(gain.get("direct_outcome_findings", 0) or 0)
-        delta = float(gain.get("decision_boundary_delta", 0) or 0)
-        duplicate_rate = float(gain.get("duplicate_rate", 0) or 0)
-        low = unique == 0 and direct == 0 and abs(delta) < 1e-12 and duplicate_rate >= 0.5
-        if low:
+        if _is_low_yield(row):
             streak += 1
         else:
             break
+
     if available_strategy_types:
-        diversity_exhausted = available_strategy_types.issubset(attempted)
+        diversity_exhausted = available_strategy_types.issubset(attempted_all)
     else:
-        diversity_exhausted = len({x for x in attempted if x}) >= 2
+        diversity_exhausted = len(attempted_all) >= 2
+
+    rationale: list[str] = []
     if streak >= min_consecutive:
         rationale.append(
             f"{streak} consecutive iterations produced no unique/direct evidence or decision-boundary change"
@@ -59,7 +80,6 @@ def transition_to_empirical(
     saturation: SaturationResult,
     ethics_feasible: bool,
 ) -> tuple[bool, tuple[str, ...]]:
-    reasons: list[str] = []
     checks = [
         (dvi_band.upper() == "HIGH", "gap DVI is HIGH"),
         (decision_material, "gap is material to the decision"),
@@ -67,7 +87,5 @@ def transition_to_empirical(
         (saturation.saturated, "secondary search is saturated"),
         (ethics_feasible, "empirical study is ethically/operationally feasible"),
     ]
-    for ok, text in checks:
-        if ok:
-            reasons.append(text)
-    return all(ok for ok, _ in checks), tuple(reasons)
+    reasons = tuple(text for ok, text in checks if ok)
+    return all(ok for ok, _ in checks), reasons
