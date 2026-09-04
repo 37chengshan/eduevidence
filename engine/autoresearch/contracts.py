@@ -87,6 +87,7 @@ class ResearchIteration:
     base_graph_revision: int
     gap_id: str
     strategy: ResearchStrategy
+    gap_lineage_key: str | None = None
     execution_plan_id: str | None = None
     search_attempts: list[dict[str, Any]] = field(default_factory=list)
     candidate_sources: list[str] = field(default_factory=list)
@@ -103,6 +104,8 @@ class ResearchIteration:
         self.strategy.validate()
         if self.base_graph_revision < 0:
             raise ValueError("base_graph_revision must be >= 0")
+        if self.gap_lineage_key is not None and not self.gap_lineage_key.startswith("KGK-"):
+            raise ValueError("gap_lineage_key must use the KGK- prefix")
         if self.new_graph_revision is not None:
             if not self.validated_evidence_ids:
                 raise ValueError("no-gain iteration must not create a GraphRevision")
