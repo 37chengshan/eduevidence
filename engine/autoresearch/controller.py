@@ -20,6 +20,30 @@ class StepResult:
     rationale: tuple[str, ...]
 
 
+def gap_lineage_key(gap: dict[str, Any]) -> str | None:
+    extensions = gap.get("extensions")
+    if not isinstance(extensions, dict):
+        return None
+    value = extensions.get("autoresearch_key")
+    if value is None:
+        return None
+    value = str(value).strip()
+    return value or None
+
+
+def history_matches_gap(row: dict[str, Any], gap: dict[str, Any]) -> bool:
+    """Match research history across graph revisions without conflating gaps.
+
+    New iterations persist the stable KGK lineage key. Legacy rows that predate
+    the key remain readable and match only by revision-local gap_id.
+    """
+    lineage = gap_lineage_key(gap)
+    row_lineage = row.get("gap_lineage_key")
+    if lineage and row_lineage:
+        return str(row_lineage) == lineage
+    return str(row.get("gap_id", "")) == str(gap.get("gap_id", ""))
+
+
 class EvidenceAutoresearchController:
     """Bounded gap-to-evidence loop with strategy memory."""
 
@@ -75,7 +99,7 @@ class EvidenceAutoresearchController:
         attempted = {
             str((row.get("strategy") or {}).get("experiment_type", ""))
             for row in history
-            if row.get("gap_id") == priority.gap_id
+            if history_matches_gap(row, gap)
         }
         choices = self.strategy_types_for(gap)
         experiment_type = next(
@@ -83,13 +107,15 @@ class EvidenceAutoresearchController:
             choices[-1],
         )
         gap_type = str(gap.get("gap_type", ""))
+        lineage = gap_lineage_key(gap)
         hypothesis = (
             f"{experiment_type.value} for {gap_type or 'gap'} will find "
             f"decision-relevant evidence that materially improves directness "
             f"or resolves {priority.gap_id}."
         )
+        strategy_anchor = lineage or priority.gap_id
         return ResearchStrategy(
-            f"STRAT-{priority.gap_id}-{experiment_type.value.lower()}",
+            f"STRAT-{strategy_anchor}-{experiment_type.value.lower()}",
             experiment_type,
             hypothesis,
             "decision_relevant_evidence",
@@ -113,9 +139,21 @@ class EvidenceAutoresearchController:
         gap = next(g for g in gaps if str(g.get("gap_id")) == priority.gap_id)
         strategy = self.build_strategy(priority, gap, history)
         iteration = ResearchIteration(
-            f"RIT-{len(history) + 1:04d}", project_id, base_graph_revision, priority.gap_id, strategy
+            f"RIT-{len(history) + 1:04d}",
+            project_id,
+            base_graph_revision,
+            priority.gap_id,
+            strategy,
+            gap_lineage_key=gap_lineage_key(gap),
         )
         outcome = executor(strategy, gap)
+        if not isinstance(outcome, dict):
+            raise ValueError("research executor must return a staging JSON object")
+        if "resolved_gap_ids" in outcome:
+            raise ValueError(
+                "executor must not author KnowledgeGap RESOLVED state; append validated "
+                "evidence, re-derive gaps, and let the main adjudication engine resolve them"
+            )
         valid = list(dict.fromkeys(outcome.get("validated_evidence_ids") or []))
         iteration.validated_evidence_ids = valid
         iteration.candidate_sources = list(outcome.get("candidate_sources") or [])
@@ -145,7 +183,7 @@ class EvidenceAutoresearchController:
 
         iteration.complete(IterationStatus.COMPLETED_NO_GAIN)
         combined = history + [iteration.as_dict()]
-        gap_history = [row for row in combined if row.get("gap_id") == priority.gap_id]
+        gap_history = [row for row in combined if history_matches_gap(row, gap)]
         available = {item.value for item in self.strategy_types_for(gap)}
         saturation = detect_saturation(gap_history, available_strategy_types=available)
         empirical, reasons = transition_to_empirical(
