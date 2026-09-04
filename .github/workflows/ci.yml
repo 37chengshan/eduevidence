@@ -41,10 +41,31 @@ jobs:
         run: |
           python -m pip wheel . -w /tmp/wheelbuild --no-deps
           python -m pip install /tmp/wheelbuild/*.whl --target /tmp/wheel-smoke --no-deps
-          PYTHONPATH=/tmp/wheel-smoke python -c "
-            from engine import ENGINE_VERSION
-            import engine.citation_check, engine.autoresearch, engine.autoevolve, retrieval.search, eduevidence_cli
-            print('wheel smoke OK', ENGINE_VERSION)"
+          cd /tmp
+          PYTHONPATH=/tmp/wheel-smoke python - <<'PY'
+          from pathlib import Path
+          from engine import ENGINE_VERSION
+          import eduevidence_cli
+          import engine.autoevolve
+          import engine.autoresearch
+          import engine.citation_check
+          import integrations.orchestration_dispatch
+          import retrieval.search
+
+          root = Path('/tmp/wheel-smoke').resolve()
+          modules = (
+              eduevidence_cli,
+              engine.autoevolve,
+              engine.autoresearch,
+              engine.citation_check,
+              integrations.orchestration_dispatch,
+              retrieval.search,
+          )
+          for module in modules:
+              path = Path(module.__file__).resolve()
+              assert path.is_relative_to(root), f'{module.__name__} imported from source tree: {path}'
+          print('isolated wheel smoke OK', ENGINE_VERSION)
+          PY
 
   schema-smoke:
     name: schema-smoke
