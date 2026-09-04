@@ -395,11 +395,6 @@ def _mutating_research_auto(args, workspace, root, state_path, gap_state_path, s
         )
         result = process(outcome, history, priority, strategy)
         completed.append(result.iteration.iteration_id)
-
-        for gap_id in outcome.get("resolved_gap_ids", []):
-            for gap_row in gaps:
-                if gap_row.get("gap_id") == gap_id:
-                    gap_row["status"] = "resolved"
         persist_result(result, completed)
 
         if result.next_action in {
