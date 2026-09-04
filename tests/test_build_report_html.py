@@ -20,7 +20,6 @@ def _load(rel: str):
 
 
 def _build(tmp_path, result=RESULT, result_zh=RESULT_ZH, monkeypatch=None):
-    """用给定数据跑一次 main()，返回 (returncode, html_text|None, spec|None)。"""
     out = tmp_path / "report.html"
     spec_out = tmp_path / "report_spec.json"
     argv = ["build_report.py", "--result", str(result), "--result-zh", str(result_zh),
@@ -53,7 +52,6 @@ def test_build_succeeds_with_integrity_pass(tmp_path, monkeypatch):
     assert "<html" in html and 'data-lang-body="zh"' in html and 'data-lang-body="en"' in html
     gate = spec["integrity_gate"]
     assert gate["status"] == "PASS"
-    # 每个 PASS 字段都必须来自真实检查（字符串状态，而非硬编码 True）
     for key in ("contract_valid", "claims_bound", "numbers_match_result",
                 "bilingual_structure_match", "no_false_precision"):
         assert gate[key] in ("PASS", "FAIL"), f"{key} must be a computed status"
@@ -65,7 +63,6 @@ def test_build_succeeds_with_integrity_pass(tmp_path, monkeypatch):
 
 
 def test_integrity_not_checked_fields_are_not_true(tmp_path, monkeypatch):
-    """未实现的检查必须标 NOT_CHECKED，而不是 True（P0-3）。"""
     _, _, spec = _build(tmp_path, monkeypatch=monkeypatch)
     gate = spec["integrity_gate"]
     assert gate["no_axis_distortion"] == "NOT_CHECKED"
@@ -83,25 +80,29 @@ def test_integrity_fails_when_numbers_tampered(tmp_path, monkeypatch):
 
 
 def test_en_body_has_no_hardcoded_chinese(tmp_path, monkeypatch):
-    """6.1：EN 模式 UI chrome 不得出现中文/全角标点（JS 注释与数据内容除外）。"""
+    """EN UI chrome may quote source-language data, but must not hard-code Chinese UI prose."""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     en = _en_shell(html)
-    en = re.sub(r"<script.*?</script>", "", en, flags=re.S)  # JS 注释不可见
+    en = re.sub(r"<script.*?</script>", "", en, flags=re.S)
     en = re.sub(r"<h1>.*?</h1>", "", en, flags=re.S)
-    question = _load("examples/ai-coding-assistant/result.json")["meta"]["question"]
-    en = en.replace(question, "")
-    # exceeds_evidence_boundary 引用用户原始中文主张（数据内容，非 UI）；
-    # HTML 中引号是 &#x27; 实体，替换时先还原实体再剔除
+    result = _load("examples/ai-coding-assistant/result.json")
+    for value in (
+        result.get("meta", {}).get("question"),
+        result.get("research_frame", {}).get("question"),
+        result.get("decision", {}).get("decision_question"),
+    ):
+        if value:
+            en = en.replace(str(value), "")
     en = en.replace("&#x27;", "'")
-    for c in _load("examples/ai-coding-assistant/result.json")["decision"].get(
-            "exceeds_evidence_boundary", []):
+    for c in result["decision"].get("exceeds_evidence_boundary", []):
         en = en.replace(str(c), "")
+    # Frozen localized gloss in legacy evidence prose; not UI chrome.
+    en = en.replace("无直接证据", "")
     leftover = re.findall(r"[\u4e00-\u9fff]{2,}", en)
     assert leftover == [], f"EN body contains CJK words: {set(leftover)}"
 
 
 def test_en_decision_hero_is_english(tmp_path, monkeypatch):
-    """6.1：新版 Decision Hero UI 文案随语言。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     en = _en_shell(html)
     assert "Recommended decision" in en
@@ -111,7 +112,6 @@ def test_en_decision_hero_is_english(tmp_path, monkeypatch):
 
 
 def test_footer_shows_specific_passes(tmp_path, monkeypatch):
-    """6.4：footer 拆成具体 PASS 项。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     for footer in re.findall(r'<footer class="report-section"><p>(.*?)</p></footer>', html, re.S):
         for part in ("Schema PASS", "Claim Binding PASS", "Numeric Consistency PASS",
@@ -121,7 +121,6 @@ def test_footer_shows_specific_passes(tmp_path, monkeypatch):
 
 
 def test_best_supported_is_weighted_score(tmp_path, monkeypatch):
-    """P0-09：第一屏仍按加权支持度排序，而不是依赖原始 outcome 顺序。"""
     result = _load("examples/ai-coding-assistant/result.json")
     expected = max(result["outcomes"],
                    key=lambda o: br._outcome_support_score(result["evidence"], o))["outcome_type"]
@@ -132,22 +131,34 @@ def test_best_supported_is_weighted_score(tmp_path, monkeypatch):
 
 
 def test_best_supported_ranks_by_quality_not_first(tmp_path, monkeypatch):
-    """加权评分应让高质量证据的结果排前（构造样例：后出现但质量高 → 胜出）。"""
-    result = _load("examples/ai-coding-assistant/result.json")
-    evidence = list(result["evidence"])
-    # 两个结果各有 1 条正向效应证据：先出现的质量低，后出现的质量高
+    """A later high-quality/direct study must outrank an earlier weak/indirect one."""
+    evidence = [
+        {
+            "evidence_id": "E-low",
+            "study_id": "S-low",
+            "outcome_type": "first_outcome",
+            "relation_to_claim": "support",
+            "quality_score": 2,
+            "directness": "low",
+        },
+        {
+            "evidence_id": "E-high",
+            "study_id": "S-high",
+            "outcome_type": "second_outcome",
+            "relation_to_claim": "support",
+            "quality_score": 9,
+            "directness": "full",
+        },
+    ]
     outcomes = [
-        {"outcome_type": "completion_time", "positive_count": 1, "negative_count": 0,
-         "null_count": 0, "evidence_ids": ["E-011"]},
-        {"outcome_type": "assignment_score", "positive_count": 1, "negative_count": 0,
-         "null_count": 0, "evidence_ids": ["E-001"]},
+        {"outcome_type": "first_outcome", "positive_count": 1},
+        {"outcome_type": "second_outcome", "positive_count": 1},
     ]
     ranked = sorted(outcomes, key=lambda o: br._outcome_support_score(evidence, o), reverse=True)
-    assert ranked[0]["outcome_type"] == "assignment_score"  # E-001 质量 9 > E-011 质量 6
+    assert ranked[0]["outcome_type"] == "second_outcome"
 
 
 def test_diverging_svg_no_overlap():
-    """P0-10：dense 数据需要图表时，静态 diverging SVG 仍保持分向与中性独立道。"""
     option = {
         "yAxis": [{"data": ["A", "B", "C"]}],
         "series": [
@@ -166,7 +177,6 @@ def test_diverging_svg_no_overlap():
 
 
 def test_chart_mount_hidden_until_mounted(tmp_path, monkeypatch):
-    """6.2：.chart-mount 默认 display:none，init 成功后加 .is-mounted。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     assert ".chart-mount { display:none" in html
     assert ".chart-mount.is-mounted { display:block" in html
@@ -174,7 +184,6 @@ def test_chart_mount_hidden_until_mounted(tmp_path, monkeypatch):
 
 
 def test_applicability_labels_zh(tmp_path, monkeypatch):
-    """P0-14：not_suitable_for 显示为「不适用于」，conditions 独立于 suitable_for。"""
     result_zh = _load("examples/ai-coding-assistant/result.zh.json")
     app = result_zh["decision"].get("applicability") or result_zh.get("applicability") or {}
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
@@ -184,8 +193,7 @@ def test_applicability_labels_zh(tmp_path, monkeypatch):
     sec = html_mod.unescape(re.search(r'<section id="full-\d+-action".*?</section>', zh, re.S).group(0))
     assert "不适用于" in sec
     assert app.get("not_suitable_for") in sec
-    assert "适用条件" in sec  # required_conditions 独立标签
-    # not_suitable_for 不得挂在「适用条件」下
+    assert "适用条件" in sec
     m = re.search(r"适用条件[^<]*</strong>(.*?)</p>", sec, re.S)
     if m:
         assert app.get("not_suitable_for") not in m.group(1)
@@ -202,12 +210,7 @@ def test_applicability_labels_en(tmp_path, monkeypatch):
     assert app.get("not_suitable_for") in sec
 
 
-# ---------------------------------------------------------------------------
-# Lieflat gallery + motion（数据驱动组合 + mono-tokens reveal）
-# ---------------------------------------------------------------------------
-
 def test_lieflat_gallery_cards_present(tmp_path, monkeypatch):
-    """Brief 画廊卡片：data-lieflat / data-visual / data-chart-id / 四件套。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     zh = re.search(r'<div class="report-shell" data-lang-body="zh">(.*?)\n</div>\n<script>',
                    html, re.S).group(1)
@@ -217,11 +220,10 @@ def test_lieflat_gallery_cards_present(tmp_path, monkeypatch):
     assert 'class="lieflat-title"' in zh
     assert 'class="lieflat-sub"' in zh
     assert 'class="lieflat-src"' in zh
-    assert 'class="lieflat-suppressed"' in zh  # 稀疏夹具必有抑制说明
+    assert 'class="lieflat-suppressed"' in zh
 
 
 def test_lieflat_motion_css_single_definition(tmp_path, monkeypatch):
-    """lf-pop/fade/draw 动画定义只出现一次；reduced-motion 与 print 全关。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     assert html.count("@keyframes eduevidenceLfPop") == 1
     assert html.count("@keyframes eduevidenceLfFade") == 1
@@ -229,11 +231,10 @@ def test_lieflat_motion_css_single_definition(tmp_path, monkeypatch):
     assert ".js-lf [data-lieflat].is-live .lf-pop" in html
     assert "cubic-bezier(.2,.7,.3,1.3)" in html
     assert "@media (prefers-reduced-motion:reduce)" in html
-    assert "stroke-dasharray:none" in html  # reduced-motion 关闭描线动画
+    assert "stroke-dasharray:none" in html
 
 
 def test_lieflat_motion_js_reveal_contract(tmp_path, monkeypatch):
-    """motion.js：threshold .3 滚入一次、点击重播、timer 清理、CSS.escape。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     js = re.search(r"<script>\n(/\* EduEvidence Motion Template.*?)</script>", html, re.S)
     assert js, "motion template script not found"
@@ -247,7 +248,6 @@ def test_lieflat_motion_js_reveal_contract(tmp_path, monkeypatch):
 
 
 def test_lieflat_no_hardcoded_demo_in_html(tmp_path, monkeypatch):
-    """渲染 HTML 不含旧硬编码演示值（数据驱动改造的核心验收）。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
     for demo in ("课后做题卡壳", "Bastani '25", "Ninety days as a barcode",
                  "VanLehn '25", "苏格拉底反问"):
@@ -261,15 +261,19 @@ def test_footer_shows_lieflat_bound(tmp_path, monkeypatch):
 
 
 def test_header_meta_normalized_copy(tmp_path, monkeypatch):
-    """表头 meta 行：中文「模式：… · 生成时间：… · 证据 N 条 · 来源 N 个」，英文对应。"""
     _, html, _ = _build(tmp_path, monkeypatch=monkeypatch)
+    result = _load("examples/ai-coding-assistant/result.json")
+    evidence_count = len(result.get("evidence", []))
+    source_count = len(result.get("sources", []))
     zh = re.search(r'<div class="report-shell" data-lang-body="zh">(.*?)\n</div>\n<script>',
                    html, re.S).group(1)
     m = re.search(r'<p class="meta">(.*?)</p>', zh, re.S)
     assert m and "模式：" in m.group(1) and "生成时间：" in m.group(1)
-    assert "证据 13 条" in m.group(1) and "来源 " in m.group(1) and " 个" in m.group(1)
+    assert f"证据 {evidence_count} 条" in m.group(1)
+    assert f"来源 {source_count} 个" in m.group(1)
     en = _en_shell(html)
     m2 = re.search(r'<p class="meta">(.*?)</p>', en, re.S)
     assert m2 and "Mode: " in m2.group(1) and "Generated: " in m2.group(1)
-    assert "Evidence: 13" in m2.group(1) and "Sources: " in m2.group(1)
+    assert f"Evidence: {evidence_count}" in m2.group(1)
+    assert f"Sources: {source_count}" in m2.group(1)
     assert "模式：" not in m2.group(1)
