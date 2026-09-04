@@ -1,261 +1,19 @@
 from __future__ import annotations
+
 import argparse
 import json
-import os
-import shlex
-import subprocess
 from pathlib import Path
+
+try:
+    from research_auto_cli import research_auto
+except ImportError:  # imported as scripts.vnext_cli in tests/package contexts
+    from scripts.research_auto_cli import research_auto
 
 
 def _read_json(path, default=None):
     if not path:
         return default
     return json.loads(Path(path).read_text(encoding="utf-8"))
-
-
-def _home(value):
-    if value:
-        return Path(value).expanduser().resolve()
-    from engine.paths import resolve_home
-    return resolve_home()
-
-
-def _project(home, project_id):
-    from engine.project import ProjectWorkspace
-    return ProjectWorkspace.open(home, project_id)
-
-
-def _load_gaps(workspace, explicit=None):
-    if explicit:
-        path = Path(explicit)
-        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    gap_dir = workspace.path / "gaps"
-    files = sorted(gap_dir.glob("gaps-rev-*.jsonl")) if gap_dir.exists() else []
-    if not files:
-        raise ValueError("no persisted KnowledgeGap file; run gap derivation first or pass --gaps")
-    return [json.loads(line) for line in files[-1].read_text(encoding="utf-8").splitlines() if line.strip()]
-
-
-def _commit_payload(workspace, run_id, payload):
-    from engine.evidence_review import (
-        ingest_claims_links,
-        ingest_extracted_studies_findings,
-        ingest_methodology_audits,
-        ingest_validated_sources,
-    )
-    from engine.graph_store import GraphStore
-    store = GraphStore.create(workspace)
-    if payload.get("sources"):
-        ingest_validated_sources(store, run_id=run_id, sources=payload["sources"])
-    if payload.get("studies") or payload.get("findings"):
-        ingest_extracted_studies_findings(
-            store,
-            run_id=run_id,
-            studies=payload.get("studies", []),
-            findings=payload.get("findings", []),
-        )
-    if payload.get("audits"):
-        ingest_methodology_audits(store, run_id=run_id, audits=payload["audits"])
-    if payload.get("claims") or payload.get("links"):
-        ingest_claims_links(
-            store,
-            run_id=run_id,
-            claims=payload.get("claims", []),
-            links=payload.get("links", []),
-        )
-    return store.active_revision()
-
-
-def _request(priority, strategy, project_id, revision, iteration_number, gap):
-    return {
-        "project_id": project_id,
-        "base_graph_revision": revision,
-        "iteration_number": iteration_number,
-        "gap": gap,
-        "gap_priority": priority.as_dict(),
-        "strategy": {
-            "strategy_id": strategy.strategy_id,
-            "experiment_type": strategy.experiment_type.value,
-            "hypothesis": strategy.hypothesis,
-            "expected_gain": strategy.expected_gain,
-            "budget": strategy.budget.__dict__,
-        },
-        "contract": {
-            "canonical_state_write": "FORBIDDEN",
-            "output": "validated staging result JSON only",
-        },
-    }
-
-
-def _external_executor(command, request, request_path):
-    request_path.write_text(json.dumps(request, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    argv = shlex.split(command)
-    if not argv:
-        raise ValueError("empty executor command")
-    env = os.environ.copy()
-    env["EDUEVIDENCE_RESEARCH_REQUEST"] = str(request_path)
-    result = subprocess.run(argv, check=True, text=True, capture_output=True, env=env)
-    return json.loads(result.stdout)
-
-
-def research_auto(argv):
-    parser = argparse.ArgumentParser(prog="eduevidence research auto")
-    sub = parser.add_subparsers(dest="action", required=True)
-    for name in ("step", "start"):
-        cmd = sub.add_parser(name)
-        cmd.add_argument("--project", required=True)
-        cmd.add_argument("--home")
-        cmd.add_argument("--gaps")
-        cmd.add_argument("--decision")
-        cmd.add_argument("--outcome-file")
-        cmd.add_argument("--max-iterations", type=int, default=5)
-        cmd.add_argument("--ethics-feasible", action="store_true")
-        if name == "start":
-            cmd.add_argument("--executor-command")
-    for name in ("status", "report", "stop"):
-        cmd = sub.add_parser(name)
-        cmd.add_argument("--project", required=True)
-        cmd.add_argument("--home")
-    args = parser.parse_args(argv)
-    workspace = _project(_home(args.home), args.project)
-    root = workspace.path / "autoresearch"
-    root.mkdir(parents=True, exist_ok=True)
-    state_path = root / "state.json"
-
-    if args.action in {"status", "report"}:
-        print(json.dumps(_read_json(state_path, {"status": "not_started"}), ensure_ascii=False, indent=2))
-        return 0
-    if args.action == "stop":
-        state = _read_json(state_path, {}) or {}
-        state["status"] = "stopped_by_user"
-        state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print("stopped")
-        return 0
-
-    from engine.autoresearch import EvidenceAutoresearchController, NegativeSearchRecord, ResearchMemory
-    from engine.graph_store import GraphStore
-    memory = ResearchMemory(root)
-    gaps = _load_gaps(workspace, args.gaps)
-    decision = _read_json(args.decision, {}) or {}
-    controller = EvidenceAutoresearchController(max_iterations=args.max_iterations)
-
-    def process(outcome, history):
-        evidence_ids = outcome.get("validated_evidence_ids") or [
-            item.get("finding_id") for item in outcome.get("findings", []) if item.get("finding_id")
-        ]
-        outcome["validated_evidence_ids"] = evidence_ids
-
-        def executor(strategy, gap):
-            return outcome
-
-        def commit(ids):
-            return _commit_payload(workspace, f"autoresearch-{len(history) + 1:04d}", outcome)
-
-        result = controller.step(
-            project_id=args.project,
-            base_graph_revision=GraphStore.create(workspace).active_revision(),
-            gaps=gaps,
-            decision=decision,
-            history=history,
-            executor=executor,
-            graph_commit=commit if evidence_ids else None,
-            ethics_feasible=args.ethics_feasible,
-        )
-        for raw in outcome.get("negative_searches", []):
-            record = NegativeSearchRecord(**raw)
-            memory.append_negative_search(record)
-            if record.negative_search_id not in result.iteration.negative_search_ids:
-                result.iteration.negative_search_ids.append(record.negative_search_id)
-        memory.append_iteration(result.iteration)
-        return result
-
-    if args.action == "step":
-        history = memory.load_iterations()
-        outcome = _read_json(args.outcome_file) if args.outcome_file else None
-        if outcome is None:
-            priority = controller.select_gap(gaps, decision)
-            gap = next(g for g in gaps if g.get("gap_id") == priority.gap_id)
-            strategy = controller.build_strategy(priority, gap, history)
-            pending = {
-                "status": "awaiting_execution",
-                **_request(
-                    priority,
-                    strategy,
-                    args.project,
-                    GraphStore.create(workspace).active_revision(),
-                    len(history) + 1,
-                    gap,
-                ),
-            }
-            state_path.write_text(json.dumps(pending, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-            print(json.dumps(pending, ensure_ascii=False, indent=2))
-            return 0
-        result = process(outcome, history)
-        state = {
-            "status": result.iteration.status.value if result.iteration.status else "unknown",
-            "next_action": result.next_action,
-            "gap_priority": result.priority.as_dict(),
-            "iteration": result.iteration.as_dict(),
-            "rationale": list(result.rationale),
-        }
-        state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print(json.dumps(state, ensure_ascii=False, indent=2))
-        return 0
-
-    if args.outcome_file and args.max_iterations != 1:
-        raise ValueError("--outcome-file with start requires --max-iterations 1; use --executor-command for a loop")
-    if not args.executor_command and not args.outcome_file:
-        raise ValueError("start requires --executor-command or one --outcome-file with --max-iterations 1")
-
-    completed = []
-    for _ in range(args.max_iterations):
-        latest = _read_json(state_path, {}) or {}
-        if latest.get("status") == "stopped_by_user":
-            break
-        history = memory.load_iterations()
-        priority = controller.select_gap(gaps, decision)
-        gap = next(g for g in gaps if g.get("gap_id") == priority.gap_id)
-        strategy = controller.build_strategy(priority, gap, history)
-        request = _request(
-            priority,
-            strategy,
-            args.project,
-            GraphStore.create(workspace).active_revision(),
-            len(history) + 1,
-            gap,
-        )
-        outcome = (
-            _read_json(args.outcome_file)
-            if args.outcome_file
-            else _external_executor(
-                args.executor_command,
-                request,
-                root / f"request-{len(history) + 1:04d}.json",
-            )
-        )
-        result = process(outcome, history)
-        completed.append(result.iteration.iteration_id)
-        state = {
-            "status": result.iteration.status.value if result.iteration.status else "unknown",
-            "next_action": result.next_action,
-            "completed_iterations": completed,
-            "gap_priority": result.priority.as_dict(),
-            "iteration": result.iteration.as_dict(),
-            "rationale": list(result.rationale),
-        }
-        state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        if result.next_action in {"empirical_evidence_needed", "stop_search_saturated"}:
-            break
-        if outcome.get("resolved_gap_ids"):
-            resolved = set(outcome["resolved_gap_ids"])
-            for gap_row in gaps:
-                if gap_row.get("gap_id") in resolved:
-                    gap_row["status"] = "resolved"
-            if all(str(row.get("status", "")).lower() == "resolved" for row in gaps):
-                break
-    final = _read_json(state_path, {"status": "completed_no_iterations"})
-    print(json.dumps(final, ensure_ascii=False, indent=2))
-    return 0
 
 
 def evolve(argv):
@@ -296,29 +54,51 @@ def evolve(argv):
         print(root)
         return 0
     if args.action in {"status", "report"}:
-        rows = (root / "results.tsv").read_text(encoding="utf-8").splitlines()[1:] if (root / "results.tsv").exists() else []
+        rows = (
+            (root / "results.tsv").read_text(encoding="utf-8").splitlines()[1:]
+            if (root / "results.tsv").exists()
+            else []
+        )
         best = _read_json(root / "best.json", {}) or {}
         statuses = [row.split("\t")[-2] for row in rows if "\t" in row]
-        print(json.dumps({"experiments": len(rows), "best": best, "plateau": PlateauTracker().plateau(statuses)}, indent=2))
+        print(
+            json.dumps(
+                {
+                    "experiments": len(rows),
+                    "best": best,
+                    "plateau": PlateauTracker().plateau(statuses),
+                },
+                indent=2,
+            )
+        )
         return 0
     if args.action == "best":
         print(json.dumps(_read_json(root / "best.json", {}), indent=2))
         return 0
     if args.action == "baseline":
         data = _read_json(args.eval)
-        (root / "baseline.json").write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        (root / "baseline.json").write_text(
+            json.dumps(data, indent=2) + "\n", encoding="utf-8"
+        )
         print(data.get("eval_id", "baseline"))
         return 0
     if args.action == "run":
         experiment = SkillExperiment(**_read_json(args.experiment))
         baseline = EvalSnapshot(**_read_json(args.baseline_eval))
         candidate = EvalSnapshot(**_read_json(args.candidate_eval))
-        ok, bad = ProtectedManifest().validate_changes(experiment.changed_files)
-        status, reason = (
-            ("INVALID", "protected mutation: " + ",".join(bad))
-            if not ok
-            else promote(baseline, candidate)
+        manifest = ProtectedManifest.from_repo(repo)
+        ok, bad = manifest.validate_changes(experiment.changed_files)
+        scope_ok, scope_bad = manifest.validate_mutation_scope(
+            experiment.changed_files,
+            mutation_tiers=experiment.mutation_scope,
+            allow_controlled="controlled" in experiment.mutation_scope,
         )
+        if not ok:
+            status, reason = "INVALID", "protected mutation: " + ",".join(bad)
+        elif not scope_ok:
+            status, reason = "INVALID", "mutation outside approved tier: " + ",".join(scope_bad)
+        else:
+            status, reason = promote(baseline, candidate)
         experiment.status = status
         experiment.promotion_reason = reason
         ExperimentLog(root).append(experiment, candidate=candidate, description=reason)
@@ -331,13 +111,23 @@ def evolve(argv):
                         "eval_id": candidate.eval_id,
                     },
                     indent=2,
-                ) + "\n",
+                )
+                + "\n",
                 encoding="utf-8",
             )
         print(json.dumps({"status": status, "reason": reason}, indent=2))
         return 0
     if args.action == "prepare-pr":
         best = _read_json(root / "best.json", {}) or {}
-        print(json.dumps({"promotion": "branch_only", "best": best, "note": "Human approval is required to open/merge the final PR."}, indent=2))
+        print(
+            json.dumps(
+                {
+                    "promotion": "branch_only",
+                    "best": best,
+                    "note": "Human approval is required to open/merge the final PR.",
+                },
+                indent=2,
+            )
+        )
         return 0
     return 2
