@@ -10,10 +10,11 @@ Metrics:
 - engine_version          from engine/versions.py (the version authority)
 - test_functions          grep 'def test_' across tests/
 - test_files              number of collected test modules in tests/
-- schema_count            schemas/*.json at root + v2/ + v3/ + v4/
+- schema_count            schemas/*.json recursively
 - reference_doc_count     references/*.md
 - gold_annotation_count   benchmarks/annotations/gold-Q*.json
-- example_packs           examples/*/ directories shipping result.json
+- example_packs           real examples/*/ directories shipping result.json
+                          (compatibility symlink aliases are excluded)
 
 Usage:
     python3 scripts/generate_metrics.py            # regenerate docs/metrics.json
@@ -56,7 +57,7 @@ def collect() -> dict:
 
     example_packs = sorted(
         p.name for p in (REPO_ROOT / "examples").iterdir()
-        if p.is_dir() and (p / "result.json").exists()
+        if not p.is_symlink() and p.is_dir() and (p / "result.json").exists()
     ) if (REPO_ROOT / "examples").is_dir() else []
 
     return {
