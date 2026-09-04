@@ -116,7 +116,6 @@ class AgentMutationView:
             for rel in set(self.baseline_hashes) | set(current)
             if self.baseline_hashes.get(rel) != current.get(rel)
         }
-        # Any symlink created by the agent is an invalid attempted mutation.
         changed.update(
             path.relative_to(self.path).as_posix()
             for path in self.path.rglob("*")
@@ -141,6 +140,28 @@ class AgentMutationView:
                     shutil.rmtree(target)
                 else:
                     target.unlink()
+
+    def export_changes(self, destination: str | Path, changed: list[str]) -> None:
+        """Preserve candidate files outside the worktree before a revert."""
+        destination = Path(destination)
+        destination.mkdir(parents=True, exist_ok=True)
+        manifest = []
+        for rel in changed:
+            source = self.path / rel
+            if source.is_symlink():
+                manifest.append({"path": rel, "status": "symlink_forbidden"})
+                continue
+            if source.is_file():
+                target = destination / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, target)
+                manifest.append({"path": rel, "status": "present"})
+            else:
+                manifest.append({"path": rel, "status": "deleted"})
+        (destination / "manifest.json").write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
 
     def cleanup(self) -> None:
         shutil.rmtree(self.path, ignore_errors=True)
