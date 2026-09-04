@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import re
 import subprocess
 from dataclasses import dataclass
@@ -39,6 +40,12 @@ class GitWorkspace:
             raise FileExistsError(path)
         _run(repo, "worktree", "add", "-b", branch, str(path), "HEAD")
         return cls(repo, path, branch)
+
+    def head(self) -> str:
+        return _run(self.path, "rev-parse", "HEAD", capture=True)
+
+    def diff(self) -> str:
+        return _run(self.path, "diff", "--binary", "HEAD", capture=True)
 
     def changed_files(self) -> list[str]:
         output = _run(self.path, "status", "--porcelain", capture=True)
