@@ -1,1 +1,1 @@
-experiment_id	parent_revision	candidate_commit	scope	hypothesis	hard_gates	science_score	research_score	robustness	cost	latency	complexity_delta	status	description
+experiment_id	parent_revision	candidate_commit	scope	hypothesis	eval_suite_hash	repeats	dev_passed	holdout_passed	adversarial_passed	holdout_isolation_verified	hard_gates	science_score	research_score	robustness	cost	latency	complexity_delta	status	description
