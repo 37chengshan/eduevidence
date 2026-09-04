@@ -32,7 +32,6 @@ def test_init_creates_workspace_and_manifest(tmp_path):
         assert field in manifest
     assert manifest["run_id"] == "r1"
     assert manifest["question"] == "Q?"
-    # planning artifacts
     for name in ("capability_plan.json", "resource_plan.json", "execution_plan.json",
                  "model_inventory.json", "agent_mcp_approval.json"):
         assert (ws.path / name).is_file(), name
@@ -72,10 +71,11 @@ def test_full_demo_run_completes_all_stages(tmp_path):
         assert state["stages"][stage]["status"] == "completed", stage
 
     final = load_json(ws.path / "final_verdict.json")
-    assert final["confidence"] == "Moderate"
-    assert final["confidence_score"] == pytest.approx(0.526, abs=0.01)
+    seeded = json.loads((DEMO_PACK / "result.json").read_text(encoding="utf-8"))["decision"]
+    assert final["confidence"] == seeded["confidence"] == "Moderate"
+    assert final["confidence_score"] == pytest.approx(seeded["confidence_score"], abs=0.001)
     assert final["confidence_policy_version"]
-    assert final["raw_model_confidence"] == "Moderate"  # preserved for audit
+    assert final["raw_model_confidence"] == seeded["raw_model_confidence"]
 
     gate = json.loads((ws.path / "gate_report.json").read_text(encoding="utf-8"))
     assert gate["post"]["passed"] is True
@@ -107,7 +107,6 @@ def test_fresh_run_blocks_on_external_frame_and_writes_brief(tmp_path):
 def test_resume_continues_from_first_pending_stage(tmp_path):
     run_cli(["run", "--question", "Q?", "--run-id", "res", "--runs-dir", str(tmp_path)])
     ws = RunWorkspace(tmp_path, "res")
-    # simulate an external agent delivering the frame artifact
     (ws.path / "frame.json").write_bytes((DEMO_PACK / "frame.json").read_bytes())
     assert run_cli(["resume", "--run-id", "res", "--runs-dir", str(tmp_path)]) == 0
     state = ws.load_state()
@@ -121,7 +120,6 @@ def test_resume_reruns_completed_stage_with_lost_artifact(tmp_path):
              "--demo-pack", str(DEMO_PACK)])
     ws = RunWorkspace(tmp_path, "full")
     assert ws.load_state()["status"] == "completed"
-    # artifact loss (crash/corruption) must trigger re-run on resume
     (ws.path / "result.json").unlink()
     assert run_cli(["resume", "--run-id", "full", "--runs-dir", str(tmp_path),
                     "--demo-pack", str(DEMO_PACK)]) == 0
@@ -129,7 +127,6 @@ def test_resume_reruns_completed_stage_with_lost_artifact(tmp_path):
     assert state["status"] == "completed"
     assert (ws.path / "result.json").is_file()
     assert state["stages"]["projection"]["status"] == "completed"
-    # completed stages stay completed (no re-seeding side effects)
     assert state["stages"]["frame"]["status"] == "completed"
 
 
@@ -168,7 +165,6 @@ def test_schema_invalid_failure_blocks_run(tmp_path):
     run_cli(["run", "--question", "Q?", "--run-id", "bad", "--runs-dir", str(tmp_path),
              "--demo-pack", str(DEMO_PACK)])
     ws = RunWorkspace(tmp_path, "bad")
-    # corrupt the seeded frame so the schema gate fails on resume
     (ws.path / "frame.json").write_text('{"question": 123}', encoding="utf-8")
     ws.mark_stage("frame", "pending", detail="forced re-validation")
     assert run_cli(["resume", "--run-id", "bad", "--runs-dir", str(tmp_path),
