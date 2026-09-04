@@ -10,10 +10,20 @@ def low_gain():
     }
 
 
+def gap(gap_id, gap_type, priority="high", revision=1):
+    return {
+        "gap_id": gap_id,
+        "gap_type": gap_type,
+        "priority": priority,
+        "status": "open",
+        "derived_from_graph_revision": revision,
+    }
+
+
 def test_high_dvi_is_not_itself_decision_material():
     priority = rank_gap(
-        {"gap_id": "G1", "gap_type": "missing_outcome", "priority": "high"},
-        decision={"recommended_action": "PILOT"},
+        gap("G1", "missing_outcome", revision=1),
+        decision={"recommended_action": "PILOT", "graph_revision": 1},
     )
     assert priority.dvi_band.value == "HIGH"
     assert priority.decision_material is False
@@ -38,8 +48,8 @@ def test_other_gap_failures_do_not_saturate_current_gap():
     result = controller.step(
         project_id="P",
         base_graph_revision=1,
-        gaps=[{"gap_id": "G1", "gap_type": "missing_transfer", "priority": "high", "status": "open"}],
-        decision={"recommended_action": "PILOT"},
+        gaps=[gap("G1", "missing_transfer", revision=1)],
+        decision={"recommended_action": "PILOT", "graph_revision": 1},
         history=other_history,
         executor=lambda strategy, gap: {
             "validated_evidence_ids": [],
@@ -70,7 +80,7 @@ def test_empty_searches_can_count_toward_saturation():
 
 def test_high_dvi_nonmaterial_saturated_gap_does_not_bridge_to_empirical():
     controller = EvidenceAutoresearchController()
-    gap = {"gap_id": "G1", "gap_type": "missing_outcome", "priority": "high", "status": "open"}
+    current_gap = gap("G1", "missing_outcome", revision=1)
     strategies = [
         "TARGETED_RETRIEVAL",
         "CITATION_CHAINING",
@@ -88,8 +98,8 @@ def test_high_dvi_nonmaterial_saturated_gap_does_not_bridge_to_empirical():
     result = controller.step(
         project_id="P",
         base_graph_revision=1,
-        gaps=[gap],
-        decision={"recommended_action": "PILOT"},
+        gaps=[current_gap],
+        decision={"recommended_action": "PILOT", "graph_revision": 1},
         history=history,
         executor=lambda strategy, gap: {
             "validated_evidence_ids": [],
@@ -112,8 +122,8 @@ def test_duplicate_only_commit_is_no_gain_not_fake_revision():
     result = controller.step(
         project_id="P",
         base_graph_revision=7,
-        gaps=[{"gap_id": "G1", "gap_type": "missing_transfer", "priority": "high", "status": "open"}],
-        decision={"recommended_action": "PILOT"},
+        gaps=[gap("G1", "missing_transfer", revision=7)],
+        decision={"recommended_action": "PILOT", "graph_revision": 7},
         history=[],
         executor=lambda strategy, gap: {
             "validated_evidence_ids": ["F-existing"],
