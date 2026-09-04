@@ -18,6 +18,7 @@ class GapPriority:
     gap_id: str
     dvi_band: Band
     cost_band: Band
+    decision_material: bool
     drivers: tuple[str, ...]
     next_research_mode: str
     score: int
@@ -27,6 +28,7 @@ class GapPriority:
             "gap_id": self.gap_id,
             "dvi_band": self.dvi_band.value,
             "cost_band": self.cost_band.value,
+            "decision_material": self.decision_material,
             "drivers": list(self.drivers),
             "next_research_mode": self.next_research_mode,
             "score": self.score,
@@ -37,6 +39,28 @@ def _v(value: Any, default: int = 2) -> int:
     if isinstance(value, int):
         return max(1, min(3, value))
     return _LEVEL.get(str(value), default)
+
+
+def _decision_material(gap: dict[str, Any]) -> bool:
+    """Return a conservative, separately auditable materiality judgment.
+
+    Materiality is intentionally not derived from the DVI band. An explicit
+    boolean on the gap (or extensions.decision_material) wins. Otherwise only
+    gap types that can directly block/reverse an education decision are treated
+    as material by default.
+    """
+    explicit = gap.get("decision_material")
+    if isinstance(explicit, bool):
+        return explicit
+    extensions = gap.get("extensions")
+    if isinstance(extensions, dict) and isinstance(extensions.get("decision_material"), bool):
+        return bool(extensions["decision_material"])
+    return str(gap.get("gap_type", "")) in {
+        "missing_transfer",
+        "missing_retention",
+        "unresolved_conflict",
+        "weak_causal_identification",
+    }
 
 
 def rank_gap(
@@ -51,11 +75,14 @@ def rank_gap(
     """Return an explainable ordinal research-priority band.
 
     This is a conceptual DVI heuristic, not EVPI/EVSI and not a probability.
+    Decision materiality is a separate field and must not be inferred from the
+    resulting DVI band when deciding whether to bridge to empirical research.
     """
     decision = decision or {}
     priority = _v(gap.get("priority", "medium"))
     gap_type = str(gap.get("gap_type", ""))
-    decision_sensitive = 3 if gap_type in {"missing_transfer", "missing_retention", "unresolved_conflict"} else priority
+    material = _decision_material(gap)
+    decision_sensitive = 3 if material else priority
     current_uncertainty = 3 if gap_type.startswith("missing_") or gap_type == "unresolved_conflict" else 2
     directness_deficit = 3 if gap_type in {"missing_transfer", "missing_retention", "missing_outcome"} else 2
     applicability = _v(applicability_relevance)
@@ -69,6 +96,7 @@ def rank_gap(
     cost_band = Band.HIGH if cost == 3 else Band.MEDIUM if cost == 2 else Band.LOW
     drivers = (
         f"gap_type={gap_type or 'unknown'}",
+        f"decision_material={material}",
         f"decision_sensitivity={decision_sensitive}",
         f"current_uncertainty={current_uncertainty}",
         f"directness_deficit={directness_deficit}",
@@ -78,7 +106,15 @@ def rank_gap(
         f"research_cost={cost}",
     )
     mode = "secondary_evidence_search" if band is not Band.LOW else "defer"
-    return GapPriority(str(gap.get("gap_id", "")), band, cost_band, drivers, mode, score)
+    return GapPriority(
+        str(gap.get("gap_id", "")),
+        band,
+        cost_band,
+        material,
+        drivers,
+        mode,
+        score,
+    )
 
 
 def rank_gaps(gaps: list[dict[str, Any]], **kwargs: Any) -> list[GapPriority]:
