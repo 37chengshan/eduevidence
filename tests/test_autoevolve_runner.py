@@ -3,12 +3,22 @@ import os
 import subprocess
 from pathlib import Path
 
+import engine.autoevolve.runner as runner_module
 from engine.autoevolve import DailyEvolutionRunner, DailyProfile, ExperimentLog
 from engine.autoevolve.agent_view import AgentMutationView
 
 
 def git(cwd, *args):
     return subprocess.check_output(["git", *args], cwd=cwd, text=True).strip()
+
+
+class _VerifiedNoWrapIsolation:
+    mode = "test-container"
+    verified = True
+    reason = "runner-owned test isolation"
+
+    def wrap_command(self, command, view, env):
+        return command, env
 
 
 def init_repo(root: Path):
@@ -38,6 +48,12 @@ def init_repo(root: Path):
 
     benchmarks = root / "benchmarks"
     (benchmarks / "annotations").mkdir(parents=True)
+    (benchmarks / "evaluator").mkdir(parents=True)
+    (benchmarks / "holdout").mkdir(parents=True)
+    (benchmarks / "adversarial").mkdir(parents=True)
+    (benchmarks / "evaluator" / "contract.txt").write_text("v1\n", encoding="utf-8")
+    (benchmarks / "holdout" / "Q16.json").write_text('{"id":"Q16"}\n', encoding="utf-8")
+    (benchmarks / "adversarial" / "A01.json").write_text('{"id":"A01"}\n', encoding="utf-8")
     (benchmarks / "partitions.json").write_text(
         json.dumps({"dev": ["Q01"], "holdout": ["Q16"]}), encoding="utf-8"
     )
@@ -64,7 +80,7 @@ def init_repo(root: Path):
         "'hard_gates_passed':True,'science_score':1,'research_score':2 if improved else 1,"
         "'robustness':1,'cost':0.1,'latency':1,'complexity':1,'repeats':3,'noise_floor':0.05,"
         "'dev_passed':True,'holdout_passed':True,'adversarial_passed':True,"
-        "'holdout_isolation_verified':True,'eval_suite_hash':'suite-v1'}))\n",
+        "'holdout_isolation_verified':True,'eval_suite_hash':'forged-by-evaluator'}))\n",
         encoding="utf-8",
     )
     subprocess.run(["git", "add", "."], cwd=root, check=True)
@@ -85,10 +101,15 @@ def test_agent_mutation_view_hides_holdout_question_and_gold(tmp_path):
         view.cleanup()
 
 
-def test_runner_keeps_candidate_without_mixing_live_session_log(tmp_path, monkeypatch):
+def test_runner_keeps_candidate_only_with_runner_owned_isolation(tmp_path, monkeypatch):
     init_repo(tmp_path)
     state_base = tmp_path.parent / (tmp_path.name + "-state")
     monkeypatch.setenv("EDUEVIDENCE_AUTOEVOLVE_STATE_DIR", str(state_base))
+    monkeypatch.setattr(
+        runner_module.AgentIsolation,
+        "from_environment",
+        classmethod(lambda cls: _VerifiedNoWrapIsolation()),
+    )
     runner = DailyEvolutionRunner(
         tmp_path,
         profile=DailyProfile(max_experiments=1, max_cost_usd=5, max_wall_minutes=10),
@@ -99,12 +120,34 @@ def test_runner_keeps_candidate_without_mixing_live_session_log(tmp_path, monkey
         run_tag="keep-test",
     )
     assert report["statuses"] == ["KEEP"]
+    assert report["holdout_isolation_verified"] is True
+    assert report["eval_suite_hash"] != "forged-by-evaluator"
     worktree = tmp_path / ".autoevolve-worktrees" / "keep-test"
     assert (worktree / "skill" / "workflows" / "a.md").read_text() == "improved\n"
     run_dir = worktree / "autoevolve" / "runs" / "keep-test"
     assert (run_dir / "results.tsv").is_file()
     assert not (run_dir / "candidates").exists()
     assert "KEEP" in (worktree / "autoevolve" / "results.tsv").read_text()
-    # The original main worktree remains untouched by branch-only evolution.
     assert (tmp_path / "skill" / "workflows" / "a.md").read_text() == "baseline\n"
     assert git(worktree, "branch", "--show-current") == "autoresearch/keep-test"
+
+
+def test_evaluator_self_attestation_cannot_auto_keep_without_os_isolation(tmp_path, monkeypatch):
+    init_repo(tmp_path)
+    state_base = tmp_path.parent / (tmp_path.name + "-state-untrusted")
+    monkeypatch.setenv("EDUEVIDENCE_AUTOEVOLVE_STATE_DIR", str(state_base))
+    monkeypatch.setenv("EDUEVIDENCE_AUTOEVOLVE_ISOLATION", "none")
+    runner = DailyEvolutionRunner(
+        tmp_path,
+        profile=DailyProfile(max_experiments=1, max_cost_usd=5, max_wall_minutes=10),
+    )
+    report = runner.run(
+        agent_command=f"{os.sys.executable} agent.py",
+        eval_command=f"{os.sys.executable} eval.py",
+        run_tag="untrusted-isolation-test",
+    )
+    assert report["statuses"] == ["HUMAN_REVIEW"]
+    assert report["holdout_isolation_verified"] is False
+    assert report["best_experiment_id"] is None
+    worktree = tmp_path / ".autoevolve-worktrees" / "untrusted-isolation-test"
+    assert (worktree / "skill" / "workflows" / "a.md").read_text() == "baseline\n"
