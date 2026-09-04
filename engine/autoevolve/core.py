@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import fnmatch
 import hashlib
 import json
@@ -6,6 +7,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 PROTECTED_DEFAULTS = (
+    "autoevolve/protected.manifest.yaml",
     "benchmarks/annotations/**",
     "benchmarks/holdout/**",
     "benchmarks/evaluator/**",
@@ -13,7 +15,24 @@ PROTECTED_DEFAULTS = (
     "references/scientific-invariants.md",
     "scripts/pre_verdict_gate.py",
     "scripts/compute_confidence.py",
-    "tests/scientific_invariants/**",
+    "scripts/check_autoresearch_invariants.py",
+    "engine/graph_store.py",
+    "engine/study_design.py",
+    "engine/autoevolve/**",
+    ".github/workflows/autoresearch-gates.yml",
+)
+SAFE_DEFAULTS = (
+    "skill/workflows/**",
+    "skill/agents/**",
+    "skill/sub-skills/**",
+    "retrieval/**",
+    "references/presentation/**",
+)
+CONTROLLED_DEFAULTS = (
+    "engine/semantics.py",
+    "engine/gaps.py",
+    "scripts/complexity_gate.py",
+    "engine/orchestration.py",
 )
 
 
@@ -49,20 +68,108 @@ class SkillExperiment:
     complexity_delta: float = 0.0
 
 
+def _matches(path: str, patterns: tuple[str, ...]) -> bool:
+    normalized = path.replace("\\", "/")
+    return any(
+        fnmatch.fnmatch(normalized, pattern)
+        or (pattern.endswith("/**") and normalized.startswith(pattern[:-3]))
+        for pattern in patterns
+    )
+
+
+def _parse_manifest(path: Path) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    """Parse the intentionally tiny manifest subset without a YAML dependency."""
+    protected: list[str] = []
+    safe: list[str] = []
+    controlled: list[str] = []
+    section = ""
+    subsection = ""
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.split("#", 1)[0].rstrip()
+        if not line.strip():
+            continue
+        stripped = line.strip()
+        indent = len(line) - len(line.lstrip(" "))
+        if indent == 0 and stripped.endswith(":"):
+            section = stripped[:-1]
+            subsection = ""
+            continue
+        if section == "mutable" and indent == 2 and stripped.endswith(":"):
+            subsection = stripped[:-1]
+            continue
+        if stripped.startswith("- "):
+            value = stripped[2:].strip().strip('"\'')
+            if section == "protected":
+                protected.append(value)
+            elif section == "mutable" and subsection == "safe":
+                safe.append(value)
+            elif section == "mutable" and subsection == "controlled":
+                controlled.append(value)
+    if not protected or not safe:
+        raise ValueError(f"invalid autoresearch manifest: {path}")
+    return tuple(protected), tuple(safe), tuple(controlled)
+
+
 class ProtectedManifest:
-    def __init__(self, patterns=PROTECTED_DEFAULTS):
+    def __init__(
+        self,
+        patterns=PROTECTED_DEFAULTS,
+        *,
+        safe_patterns=SAFE_DEFAULTS,
+        controlled_patterns=CONTROLLED_DEFAULTS,
+    ):
         self.patterns = tuple(patterns)
+        self.safe_patterns = tuple(safe_patterns)
+        self.controlled_patterns = tuple(controlled_patterns)
+
+    @classmethod
+    def from_repo(cls, root: str | Path) -> "ProtectedManifest":
+        path = Path(root) / "autoevolve" / "protected.manifest.yaml"
+        if not path.is_file():
+            return cls()
+        protected, safe, controlled = _parse_manifest(path)
+        # The protection manifest must protect itself and the evaluator control
+        # plane; inject hard defaults even if a human-edited manifest omitted one.
+        merged_protected = tuple(dict.fromkeys((*protected, *PROTECTED_DEFAULTS)))
+        return cls(
+            merged_protected,
+            safe_patterns=safe,
+            controlled_patterns=controlled,
+        )
 
     def is_protected(self, path: str) -> bool:
-        normalized = path.replace("\\", "/")
-        return any(
-            fnmatch.fnmatch(normalized, pattern)
-            or (pattern.endswith("/**") and normalized.startswith(pattern[:-3]))
-            for pattern in self.patterns
-        )
+        return _matches(path, self.patterns)
+
+    def classify(self, path: str) -> str:
+        if self.is_protected(path):
+            return "protected"
+        if _matches(path, self.safe_patterns):
+            return "safe"
+        if _matches(path, self.controlled_patterns):
+            return "controlled"
+        return "unknown"
 
     def validate_changes(self, changed: list[str]) -> tuple[bool, list[str]]:
         bad = [path for path in changed if self.is_protected(path)]
+        return (not bad, bad)
+
+    def validate_mutation_scope(
+        self,
+        changed: list[str],
+        *,
+        mutation_tiers: tuple[str, ...] | list[str],
+        allow_controlled: bool,
+    ) -> tuple[bool, list[str]]:
+        tiers = set(mutation_tiers)
+        bad: list[str] = []
+        for path in changed:
+            kind = self.classify(path)
+            allowed = kind == "safe" and "safe" in tiers
+            allowed = allowed or (
+                kind == "controlled" and allow_controlled and "controlled" in tiers
+            )
+            if not allowed:
+                bad.append(path)
         return (not bad, bad)
 
     def hash_tree(self, root: str | Path) -> str:
@@ -86,22 +193,41 @@ def promote(
     candidate: EvalSnapshot,
     *,
     simplicity_tolerance: float = 0.0,
+    efficiency_tolerance: float = 0.05,
+    minimum_repeats: int = 3,
 ) -> tuple[str, str]:
+    """Constraint-first promotion; automatic KEEP is deliberately conservative."""
     if not candidate.hard_gates_passed:
         return "REJECT", "L0 hard gate failed"
     if candidate.science_score < baseline.science_score:
         return "REJECT", "scientific correctness regressed"
+    if min(baseline.repeats, candidate.repeats) < minimum_repeats:
+        return "RETEST", f"automatic promotion requires >= {minimum_repeats} repeated runs"
+
     delta = candidate.research_score - baseline.research_score
     noise = max(baseline.noise_floor, candidate.noise_floor)
-    if abs(delta) <= noise and candidate.complexity > baseline.complexity + simplicity_tolerance:
-        return "REJECT", "within noise floor but more complex"
-    if abs(delta) <= noise:
-        return "RETEST", "candidate delta is within empirical noise floor"
+    if delta < -noise:
+        return "REJECT", "research-quality regression exceeds empirical noise floor"
+
     regressions = []
     if candidate.robustness < baseline.robustness:
         regressions.append("robustness")
+    if baseline.cost > 0 and candidate.cost > baseline.cost * (1 + efficiency_tolerance):
+        regressions.append("cost")
+    if baseline.latency > 0 and candidate.latency > baseline.latency * (1 + efficiency_tolerance):
+        regressions.append("latency")
+    if candidate.complexity > baseline.complexity + simplicity_tolerance:
+        regressions.append("complexity")
+
+    if abs(delta) <= noise:
+        if regressions:
+            return "REJECT", "within noise floor with regression: " + ",".join(regressions)
+        if candidate.complexity < baseline.complexity - simplicity_tolerance:
+            return "KEEP", "equivalent research quality with simpler implementation"
+        return "RETEST", "candidate delta is within empirical noise floor"
+
     if delta > noise and not regressions:
-        return "KEEP", "material research-quality improvement without core regression"
+        return "KEEP", "material research-quality improvement without Pareto regression"
     return "HUMAN_REVIEW", "Pareto trade-off: " + ",".join(regressions or ["mixed metrics"])
 
 
@@ -185,3 +311,8 @@ class DailyProfile:
             raise ValueError("daily budget must be positive")
         if self.promotion != "branch_only":
             raise ValueError("daily mode is branch_only")
+        unknown = set(self.mutation_tiers) - {"safe", "controlled"}
+        if unknown:
+            raise ValueError(f"unknown mutation tiers: {sorted(unknown)}")
+        if "controlled" in self.mutation_tiers and not self.allow_controlled:
+            raise ValueError("controlled mutation tier requires allow_controlled=true")
