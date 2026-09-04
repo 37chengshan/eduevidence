@@ -25,7 +25,18 @@ class ResearchMemory:
         record.validate()
         self._append(self.negative_path, record.__dict__)
 
-    def load_iterations(self, gap_id: str | None = None) -> list[dict[str, Any]]:
+    def load_iterations(
+        self,
+        gap_id: str | None = None,
+        *,
+        gap_lineage_key: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """Load iteration history, preferring stable lineage across revisions.
+
+        Legacy rows without `gap_lineage_key` remain queryable by `gap_id`.
+        When a lineage key is supplied, new keyed rows match by lineage and old
+        unkeyed rows may additionally match the supplied gap_id for migration.
+        """
         if not self.iterations_path.exists():
             return []
         rows = [
@@ -33,4 +44,16 @@ class ResearchMemory:
             for line in self.iterations_path.read_text(encoding="utf-8").splitlines()
             if line.strip()
         ]
-        return [r for r in rows if gap_id is None or r.get("gap_id") == gap_id]
+        if gap_lineage_key is not None:
+            return [
+                row for row in rows
+                if row.get("gap_lineage_key") == gap_lineage_key
+                or (
+                    not row.get("gap_lineage_key")
+                    and gap_id is not None
+                    and row.get("gap_id") == gap_id
+                )
+            ]
+        if gap_id is not None:
+            return [row for row in rows if row.get("gap_id") == gap_id]
+        return rows
