@@ -19,6 +19,9 @@ import json
 import math
 import sys
 from pathlib import Path
+from typing import Any, Dict, List
+
+
 def _two_tailed_p_from_z(z: float) -> float:
     """Standard normal two-tailed p-value."""
     return 2.0 * (1.0 - 0.5 * (1.0 + math.erf(abs(z) / math.sqrt(2.0))))
@@ -39,51 +42,40 @@ def _null_inference() -> Dict[str, Any]:
 def _solve_linear_system(A: List[List[float]], b: List[float]) -> List[float]:
     """Gaussian elimination with partial pivoting for small OLS systems (p <= 10)."""
     n = len(b)
-    # Augmented matrix
     M = [A[i][:] + [b[i]] for i in range(n)]
-
     for i in range(n):
-        # Pivot
         max_row = max(range(i, n), key=lambda r: abs(M[r][i]))
         if abs(M[max_row][i]) < 1e-12:
             raise ValueError("Singular matrix in OLS estimation")
         M[i], M[max_row] = M[max_row], M[i]
-
         pivot = M[i][i]
         for j in range(i, n + 1):
             M[i][j] /= pivot
-
         for r in range(n):
             if r != i:
                 factor = M[r][i]
                 for c in range(i, n + 1):
                     M[r][c] -= factor * M[i][c]
-
     return [M[i][n] for i in range(n)]
 
 
 def _matrix_inverse(A: List[List[float]]) -> List[List[float]]:
     """Inverts an n x n matrix using Gauss-Jordan elimination."""
     n = len(A)
-    # Augment with identity
     M = [A[i][:] + [1.0 if i == j else 0.0 for j in range(n)] for i in range(n)]
-
     for i in range(n):
         max_row = max(range(i, n), key=lambda r: abs(M[r][i]))
         if abs(M[max_row][i]) < 1e-12:
             raise ValueError("Singular matrix in inversion")
         M[i], M[max_row] = M[max_row], M[i]
-
         pivot = M[i][i]
         for j in range(2 * n):
             M[i][j] /= pivot
-
         for r in range(n):
             if r != i:
                 factor = M[r][i]
                 for c in range(2 * n):
                     M[r][c] -= factor * M[i][c]
-
     return [[M[i][n + j] for j in range(n)] for i in range(n)]
 
 
@@ -104,7 +96,6 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
         return {"status": "error", "error_code": "ERR_INSUFFICIENT_ROWS",
                 "message": "Insufficient data rows (minimum 4 required)"}
 
-    # Normalize column names (+ cluster candidates; exact names only, never guessed)
     field_map = {}
     cluster_columns: List[str] = []
     for col in rows[0].keys():
@@ -124,13 +115,10 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
             "message": f"CSV missing required columns (need treat/post/outcome). Found: {list(rows[0].keys())}"
         }
 
-    # Parse numeric arrays
     y_vals: List[float] = []
     treat_vals: List[float] = []
     post_vals: List[float] = []
     treat_post_vals: List[float] = []
-
-    # Cells for 2x2 table
     cell_y = {(0, 0): [], (0, 1): [], (1, 0): [], (1, 1): []}
 
     for r in rows:
@@ -138,7 +126,6 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
             t = 1.0 if float(r[field_map["treat"]]) > 0.5 else 0.0
             p = 1.0 if float(r[field_map["post"]]) > 0.5 else 0.0
             y = float(r[field_map["outcome"]])
-            
             treat_vals.append(t)
             post_vals.append(p)
             treat_post_vals.append(t * p)
@@ -152,7 +139,6 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
         return {"status": "error", "error_code": "ERR_PARSE",
                 "message": "Failed to parse sufficient numeric rows"}
 
-    # Cell means
     means = {}
     stds = {}
     for k, v in cell_y.items():
@@ -165,7 +151,6 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
             means[k] = 0.0
             stds[k] = 1.0
 
-    # --- Estimability gates (fail closed; never fabricate inference) ---
     if len(set(treat_vals)) < 2:
         return {
             "status": "error", "error_code": "ERR_NO_TREAT_VARIATION",
@@ -205,15 +190,12 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
     y_t_pre = means[(1, 0)]
     y_t_post = means[(1, 1)]
 
-    # Simple 2x2 delta
-    delta_simple = (y_t_post - y_t_pre) - (y_c_post - y_c_pre)
+    # Keep the simple 2x2 contrast as a diagnostic equivalence check.
+    _delta_simple = (y_t_post - y_t_pre) - (y_c_post - y_c_pre)
 
-    # OLS Estimation: Y = X * beta + e, X = [1, Treat, Post, Treat*Post]
-    # Build X^T X (4x4) and X^T Y (4x1)
     X = [[1.0, treat_vals[i], post_vals[i], treat_post_vals[i]] for i in range(n)]
     XtX = [[0.0] * 4 for _ in range(4)]
     XtY = [0.0] * 4
-
     for i in range(n):
         row = X[i]
         yi = y_vals[i]
@@ -232,7 +214,6 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
             **_null_inference(),
         }
 
-    # Residual sum of squares & Standard Error
     rss = 0.0
     for i in range(n):
         y_hat = beta[0] + beta[1] * treat_vals[i] + beta[2] * post_vals[i] + beta[3] * treat_post_vals[i]
@@ -241,7 +222,6 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
     df_resid = n - 4
     sigma2 = rss / df_resid
     r_squared = max(0.0, 1.0 - (rss / tss)) if tss > 0 else 0.0
-
     if rss <= 0:
         return {
             "status": "error", "error_code": "ERR_ZERO_RESIDUAL",
@@ -252,16 +232,12 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
     t_stat = beta[3] / se_delta if se_delta > 0 else 0.0
     p_val = _two_tailed_p_from_z(t_stat)
 
-    # Standardized Effect Size: Hedges' g
     s_pooled_pre = math.sqrt((stds[(0, 0)] ** 2 + stds[(1, 0)] ** 2) / 2.0) if stds[(0, 0)] and stds[(1, 0)] else 1.0
     hedges_j = 1.0 - (3.0 / (4.0 * df_resid - 1.0)) if df_resid > 2 else 1.0
     hedges_g = round(hedges_j * (beta[3] / s_pooled_pre), 3) if s_pooled_pre > 0 else 0.0
 
-    # Baseline Equivalence
     baseline_diff = y_t_pre - y_c_pre
     baseline_g = baseline_diff / s_pooled_pre if s_pooled_pre > 0 else 0.0
-    # QED/DID can never meet WWC 5.0 standards WITHOUT reservations; and without
-    # covariate-adjustment fields a 0.05<|g|<=0.25 baseline is not passable.
     if abs(baseline_g) <= 0.05:
         wwc_rating = "Meets Standards With Reservations"
     elif abs(baseline_g) <= 0.25:
@@ -273,7 +249,6 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
         round(beta[3] - 1.96 * se_delta, 3),
         round(beta[3] + 1.96 * se_delta, 3)
     ]
-
     cluster_note = (
         f"cluster column(s) detected ({', '.join(cluster_columns)}) but cluster-robust "
         "inference is not implemented in this build; p-value is not cluster-robust"
