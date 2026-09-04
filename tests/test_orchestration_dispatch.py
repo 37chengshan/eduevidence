@@ -32,6 +32,22 @@ def test_dispatch_rejects_local_task(monkeypatch):
     assert called is False
 
 
+def test_dispatch_rejects_delegated_template_without_run_context(monkeypatch):
+    called = False
+
+    def fake_safe_spawn(*args, **kwargs):
+        nonlocal called
+        called = True
+        return {"status": "READY", "spawn_call": {}}
+
+    monkeypatch.setattr(dispatch, "safe_spawn", fake_safe_spawn)
+    task = ExecutionPlanner().plan("M").delegated_tasks[0]
+    result = dispatch.dispatch_task(task, "x", None)
+    assert result["status"] == dispatch.TASKSPEC_INVALID
+    assert "run_id" in result["reason"]
+    assert called is False
+
+
 def test_dispatch_wraps_prompt_and_preserves_existing_approval_gate(monkeypatch):
     seen = {}
 
@@ -40,12 +56,14 @@ def test_dispatch_wraps_prompt_and_preserves_existing_approval_gate(monkeypatch)
         return {"status": "READY", "spawn_call": {"tool": "spawn_agent"}}
 
     monkeypatch.setattr(dispatch, "safe_spawn", fake_safe_spawn)
-    task = ExecutionPlanner().plan("M").delegated_tasks[0]
+    task = ExecutionPlanner().plan("M", run_id="RUN-1", base_revision=4).delegated_tasks[0]
     approval = {"approved": True}
     result = dispatch.dispatch_task(task, "Search the requested evidence axis.", approval)
 
     assert result["status"] == "READY"
     assert result["task_id"] == task.task_id
+    assert result["run_id"] == "RUN-1"
+    assert result["base_revision"] == 4
     assert result["stage"] == task.stage
     assert result["evidence_axis"] == task.evidence_axis
     assert seen["role"] == task.role
