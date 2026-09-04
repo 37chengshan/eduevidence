@@ -41,6 +41,52 @@ def _v(value: Any, default: int = 2) -> int:
     return _LEVEL.get(str(value), default)
 
 
+def _revision_number(value: Any, *, label: str) -> int:
+    if isinstance(value, bool):
+        raise ValueError(f"{label} must be an integer graph revision")
+    try:
+        revision = int(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{label} must be an integer graph revision") from exc
+    if revision < 0:
+        raise ValueError(f"{label} must be >= 0")
+    return revision
+
+
+def _require_revision_bound_decision(
+    gap: dict[str, Any], decision: dict[str, Any] | None
+) -> None:
+    """Fail closed when a DecisionSnapshot and KnowledgeGap are from different revisions.
+
+    DVI may use the current DecisionSnapshot as a decision-sensitivity input. It
+    must never combine a stale decision with a newer gap (or vice versa), since
+    that could reorder the next research target using an obsolete boundary.
+    """
+    if not decision:
+        return
+    if "graph_revision" not in decision:
+        raise ValueError(
+            "DecisionSnapshot used for DVI must include graph_revision"
+        )
+    if "derived_from_graph_revision" not in gap:
+        raise ValueError(
+            f"KnowledgeGap {gap.get('gap_id', '')!r} used for DVI must include "
+            "derived_from_graph_revision"
+        )
+    decision_revision = _revision_number(
+        decision.get("graph_revision"), label="DecisionSnapshot.graph_revision"
+    )
+    gap_revision = _revision_number(
+        gap.get("derived_from_graph_revision"),
+        label="KnowledgeGap.derived_from_graph_revision",
+    )
+    if decision_revision != gap_revision:
+        raise ValueError(
+            "stale DecisionSnapshot for DVI: "
+            f"decision revision {decision_revision} != gap revision {gap_revision}"
+        )
+
+
 def _decision_material(gap: dict[str, Any]) -> bool:
     """Return a conservative, separately auditable materiality judgment.
 
@@ -78,6 +124,7 @@ def rank_gap(
     Decision materiality is a separate field and must not be inferred from the
     resulting DVI band when deciding whether to bridge to empirical research.
     """
+    _require_revision_bound_decision(gap, decision)
     decision = decision or {}
     priority = _v(gap.get("priority", "medium"))
     gap_type = str(gap.get("gap_type", ""))
