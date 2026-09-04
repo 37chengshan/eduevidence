@@ -15,14 +15,38 @@ from engine.autoresearch import (
 )
 
 
+def _gap(gap_id, gap_type, priority="high", revision=3, lineage=None):
+    row = {
+        "gap_id": gap_id,
+        "gap_type": gap_type,
+        "priority": priority,
+        "status": "open",
+        "derived_from_graph_revision": revision,
+    }
+    if lineage:
+        row["extensions"] = {"autoresearch_key": lineage}
+    return row
+
+
 def test_transfer_gap_ranks_above_low_value_missing_outcome():
     gaps = [
-        {"gap_id": "G1", "gap_type": "missing_transfer", "priority": "high", "status": "open"},
-        {"gap_id": "G2", "gap_type": "missing_outcome", "priority": "low", "status": "open"},
+        _gap("G1", "missing_transfer", revision=3),
+        _gap("G2", "missing_outcome", priority="low", revision=3),
     ]
-    ranked = rank_gaps(gaps, decision={"recommended_action": "pilot"})
+    ranked = rank_gaps(
+        gaps,
+        decision={"recommended_action": "pilot", "graph_revision": 3},
+    )
     assert ranked[0].gap_id == "G1"
     assert ranked[0].dvi_band == Band.HIGH
+    try:
+        rank_gaps(
+            gaps,
+            decision={"recommended_action": "pilot", "graph_revision": 2},
+        )
+        assert False, "stale DecisionSnapshot must fail closed"
+    except ValueError as exc:
+        assert "stale DecisionSnapshot" in str(exc)
 
 
 def test_negative_search_scope_bounded():
@@ -39,12 +63,13 @@ def test_negative_search_scope_bounded():
 
 def test_no_gain_no_revision():
     controller = EvidenceAutoresearchController()
-    gaps = [{"gap_id": "G1", "gap_type": "missing_transfer", "priority": "high", "status": "open"}]
+    gaps = [_gap("G1", "missing_transfer", revision=3)]
+    decision = {"recommended_action": "pilot", "graph_revision": 3}
     result = controller.step(
         project_id="P",
         base_graph_revision=3,
         gaps=gaps,
-        decision={"recommended_action": "pilot"},
+        decision=decision,
         history=[],
         executor=lambda strategy, gap: {
             "validated_evidence_ids": [],
@@ -53,11 +78,27 @@ def test_no_gain_no_revision():
     )
     assert result.iteration.new_graph_revision is None
     assert result.iteration.status == IterationStatus.COMPLETED_NO_GAIN
+    try:
+        controller.step(
+            project_id="P",
+            base_graph_revision=3,
+            gaps=gaps,
+            decision=decision,
+            history=[],
+            executor=lambda strategy, gap: {
+                "validated_evidence_ids": [],
+                "resolved_gap_ids": ["G1"],
+                "evidence_gain": {},
+            },
+        )
+        assert False, "worker-authored resolved state must fail closed"
+    except ValueError as exc:
+        assert "must not author KnowledgeGap RESOLVED" in str(exc)
 
 
 def test_valid_negative_evidence_is_appended_and_creates_revision():
     controller = EvidenceAutoresearchController()
-    gaps = [{"gap_id": "G1", "gap_type": "unresolved_conflict", "priority": "high", "status": "open"}]
+    gaps = [_gap("G1", "unresolved_conflict", revision=4)]
     seen = []
 
     def commit(ids):
@@ -68,7 +109,7 @@ def test_valid_negative_evidence_is_appended_and_creates_revision():
         project_id="P",
         base_graph_revision=4,
         gaps=gaps,
-        decision={"recommended_action": "pilot"},
+        decision={"recommended_action": "pilot", "graph_revision": 4},
         history=[],
         executor=lambda strategy, gap: {
             "validated_evidence_ids": ["E-negative"],
@@ -115,22 +156,40 @@ def test_saturation_requires_streak_and_diversity():
 
 def test_research_memory_is_append_only(tmp_path: Path):
     memory = ResearchMemory(tmp_path)
+    lineage = "KGK-same-semantic-gap"
     first = ResearchIteration(
         "R1",
         "P",
         0,
-        "G",
+        "G-old",
         ResearchStrategy("S", ResearchExperimentType.TARGETED_RETRIEVAL, "h", "gain"),
+        gap_lineage_key=lineage,
     )
     first.complete(IterationStatus.COMPLETED_NO_GAIN)
     memory.append_iteration(first)
     second = ResearchIteration(
         "R2",
         "P",
-        0,
-        "G",
+        1,
+        "G-new",
         ResearchStrategy("S2", ResearchExperimentType.CITATION_CHAINING, "h2", "gain"),
+        gap_lineage_key=lineage,
     )
     second.complete(IterationStatus.COMPLETED_NO_GAIN)
     memory.append_iteration(second)
-    assert [row["iteration_id"] for row in memory.load_iterations("G")] == ["R1", "R2"]
+    assert [
+        row["iteration_id"]
+        for row in memory.load_iterations("G-new", gap_lineage_key=lineage)
+    ] == ["R1", "R2"]
+
+    controller = EvidenceAutoresearchController()
+    new_gap = _gap("G-new", "missing_transfer", revision=2, lineage=lineage)
+    next_strategy = controller.build_strategy(
+        controller.select_gap(
+            [new_gap],
+            {"recommended_action": "pilot", "graph_revision": 2},
+        ),
+        new_gap,
+        memory.load_iterations(),
+    )
+    assert next_strategy.experiment_type == ResearchExperimentType.TEMPORAL_REFRESH
