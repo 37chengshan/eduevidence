@@ -1,9 +1,10 @@
 """TaskSpec-aware dispatch adapter for Agent MCP.
 
-This module is deliberately thin: Agent MCP remains the only implementation
-of CLI/model approval and spawn payload construction. EduEvidence adds one
-scientific planning gate in front of it: every delegated worker must carry a
-validated TaskSpec and may only return staging artifacts.
+Agent MCP remains the only implementation of CLI/model approval and spawn
+payload construction. EduEvidence adds a scientific contract gate in front of
+it: every delegated worker must carry run/revision context, explicit
+capabilities, forbidden actions, scope/budget/output/termination contracts, and
+may return staging artifacts only.
 """
 from __future__ import annotations
 
@@ -30,12 +31,7 @@ def dispatch_task(
     context_mode: str = "compact",
     summary_chars: int | None = None,
 ) -> dict[str, Any]:
-    """Validate a delegated TaskSpec, then pass it through safe_spawn().
-
-    This function does not select a CLI/model and does not weaken the existing
-    Agent MCP approval gate. It only binds a scientific task contract to the
-    spawn request.
-    """
+    """Validate a dispatch-ready TaskSpec, then pass it through safe_spawn()."""
     if not isinstance(task, TaskSpec):
         return {
             "status": TASKSPEC_REQUIRED,
@@ -43,7 +39,7 @@ def dispatch_task(
             "reason": "subagent dispatch requires a TaskSpec",
         }
     try:
-        task.validate()
+        task.validate_for_dispatch()
     except ValueError as exc:
         return {
             "status": TASKSPEC_INVALID,
@@ -74,7 +70,11 @@ def dispatch_task(
     )
     if result.get("status") == "READY":
         result["task_id"] = task.task_id
+        result["run_id"] = task.run_id
+        result["base_revision"] = task.base_revision
         result["stage"] = task.stage
         result["evidence_axis"] = task.evidence_axis
+        result["allowed_capabilities"] = list(task.allowed_capabilities)
         result["expected_staging_outputs"] = list(task.expected_outputs)
+        result["output_contract"] = dict(task.output_contract)
     return result
