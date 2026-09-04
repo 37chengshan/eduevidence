@@ -21,6 +21,7 @@ from .core import (
     promote,
 )
 from .git_workspace import GitWorkspace
+from .trust import AgentIsolation, compute_eval_suite_hash
 
 
 def _run_json(command: str, cwd: Path, env=None) -> dict:
@@ -39,6 +40,23 @@ def _run_json(command: str, cwd: Path, env=None) -> dict:
     if not isinstance(value, dict):
         raise ValueError("command stdout must be one JSON object")
     return value
+
+
+def _trusted_eval_snapshot(
+    payload: dict[str, Any],
+    *,
+    suite_hash: str,
+    isolation_verified: bool,
+) -> EvalSnapshot:
+    """Build an EvalSnapshot while ignoring evaluator self-attestation.
+
+    Evaluation suite identity and holdout-isolation authority are runner-owned.
+    Any values with those names emitted by the evaluator are overwritten.
+    """
+    trusted = dict(payload)
+    trusted["eval_suite_hash"] = suite_hash
+    trusted["holdout_isolation_verified"] = bool(isolation_verified)
+    return EvalSnapshot(**trusted)
 
 
 def _read_jsonl(path: Path, limit: int = 25) -> list[dict[str, Any]]:
@@ -175,7 +193,13 @@ class DailyEvolutionRunner:
         log = ExperimentLog(state_root)
         manifest = ProtectedManifest.from_repo(workspace.path)
         plateau = PlateauTracker()
-        baseline = EvalSnapshot(**_run_json(eval_command, workspace.path))
+        isolation = AgentIsolation.from_environment()
+        trusted_suite_hash = compute_eval_suite_hash(workspace.path)
+        baseline = _trusted_eval_snapshot(
+            _run_json(eval_command, workspace.path),
+            suite_hash=trusted_suite_hash,
+            isolation_verified=isolation.verified,
+        )
         statuses: list[str] = []
         spent = float(baseline.cost)
         best = None
@@ -211,7 +235,12 @@ class DailyEvolutionRunner:
                         "EDUEVIDENCE_HOLDOUT_ACCESS": "FORBIDDEN",
                     }
                 )
-                proposal = _run_json(agent_command, view.path, env)
+                isolated_command, agent_env = isolation.wrap_command(
+                    agent_command,
+                    view.path,
+                    env,
+                )
+                proposal = _run_json(isolated_command, view.path, agent_env)
                 hypothesis = str(proposal.get("hypothesis", "")).strip()
                 if not hypothesis:
                     raise ValueError("empty hypothesis")
@@ -244,12 +273,19 @@ class DailyEvolutionRunner:
                         protected_after_sync = manifest.hash_tree(workspace.path)
                         if protected_after_sync != protected_before:
                             status, reason = "INVALID", "protected tree hash changed"
+                        elif compute_eval_suite_hash(workspace.path) != trusted_suite_hash:
+                            status, reason = "INVALID", "trusted evaluation suite changed during experiment"
                         else:
                             eval_env = os.environ.copy()
                             eval_env["EDUEVIDENCE_EXPERIMENT_ID"] = experiment_id
+                            eval_env["EDUEVIDENCE_EVAL_SUITE_HASH"] = trusted_suite_hash
                             for retest_index in range(max_retests + 1):
                                 eval_env["EDUEVIDENCE_RETEST_INDEX"] = str(retest_index)
-                                candidate = EvalSnapshot(**_run_json(eval_command, workspace.path, eval_env))
+                                candidate = _trusted_eval_snapshot(
+                                    _run_json(eval_command, workspace.path, eval_env),
+                                    suite_hash=trusted_suite_hash,
+                                    isolation_verified=isolation.verified,
+                                )
                                 spent += float(candidate.cost)
                                 status, reason = promote(baseline, candidate)
                                 if status != "RETEST":
@@ -343,8 +379,16 @@ class DailyEvolutionRunner:
             "promotion": "branch_only",
             "branch_push_requested": push_branch,
             "branch_pushed": False,
-            "mutation_view": "dev_only_context_isolation",
-            "security_note": "OS-level holdout isolation must be attested by evaluator for automatic KEEP",
+            "mutation_view": (
+                "os_container_isolation" if isolation.verified else "dev_only_context_isolation"
+            ),
+            "holdout_isolation_verified": isolation.verified,
+            "isolation_provider": isolation.mode,
+            "isolation_reason": isolation.reason,
+            "eval_suite_hash": trusted_suite_hash,
+            "security_note": (
+                "automatic KEEP requires runner-owned OS isolation; evaluator self-attestation is ignored"
+            ),
             "candidate_artifacts": "local session state only; never auto-pushed",
         }
         (state_root / "daily-report.json").write_text(

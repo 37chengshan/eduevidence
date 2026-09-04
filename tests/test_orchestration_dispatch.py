@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from engine.orchestration import ExecutionMode, ExecutionPlanner, TaskSpec
 import integrations.orchestration_dispatch as dispatch
 
@@ -95,3 +97,58 @@ def test_dispatch_rejects_canonical_output_before_safe_spawn(monkeypatch):
     result = dispatch.dispatch_task(task, "x", None)
     assert result["status"] == dispatch.TASKSPEC_INVALID
     assert called is False
+
+
+def test_host_execution_forces_main_process_acceptance():
+    task = ExecutionPlanner().plan("M", run_id="RUN-2", base_revision=7).delegated_tasks[0]
+    dispatched = {
+        "status": "READY",
+        "task_id": task.task_id,
+        "spawn_call": {"tool": "spawn_agent", "opaque": True},
+    }
+
+    def host_executor(_spawn_call):
+        return {
+            "task_id": task.task_id,
+            "status": "completed",
+            "validated": True,
+            "staging_artifacts": [{"artifact_type": "DecisionSnapshot"}],
+        }
+
+    result = dispatch.execute_dispatched_task(task, dispatched, host_executor)
+    assert result.validated is False
+    assert any("canonical output" in issue for issue in result.validation_issues)
+    with pytest.raises(PermissionError):
+        dispatch.judge_artifacts([result])
+
+
+def test_host_execution_accepts_only_contract_bound_staging_artifacts():
+    task = ExecutionPlanner().plan("M", run_id="RUN-3", base_revision=8).delegated_tasks[0]
+    artifact_type = task.expected_outputs[0]
+    dispatched = {
+        "status": "READY",
+        "task_id": task.task_id,
+        "spawn_call": {"tool": "spawn_agent"},
+    }
+
+    def host_executor(_spawn_call):
+        return {
+            "task_id": task.task_id,
+            "status": "completed",
+            "validated": False,
+            "staging_artifacts": [
+                {"artifact_type": artifact_type, "payload": {"source_ids": ["S-1"]}}
+            ],
+        }
+
+    result = dispatch.execute_dispatched_task(task, dispatched, host_executor)
+    assert result.validated is True
+    accepted = dispatch.judge_artifacts([result])
+    assert accepted == list(result.staging_artifacts)
+
+
+def test_host_execution_rejects_task_identity_mismatch():
+    task = ExecutionPlanner().plan("M", run_id="RUN-4", base_revision=9).delegated_tasks[0]
+    dispatched = {"status": "READY", "task_id": "other", "spawn_call": {}}
+    with pytest.raises(ValueError, match="task_id"):
+        dispatch.execute_dispatched_task(task, dispatched, lambda _: {})
