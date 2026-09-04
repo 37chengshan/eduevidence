@@ -85,7 +85,13 @@ class AgentIsolation:
             return cls("container", False, reason="docker/podman runtime unavailable")
         if not image:
             return cls("container", False, runtime=runtime, reason="isolation image not configured")
-        return cls("container", True, runtime=runtime, image=image, reason="runner-owned container boundary")
+        return cls(
+            "container",
+            True,
+            runtime=runtime,
+            image=image,
+            reason="runner-owned container boundary",
+        )
 
     def wrap_command(
         self,
@@ -118,14 +124,23 @@ class AgentIsolation:
             "--workdir",
             "/workspace",
         ]
-        forwarded: dict[str, str] = {}
+        view_prefix = str(view)
         for key, value in env.items():
-            if key.startswith("EDUEVIDENCE_"):
-                argv.extend(["--env", f"{key}={value}"])
-                forwarded[key] = value
+            if not key.startswith("EDUEVIDENCE_"):
+                continue
+            text = str(value)
+            if text == view_prefix:
+                text = "/workspace"
+            elif text.startswith(view_prefix + os.sep):
+                rel = Path(text).relative_to(view).as_posix()
+                text = f"/workspace/{rel}"
+            argv.extend(["--env", f"{key}={text}"])
         argv.extend([self.image, "sh", "-lc", command])
-        # The container runtime itself receives a minimal normal host env so it
-        # can be found/executed, but no model/API credentials are forwarded into
-        # the container unless explicitly encoded as EDUEVIDENCE_* controls.
-        host_env = {key: value for key, value in os.environ.items() if key in {"PATH", "HOME", "TMPDIR"}}
+        # The container runtime itself receives only the minimal host settings
+        # needed to launch. Model/API credentials are not implicitly forwarded.
+        host_env = {
+            key: value
+            for key, value in os.environ.items()
+            if key in {"PATH", "HOME", "TMPDIR"}
+        }
         return shlex.join(argv), host_env
