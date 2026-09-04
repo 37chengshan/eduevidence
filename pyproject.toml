@@ -34,7 +34,7 @@ py-modules = ["eduevidence_cli"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["engine*", "scripts*"]
+include = ["engine*", "scripts*", "retrieval*", "integrations*"]
 
 [tool.setuptools.data-files]
 "share/eduevidence/schemas" = ["schemas/*.json"]
