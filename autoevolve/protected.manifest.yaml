@@ -1,4 +1,5 @@
 protected:
+  - autoevolve/protected.manifest.yaml
   - benchmarks/annotations/**
   - benchmarks/holdout/**
   - benchmarks/evaluator/**
@@ -6,6 +7,11 @@ protected:
   - references/scientific-invariants.md
   - scripts/pre_verdict_gate.py
   - scripts/compute_confidence.py
+  - scripts/check_autoresearch_invariants.py
+  - engine/graph_store.py
+  - engine/study_design.py
+  - engine/autoevolve/**
+  - .github/workflows/autoresearch-gates.yml
   - tests/scientific_invariants/**
 
 mutable:
