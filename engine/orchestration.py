@@ -1,18 +1,19 @@
 """Canonical orchestration primitives for EduEvidence.
 
-This module separates five concepts that were historically easy to conflate:
-protocol stage, scientific role, capability, worker/subagent, and model/CLI.
-It is intentionally deterministic and dependency-free so Platform Native and
-Agent MCP Enhanced modes share the same planning semantics.
+Protocol stage, scientific role, capability, worker/subagent, and model/CLI are
+separate concepts. A RoleSpec describes scientific responsibility; a TaskSpec
+is one bounded execution contract; an ExecutionPlan states sequencing and
+parallel groups. Runtime model/CLI selection remains an adapter concern.
 
-Scientific rule: workers may produce staging artifacts, but only the lead
-orchestrator/single-writer path may commit canonical project state.
+Scientific rule: workers produce staging artifacts only. Canonical project
+state is committed by the single-writer lead path after validation.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import json
+from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Iterable
+from typing import Any, Iterable
 
 
 class Complexity(str, Enum):
@@ -47,6 +48,13 @@ CANONICAL_STATE_ARTIFACTS = frozenset({
     "PilotRun",
     "AnalysisRun",
 })
+
+DEFAULT_FORBIDDEN_WORKER_ACTIONS = (
+    "canonical_state_write",
+    "decision_promotion",
+    "recursive_worker_spawn",
+    "evaluator_mutation",
+)
 
 
 @dataclass(frozen=True)
@@ -126,26 +134,32 @@ ROLE_REGISTRY: dict[str, RoleSpec] = {
 
 @dataclass(frozen=True)
 class TaskSpec:
-    """One bounded unit of work that may be executed locally or delegated.
-
-    A TaskSpec is required for delegation. It states the scientific role,
-    evidence axis, inputs, expected staging outputs and budget. Delegated tasks
-    are read-only with respect to canonical project state.
-    """
+    """One bounded scientific task; delegation requires full runtime context."""
 
     task_id: str
     stage: str
     role: str
     objective: str
     evidence_axis: str
-    inputs: tuple[str, ...] = ()
+    run_id: str | None = None
+    base_revision: int | None = None
+    role_profile: str | None = None
+    reason_for_delegation: str | None = None
+    inputs: tuple[str, ...] = ()  # legacy alias kept during migration
+    input_artifacts: tuple[str, ...] = ()
+    allowed_capabilities: tuple[str, ...] = ()
+    forbidden_actions: tuple[str, ...] = DEFAULT_FORBIDDEN_WORKER_ACTIONS
+    scope: dict[str, Any] = field(default_factory=dict)
+    budget: dict[str, Any] = field(default_factory=dict)
     expected_outputs: tuple[str, ...] = ()
+    output_contract: dict[str, Any] = field(default_factory=dict)
+    termination: dict[str, Any] = field(default_factory=dict)
     execution_mode: ExecutionMode = ExecutionMode.LOCAL
     independent: bool = False
     read_only: bool = True
     timeout_seconds: int = 1800
     token_budget: int | None = None
-    metadata: dict[str, str] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def validate(self) -> None:
         if not self.task_id.strip():
@@ -159,38 +173,78 @@ class TaskSpec:
             raise ValueError(
                 f"role {self.role!r} does not own stage {self.stage!r}; owns {spec.stages}"
             )
+        if self.role_profile not in (None, self.role):
+            raise ValueError("role_profile must identify the same scientific role")
         if not self.objective.strip():
             raise ValueError("objective must be non-empty")
         if not self.evidence_axis.strip():
             raise ValueError("evidence_axis must be non-empty")
+        if self.base_revision is not None and self.base_revision < 0:
+            raise ValueError("base_revision must be >= 0")
         if self.timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
         if self.token_budget is not None and self.token_budget <= 0:
             raise ValueError("token_budget must be positive when provided")
-        if self.execution_mode is ExecutionMode.DELEGATED and not self.read_only:
-            raise ValueError("delegated workers must be read-only against canonical state")
-        if spec.independence_required and self.execution_mode is ExecutionMode.DELEGATED:
-            if not self.independent:
-                raise ValueError(f"role {self.role!r} requires independent delegated execution")
-        forbidden = CANONICAL_STATE_ARTIFACTS.intersection(self.expected_outputs)
-        if self.execution_mode is ExecutionMode.DELEGATED and forbidden:
+        unknown_caps = set(self.allowed_capabilities) - set(spec.capabilities)
+        if unknown_caps:
             raise ValueError(
-                "delegated workers may only return staging artifacts; canonical outputs forbidden: "
-                f"{sorted(forbidden)}"
+                f"task grants capabilities outside role {self.role!r}: {sorted(unknown_caps)}"
             )
+        forbidden = CANONICAL_STATE_ARTIFACTS.intersection(self.expected_outputs)
+        if self.execution_mode is ExecutionMode.DELEGATED:
+            if not self.read_only:
+                raise ValueError("delegated workers must be read-only against canonical state")
+            if forbidden:
+                raise ValueError(
+                    "delegated workers may only return staging artifacts; canonical outputs forbidden: "
+                    f"{sorted(forbidden)}"
+                )
+            if "canonical_state_write" not in self.forbidden_actions:
+                raise ValueError("delegated TaskSpec must explicitly forbid canonical_state_write")
+            if spec.independence_required and not self.independent:
+                raise ValueError(f"role {self.role!r} requires independent delegated execution")
+
+    def validate_for_dispatch(self) -> None:
+        self.validate()
+        if self.execution_mode is not ExecutionMode.DELEGATED:
+            raise ValueError("only delegated TaskSpecs may be dispatched")
+        if not self.run_id or not self.run_id.strip():
+            raise ValueError("delegated TaskSpec requires run_id")
+        if self.base_revision is None:
+            raise ValueError("delegated TaskSpec requires base_revision")
+        if not self.reason_for_delegation or not self.reason_for_delegation.strip():
+            raise ValueError("delegated TaskSpec requires reason_for_delegation")
+        if not self.allowed_capabilities:
+            raise ValueError("delegated TaskSpec requires explicit allowed_capabilities")
+        if not self.output_contract:
+            raise ValueError("delegated TaskSpec requires output_contract")
+        if not self.termination:
+            raise ValueError("delegated TaskSpec requires termination contract")
+
+    def to_dict(self) -> dict[str, Any]:
+        value = asdict(self)
+        value["execution_mode"] = self.execution_mode.value
+        return value
 
     def to_prompt_contract(self) -> str:
-        """Produce a stable task envelope for a worker prompt."""
-        self.validate()
+        """Produce a stable, explicit worker envelope."""
+        self.validate_for_dispatch()
         return (
             f"TASK_ID: {self.task_id}\n"
+            f"RUN_ID: {self.run_id}\n"
+            f"BASE_GRAPH_REVISION: {self.base_revision}\n"
             f"STAGE: {self.stage}\n"
             f"SCIENTIFIC_ROLE: {self.role}\n"
             f"EVIDENCE_AXIS: {self.evidence_axis}\n"
             f"OBJECTIVE: {self.objective}\n"
-            f"INPUTS: {', '.join(self.inputs) if self.inputs else 'none'}\n"
-            f"EXPECTED_STAGING_OUTPUTS: "
-            f"{', '.join(self.expected_outputs) if self.expected_outputs else 'none'}\n"
+            f"REASON_FOR_DELEGATION: {self.reason_for_delegation}\n"
+            f"ALLOWED_CAPABILITIES: {', '.join(self.allowed_capabilities)}\n"
+            f"FORBIDDEN_ACTIONS: {', '.join(self.forbidden_actions)}\n"
+            f"INPUT_ARTIFACTS: {', '.join(self.input_artifacts or self.inputs) if (self.input_artifacts or self.inputs) else 'none'}\n"
+            f"SCOPE_JSON: {json.dumps(self.scope, ensure_ascii=False, sort_keys=True)}\n"
+            f"BUDGET_JSON: {json.dumps(self.budget, ensure_ascii=False, sort_keys=True)}\n"
+            f"OUTPUT_CONTRACT_JSON: {json.dumps(self.output_contract, ensure_ascii=False, sort_keys=True)}\n"
+            f"TERMINATION_JSON: {json.dumps(self.termination, ensure_ascii=False, sort_keys=True)}\n"
             "CANONICAL_STATE_WRITE: FORBIDDEN\n"
             "Return only the requested staging artifact(s)."
         )
@@ -201,6 +255,8 @@ class ExecutionPlan:
     complexity: Complexity
     tasks: tuple[TaskSpec, ...]
     max_parallel_workers: int
+    parallel_groups: tuple[tuple[str, ...], ...] = ()
+    plan_id: str | None = None
 
     @property
     def delegated_tasks(self) -> tuple[TaskSpec, ...]:
@@ -209,85 +265,180 @@ class ExecutionPlan:
     def validate(self) -> None:
         if self.max_parallel_workers < 0:
             raise ValueError("max_parallel_workers cannot be negative")
+        if self.max_parallel_workers > 6:
+            raise ValueError("bounded worker pool exceeds hard limit of 6")
         ids: set[str] = set()
+        by_id: dict[str, TaskSpec] = {}
         for task in self.tasks:
             task.validate()
             if task.task_id in ids:
                 raise ValueError(f"duplicate task id: {task.task_id}")
             ids.add(task.task_id)
-        if len(self.delegated_tasks) > 0 and self.max_parallel_workers < 1:
+            by_id[task.task_id] = task
+        if self.delegated_tasks and self.max_parallel_workers < 1:
             raise ValueError("delegated plan requires max_parallel_workers >= 1")
-        if self.max_parallel_workers > 6:
-            raise ValueError("bounded worker pool exceeds hard limit of 6")
+
+        grouped: list[str] = []
+        for group in self.parallel_groups:
+            if not group:
+                raise ValueError("parallel groups may not be empty")
+            if len(group) > self.max_parallel_workers:
+                raise ValueError("parallel group exceeds max_parallel_workers")
+            for task_id in group:
+                task = by_id.get(task_id)
+                if task is None:
+                    raise ValueError(f"parallel group references unknown task {task_id}")
+                if task.execution_mode is not ExecutionMode.DELEGATED:
+                    raise ValueError(f"parallel group may contain delegated tasks only: {task_id}")
+                grouped.append(task_id)
+        delegated_ids = [task.task_id for task in self.delegated_tasks]
+        if sorted(grouped) != sorted(delegated_ids):
+            raise ValueError("every delegated task must appear exactly once in parallel_groups")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "plan_id": self.plan_id,
+            "complexity": self.complexity.value,
+            "tasks": [task.to_dict() for task in self.tasks],
+            "max_parallel_workers": self.max_parallel_workers,
+            "parallel_groups": [list(group) for group in self.parallel_groups],
+        }
 
 
 class ExecutionPlanner:
-    """Deterministic planner for whether scientific duties need subagents.
+    """Deterministic policy planner; it never chooses a concrete model/CLI."""
 
-    It never chooses a concrete model or CLI. Agent MCP handles that later,
-    after user approval. The planner only decides local vs delegated work and
-    the evidence axes that should remain independent.
-    """
-
-    def plan(self, complexity: str | Complexity) -> ExecutionPlan:
+    def plan(
+        self,
+        complexity: str | Complexity,
+        *,
+        run_id: str | None = None,
+        base_revision: int | None = None,
+        plan_id: str | None = None,
+    ) -> ExecutionPlan:
         level = complexity if isinstance(complexity, Complexity) else Complexity(complexity.upper())
         if level is Complexity.S:
-            plan = ExecutionPlan(level, self._serial_tasks(), max_parallel_workers=0)
+            plan = ExecutionPlan(
+                level,
+                self._serial_tasks(run_id, base_revision),
+                max_parallel_workers=0,
+                parallel_groups=(),
+                plan_id=plan_id,
+            )
         elif level is Complexity.M:
-            plan = ExecutionPlan(level, self._medium_tasks(), max_parallel_workers=3)
+            tasks = self._medium_tasks(run_id, base_revision)
+            plan = ExecutionPlan(
+                level,
+                tasks,
+                max_parallel_workers=2,
+                parallel_groups=(("retrieve-direct", "retrieve-counter"), ("challenge",)),
+                plan_id=plan_id,
+            )
         else:
-            plan = ExecutionPlan(level, self._deep_tasks(), max_parallel_workers=4)
+            tasks = self._deep_tasks(run_id, base_revision)
+            plan = ExecutionPlan(
+                level,
+                tasks,
+                max_parallel_workers=4,
+                parallel_groups=(
+                    (
+                        "retrieve-direct",
+                        "retrieve-transfer",
+                        "retrieve-counter",
+                        "retrieve-applicability",
+                    ),
+                    ("challenge", "audit"),
+                ),
+                plan_id=plan_id,
+            )
         plan.validate()
         return plan
 
     @staticmethod
-    def _base(task_id: str, stage: str, role: str, objective: str, axis: str,
-              *, delegated: bool = False, independent: bool = False,
-              outputs: Iterable[str] = ()) -> TaskSpec:
+    def _base(
+        task_id: str,
+        stage: str,
+        role: str,
+        objective: str,
+        axis: str,
+        *,
+        run_id: str | None,
+        base_revision: int | None,
+        delegated: bool = False,
+        independent: bool = False,
+        outputs: Iterable[str] = (),
+    ) -> TaskSpec:
+        role_spec = ROLE_REGISTRY[role]
+        timeout_seconds = 1800
+        token_budget = None
+        outputs = tuple(outputs)
         return TaskSpec(
             task_id=task_id,
             stage=stage,
             role=role,
+            role_profile=role,
             objective=objective,
             evidence_axis=axis,
-            expected_outputs=tuple(outputs),
+            run_id=run_id,
+            base_revision=base_revision,
+            reason_for_delegation=(
+                f"independent bounded {axis} work benefits from delegated context"
+                if delegated
+                else None
+            ),
+            allowed_capabilities=role_spec.capabilities,
+            forbidden_actions=DEFAULT_FORBIDDEN_WORKER_ACTIONS,
+            scope={"evidence_axis": axis},
+            budget={"timeout_seconds": timeout_seconds, "token_budget": token_budget},
+            expected_outputs=outputs,
+            output_contract={
+                "artifact_types": list(outputs),
+                "canonical_state": False,
+                "validation_owner": "lead-orchestrator",
+            },
+            termination={
+                "max_seconds": timeout_seconds,
+                "conditions": ["output_contract_satisfied", "budget_exhausted", "tool_failure"],
+            },
             execution_mode=ExecutionMode.DELEGATED if delegated else ExecutionMode.LOCAL,
             independent=independent,
             read_only=True,
+            timeout_seconds=timeout_seconds,
+            token_budget=token_budget,
         )
 
-    def _serial_tasks(self) -> tuple[TaskSpec, ...]:
+    def _serial_tasks(self, run_id, base_revision) -> tuple[TaskSpec, ...]:
         return (
-            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame"),
-            self._base("retrieve", "retrieve", "evidence-retriever", "Acquire bounded evidence.", "direct+counter"),
-            self._base("extract", "extract", "evidence-analyst", "Extract structured findings.", "all-eligible"),
-            self._base("challenge", "challenge", "skeptic", "Challenge the provisional interpretation.", "counter-evidence"),
-            self._base("audit", "audit", "method-reviewer", "Audit methodology and outcome validity.", "methodology"),
-            self._base("judge", "adjudicate", "evidence-judge", "Emit an evidence-bounded decision.", "decision"),
+            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
+            self._base("retrieve", "retrieve", "evidence-retriever", "Acquire bounded evidence.", "direct+counter", run_id=run_id, base_revision=base_revision),
+            self._base("extract", "extract", "evidence-analyst", "Extract structured findings.", "all-eligible", run_id=run_id, base_revision=base_revision),
+            self._base("challenge", "challenge", "skeptic", "Challenge the provisional interpretation.", "counter-evidence", run_id=run_id, base_revision=base_revision),
+            self._base("audit", "audit", "method-reviewer", "Audit methodology and outcome validity.", "methodology", run_id=run_id, base_revision=base_revision),
+            self._base("judge", "adjudicate", "evidence-judge", "Emit an evidence-bounded decision.", "decision", run_id=run_id, base_revision=base_revision),
         )
 
-    def _medium_tasks(self) -> tuple[TaskSpec, ...]:
+    def _medium_tasks(self, run_id, base_revision) -> tuple[TaskSpec, ...]:
         return (
-            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame"),
-            self._base("retrieve-direct", "retrieve", "evidence-retriever", "Retrieve direct decision-relevant evidence.", "direct-causal", delegated=True, outputs=("SourceCandidates",)),
-            self._base("retrieve-counter", "retrieve", "evidence-retriever", "Retrieve null, negative and contradictory evidence.", "counter-risk", delegated=True, outputs=("SourceCandidates",)),
-            self._base("extract", "extract", "evidence-analyst", "Merge validated sources and extract findings.", "all-eligible"),
-            self._base("challenge", "challenge", "skeptic", "Independently test the provisional interpretation.", "counter-evidence", delegated=True, independent=True, outputs=("SkepticFindings",)),
-            self._base("audit", "audit", "method-reviewer", "Audit methodology and construct validity.", "methodology"),
-            self._base("judge", "adjudicate", "evidence-judge", "Emit an evidence-bounded decision.", "decision"),
+            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
+            self._base("retrieve-direct", "retrieve", "evidence-retriever", "Retrieve direct decision-relevant evidence.", "direct-causal", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
+            self._base("retrieve-counter", "retrieve", "evidence-retriever", "Retrieve null, negative and contradictory evidence.", "counter-risk", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
+            self._base("extract", "extract", "evidence-analyst", "Merge validated sources and extract findings.", "all-eligible", run_id=run_id, base_revision=base_revision),
+            self._base("challenge", "challenge", "skeptic", "Independently test the provisional interpretation.", "counter-evidence", run_id=run_id, base_revision=base_revision, delegated=True, independent=True, outputs=("SkepticFindings",)),
+            self._base("audit", "audit", "method-reviewer", "Audit methodology and construct validity.", "methodology", run_id=run_id, base_revision=base_revision),
+            self._base("judge", "adjudicate", "evidence-judge", "Emit an evidence-bounded decision.", "decision", run_id=run_id, base_revision=base_revision),
         )
 
-    def _deep_tasks(self) -> tuple[TaskSpec, ...]:
+    def _deep_tasks(self, run_id, base_revision) -> tuple[TaskSpec, ...]:
         return (
-            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame"),
-            self._base("retrieve-direct", "retrieve", "evidence-retriever", "Retrieve direct causal evidence.", "direct-causal", delegated=True, outputs=("SourceCandidates",)),
-            self._base("retrieve-transfer", "retrieve", "evidence-retriever", "Retrieve retention and independent-transfer evidence.", "transfer-retention", delegated=True, outputs=("SourceCandidates",)),
-            self._base("retrieve-counter", "retrieve", "evidence-retriever", "Retrieve null, negative, risk and contradiction evidence.", "counter-risk", delegated=True, outputs=("SourceCandidates",)),
-            self._base("retrieve-applicability", "retrieve", "evidence-retriever", "Retrieve subgroup, context and freshness evidence.", "applicability-freshness", delegated=True, outputs=("SourceCandidates",)),
-            self._base("extract", "extract", "evidence-analyst", "Deterministically merge and extract validated findings.", "all-eligible"),
-            self._base("challenge", "challenge", "skeptic", "Independently challenge the merged interpretation.", "counter-evidence", delegated=True, independent=True, outputs=("SkepticFindings",)),
-            self._base("audit", "audit", "method-reviewer", "Independently audit methodology and outcome validity.", "methodology", delegated=True, independent=True, outputs=("MethodologyAudit",)),
-            self._base("judge", "adjudicate", "evidence-judge", "Emit an evidence-bounded decision after all gates.", "decision"),
+            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
+            self._base("retrieve-direct", "retrieve", "evidence-retriever", "Retrieve direct causal evidence.", "direct-causal", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
+            self._base("retrieve-transfer", "retrieve", "evidence-retriever", "Retrieve retention and independent-transfer evidence.", "transfer-retention", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
+            self._base("retrieve-counter", "retrieve", "evidence-retriever", "Retrieve null, negative, risk and contradiction evidence.", "counter-risk", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
+            self._base("retrieve-applicability", "retrieve", "evidence-retriever", "Retrieve subgroup, context and freshness evidence.", "applicability-freshness", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
+            self._base("extract", "extract", "evidence-analyst", "Deterministically merge and extract validated findings.", "all-eligible", run_id=run_id, base_revision=base_revision),
+            self._base("challenge", "challenge", "skeptic", "Independently challenge the merged interpretation.", "counter-evidence", run_id=run_id, base_revision=base_revision, delegated=True, independent=True, outputs=("SkepticFindings",)),
+            self._base("audit", "audit", "method-reviewer", "Independently audit methodology and outcome validity.", "methodology", run_id=run_id, base_revision=base_revision, delegated=True, independent=True, outputs=("MethodologyAudit",)),
+            self._base("judge", "adjudicate", "evidence-judge", "Emit an evidence-bounded decision after all gates.", "decision", run_id=run_id, base_revision=base_revision),
         )
 
 
