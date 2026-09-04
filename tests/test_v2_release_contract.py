@@ -39,7 +39,6 @@ def test_skill_does_not_present_engine_as_standalone_server():
 
 def test_skill_keeps_agent_mcp_optional():
     text = _skill_text()
-    # Agent MCP may be mentioned as an option, never as the only backend
     assert "Agent MCP" in text
     assert "Native" in text or "native" in text
 
@@ -70,7 +69,9 @@ def test_skill_payload_includes_engine():
 
 def test_wheel_metadata_includes_engine_package():
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert 'packages = ["engine", "scripts"]' in pyproject
+    assert "[tool.setuptools.packages.find]" in pyproject
+    for package_glob in ("engine*", "scripts*", "retrieval*", "integrations*"):
+        assert f'"{package_glob}"' in pyproject
 
 
 def test_copied_payload_imports_engine_without_source_repo(tmp_path):
@@ -86,8 +87,6 @@ def test_copied_payload_imports_engine_without_source_repo(tmp_path):
         "import engine.project, engine.graph_store, engine.projections\n"
         "print('engine-import-ok')\n" % str(payload)
     )
-    code = ("import sys\n" + probe)
-    # run in an isolated interpreter whose cwd is NOT the repo
     result = subprocess.run(
         [sys.executable, "-c", probe], capture_output=True, text=True,
         cwd=str(tmp_path))
