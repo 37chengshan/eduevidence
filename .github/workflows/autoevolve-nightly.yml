@@ -19,6 +19,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # The mutation agent is an external process. Never persist the
+          # repository write credential into .git/config where it could bypass
+          # the branch-only runner and push main directly.
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -33,22 +37,43 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
             echo "Daily evolution is disabled until both repository variables are configured."
           fi
-      - name: Configure git identity
+      - name: Configure local git identity
         if: steps.configured.outputs.enabled == 'true'
         run: |
           git config user.name "eduevidence-autoresearch"
           git config user.email "autoresearch@users.noreply.github.com"
-      - name: Run bounded evolution and push experiment branch only
+      - name: Run bounded evolution without remote credentials
         if: steps.configured.outputs.enabled == 'true'
+        env:
+          # The branch name is workflow-owned, not agent-provided.
+          RUN_TAG: gha-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
           python scripts/daily_evolve.py \
             --repo . \
             --agent-command "$AGENT_COMMAND" \
             --eval-command "$EVAL_COMMAND" \
+            --run-tag "$RUN_TAG" \
             --max-experiments 20 \
             --max-cost-usd 5 \
-            --max-wall-minutes 180 \
-            --push-branch
+            --max-wall-minutes 180
+      - name: Push only the workflow-owned autoresearch branch
+        if: steps.configured.outputs.enabled == 'true'
+        env:
+          PUSH_TOKEN: ${{ github.token }}
+          RUN_TAG: gha-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          branch="autoresearch/${RUN_TAG}"
+          case "$branch" in
+            autoresearch/gha-*) ;;
+            *) echo "invalid autoresearch branch: $branch" >&2; exit 2 ;;
+          esac
+          git show-ref --verify --quiet "refs/heads/$branch"
+          git push \
+            "https://x-access-token:${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "refs/heads/${branch}:refs/heads/${branch}"
 
 # This workflow never opens or merges a PR and never deploys/releases.
-# The configured agent/evaluator are external, pre-authorized commands.
+# External agent/evaluator processes run without persisted GitHub credentials;
+# only the final dedicated step receives a token and pushes one exact
+# workflow-owned autoresearch/* ref.
