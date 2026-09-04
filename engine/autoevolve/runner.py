@@ -50,7 +50,11 @@ def _read_jsonl(path: Path, limit: int = 25) -> list[dict[str, Any]]:
 
 def _session_root(repo: Path, tag: str) -> Path:
     configured = os.environ.get("EDUEVIDENCE_AUTOEVOLVE_STATE_DIR")
-    base = Path(configured).expanduser().resolve() if configured else repo.parent / ".eduevidence-autoevolve-state"
+    base = (
+        Path(configured).expanduser().resolve()
+        if configured
+        else repo.parent / ".eduevidence-autoevolve-state"
+    )
     root = base / tag
     if root.exists():
         raise FileExistsError(f"autoevolve session state already exists: {root}")
@@ -86,6 +90,15 @@ def _append_file(source: Path, target: Path, *, skip_first_line: bool = False) -
             handle.write(line + "\n")
 
 
+def _copy_public_session_files(state_root: Path, run_target: Path) -> None:
+    """Persist only structured, non-candidate session records to Git."""
+    run_target.mkdir(parents=True, exist_ok=False)
+    for name in ("results.tsv", "experiments.jsonl", "daily-report.json"):
+        source = state_root / name
+        if source.is_file():
+            shutil.copy2(source, run_target / name)
+
+
 def _export_session(
     workspace: GitWorkspace,
     state_root: Path,
@@ -94,12 +107,17 @@ def _export_session(
     best_experiment_id: str | None,
     best_commit: str | None,
 ) -> str:
-    """Persist session memory only after candidate evaluation has finished."""
+    """Persist audit memory only after candidate evaluation has finished.
+
+    Candidate patches/files remain local in the external state directory. They
+    are deliberately excluded from automatic branch persistence because an
+    external agent could have written sensitive/transient material into them.
+    """
     run_target = workspace.path / "autoevolve" / "runs" / tag
     if run_target.exists():
         raise FileExistsError(f"session run target exists: {run_target}")
     run_target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(state_root, run_target)
+    _copy_public_session_files(state_root, run_target)
 
     _append_file(
         state_root / "results.tsv",
@@ -314,8 +332,6 @@ class DailyEvolutionRunner:
         report = {
             "run_tag": tag,
             "branch": workspace.branch,
-            "worktree": str(workspace.path),
-            "state_root": str(state_root),
             "experiments": len(statuses),
             "statuses": statuses,
             "best_experiment_id": best,
@@ -325,9 +341,11 @@ class DailyEvolutionRunner:
             "plateau": plateau.plateau(statuses),
             "stop_reason": stop_reason,
             "promotion": "branch_only",
+            "branch_push_requested": push_branch,
             "branch_pushed": False,
             "mutation_view": "dev_only_context_isolation",
             "security_note": "OS-level holdout isolation must be attested by evaluator for automatic KEEP",
+            "candidate_artifacts": "local session state only; never auto-pushed",
         }
         (state_root / "daily-report.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2) + "\n",
@@ -344,8 +362,6 @@ class DailyEvolutionRunner:
         if push_branch:
             workspace.push()
             report["branch_pushed"] = True
-        # Re-write the external report with final push/metadata status. The
-        # committed run copy intentionally reflects the pre-push state.
         (state_root / "daily-report.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
