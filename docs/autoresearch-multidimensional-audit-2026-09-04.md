@@ -29,6 +29,14 @@ Saturation is computed per gap rather than across unrelated gap histories. Empty
 
 The research CLI now pre-allocates a ResearchIteration ID, requires executor-side `query_count`, `candidate_count`, and `fetched_count`, verifies those measurements against the ResearchBudget, checks request/result identity, uses an exclusive project writer lock, and implements stop as a separate request signal instead of racing on canonical state.
 
+### State-machine blockers — CLOSED
+
+**B1 — DecisionSnapshot revision binding: CLOSED.** Any non-empty DecisionSnapshot used for DVI must carry `graph_revision`, and it must equal the KnowledgeGap's `derived_from_graph_revision`. Stale or unbound decision state fails closed before ranking. Regression coverage explicitly exercises the stale-revision case.
+
+**B2 — Worker cannot resolve KnowledgeGap: CLOSED.** Executor/worker output containing `resolved_gap_ids` is rejected by the Evidence Autoresearch controller. Gap resolution is owned by the main engine after validated evidence is committed and coverage/adjudication is re-derived. The obsolete CLI path that would have persisted worker-authored `resolved_gap_ids` has also been removed, so there is no contradictory fallback path.
+
+**B3 — Stable gap lineage is consumed: CLOSED.** KnowledgeGap derivation emits `extensions.autoresearch_key`; ResearchIteration persists the lineage key and strategy/saturation history uses it across GraphRevisions when available, while `gap_id` remains the revision-local artifact identifier. Regression coverage verifies that semantically identical gaps with different revision-local IDs continue prior strategy memory.
+
 ### Multi-role / subagent architecture
 
 The runtime contract now follows the same model as the design document. `TaskSpec` carries run/revision context, role, evidence axis, delegation rationale, allowed capabilities, forbidden actions, scope, budget, output contract, and termination contract. A delegated task without this context cannot reach `safe_spawn()`.
@@ -51,29 +59,33 @@ Nightly GitHub execution no longer exposes a persisted repository write credenti
 
 ### Packaging / CI / Skill distribution
 
-The Skill bundle now contains `agents/openai.yaml`, and the competition package includes the vNext engine/scripts/retrieval/integrations/schemas/Skill/reference/Autoevolve control plane while excluding private benchmark/test/run histories. The wheel package now discovers `engine*`, `scripts*`, `retrieval*`, and `integrations*`, and includes vNext schemas.
+The Skill bundle now contains `agents/openai.yaml`, and the competition package includes the vNext engine/scripts/retrieval/integrations/schemas/Skill/reference/Autoevolve control plane while excluding private benchmark/test/run histories. The wheel package discovers `engine*`, `scripts*`, `retrieval*`, and `integrations*`, and includes vNext schemas.
 
-The dedicated Autoresearch Gates exercise orchestration, dispatch, worker validation, atomic evidence commits, scientific transitions, research CLI contracts, Autoevolve promotion/runner behavior, git workspace behavior, and vNext wheel imports. Historical CI references to deleted examples and stale packaging paths were removed rather than hidden behind broad ignores.
+The main wheel smoke is isolated from the repository checkout: it changes to `/tmp`, loads only `/tmp/wheel-smoke`, and asserts imported module `__file__` paths are physically inside the installed wheel target. This prevents a source-tree import from producing a false-green release test.
+
+The dedicated Autoresearch Gates exercise orchestration, dispatch, worker validation, atomic evidence commits, scientific transitions, research CLI contracts, Autoevolve promotion/runner behavior, git workspace behavior, and vNext wheel imports. Historical CI references to deleted examples and stale packaging paths were repaired with data-driven contracts or a single compatibility symlink rather than duplicate flagship data.
 
 A narrow Ruff exception remains for one legacy postponed `Optional` annotation in the report renderer. It does not relax undefined-name checks repository-wide and is a cleanup item, not a runtime safety dependency.
 
-## Merge blockers still to verify/close
+## Validation result
 
-### B1 — DecisionSnapshot revision binding
+All merge-blocking technical gates passed on commit `a19e20d336d59569647994a0deb2e34f1ed4dfb1` immediately before this audit-status documentation update:
 
-Any DecisionSnapshot used to calculate DVI must be bound to the currently active GraphRevision. This must be checked on every research-auto entry, not only after a previous `re_adjudicate` transition. A non-empty stale DecisionSnapshot must fail closed before gap ranking.
+- B1–B3 closed and regression-tested;
+- repository metrics current (`842` tests, `47` schemas);
+- Ruff E9/F63/F7/F82 passed;
+- full pytest passed;
+- Python 3.10 GitHub Actions test job passed;
+- Python 3.12 GitHub Actions test job passed;
+- schema-smoke passed;
+- upload-build + SKILL parity + zero-leak scan passed;
+- Autoresearch Gates passed;
+- isolated wheel import smoke passed on both Python 3.10 and 3.12;
+- protected scientific surfaces were not weakened to obtain green tests.
 
-### B2 — Worker cannot declare a KnowledgeGap resolved
+Because this file update creates a documentation-only successor commit, the successor HEAD must still receive its own GitHub check result before final merge if branch policy requires every HEAD to be green.
 
-Executor output must not be authoritative for `RESOLVED`. A worker may return evidence and observations; only main-engine graph coverage + re-adjudication/re-derivation may resolve the gap. Any direct persistence path from worker-supplied `resolved_gap_ids` must be removed.
-
-### B3 — Stable gap lineage must be consumed, not only emitted
-
-KnowledgeGap derivation now emits `extensions.autoresearch_key`, a stable semantic lineage key across GraphRevisions. Research history/saturation/attempted-strategy matching must use this key when available, with `gap_id` retained as the revision-local artifact identifier. Merely writing the key without consuming it does not solve cross-revision repeated-search memory.
-
-These three are state-machine correctness items and should be closed before merging the vNext branch.
-
-## Important hardening after merge blockers
+## Important hardening after merge
 
 ### H1 — Holdout isolation authority
 
@@ -85,21 +97,10 @@ Baseline/candidate suite hashes are compared, but the strongest implementation c
 
 ### H3 — Host result-adapter wiring
 
-The repository now contains the correct TaskSpec dispatch gate and WorkerResult acceptance gate. Any host/Agent-MCP adapter that actually executes a spawn must route returned worker artifacts through `validate_worker_output()` before Judge context construction. A host that bypasses that acceptance boundary is non-conformant even if the worker prompt says "staging only".
+The repository contains the TaskSpec dispatch gate and WorkerResult acceptance gate. Any host/Agent-MCP adapter that actually executes a spawn must route returned worker artifacts through `validate_worker_output()` before Judge context construction. A host that bypasses that acceptance boundary is non-conformant even if the worker prompt says "staging only".
 
-## Validation policy
+## Merge position
 
-The branch should be considered technically mergeable only after all of the following are true on the same current HEAD:
+There are no remaining known **merge-blocking state-machine defects** from this audit. Once the current documentation successor HEAD reports the same required checks green, the branch is **technically ready for human merge**.
 
-- merge blockers B1–B3 are closed and regression-tested;
-- repository metrics are current;
-- Ruff E9/F63/F7/F82 passes;
-- full pytest passes;
-- Python 3.10 and Python 3.12 GitHub Actions test jobs pass;
-- schema-smoke passes;
-- upload-build passes;
-- Autoresearch Gates pass;
-- wheel isolated-import smoke passes;
-- no protected surface was weakened to make the tests green.
-
-Even after all gates pass, merge to `main` remains a human action. Autoevolve may prepare and push experiment branches, but it is never the merge authority.
+Merge to `main` remains a human action. Autoevolve may prepare and push experiment branches, but it is never the merge authority.
