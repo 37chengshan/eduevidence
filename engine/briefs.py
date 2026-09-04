@@ -14,6 +14,7 @@ from pathlib import Path
 
 from engine.contracts import load_schema, schema_path
 from engine.planner import PlanStep
+from engine.project import ProjectWorkspace
 
 
 def _schema_section(schema: dict) -> str:
@@ -73,7 +74,7 @@ def build_task_brief(step: PlanStep, *, project: ProjectWorkspace,
         f"Validate the output with `engine.contracts.validate_record({schema_name!r}, record)` — "
         f"it must return [] (empty errors).",
         "",
-        f"## Output path",
+        "## Output path",
         str(output_path),
         "",
         "## Inputs",
