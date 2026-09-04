@@ -1,6 +1,7 @@
 """V2 projection + V1 compatibility tests."""
 
 import json
+from pathlib import Path
 
 from engine.graph_store import GraphStore, GraphMutation
 from engine.project import ProjectWorkspace
@@ -109,7 +110,6 @@ def test_projection_contains_all_surfaces(tmp_path):
     assert len(proj["methodology_reviews"]) == 1
     assert isinstance(proj["knowledge_gaps"], list)
     assert isinstance(proj["study_designs"], list)
-    # analysis provenance surfaces project-local source provenance
     assert len(proj["analysis_provenance"]) == 1
     assert proj["analysis_provenance"][0]["dataset_id"] == "DAT-1"
 
@@ -132,7 +132,6 @@ def test_v1_compat_evidence_rows_preserve_identity(tmp_path):
     assert rows["FND-1"]["extensions"]["evidence_link_id"] == "LNK-1"
     assert rows["FND-1"]["relation_to_claim"] == "support"
     assert rows["FND-2"]["extensions"]["evidence_link_id"] == "LNK-2"
-    # V1 renderer expects these top-level keys
     for key in ("meta", "execution", "research_frame", "decision", "outcomes",
                 "claims", "sources", "evidence", "methodology_reviews",
                 "conflicts", "applicability", "intervention", "evaluation",
@@ -166,9 +165,8 @@ def test_projection_does_not_mutate_graph(tmp_path):
 # ---- V2 renderer surfaces (Task 23) ---------------------------------------
 
 def _render(ws, **over):
-    """Render a full HTML report from a V2 projection (single-language path)."""
+    """Load the report renderer for compatibility checks."""
     import importlib.util
-    from pathlib import Path
     spec = importlib.util.spec_from_file_location(
         "build_report", "visualization/eduevidence-report/scripts/build_report.py")
     mod = importlib.util.module_from_spec(spec)
@@ -180,7 +178,6 @@ def test_v2_report_contains_project_surfaces(tmp_path):
     ws, store = _graph(tmp_path)
     proj = build_report_projection(ws)
     compat = build_v1_compat_result(ws)
-    # reuse the demo renderer entry to produce HTML from compat shape
     import importlib.util
     spec = importlib.util.spec_from_file_location(
         "build_report", "visualization/eduevidence-report/scripts/build_report.py")
@@ -212,14 +209,12 @@ def test_v1_result_renders_without_v2_surfaces(tmp_path):
         "build_report", "visualization/eduevidence-report/scripts/build_report.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    import json
-    v1 = json.loads((Path(tmp_path).parent.parent / "examples" / "ai-coding-assistant" /
-                     "result.json").read_text(encoding="utf-8")) if False else None
-    from pathlib import Path
-    v1_path = Path(__file__).resolve().parent.parent / "examples" / "ai-coding-assistant" / "result.json"
+    # ai-tutor is retained as a legacy compatibility pack; the deleted
+    # ai-coding-assistant directory must not be referenced by live tests.
+    v1_path = Path(__file__).resolve().parent.parent / "examples" / "ai-tutor" / "result.json"
     v1 = json.loads(v1_path.read_text(encoding="utf-8"))
     viz = mod.visualization_decisions(v1, {})
     html = mod.render_html(v1, v1, {}, {}, {}, {}, {}, {}, "claude", viz)
     assert "Project & Research History" not in html
     assert "项目与研究历史" not in html
-    assert "CLM-" in html or "C-00" in html  # report still renders claims
+    assert "CLM-" in html or "C-00" in html
