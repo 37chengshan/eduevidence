@@ -11,7 +11,7 @@ mkdir -p "$STAGING"
 cp "$ROOT/SKILL.md" "$STAGING/SKILL.md"
 
 # Runtime + vNext self-evolution control plane. Benchmarks/tests remain excluded.
-for d in engine domains scripts retrieval integrations schemas skill references autoevolve; do
+for d in agents engine domains scripts retrieval integrations schemas skill references autoevolve; do
   test -d "$ROOT/$d" || { echo "missing allowlist dir: $d"; exit 1; }
   rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store","runs"} "$ROOT/$d/" "$STAGING/$d/"
 done
@@ -33,7 +33,6 @@ for f in main.js state.js api.js charts.js dashboard.js viz.js; do
 done
 
 mkdir -p "$STAGING/examples"
-# Current real-literature flagship.
 for d in ai-coding-assistant-evidence; do
   test -d "$ROOT/examples/$d" || { echo "missing flagship example: $d"; exit 1; }
   rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store","figures"} \
@@ -70,7 +69,7 @@ rm -rf "$STAGING/docs/competition-brief.md" "$STAGING/docs/superpowers" \
        "$STAGING/autoevolve/runs"
 
 cmp "$ROOT/SKILL.md" "$STAGING/SKILL.md"
-# Do not hide compile failures; CI must name the offending file.
+test -f "$STAGING/agents/openai.yaml"
 while IFS= read -r -d '' py; do
   python3 -m py_compile "$py"
 done < <(find "$STAGING" -name "*.py" -print0)
@@ -121,4 +120,4 @@ cp -a "$STAGING" "$DIST"
 rm -rf "$STAGING"
 echo "==> Submission ready: $DIST"
 echo "    files=$(find "$DIST" -type f | wc -l | tr -d ' ') bytes=$(du -sk "$DIST" | cut -f1)K"
-echo "    SKILL.md parity: OK | flagship artifacts: OK"
+echo "    SKILL.md parity: OK | agents/openai.yaml: OK | flagship artifacts: OK"
