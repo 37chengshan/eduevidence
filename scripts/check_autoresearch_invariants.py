@@ -41,6 +41,8 @@ def main() -> int:
             fail("S must delegate zero tasks")
         if len(plan.delegated_tasks) > cap:
             fail(f"{level} delegated worker plan exceeds policy cap")
+        if max((len(group) for group in plan.parallel_groups), default=0) > plan.max_parallel_workers:
+            fail(f"{level} execution group exceeds max_parallel_workers")
     try:
         CanonicalWriteGuard().require("worker", "GraphRevision")
         fail("single writer guard did not block worker")
@@ -81,7 +83,7 @@ def main() -> int:
             text=True,
         ).splitlines()
         from engine.autoevolve import ProtectedManifest
-        ok, bad = ProtectedManifest().validate_changes(changed)
+        ok, bad = ProtectedManifest.from_repo(ROOT).validate_changes(changed)
         if not ok:
             fail("protected mutation on autoresearch branch: " + ",".join(bad))
 
