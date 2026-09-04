@@ -5,6 +5,8 @@ import json
 import os
 import shlex
 import subprocess
+from contextlib import contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -37,13 +39,21 @@ def _project(home, project_id):
 def _load_gaps(workspace, explicit=None):
     if explicit:
         path = Path(explicit)
-        rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        rows = [
+            json.loads(line)
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
     else:
         gap_dir = workspace.path / "gaps"
         files = sorted(gap_dir.glob("gaps-rev-*.jsonl")) if gap_dir.exists() else []
         if not files:
             raise ValueError("no persisted KnowledgeGap file; derive gaps first or pass --gaps")
-        rows = [json.loads(line) for line in files[-1].read_text(encoding="utf-8").splitlines() if line.strip()]
+        rows = [
+            json.loads(line)
+            for line in files[-1].read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
     return rows
 
 
@@ -72,8 +82,6 @@ def _require_fresh_research_state(
     decision: dict[str, Any],
     previous_state: dict[str, Any],
 ) -> None:
-    # If a previous iteration landed evidence, a new decision/gap derivation is
-    # mandatory before another research iteration. Do not silently rank old gaps.
     if previous_state.get("next_action") == "re_adjudicate":
         if int(decision.get("graph_revision", -1)) != active_revision:
             raise ValueError(
@@ -88,11 +96,18 @@ def _require_fresh_research_state(
             )
 
 
+def _iteration_id(iteration_number: int) -> str:
+    return f"RIT-{iteration_number:04d}"
+
+
 def _request(priority, strategy, project_id, revision, iteration_number, gap):
+    iteration_id = _iteration_id(iteration_number)
     return {
         "project_id": project_id,
-        "base_graph_revision": revision,
+        "iteration_id": iteration_id,
         "iteration_number": iteration_number,
+        "base_graph_revision": revision,
+        "gap_id": priority.gap_id,
         "gap": gap,
         "gap_priority": priority.as_dict(),
         "strategy": {
@@ -105,6 +120,9 @@ def _request(priority, strategy, project_id, revision, iteration_number, gap):
         "contract": {
             "canonical_state_write": "FORBIDDEN",
             "output": "validated staging result JSON only",
+            "required_measurements": ["query_count", "candidate_count", "fetched_count"],
+            "negative_search_research_iteration_id": iteration_id,
+            "negative_search_gap_id": priority.gap_id,
             "search_snippets_are_evidence": False,
         },
     }
@@ -119,10 +137,38 @@ def _validate_outcome_budget(outcome: dict[str, Any], strategy) -> None:
         ("candidate_count", budget.max_candidates),
         ("fetched_count", budget.max_fulltext_fetches),
     )
+    measured: dict[str, int] = {}
     for key, limit in checks:
-        value = outcome.get(key)
-        if value is not None and int(value) > limit:
+        if key not in outcome:
+            raise ValueError(f"executor output must report {key} to enforce bounded research")
+        try:
+            value = int(outcome[key])
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"executor measurement {key} must be an integer") from exc
+        if value < 0:
+            raise ValueError(f"executor measurement {key} cannot be negative")
+        if value > limit:
             raise ValueError(f"research budget exceeded: {key}={value} > {limit}")
+        measured[key] = value
+    if measured["fetched_count"] > measured["candidate_count"]:
+        raise ValueError("fetched_count cannot exceed candidate_count")
+    candidates = outcome.get("candidate_sources")
+    if isinstance(candidates, list) and len(candidates) > measured["candidate_count"]:
+        raise ValueError("candidate_sources length exceeds reported candidate_count")
+    attempts = outcome.get("search_attempts")
+    if isinstance(attempts, list) and len(attempts) > measured["query_count"]:
+        raise ValueError("search_attempts length exceeds reported query_count")
+
+
+def _validate_outcome_identity(
+    outcome: dict[str, Any], *, expected_iteration_id: str, expected_gap_id: str
+) -> None:
+    supplied_iteration = outcome.get("iteration_id")
+    supplied_gap = outcome.get("gap_id")
+    if supplied_iteration is not None and supplied_iteration != expected_iteration_id:
+        raise ValueError("executor iteration_id does not match ResearchRequest")
+    if supplied_gap is not None and supplied_gap != expected_gap_id:
+        raise ValueError("executor gap_id does not match ResearchRequest")
 
 
 def _external_executor(command, request, request_path, *, timeout_seconds: int):
@@ -158,45 +204,40 @@ def _commit_payload(workspace, run_id, payload, *, expected_base_revision: int):
     )
 
 
-def research_auto(argv):
-    parser = argparse.ArgumentParser(prog="eduevidence research auto")
-    sub = parser.add_subparsers(dest="action", required=True)
-    for name in ("step", "start"):
-        cmd = sub.add_parser(name)
-        cmd.add_argument("--project", required=True)
-        cmd.add_argument("--home")
-        cmd.add_argument("--gaps")
-        cmd.add_argument("--decision")
-        cmd.add_argument("--outcome-file")
-        cmd.add_argument("--max-iterations", type=int, default=5)
-        cmd.add_argument("--ethics-feasible", action="store_true")
-        cmd.add_argument("--executor-timeout-seconds", type=int, default=1800)
-        if name == "start":
-            cmd.add_argument("--executor-command")
-    for name in ("status", "report", "stop"):
-        cmd = sub.add_parser(name)
-        cmd.add_argument("--project", required=True)
-        cmd.add_argument("--home")
-    args = parser.parse_args(argv)
-    if getattr(args, "executor_timeout_seconds", 1) <= 0:
-        raise ValueError("executor timeout must be positive")
+@contextmanager
+def _writer_lock(path: Path):
+    """One research-auto writer per Project; stale locks fail closed."""
+    payload = {
+        "pid": os.getpid(),
+        "acquired_at": datetime.now(timezone.utc).isoformat(),
+    }
+    flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
+    try:
+        fd = os.open(path, flags, 0o600)
+    except FileExistsError as exc:
+        detail = ""
+        try:
+            detail = path.read_text(encoding="utf-8").strip()
+        except OSError:
+            pass
+        raise RuntimeError(
+            f"research auto writer already active or a stale lock exists at {path}. "
+            "Do not delete it while another run is active; after confirming no writer is running, "
+            f"remove it manually. lock={detail or 'unreadable'}"
+        ) from exc
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle)
+            handle.write("\n")
+        yield
+    finally:
+        try:
+            path.unlink()
+        except FileNotFoundError:
+            pass
 
-    workspace = _project(_home(args.home), args.project)
-    root = workspace.path / "autoresearch"
-    root.mkdir(parents=True, exist_ok=True)
-    state_path = root / "state.json"
-    gap_state_path = root / "gap-state.json"
 
-    if args.action in {"status", "report"}:
-        print(json.dumps(_read_json(state_path, {"status": "not_started"}), ensure_ascii=False, indent=2))
-        return 0
-    if args.action == "stop":
-        state = _read_json(state_path, {}) or {}
-        state["status"] = "stopped_by_user"
-        _write_json(state_path, state)
-        print("stopped")
-        return 0
-
+def _mutating_research_auto(args, workspace, root, state_path, gap_state_path, stop_path):
     from engine.autoresearch import EvidenceAutoresearchController, NegativeSearchRecord, ResearchMemory
     from engine.graph_store import GraphStore
 
@@ -214,15 +255,25 @@ def research_auto(argv):
         previous_state=previous_state,
     )
 
-    def process(outcome, history):
+    def process(outcome, history, priority, strategy):
         base_revision = GraphStore.create(workspace).active_revision()
+        expected_iteration_id = _iteration_id(len(history) + 1)
+        _validate_outcome_identity(
+            outcome,
+            expected_iteration_id=expected_iteration_id,
+            expected_gap_id=priority.gap_id,
+        )
+        _validate_outcome_budget(outcome, strategy)
         evidence_ids = outcome.get("validated_evidence_ids") or [
-            item.get("finding_id") for item in outcome.get("findings", []) if item.get("finding_id")
+            item.get("finding_id")
+            for item in outcome.get("findings", [])
+            if isinstance(item, dict) and item.get("finding_id")
         ]
         outcome["validated_evidence_ids"] = [item for item in evidence_ids if item]
 
-        def executor(strategy, gap):
-            _validate_outcome_budget(outcome, strategy)
+        def executor(actual_strategy, gap):
+            if actual_strategy.strategy_id != strategy.strategy_id:
+                raise RuntimeError("controller strategy changed between request and execution")
             return outcome
 
         def commit(_ids):
@@ -246,7 +297,9 @@ def research_auto(argv):
         for raw in outcome.get("negative_searches", []):
             record = NegativeSearchRecord(**raw)
             if record.research_iteration_id != result.iteration.iteration_id:
-                raise ValueError("NegativeSearchRecord research_iteration_id does not match current iteration")
+                raise ValueError(
+                    "NegativeSearchRecord research_iteration_id does not match current iteration"
+                )
             if record.gap_id != result.iteration.gap_id:
                 raise ValueError("NegativeSearchRecord gap_id does not match current gap")
             memory.append_negative_search(record)
@@ -276,11 +329,11 @@ def research_auto(argv):
 
     if args.action == "step":
         history = memory.load_iterations()
+        priority = controller.select_gap(gaps, decision)
+        gap = next(g for g in gaps if g.get("gap_id") == priority.gap_id)
+        strategy = controller.build_strategy(priority, gap, history)
         outcome = _read_json(args.outcome_file) if args.outcome_file else None
         if outcome is None:
-            priority = controller.select_gap(gaps, decision)
-            gap = next(g for g in gaps if g.get("gap_id") == priority.gap_id)
-            strategy = controller.build_strategy(priority, gap, history)
             pending = {
                 "status": "awaiting_execution",
                 **_request(
@@ -295,20 +348,28 @@ def research_auto(argv):
             _write_json(state_path, pending)
             print(json.dumps(pending, ensure_ascii=False, indent=2))
             return 0
-        result = process(outcome, history)
+        result = process(outcome, history, priority, strategy)
         state = persist_result(result)
         print(json.dumps(state, ensure_ascii=False, indent=2))
         return 0
 
     if args.outcome_file and args.max_iterations != 1:
-        raise ValueError("--outcome-file with start requires --max-iterations 1; use --executor-command for a loop")
+        raise ValueError(
+            "--outcome-file with start requires --max-iterations 1; use --executor-command for a loop"
+        )
     if not args.executor_command and not args.outcome_file:
-        raise ValueError("start requires --executor-command or one --outcome-file with --max-iterations 1")
+        raise ValueError(
+            "start requires --executor-command or one --outcome-file with --max-iterations 1"
+        )
 
     completed = []
     for _ in range(args.max_iterations):
-        latest = _read_json(state_path, {}) or {}
-        if latest.get("status") == "stopped_by_user":
+        if stop_path.exists():
+            stop_path.unlink(missing_ok=True)
+            latest = _read_json(state_path, {}) or {}
+            latest["status"] = "stopped_by_user"
+            latest["completed_iterations"] = list(completed)
+            _write_json(state_path, latest)
             break
         history = memory.load_iterations()
         priority = controller.select_gap(gaps, decision)
@@ -332,18 +393,15 @@ def research_auto(argv):
                 timeout_seconds=args.executor_timeout_seconds,
             )
         )
-        _validate_outcome_budget(outcome, strategy)
-        result = process(outcome, history)
+        result = process(outcome, history, priority, strategy)
         completed.append(result.iteration.iteration_id)
 
         for gap_id in outcome.get("resolved_gap_ids", []):
             for gap_row in gaps:
                 if gap_row.get("gap_id") == gap_id:
                     gap_row["status"] = "resolved"
-        state = persist_result(result, completed)
+        persist_result(result, completed)
 
-        # New evidence changes canonical knowledge. Do not rank another gap from
-        # stale decision/gap state; the main engine must adjudicate and re-derive.
         if result.next_action in {
             "re_adjudicate",
             "empirical_evidence_needed",
@@ -356,3 +414,67 @@ def research_auto(argv):
     final = _read_json(state_path, {"status": "completed_no_iterations"})
     print(json.dumps(final, ensure_ascii=False, indent=2))
     return 0
+
+
+def research_auto(argv):
+    parser = argparse.ArgumentParser(prog="eduevidence research auto")
+    sub = parser.add_subparsers(dest="action", required=True)
+    for name in ("step", "start"):
+        cmd = sub.add_parser(name)
+        cmd.add_argument("--project", required=True)
+        cmd.add_argument("--home")
+        cmd.add_argument("--gaps")
+        cmd.add_argument("--decision")
+        cmd.add_argument("--outcome-file")
+        cmd.add_argument("--max-iterations", type=int, default=5)
+        cmd.add_argument("--ethics-feasible", action="store_true")
+        cmd.add_argument("--executor-timeout-seconds", type=int, default=1800)
+        if name == "start":
+            cmd.add_argument("--executor-command")
+    for name in ("status", "report", "stop"):
+        cmd = sub.add_parser(name)
+        cmd.add_argument("--project", required=True)
+        cmd.add_argument("--home")
+    args = parser.parse_args(argv)
+    if getattr(args, "executor_timeout_seconds", 1) <= 0:
+        raise ValueError("executor timeout must be positive")
+
+    workspace = _project(_home(args.home), args.project)
+    root = workspace.path / "autoresearch"
+    root.mkdir(parents=True, exist_ok=True)
+    state_path = root / "state.json"
+    gap_state_path = root / "gap-state.json"
+    stop_path = root / "stop.requested"
+    lock_path = root / ".writer.lock"
+
+    if args.action in {"status", "report"}:
+        state = _read_json(state_path, {"status": "not_started"})
+        if isinstance(state, dict):
+            state = dict(state)
+            state["stop_requested"] = stop_path.exists()
+            state["writer_active"] = lock_path.exists()
+        print(json.dumps(state, ensure_ascii=False, indent=2))
+        return 0
+    if args.action == "stop":
+        stop_path.write_text(
+            json.dumps(
+                {
+                    "requested_at": datetime.now(timezone.utc).isoformat(),
+                    "requested_by_pid": os.getpid(),
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        print("stop requested")
+        return 0
+
+    with _writer_lock(lock_path):
+        return _mutating_research_auto(
+            args,
+            workspace,
+            root,
+            state_path,
+            gap_state_path,
+            stop_path,
+        )
