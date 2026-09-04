@@ -73,9 +73,8 @@ def test_run_sim_manifest_valid_and_budget(tmp_path):
     assert len(manifest["attempts"]) == 2 * 2 * 2
     assert all(a["status"] == "completed" for a in manifest["attempts"])
     assert all(a["artifacts"] for a in manifest["attempts"])
-    # manifest must validate against its schema
     sys.path.insert(0, str(ROOT))
-    from validate_schema import SchemaError, Validator
+    from validate_schema import Validator
     schema = json.loads((ROOT / "schemas" / "v3" / "run-manifest.schema.json").read_text(encoding="utf-8"))
     data = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     Validator(schema).validate(data, schema, "$")
@@ -101,7 +100,6 @@ def test_evaluate_run_and_report(tmp_path):
     manifest = benchmark_v3.run_benchmark(
         questions=questions, baselines=["B3_eduevidence_single"],
         repeats=2, out_dir=out, driver_name="sim", budget_tokens=None)
-    # overwrite responses with the gold-matching response so metrics are meaningful
     for a in manifest["attempts"]:
         art = out / a["artifacts"][0]
         data = json.loads(art.read_text(encoding="utf-8"))
@@ -110,7 +108,7 @@ def test_evaluate_run_and_report(tmp_path):
 
     summary = be.evaluate_run(out, manifest, ROOT / "benchmarks" / "annotations")
     pb = summary["per_baseline"]["B3_eduevidence_single"]
-    assert pb["n"] == 2  # 1 question x 2 repeats
+    assert pb["n"] == 2
     assert pb["metrics"]["decision_calibration"]["mean"] == 1.0
 
     report_path = tmp_path / "report.md"
@@ -120,6 +118,7 @@ def test_evaluate_run_and_report(tmp_path):
 
 
 def test_cli_driver_mocked(monkeypatch):
+    import shutil
     import subprocess
     from benchmark_v3 import CliDriver
 
@@ -134,9 +133,10 @@ def test_cli_driver_mocked(monkeypatch):
         calls["cmd"] = cmd
         return FakeProc()
 
+    monkeypatch.setattr(shutil, "which", lambda name: "/mock/bin/omp" if name == "omp" else None)
     monkeypatch.setattr(subprocess, "run", fake_run)
     d = CliDriver(model="deepseek-v4-flash")
-    assert d.available() is True  # omp exists on this host
+    assert d.available() is True
     text, usage = d.call("prompt here", no_tools=True)
     assert "recommended_action" in text
     assert usage["latency_s"] >= 0

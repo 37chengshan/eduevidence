@@ -53,7 +53,6 @@ def test_recommendations_are_scan_driven_not_fixed():
             assert row.get("cli") in ("omp", None)
             if row.get("model"):
                 assert row["model"] in scanned, f"unscanned model leaked: {row['model']}"
-    # 换扫描集合必须能改变推荐（不允许固定推荐表）
     models1 = {r["model"] for r in table1["recommendations"] if r.get("model")}
     models2 = {r["model"] for r in table2["recommendations"] if r.get("model")}
     assert models1 != models2
@@ -105,7 +104,6 @@ def test_global_approval_roundtrip_and_tamper(tmp_path, monkeypatch):
     assert loaded["role_mapping_hash"]
     ok, changes = is_approval_current(loaded, roles, ["omp"])
     assert ok and not changes
-    # 篡改（换模型不改 hash）必须失效
     loaded["roles"]["evidence-retriever"]["model"] = "tampered"
     ok, changes = is_approval_current(loaded, roles, ["omp"])
     assert not ok and changes
@@ -116,6 +114,11 @@ def test_global_approval_roundtrip_and_tamper(tmp_path, monkeypatch):
 def test_non_tty_startup_returns_false_without_prompting(monkeypatch, capsys):
     import scripts.orchestrator as orch  # noqa: PLC0415
 
+    monkeypatch.setattr(
+        agent_mcp_mod,
+        "detect_agent_mcp",
+        lambda: {"state": "available", "mode": "agent_mcp", "hint": ""},
+    )
     monkeypatch.setattr("sys.stdin.isatty", lambda: False)
     result = orch.interactive_agent_mcp_setup(False)
     assert result is False
@@ -123,8 +126,6 @@ def test_non_tty_startup_returns_false_without_prompting(monkeypatch, capsys):
 
 
 def test_benchmark_cli_driver_fails_closed_without_explicit_model(monkeypatch):
-    import subprocess  # noqa: PLC0415
-
     from benchmark_v3 import CliDriver  # noqa: PLC0415
 
     monkeypatch.delenv("EDUEVIDENCE_LLM_MODEL", raising=False)

@@ -24,32 +24,33 @@ dev = ["pytest>=7.0"]
 eduevidence = "eduevidence_cli:main"
 
 [tool.pytest.ini_options]
-# scripts/ 只为收编历史遗留的红队压测 scripts/test_adversarial_empirical.py
-# （E5：该文件是全仓唯一 test_*.py 命名的脚本，纳入默认收集后不再"死测试"）。
 testpaths = ["tests", "scripts"]
 python_files = ["test_*.py"]
 addopts = "-q"
 filterwarnings = ["ignore::pytest.PytestReturnNotNoneWarning:scripts.*"]
 
-# wheel 自包含 CLI：eduevidence_cli + engine + scripts（V1/V2 命令实现与
-# validate_schema）+ schemas 数据文件（data-files 安装到 share/eduevidence/，
-# engine.contracts / orchestrator 按回退路径解析）。Skill 本体（SKILL.md +
-# skill/ + references/ + retrieval/ + integrations/ + visualization/ +
-# assets/）由 install.sh 或源码包完整分发。
 [tool.setuptools]
 py-modules = ["eduevidence_cli"]
-packages = ["engine", "scripts"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["engine*", "scripts*", "retrieval*", "integrations*"]
 
 [tool.setuptools.data-files]
 "share/eduevidence/schemas" = ["schemas/*.json"]
 "share/eduevidence/schemas/v2" = ["schemas/v2/*.json"]
 "share/eduevidence/schemas/v3" = ["schemas/v3/*.json"]
 "share/eduevidence/schemas/v4" = ["schemas/v4/*.json"]
+"share/eduevidence/schemas/vNext" = ["schemas/vNext/*.json"]
 "share/eduevidence/domains" = ["domains/manifest.json", "domains/education/manifest.json", "domains/education/outcome_taxonomy.json", "domains/policy/manifest.json", "domains/policy/frame.schema.json", "domains/policy/outcome_taxonomy.json", "domains/policy/methodology_checklist.json"]
 "share/eduevidence/domains/policy/references" = ["domains/policy/references/*.md"]
 "share/eduevidence/benchmarks" = ["benchmarks/evidence-library.json"]
 
 [tool.ruff.lint]
-# E5 最小守门集：语法层错误 + 未定义/重定义名。风格类规则不设（存量代码
-# 不做一次性大规模格式化，避免淹没 review）。
 select = ["E9", "F63", "F7", "F82"]
+
+[tool.ruff.lint.per-file-ignores]
+# build_report.py enables postponed annotations; its legacy Optional annotation
+# is not evaluated at runtime. Keep this F821 exception narrowly scoped rather
+# than weakening undefined-name checks for the repository.
+"visualization/eduevidence-report/scripts/build_report.py" = ["F821"]

@@ -1,69 +1,107 @@
 # 活证据工作流（Living Evidence）
 
-> v3 Decision-to-Outcome Loop 与 v4 迭代节奏的方法学说明。核心观点：
-> **证据不是一次性产物，而是随试点数据持续更新的活证据** —— 每次试点运行
-> 都会产生新的证据图修订，决策随证据一起演化。
+> **证据不是一次性产物，而是持续修订的决策状态。** EduEvidence vNext 把活证据扩展为两类更新：新证据到来时被动/订阅式更新，以及由当前 KnowledgeGap 主动选择“下一条最值得寻找的证据”。
 
-## 一、什么是活证据
+## 一、三条相互区分的闭环
 
-传统综述产出"定格"的结论；EduEvidence 把证据流程接成回路：
-PILOT 决策 → 真实数据 → 分析 → 图更新 → 再裁决 → 新决策。教育干预的效果
-只有回到真实课堂才能被确认，活证据工作流让每次试点都成为一次"证据体检"。
+```text
+Evidence Autoresearch
+Gap → bounded search experiment → GraphRevision → Decision drift → next Gap
 
-## 二、闭环流程（engine/pilot.py）
+Decision-to-Outcome
+Decision → Pilot → Data → Analysis → GraphRevision → DecisionSnapshot
 
-1. **注册 PilotRun**：PILOT 决策（DecisionSnapshot）绑定试点运行记录
-   （`schemas/v3/pilot-outcome.schema.json`）。
-2. **导入结果数据**：匿名化试点结果导入；**PII 列（姓名 / 学号 / 邮箱 / 电话）
-   在导入时被拒绝**，学生数据永远留在本地。
-3. **分析链接**：AnalysisRun 状态须为 `validated`，否则返回
-   `ANALYSIS_INVALID` 且证据图保持不变。
-4. **原子图更新**（engine/update.py）：项目本地 Source + Study + Findings +
-   MethodologyAudit + Claims/Links 在**单个图修订（revision）**内一次提交，
-   绝不分条提交；修订不可变、可追溯。
-5. **再裁决**：tribunal 基于含试点证据的新修订重新裁决，产出新
-   DecisionSnapshot 与机器可读 diff，旧决策保留完整追溯链。
+Skill Autoresearch
+repository hypothesis → candidate → protected eval → keep/revert
+```
 
-## 二·补 v4 文献订阅与漂移（engine/living.py）
+前两条改变现实研究 Project；第三条只改变研究系统候选代码，绝不能碰真实用户 Project。
 
-v4 把活证据从"试点数据回填"扩展到"**文献级持续监控**"：
+## 二、试点数据回注
 
-1. **订阅决策**：`eduevidence living subscribe --decision <DEC> --term <检索词>`
-   将某个 DecisionSnapshot 与其检索式绑定（`schemas/v4/living-subscription.schema.json`）。
-2. **增量刷新**：`eduevidence living refresh --subscription <SUB>` 注入新证据
-   （人工/agent 提供 evidence JSONL，或 retriever 适配器对接真实检索层）；
-   新证据按内容 hash 幂等去重后**单次图修订**提交。
-3. **漂移报告**：tribunal 重裁决后产出 `project/living/drift/<DRF>.json`
-   （`schemas/v4/drift-report.schema.json`）：新旧决策 diff + 新证据摘要 +
-   **建议动作 confirmed / changed / needs_review**。引擎**绝不自动改判**——
-   改判必须由人走再裁决门。
-4. **失败可恢复**：若刷新中途失败（图已提交但订阅未记账），重试同一证据
-   会按图内实体幂等跳过并恢复 hash 记账（review P1-1）。
+1. **注册 PilotRun**：PILOT DecisionSnapshot 绑定试点运行记录。
+2. **导入结果数据**：匿名化结果导入；PII 列在导入时拒绝或要求去标识。
+3. **分析链接**：AnalysisRun 必须 validated；不可估计时 fail closed。
+4. **原子图更新**：项目本地 Source + Study + Finding + Audit + Claim/Link 在受控 GraphRevision 中提交；旧 Revision 不覆盖。
+5. **再裁决**：基于新 Revision 产生新的 DecisionSnapshot/diff。新数据不要求强行改变 action；certainty/applicability/boundary 改变也是有效 revision。
 
-数据流：DecisionSnapshot + 订阅 → 增量证据 → 图 revision n+1 → 漂移报告 →
-人决策（改判/维持/补充检索）。
+## 三、文献订阅与增量刷新
 
-## 三、跨项目活证据
+`engine/living.py` 保留现有语义：
 
-- **Shared Research Library**：经核验的外部事实以不可变快照导入，事实可复用、
-  解释留在项目内；
-- **meta_synthesis**（`engine/meta_synthesis.py`）：把一个库修订的已核验事实
-  聚合为 outcome 级概览（正向 / 负向 / 零效应 + 独立研究键），只读投影、不改库。
+```text
+DecisionSnapshot subscription
+→ incremental evidence
+→ content-hash dedupe
+→ GraphRevision n+1
+→ drift report
+→ review / maintain / revise
+```
 
-## 四、自动化保障（CI）
+搜索结果摘要仍只用于发现，必须通过 fetch/provenance/validation/extraction 才能进入证据状态。
 
-- `schema-smoke`：三 pack 的活证据产物（verdict / evidence / intervention /
-  methodology / frame / evaluation / result）全量过 schema，契约漂移即失败；
-- `upload-build`：SKILL.md 一致性 + 零泄漏检查，保证发布包与仓库同步；
-- 活证据产物始终以 schema 契约形式落盘，可审计、可复算。
+## 四、主动 Evidence Autoresearch
 
-## 五、更新节奏
+Living Evidence 不再只依赖预先写死的 query terms。需要主动继续研究时：
 
-| 层级 | 更新频率 | 触发 |
-|------|----------|------|
-| 研究级（Project） | 每次试点 | PILOT 数据回填 → 再裁决 |
-| 库级（Library） | 快照导入 | 新核验事实入库 |
-| 发布级（Upload） | 每次发布 | CI upload-build |
+```text
+Project + current GraphRevision + DecisionSnapshot
+→ derive grounded KnowledgeGaps
+→ conceptual DVI ranking
+→ select ONE decision-relevant Gap
+→ ONE bounded ResearchStrategy
+→ validated evidence append or no-gain/negative-search memory
+→ re-adjudicate
+→ repeat until bounded stop
+```
 
-活证据工作流是 v4「可信度 × 通用智能」路线的引擎侧支撑：结论不是终点，
-持续可验证的决策过程才是。
+详细规则见 `references/autoresearch.md`。
+
+关键边界：
+
+- DVI 只输出 HIGH/MEDIUM/LOW 和可解释 drivers，不伪装成 EVPI/EVSI。
+- Validated Evidence append-only，不因不利于当前 verdict 而删除。
+- No-gain ResearchIteration 不制造 GraphRevision。
+- 同一 Gap 的失败策略会轮换，避免重复撞同一路径。
+- Search saturation 需要连续低收益 + strategy diversity exhaustion。
+- 只有 HIGH-DVI、decision-material、仍 unresolved、secondary search saturated 且伦理/可行性允许，才可进入 `EMPIRICAL_EVIDENCE_NEEDED`；随后仍必须通过现有 StudyDesign grounding gate。
+
+## 五、Single Writer
+
+主动检索可以并行，但 canonical state transition 串行：
+
+```text
+parallel workers
+→ staging artifacts
+→ schema/provenance/scientific gates
+→ Single Writer
+→ GraphRevision
+```
+
+Subagent 不直接写 GraphRevision、DecisionSnapshot、KnowledgeGap persistent state、StudyDesign 或 PilotRun。
+
+## 六、跨项目活证据
+
+- Shared Research Library 保存经核验的外部事实快照；事实可复用，解释保持 project-local。
+- `engine/meta_synthesis.py` 对库修订做只读 outcome-level projection，不替代项目 Decision。
+- Evidence Autoresearch 的 ResearchIteration memory 保持 project-local，避免一个项目的失败搜索直接变成另一个项目的事实。
+
+## 七、自动化保障
+
+- `CI / schema-smoke`：当前完整 example packs 通过原有 schema 契约。
+- `Autoresearch Gates`：检查科学宪法、S/M/L orchestration、Single Writer、vNext schemas、wheel subpackages 和 benchmark partition contract。
+- `autoevolve-nightly`：仅在显式配置外部 Agent/Evaluator 后运行，branch-only；绝不自动 merge/release/deploy。
+- Evidence/Decision 与 Skill evolution 权限物理分离。
+
+## 八、更新节奏
+
+| 层级 | 触发 | 结果 |
+|---|---|---|
+| Project passive refresh | 新文献/订阅证据 | GraphRevision + drift |
+| Project active research | HIGH-value KnowledgeGap | bounded ResearchIteration(s) |
+| Project empirical | grounded saturated Gap | Pilot/Data → GraphRevision |
+| Library | 新核验事实快照 | Library revision |
+| Skill evolution | 维护者/定时 opt-in | autoresearch branch candidate |
+| Release | 人工确认 | main/release |
+
+结论不是终点；**可追溯、可挑战、可更新且有停止条件的决策过程**才是 EduEvidence 的长期状态。

@@ -1,0 +1,17 @@
+schedule_profile: daily
+max_experiments: 20
+max_cost_usd: 5
+max_wall_minutes: 180
+mutation_tiers:
+  - safe
+allow_controlled: false
+promotion: branch_only
+plateau_valid_experiments: 5
+empirical_repeats_min: 3
+empirical_repeats_preferred: 5
+noise_floor_required: true
+human_gates:
+  merge_main: true
+  release: true
+  deploy: true
+  human_subject_pilot: true

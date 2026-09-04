@@ -1,0 +1,34 @@
+protected:
+  - autoevolve/protected.manifest.yaml
+  - autoevolve/program.md
+  - benchmarks/annotations/**
+  - benchmarks/holdout/**
+  - benchmarks/evaluator/**
+  - schemas/**
+  - references/scientific-invariants.md
+  - scripts/pre_verdict_gate.py
+  - scripts/compute_confidence.py
+  - scripts/check_autoresearch_invariants.py
+  - scripts/daily_evolve.py
+  - scripts/vnext_cli.py
+  - engine/graph_store.py
+  - engine/study_design.py
+  - engine/autoevolve/**
+  - .github/workflows/autoresearch-gates.yml
+  - .github/workflows/autoevolve-nightly.yml
+  - tests/scientific_invariants/**
+
+mutable:
+  safe:
+    - skill/workflows/**
+    - skill/agents/**
+    - skill/sub-skills/**
+    - retrieval/**
+    - references/presentation/**
+  controlled:
+    - engine/semantics.py
+    - engine/gaps.py
+    - scripts/complexity_gate.py
+    - engine/orchestration.py
+
+promotion: branch_only

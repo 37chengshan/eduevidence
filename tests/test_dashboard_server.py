@@ -9,7 +9,6 @@ import signal
 import socket
 import subprocess
 import sys
-import threading
 import time
 import urllib.error
 import urllib.request
@@ -69,10 +68,15 @@ def test_studio_entry_and_api(server):
 
 
 def test_known_project_viz_and_reports(server):
+    # The legacy filesystem alias remains readable for data compatibility, but
+    # the canonical project id is the first-class Studio identity.
     assert _get(server, "/api/projects/ai-coding-assistant/viz")[0] == 200
     assert _get(server, "/api/projects/ai-coding-assistant-evidence/viz")[0] == 200
-    assert _get(server, "/report?id=ai-coding-assistant&theme=claude")[0] == 200
-    assert _get(server, "/report?id=ai-coding-assistant")[0] == 200
+    # This flagship currently ships the baked default report but no
+    # reports-5themes/ directory. Theme routes must reflect physical artifacts,
+    # not invent a variant that is not packaged.
+    assert _get(server, "/report?id=ai-coding-assistant-evidence")[0] == 200
+    assert _get(server, "/report?id=ai-coding-assistant-evidence&theme=claude")[0] == 404
 
 
 def test_unknown_project_404(server):
@@ -81,9 +85,9 @@ def test_unknown_project_404(server):
 
 
 def test_unknown_theme_404(server):
-    assert _get(server, "/report?id=ai-coding-assistant&theme=nope")[0] == 404
-    # URL metacharacters must not become a filesystem path or fallback theme.
-    assert _get(server, "/report?id=ai-coding-assistant&theme=..%2F..%2FSKILL")[0] == 404
+    assert _get(server, "/report?id=ai-coding-assistant-evidence&theme=nope")[0] == 404
+    assert _get(server, "/report?id=ai-coding-assistant-evidence&theme=..%2F..%2FSKILL")[0] == 404
+
 
 def test_legacy_routes_rejected(server):
     for path in ("/landing.html", "/landing", "/api/paradox/details",
@@ -128,5 +132,4 @@ def test_viz_payload_null_ci_not_zero(server):
     data = json.loads(body)
     for item in data.get("forest", []):
         lo, hi = item.get("ci_lower"), item.get("ci_upper")
-        # fixture rows either carry both bounds or neither
         assert (lo is None) == (hi is None)

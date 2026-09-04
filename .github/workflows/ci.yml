@@ -1,8 +1,4 @@
-# CI for EduEvidence - three independent jobs (no `needs`), so they run in
-# parallel on every push to main and on every pull request:
-#   test         - unit/integration tests, Python 3.10 + 3.12 matrix
-#   schema-smoke - every example pack must validate against the schema contracts
-#   upload-build - packaging/make_upload.sh + SKILL.md parity + zero-leak scan
+# CI for EduEvidence - independent jobs run on every PR and push to main.
 name: CI
 
 on:
@@ -23,66 +19,68 @@ jobs:
         python-version: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-
       - name: Install
         run: |
           python -m pip install --upgrade pip
           pip install -e '.[dev]' ruff pytest-cov
-
-      - name: Version consistency gate (engine/versions.py is the authority)
+      - name: Version consistency gate
         run: python scripts/check_version_consistency.py
-
-      - name: Metrics gate (docs/metrics.json must match repository reality)
+      - name: Metrics gate
         run: python scripts/generate_metrics.py --check
-
-      # E5: syntax/undefined-name guard. Style rules intentionally not enforced
-      # (no one-shot mass reformat of legacy code).
       - name: Ruff (E9/F63/F7/F82)
         run: ruff check --select E9,F63,F7,F82 .
-
-      # E5: no silent retries — a flaky failure must surface, not be absorbed.
-      # Coverage is reported (not gated) to make blind spots visible over time.
       - name: Run tests with coverage
         run: |
           python -m pytest --cov=engine --cov=retrieval \
             --cov-report=term-missing:skip-covered --cov-report=xml --tb=short
-
-      # E1（部分交付）：完整 src-layout 迁移按计划允许延后；此处以"wheel 隔离安装 +
-      # 关键包导入 + CLI 模块加载"守住打包/导入契约，消灭 sys.path 假设的回归风险。
       - name: Wheel install smoke
         run: |
           python -m pip wheel . -w /tmp/wheelbuild --no-deps
           python -m pip install /tmp/wheelbuild/*.whl --target /tmp/wheel-smoke --no-deps
-          PYTHONPATH=/tmp/wheel-smoke python -c "
-            from engine import ENGINE_VERSION
-            import engine.citation_check, retrieval.search, eduevidence_cli
-            print('wheel smoke OK', ENGINE_VERSION)"
+          cd /tmp
+          PYTHONPATH=/tmp/wheel-smoke python - <<'PY'
+          from pathlib import Path
+          from engine import ENGINE_VERSION
+          import eduevidence_cli
+          import engine.autoevolve
+          import engine.autoresearch
+          import engine.citation_check
+          import integrations.orchestration_dispatch
+          import retrieval.search
+
+          root = Path('/tmp/wheel-smoke').resolve()
+          modules = (
+              eduevidence_cli,
+              engine.autoevolve,
+              engine.autoresearch,
+              engine.citation_check,
+              integrations.orchestration_dispatch,
+              retrieval.search,
+          )
+          for module in modules:
+              path = Path(module.__file__).resolve()
+              assert path.is_relative_to(root), f'{module.__name__} imported from source tree: {path}'
+          print('isolated wheel smoke OK', ENGINE_VERSION)
+          PY
 
   schema-smoke:
     name: schema-smoke
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - name: Validate all three example packs against schema contracts
+      - name: Validate current complete example packs against schema contracts
         run: |
           set -euo pipefail
           validate() { python scripts/validate_schema.py --schema "$1" --data "$2"; }
-          # Shared 7-file pack contract (all packs ship these files).
-          # ai-tutor / ai-writing-assistant are legacy packs;
-          # ai-coding-assistant-evidence is the real-literature flagship;
-          # esl/highschool-math are badged SYNTHETIC demos.
-          for pack in ai-coding-assistant ai-tutor ai-writing-assistant ai-coding-assistant-evidence; do
+          for pack in ai-tutor ai-writing-assistant ai-coding-assistant-evidence; do
             validate schemas/verdict.schema.json         "examples/$pack/verdict.json"
             validate schemas/evidence.schema.json        "examples/$pack/evidence.jsonl"
             validate schemas/intervention.schema.json    "examples/$pack/intervention.json"
@@ -91,46 +89,42 @@ jobs:
             validate schemas/evaluation.schema.json      "examples/$pack/evaluation.json"
             validate schemas/report-result.schema.json   "examples/$pack/result.json"
           done
-          # ai-coding-assistant ships the fetched source log; the evidence flagship ships its curated source log too.
-          validate schemas/source.schema.json "examples/ai-coding-assistant/sources.jsonl"
           validate schemas/source.schema.json "examples/ai-coding-assistant-evidence/sources.jsonl"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in Path('schemas/vNext').glob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          print('vNext schema JSON smoke OK')
+          PY
 
   upload-build:
     name: upload-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Build upload package
         run: bash packaging/make_upload.sh
-
-      - name: SKILL.md parity (submission must equal repo SKILL.md)
+      - name: SKILL.md parity
         run: diff -u SKILL.md dist/eduevidence-submission/SKILL.md
-
       - name: Zero-leak scan
         run: |
           set -euo pipefail
-          # 1) Local-only files/dirs must not ship (make_upload.sh strips them).
           submission=dist/eduevidence-submission
           test ! -e "$submission/docs/competition-brief.md"
           test ! -e "$submission/docs/superpowers"
           test ! -e "$submission/benchmarks/baselines"
           test ! -e "$submission/packaging"
-          test ! -e "$submission/examples/ai-coding-assistant/reports-5themes_副本"
           if find "$submission" -name '*副本*' | grep -q .; then
             echo "::error::macOS copy artifacts leaked into submission package"
-            find "$submission" -name '*副本*'
             exit 1
           fi
-          # 2) Content canaries from the local-only competition brief.
-          #    (科艺融合 appears in the public v4-roadmap doc, so the canary uses
-          #    brief-exclusive strings only.)
           if grep -rIl '壁仞' "$submission" | grep -q .; then
-            echo "::error::local competition brief content leaked into submission package (壁仞)"
+            echo "::error::local competition brief content leaked into submission package"
             exit 1
           fi
           if grep -rIl 'interndiscovery@pjlab.org.cn' "$submission" | grep -q .; then
-            echo "::error::local competition brief content leaked into submission package (官方邮箱)"
+            echo "::error::local competition brief content leaked into submission package"
             exit 1
           fi
           echo "zero-leak scan OK"

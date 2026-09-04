@@ -34,8 +34,8 @@ THEME_PALETTES = {
     "presentation": {"bg": "#140A08", "card_bg": "#1C0D0A", "text": "#FBBF24", "subtext": "#D97706", "muted": "#9A3412", "grid": "#2D120B", "border": "#4A2218", "primary": "#F59E0B", "secondary": "#F24D29", "accent": "#10B981", "ribbon": "#2A140E"},
 }
 
-STAGGER_DOT = 12   # ms per dot (token range 8–15)
-STAGGER_BAR = 100  # ms per bar (token range 80–130)
+STAGGER_DOT = 12
+STAGGER_BAR = 100
 MIN_FONT = 6.5
 
 
@@ -77,9 +77,6 @@ def _fmt(v: float, digits: int = 2) -> str:
 
 
 class Audit:
-    """Collects every displayed number as (origin, value) for the
-    lieflat_data_bound integrity gate."""
-
     def __init__(self, out: Optional[list] = None):
         self.out: list[Tuple[str, Any]] = [] if out is None else out
 
@@ -95,10 +92,6 @@ def _svg_open(p: Dict[str, str], w: int, h: int, aria: str) -> List[str]:
             f'width="100%" height="100%" role="img" aria-label="{esc(aria)}" '
             f'style="background:{p["card_bg"]};">']
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# meta.forest — forest plot (Hedges' g + 95% CI)
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_forest_plot(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -122,7 +115,6 @@ def render_forest_plot(bundle: dict, theme: str, meta: dict, audit: Optional[lis
     out.append(f'<text x="{cx:.0f}" y="{head_y}" text-anchor="middle" font-size="10" font-weight="700" fill="{p["subtext"]}" {lf_fade(60)}>Hedges&#39; g [95% CI]</text>')
     out.append(f'<text x="{w - 24}" y="{head_y}" text-anchor="end" font-size="10" font-weight="700" fill="{p["subtext"]}" {lf_fade(90)}>Effect [95% CI]</text>')
     out.append(f'<line x1="20" y1="{head_y + 8}" x2="{w - 20}" y2="{head_y + 8}" stroke="{p["border"]}" stroke-width="1" {lf_draw(0)}/>')
-    # zero line
     out.append(f'<line x1="{cx:.1f}" y1="{head_y + 8}" x2="{cx:.1f}" y2="{h - 56}" stroke="{p["muted"]}" stroke-dasharray="3,3" stroke-width="1" {lf_fade(120)}/>')
     row_y = head_y + 26
     for i, s in enumerate(studies):
@@ -145,11 +137,11 @@ def render_forest_plot(bundle: dict, theme: str, meta: dict, audit: Optional[lis
             out.append(f'<line x1="{xl:.1f}" y1="{row_y}" x2="{xu:.1f}" y2="{row_y}" stroke="{color}" stroke-width="1.5" {lf_draw(i * STAGGER_BAR + 120)}/>')
             out.append(f'<line x1="{xl:.1f}" y1="{row_y - 4}" x2="{xl:.1f}" y2="{row_y + 4}" stroke="{color}" stroke-width="1.5" {lf_fade(i * STAGGER_BAR + 140)}/>')
             out.append(f'<line x1="{xu:.1f}" y1="{row_y - 4}" x2="{xu:.1f}" y2="{row_y + 4}" stroke="{color}" stroke-width="1.5" {lf_fade(i * STAGGER_BAR + 140)}/>')
-        out.append(f'<rect x="{x_pt - 3.5:.1f}" y="{row_y - 3.5:.1f}" width="7" height="7" fill="{color}" {lf_pop(i * STAGGER_BAR + 150)}><title>{esc(str(s["label"]))} — g = {g:+.2f}{f", N = {s["n"]:.0f}" if s.get("n") else ""}</title></rect>')
+        n_suffix = (", N = %.0f" % s["n"]) if s.get("n") else ""
+        out.append(f'<rect x="{x_pt - 3.5:.1f}" y="{row_y - 3.5:.1f}" width="7" height="7" fill="{color}" {lf_pop(i * STAGGER_BAR + 150)}><title>{esc(str(s["label"]))} — g = {g:+.2f}{n_suffix}</title></rect>')
         ci_txt = f'{g:+.2f} [{ci_l:+.2f}, {ci_u:+.2f}]' if ci_l is not None and ci_u is not None else f"{g:+.2f}"
         out.append(f'<text x="{w - 24}" y="{row_y + 4}" text-anchor="end" font-size="10" font-weight="800" fill="{color}" {lf_fade(i * STAGGER_BAR + 200)}>{ci_txt}</text>')
         row_y += 27
-    # axis
     axis_y = h - 48
     out.append(f'<line x1="{cx - 0.34 * w:.0f}" y1="{axis_y}" x2="{cx + 0.34 * w:.0f}" y2="{axis_y}" stroke="{p["text"]}" stroke-width="1" {lf_draw(200)}/>')
     for tick in (-1.0, -0.5, 0.0, 0.5, 1.0):
@@ -164,10 +156,6 @@ def render_forest_plot(bundle: dict, theme: str, meta: dict, audit: Optional[lis
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# evidence.ranked_effects — L2 Dot Cascade
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_dot_cascade(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -203,10 +191,6 @@ def render_dot_cascade(bundle: dict, theme: str, meta: dict, audit: Optional[lis
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# evidence.year_x_dimension — L9 Bubble Almanac
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_bubble_almanac(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -247,10 +231,6 @@ def render_bubble_almanac(bundle: dict, theme: str, meta: dict, audit: Optional[
     return "\n".join(out)
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# evidence.grouped_distribution — G15 Jitter Strip
-# ══════════════════════════════════════════════════════════════════════════
-
 def render_jitter_strip(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
     A = Audit(audit)
@@ -279,10 +259,6 @@ def render_jitter_strip(bundle: dict, theme: str, meta: dict, audit: Optional[li
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# evidence.multidim_top — L20 Parallel Coordinates
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_parallel_coordinates(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -329,15 +305,12 @@ def render_parallel_coordinates(bundle: dict, theme: str, meta: dict, audit: Opt
         if len(d_parts) < 2:
             continue
         title = f'{esc(str(r["label"]))} — ' + ", ".join(f'{ax["key"]}={r.get(ax["key"])}' for ax in axes)
-        out.append(f'<polyline points="{" ".join(d_parts)}" fill="none" stroke="{p["primary"]}" stroke-width="1" opacity="0.45" {lf_draw(r_i * STAGGER_BAR + 120)}><title>{title}</title></polyline>')
+        points_text = " ".join(d_parts)
+        out.append(f'<polyline points="{points_text}" fill="none" stroke="{p["primary"]}" stroke-width="1" opacity="0.45" {lf_draw(r_i * STAGGER_BAR + 120)}><title>{title}</title></polyline>')
         out.append(f'<circle cx="{d_parts[0].split()[0]}" cy="{d_parts[0].split()[1]}" r="2.4" fill="{p["primary"]}" {lf_pop(r_i * STAGGER_BAR + 140)}/>')
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# evidence.study_type_composition / wwc — L14 Hundred Field
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_hundred_field(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -363,10 +336,6 @@ def render_hundred_field(bundle: dict, theme: str, meta: dict, audit: Optional[l
     return "\n".join(out)
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# evidence.study_type_composition / wwc — F4 Tick Donut
-# ══════════════════════════════════════════════════════════════════════════
-
 def render_tick_donut(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
     A = Audit(audit)
@@ -376,7 +345,6 @@ def render_tick_donut(bundle: dict, theme: str, meta: dict, audit: Optional[list
     out = _svg_open(p, w, h, meta.get("title", "tick donut"))
     cx, cy, r0, r1 = 200, 158, 88, 104
     colors = [p["primary"], p["secondary"], p["accent"], p["muted"]]
-    # largest-remainder share of 100 ticks
     ticks_per = []
     assigned = 0
     for c_i, c in enumerate(cats):
@@ -385,13 +353,13 @@ def render_tick_donut(bundle: dict, theme: str, meta: dict, audit: Optional[list
         n = int(round(share))
         ticks_per.append((c_i, n))
         assigned += n
-    while assigned > 100:  # trim the largest over-assignment
+    while assigned > 100:
         c_i, n = max(ticks_per, key=lambda t: t[1])
         ticks_per[ticks_per.index((c_i, n))] = (c_i, n - 1)
         assigned -= 1
-    while assigned < 100:  # give the remainder to the largest category
-        c_i, _ = max(ticks_per, key=lambda t: t[1])
-        ticks_per[ticks_per.index((c_i, _))] = (c_i, _ + 1)
+    while assigned < 100:
+        c_i, n = max(ticks_per, key=lambda t: t[1])
+        ticks_per[ticks_per.index((c_i, n))] = (c_i, n + 1)
         assigned += 1
     tick_i = 0
     for c_i, n in ticks_per:
@@ -407,10 +375,6 @@ def render_tick_donut(bundle: dict, theme: str, meta: dict, audit: Optional[list
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# outcomes.direction_counts — F5 Tick Rows
-# ══════════════════════════════════════════════════════════════════════════
 
 def _dir_colors(p: Dict[str, str]) -> Dict[str, str]:
     return {"positive": p["secondary"], "negative": p["primary"], "null": p["muted"]}
@@ -448,10 +412,6 @@ def render_tick_rows(bundle: dict, theme: str, meta: dict, audit: Optional[list]
     return "\n".join(out)
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# outcomes.direction_counts — F1 Rung Bars
-# ══════════════════════════════════════════════════════════════════════════
-
 def render_rung_bars(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
     A = Audit(audit)
@@ -461,8 +421,6 @@ def render_rung_bars(bundle: dict, theme: str, meta: dict, audit: Optional[list]
     colors = _dir_colors(p)
     x_start, x_end, y_base = 60, 516, 240
     bar_w = min(52, (x_end - x_start) / max(1, len(rows)) * 0.62)
-    total_max = max((r["positive"] + r["negative"] + r["null"]) for r in rows) or 1
-    rung_h = 5.5
     for r_i, r in enumerate(rows):
         cx = x_start + (r_i + 0.5) * (x_end - x_start) / len(rows)
         label = r.get("label_" + meta.get("lang", "en"), r.get("label_en", r["label"]))
@@ -474,8 +432,8 @@ def render_rung_bars(bundle: dict, theme: str, meta: dict, audit: Optional[list]
             for _ in range(count):
                 if y_base - y > 118:
                     break
-                y -= rung_h + 2.2
-                out.append(f'<rect x="{cx - bar_w / 2:.1f}" y="{y:.1f}" width="{bar_w:.1f}" height="{rung_h}" rx="2.6" fill="{colors[key]}" {lf_fade(r_i * STAGGER_BAR + shown * STAGGER_DOT + 60)}><title>{esc(str(label))} — {key} evidence</title></rect>')
+                y -= 7.7
+                out.append(f'<rect x="{cx - bar_w / 2:.1f}" y="{y:.1f}" width="{bar_w:.1f}" height="5.5" rx="2.6" fill="{colors[key]}" {lf_fade(r_i * STAGGER_BAR + shown * STAGGER_DOT + 60)}><title>{esc(str(label))} — {key} evidence</title></rect>')
                 shown += 1
             if shown < count:
                 out.append(f'<text x="{cx:.1f}" y="{y - 4:.1f}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="800" fill="{p["subtext"]}" {lf_fade(r_i * STAGGER_BAR + 500)}>+{count - shown}</text>')
@@ -485,10 +443,6 @@ def render_rung_bars(bundle: dict, theme: str, meta: dict, audit: Optional[list]
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# outcomes.paired_counts — F6 Paired Rungs
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_paired_rungs(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -506,6 +460,7 @@ def render_paired_rungs(bundle: dict, theme: str, meta: dict, audit: Optional[li
     for r_i, r in enumerate(rows):
         cx = 60 + (r_i + 0.5) * group_w
         label = r.get("label_" + lang, r.get("label_en", r["label"]))
+        last_y = y_base
         for col, key in ((0, "positive"), (1, "negative")):
             count = int(r.get(key) or 0)
             A.log(f"rows[{r_i}].{key}", count)
@@ -514,22 +469,19 @@ def render_paired_rungs(bundle: dict, theme: str, meta: dict, audit: Optional[li
             for _ in range(count):
                 if y_base - y > 130:
                     break
-                y -= 5.5 + 2.2
+                y -= 7.7
                 x = cx - col_w - 4 + col * (col_w + 8)
                 out.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{col_w}" height="5.5" rx="2.6" fill="{colors[key]}" {lf_fade(r_i * STAGGER_BAR + shown * STAGGER_DOT + 60)}><title>{esc(str(label))} — {key}</title></rect>')
                 shown += 1
+            last_y = min(last_y, y)
             if shown < count:
                 out.append(f'<text x="{cx:.1f}" y="{y - 4:.1f}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="800" fill="{p["subtext"]}" {lf_fade(r_i * STAGGER_BAR + 500)}>+{count - shown}</text>')
         out.append(f'<text x="{cx:.1f}" y="{y_base + 16}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="600" fill="{p["subtext"]}" {lf_fade(r_i * STAGGER_BAR + 100)}>{esc(str(label)[:10])}</text>')
-        out.append(f'<text x="{cx:.1f}" y="{y - 8:.1f}" text-anchor="middle" font-size="8" font-weight="800" fill="{p["text"]}" {lf_fade(r_i * STAGGER_BAR + 520)}>{r["positive"]} / {r["negative"]}</text>')
+        out.append(f'<text x="{cx:.1f}" y="{last_y - 8:.1f}" text-anchor="middle" font-size="8" font-weight="800" fill="{p["text"]}" {lf_fade(r_i * STAGGER_BAR + 520)}>{r["positive"]} / {r["negative"]}</text>')
     out.append(f'<line x1="46" y1="{y_base}" x2="512" y2="{y_base}" stroke="{p["text"]}" stroke-width="1.2" {lf_draw(120)}/>')
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# outcomes.bipolar_axes — L7 Brand Spectrum
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_brand_spectrum(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -545,11 +497,12 @@ def render_brand_spectrum(bundle: dict, theme: str, meta: dict, audit: Optional[
     out.append(f'<text x="{x0 - 12}" y="62" text-anchor="end" font-size="9" font-weight="700" fill="{p["subtext"]}" {lf_fade(40)}>{esc(left_t)}</text>')
     out.append(f'<text x="{x1 + 12}" y="62" font-size="9" font-weight="700" fill="{p["subtext"]}" {lf_fade(80)}>{esc(right_t)}</text>')
     px = lambda t: x0 + t * (x1 - x0)
-    ribbon = [f"{px(axes[0]['position']):.1f} {y0}"]
+    ribbon = [f"{px(axes[0]['position']):.1f} {y0}"] if axes else []
     for i in range(1, len(axes)):
         ribbon.append(f"C {px(axes[i-1]['position']):.1f} {y0 + (i-1)*gap + gap/2:.1f}, {px(axes[i]['position']):.1f} {y0 + i*gap - gap/2:.1f}, {px(axes[i]['position']):.1f} {y0 + i*gap}")
-    ribbon_d = f"M {ribbon[0]} " + " ".join(ribbon[1:])
-    out.append(f'<path d="{ribbon_d}" fill="none" stroke="{p["ribbon"]}" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" {lf_draw(60)}/>')
+    if ribbon:
+        ribbon_d = f"M {ribbon[0]} " + " ".join(ribbon[1:])
+        out.append(f'<path d="{ribbon_d}" fill="none" stroke="{p["ribbon"]}" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" {lf_draw(60)}/>')
     for i, ax in enumerate(axes):
         y = y0 + i * gap
         pos = float(ax["position"])
@@ -572,10 +525,6 @@ def render_brand_spectrum(bundle: dict, theme: str, meta: dict, audit: Optional[
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# intervention.phase_weeks — L3 Barcode Lollipop
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_barcode_lollipop(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -601,7 +550,7 @@ def render_barcode_lollipop(bundle: dict, theme: str, meta: dict, audit: Optiona
         out.append(f'<line x1="{x:.1f}" y1="{y_base}" x2="{x:.1f}" y2="{y:.1f}" stroke="{p["grid"]}" stroke-width="0.7" {lf_fade(60)}/>')
         is_peak = wk["week"] in peak_weeks
         out.append(f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{min(y_base, y + 12 + ((i * 7) % 12)):.1f}" stroke="{p["text"]}" stroke-width="{1.4 if is_peak else 0.9}" {lf_fade(min(i * STAGGER_BAR, 1200) + 80)}/>')
-        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{4.8 if is_peak else 2.5:.1f}" fill="{p["primary"] if is_peak else p["text"]}" {lf_pop(min(i * STAGGER_DOT, 700) + 160)}><title>{esc(lang == "zh" and f"第 {wk['week']} 周 — 阶段 {phase}" or f"week {wk['week']} — phase {phase}")}</title></circle>')
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{4.8 if is_peak else 2.5:.1f}" fill="{p["primary"] if is_peak else p["text"]}" {lf_pop(min(i * STAGGER_DOT, 700) + 160)}/>')
         if is_peak:
             pk = next((q for q in peaks if q["week"] == wk["week"]), None)
             pk_txt = (pk or {}).get("label_zh" if lang == "zh" else "label_en", "")
@@ -615,10 +564,6 @@ def render_barcode_lollipop(bundle: dict, theme: str, meta: dict, audit: Optiona
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# intervention.activity_weights — L1 Launch Fan
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_launch_fan(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -647,10 +592,6 @@ def render_launch_fan(bundle: dict, theme: str, meta: dict, audit: Optional[list
     return "\n".join(out)
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# intervention.phase_groups — L8 Dotty Matrix
-# ══════════════════════════════════════════════════════════════════════════
-
 def render_dotty_matrix(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
     A = Audit(audit)
@@ -661,6 +602,7 @@ def render_dotty_matrix(bundle: dict, theme: str, meta: dict, audit: Optional[li
 
     def P(c, r, k):
         return 236 + (c - r) * 17, 244 + (c + r) * 8.4 - k * 52
+
     for k in range(len(layers)):
         cs = [P(-0.6, -0.6, k), P(5.6, -0.6, k), P(5.6, 5.6, k), P(-0.6, 5.6, k)]
         poly_d = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in cs) + " Z"
@@ -678,10 +620,6 @@ def render_dotty_matrix(bundle: dict, theme: str, meta: dict, audit: Optional[li
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# decision.confidence_score — F11 Tick Gauge
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_tick_gauge(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -705,10 +643,6 @@ def render_tick_gauge(bundle: dict, theme: str, meta: dict, audit: Optional[list
     return "\n".join(out)
 
 
-# ══════════════════════════════════════════════════════════════════════════
-# methodology.flag_rates — L15 Ballot Tally
-# ══════════════════════════════════════════════════════════════════════════
-
 def render_ballot_tally(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
     A = Audit(audit)
@@ -730,16 +664,13 @@ def render_ballot_tally(bundle: dict, theme: str, meta: dict, audit: Optional[li
             x = 162 + t * 11
             if x > 470:
                 break
-            out.append(f'<rect x="{x:.1f}" y="{yc - 4:.1f}" width="8" height="8" rx="2" fill="{p["primary"] if t < flagged else p["grid"]}" {lf_pop(min(r_i * STAGGER_BAR + t * STAGGER_DOT, 1400))}><title>{esc(str(label))} — verdict {t + 1}/{total}{" (flagged)" if t < flagged else ""}</title></rect>')
+            flag_suffix = " (flagged)" if t < flagged else ""
+            out.append(f'<rect x="{x:.1f}" y="{yc - 4:.1f}" width="8" height="8" rx="2" fill="{p["primary"] if t < flagged else p["grid"]}" {lf_pop(min(r_i * STAGGER_BAR + t * STAGGER_DOT, 1400))}><title>{esc(str(label))} — verdict {t + 1}/{total}{flag_suffix}</title></rect>')
         out.append(f'<text x="512" y="{yc + 3:.1f}" text-anchor="end" font-size="9" font-weight="800" fill="{p["text"]}" {lf_fade(r_i * STAGGER_BAR + 300)}>{flagged}/{total}</text>')
     out.append(f'<text x="30" y="280" font-size="7.5" font-weight="600" fill="{p["muted"]}" {lf_fade(500)}>{esc(str(bundle.get("derived", ""))[:70])}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# evidence.year_x_outcome_counts — L16 Matrix Heat
-# ══════════════════════════════════════════════════════════════════════════
 
 def render_matrix_heat(bundle: dict, theme: str, meta: dict, audit: Optional[list] = None) -> str:
     p = get_theme(theme)
@@ -772,14 +703,9 @@ def render_matrix_heat(bundle: dict, theme: str, meta: dict, audit: Optional[lis
             else:
                 out.append(f'<rect x="{x + 2:.1f}" y="{y + 2:.1f}" width="{cell_w - 4:.1f}" height="{cell_h - 4}" rx="4" fill="{p["grid"]}" fill-opacity="0.5" {lf_fade((i + j) * STAGGER_DOT)}/>')
             out.append(f'<text x="{x + cell_w / 2:.1f}" y="{y + cell_h / 2 + 3:.1f}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="800" fill="{p["text"]}" {lf_pop(min((i + j) * STAGGER_DOT + 60, 900))}>{v}</text>')
-            out.append(f'<title>{esc(str(label))} × {esc(str(years[j]))} — {v} studies</title>')
     out.append("</svg>")
     return "\n".join(out)
 
-
-# ══════════════════════════════════════════════════════════════════════════
-# Registry + dispatcher
-# ══════════════════════════════════════════════════════════════════════════
 
 REGISTRY: Dict[str, Dict[str, Any]] = {
     "forest_plot": {"catalog_ref": "FOREST-PLOT (publication figure)", "source": "meta.forest",
@@ -844,8 +770,6 @@ ACADEMIC_FIGURE_KEYS = ("outcome-comparison.svg", "benchmark-citation-support.sv
 
 def render_figure(fig_type: str, bundle: dict, theme: str, meta: dict,
                   audit: Optional[list] = None) -> str:
-    """Dispatch to the registered renderer. Unknown types raise ValueError —
-    the caller records the reason and never silently falls back."""
     entry = REGISTRY.get(fig_type)
     if entry is None:
         raise ValueError(f"unregistered lieflat chart type: {fig_type!r}")

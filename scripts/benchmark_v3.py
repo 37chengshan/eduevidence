@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -47,8 +48,6 @@ BASELINES = (
     "B3_eduevidence_single", "B4_eduevidence_agent_mcp",
 )
 DEFAULT_BUDGET_TOKENS = 1_000_000
-
-# ---------------------------------------------------------------- prompts
 
 
 def _prompt_b0(q: dict) -> str:
@@ -118,9 +117,6 @@ def build_prompt(baseline: str, q: dict) -> str:
     return fn(q)
 
 
-# ---------------------------------------------------------------- drivers
-
-
 class ApiDriver:
     """OpenAI-compatible chat completions driver (no SDK dependency)."""
 
@@ -152,7 +148,7 @@ class ApiDriver:
             headers={"Content-Type": "application/json",
                      "Authorization": f"Bearer {self.api_key}"},
             method="POST")
-        with urllib.request.urlopen(req, timeout=self.timeout) as resp:  # noqa: S310 (user-configured endpoint)
+        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
             payload = json.loads(resp.read().decode("utf-8"))
         usage = payload.get("usage") or {}
         text = (payload.get("choices") or [{}])[0].get("message", {}).get("content", "")
@@ -166,20 +162,12 @@ class ApiDriver:
 
 
 class CliDriver:
-    """omp CLI driver - host agent runtime (user-approved).
-
-    Calls `omp -p --no-session --model=<model> <prompt>` in a scratch dir;
-    captures stdout as the response. Token usage is estimated from text
-    length and recorded as such (manifest usage fields may stay null; the
-    run manifest environment records the exact invocation).
-    """
+    """omp CLI driver - host agent runtime (user-approved)."""
 
     name = "cli"
 
     def __init__(self, model: str | None = None, thinking: str = "max",
                  timeout: int = 600):
-        # 无确认模型即 fail-closed：模型必须来自显式 --model 或
-        # EDUEVIDENCE_LLM_MODEL，绝不静默使用未确认的默认模型。
         self.model = model or os.environ.get("EDUEVIDENCE_LLM_MODEL", "")
         self.thinking = thinking
         self.timeout = timeout
@@ -189,7 +177,6 @@ class CliDriver:
         return bool(self.model) and shutil.which("omp") is not None
 
     def call(self, prompt: str, *, no_tools: bool = False) -> tuple[str, dict]:
-        import subprocess
         import tempfile
         import time
 
@@ -202,7 +189,7 @@ class CliDriver:
         t0 = time.monotonic()
         with tempfile.TemporaryDirectory(prefix="eduevidence-bench-") as workdir:
             proc = subprocess.run(cmd, capture_output=True, text=True,
-                                 timeout=self.timeout, cwd=workdir)
+                                  timeout=self.timeout, cwd=workdir)
         latency = time.monotonic() - t0
         if proc.returncode != 0:
             raise RuntimeError(
@@ -216,6 +203,7 @@ class CliDriver:
         }
         return text, usage
 
+
 class SimDriver:
     """Deterministic simulation — harness validation ONLY. Never performance evidence."""
 
@@ -228,10 +216,8 @@ class SimDriver:
         return True
 
     def call(self, prompt: str, *, no_tools: bool = False) -> tuple[str, dict[str, Any]]:
-        from benchmark_v2 import simulate_question_result  # noqa: PLC0415
+        from benchmark_v2 import simulate_question_result  # noqa: F401
 
-        # Deterministic pseudo-usage from prompt length; response is a stub
-        # that the evaluator must never use as model performance.
         import random
         rng = random.Random(len(prompt) * 7919 % 2**31)
         usage = {
@@ -256,9 +242,6 @@ def make_driver(name: str, *, model: str | None = None, thinking: str = "max") -
     if name == "sim":
         return SimDriver()
     raise ValueError(f"unknown driver: {name}")
-
-
-# ---------------------------------------------------------------- run
 
 
 def _now_iso() -> str:
@@ -306,8 +289,6 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
     total_tokens = 0
     budget_stopped = False
     import re as _re
-    # --resume: reuse previously completed attempts (their response artifacts
-    # live in out_dir); only unfinished attempts are re-run.
     done_ids: set[str] = set()
     resumed: dict[str, dict[str, Any]] = {}
     if resume and out_dir.is_dir():
@@ -318,7 +299,7 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
             except (OSError, _json.JSONDecodeError):
                 continue
             aid = data.get("attempt_id")
-            if aid and (out_dir / art.name).is_file():
+            if aid and art.is_file():
                 done_ids.add(aid)
                 resumed[aid] = data
         if done_ids:
@@ -336,9 +317,6 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                     break
                 attempt_id = f"{question['id']}-{baseline}-a{attempt}"
                 if attempt_id in done_ids:
-                    # Re-register resumed attempts in the manifest (status +
-                    # usage read back from their artifact) so eval/report see
-                    # the complete run.
                     art = out_dir / f"{attempt_id}.response.json"
                     data = resumed.get(attempt_id, {})
                     usage = data.get("usage") or {}
@@ -396,7 +374,7 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                     }, ensure_ascii=False, indent=2), encoding="utf-8")
                     entry["artifacts"] = [artifact.name]
                 except (urllib.error.URLError, OSError, ValueError, KeyError,
-                        subprocess.TimeoutExpired) as exc:  # P2-1: a hung model call must not kill the whole run
+                        subprocess.TimeoutExpired) as exc:
                     entry.update({"status": "failed", "error": str(exc),
                                   "finished_at": _now_iso()})
                 manifest["attempts"].append(entry)
@@ -408,8 +386,6 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
                     break
 
     if budget_stopped:
-        # P2-2: record remaining attempts as budget_stopped so the report can
-        # distinguish "stopped by budget" from "never scheduled".
         for question in questions:
             if any(a["question_id"] == question["id"] for a in manifest["attempts"]):
                 continue
@@ -432,7 +408,7 @@ def run_benchmark(*, questions: list[dict], baselines: list[str], repeats: int,
     tmp = out_dir / "manifest.json.tmp"
     tmp.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
                    encoding="utf-8")
-    tmp.replace(manifest_path)  # atomic write (P2-4)
+    tmp.replace(manifest_path)
     _validate_manifest(manifest_path)
     print(f"wrote {manifest_path} (attempts={len(manifest['attempts'])}, "
           f"mode={manifest['run_mode']}, total_tokens~{total_tokens})")
@@ -447,13 +423,13 @@ def _questions_version() -> str:
         proc = _sp.run(["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
                        capture_output=True, text=True, timeout=10)
         return proc.stdout.strip() or "unknown"
-    except Exception:  # noqa: BLE001 - version lookup must never fail a run
+    except Exception:
         return "unknown"
 
 
 def _validate_manifest(path: Path) -> None:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from validate_schema import Validator, SchemaError  # noqa: PLC0415
+    from validate_schema import Validator, SchemaError
 
     import json as _json
     schema = _json.loads(
@@ -487,7 +463,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
 
 
 def _cmd_report(args: argparse.Namespace) -> int:
-    from benchmark_evaluator import report_from_run  # noqa: PLC0415
+    from benchmark_evaluator import report_from_run
 
     run_dir = Path(args.run)
     manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -543,7 +519,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _cmd_eval(args: argparse.Namespace) -> int:
-    from benchmark_evaluator import evaluate_run  # noqa: PLC0415
+    from benchmark_evaluator import evaluate_run
 
     run_dir = Path(args.run)
     manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))

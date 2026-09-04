@@ -40,6 +40,7 @@ from pathlib import Path
 from engine.contracts import validate_record
 from engine.graph_store import GraphStore
 from engine.ids import new_local_id
+from engine.project import ProjectWorkspace
 from engine.semantics import claim_relation, decision_implication
 from engine.synthesis import ClaimSynthesis, synthesize_project
 from engine.versions import (
@@ -284,8 +285,6 @@ def _decision_action(syn_statuses: dict[str, str], confidence: dict,
     if label in ("High", "Moderate") and has_support:
         return "PILOT"
     return "INSUFFICIENT_EVIDENCE"
-
-
 
 
 

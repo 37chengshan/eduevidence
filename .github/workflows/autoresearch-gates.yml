@@ -1,0 +1,72 @@
+name: Autoresearch Gates
+
+on:
+  pull_request:
+  push:
+    branches: [main, "feature/**", "autoresearch/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scientific-invariants:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: pip install -e '.[dev]'
+      - name: Scientific, orchestration, schema and protected gates
+        run: python scripts/check_autoresearch_invariants.py
+      - name: vNext focused tests
+        run: |
+          python -m pytest -q \
+            tests/test_orchestration.py \
+            tests/test_orchestration_dispatch.py \
+            tests/test_worker_result_gate.py \
+            tests/test_autoresearch_core.py \
+            tests/test_autoresearch_commit.py \
+            tests/test_autoresearch_scientific_transitions.py \
+            tests/test_research_auto_cli_contract.py \
+            tests/test_autoevolve_core.py \
+            tests/test_autoevolve_runner.py \
+            tests/test_git_workspace.py \
+            tests/test_vnext_cli.py
+      - name: Wheel imports include vNext packages
+        run: |
+          python -m pip wheel . -w /tmp/wheelbuild --no-deps
+          python -m pip install /tmp/wheelbuild/*.whl --target /tmp/wheel-smoke --no-deps
+          PYTHONPATH=/tmp/wheel-smoke python - <<'PY'
+          import engine.autoresearch
+          import engine.autoevolve
+          import engine.orchestration
+          import engine.worker_result
+          import scripts.research_auto_cli
+          import scripts.vnext_cli
+          print('vNext wheel smoke OK')
+          PY
+
+  benchmark-partition-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Partition and adversarial manifest smoke
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('benchmarks/partitions.json').read_text())
+          assert set(p['dev']).isdisjoint(p['holdout'])
+          rows=[json.loads(x) for x in Path('benchmarks/adversarial/cases.jsonl').read_text().splitlines() if x.strip()]
+          assert len(rows) >= 7
+          assert len({r['id'] for r in rows}) == len(rows)
+          print('benchmark partition contract OK')
+          PY

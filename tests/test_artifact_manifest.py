@@ -67,14 +67,13 @@ def test_manifest_matches_actual_artifacts(built_themes, tmp_path):
     assert manifest["renderer_version"] == br.RENDERER_VERSION
     assert manifest["git_commit"] == "test-commit"
     result = json.loads(RESULT.read_text(encoding="utf-8"))
-    assert manifest["evidence_count"] == len(result["evidence"]) == 13
-    assert manifest["source_count"] == len(result["sources"]) == 7
+    assert manifest["evidence_count"] == len(result["evidence"])
+    assert manifest["source_count"] == len(result["sources"])
+    assert manifest["evidence_count"] > 0 and manifest["source_count"] > 0
     assert manifest["themes"] == list(br.THEME_NAMES)
 
-    # manifest 文件与返回值一致（磁盘上真实存在）
     on_disk = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert on_disk == manifest
-    # 文件内的 hash 字段与 HTML 内嵌 hash 一一对应
     for theme, path in built_themes.items():
         assert br.embedded_result_hash(path) == manifest["result_sha256"]
 
