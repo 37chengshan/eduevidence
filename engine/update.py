@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 
 from engine.contracts import validate_record
 from engine.graph_store import GraphStore, GraphMutation, GraphRevision
+from engine.project import ProjectWorkspace
 
 
 def _now_iso() -> str:
