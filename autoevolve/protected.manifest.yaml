@@ -1,5 +1,6 @@
 protected:
   - autoevolve/protected.manifest.yaml
+  - autoevolve/program.md
   - benchmarks/annotations/**
   - benchmarks/holdout/**
   - benchmarks/evaluator/**
@@ -8,10 +9,13 @@ protected:
   - scripts/pre_verdict_gate.py
   - scripts/compute_confidence.py
   - scripts/check_autoresearch_invariants.py
+  - scripts/daily_evolve.py
+  - scripts/vnext_cli.py
   - engine/graph_store.py
   - engine/study_design.py
   - engine/autoevolve/**
   - .github/workflows/autoresearch-gates.yml
+  - .github/workflows/autoevolve-nightly.yml
   - tests/scientific_invariants/**
 
 mutable:
