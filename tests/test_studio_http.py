@@ -80,6 +80,14 @@ def test_missing_built_studio_never_falls_back_to_v5_ui(tmp_path, monkeypatch):
         thread.join(timeout=3)
 
 
+def test_repository_legacy_entry_is_fail_closed_tombstone():
+    text = (studio.WEB_DIR / 'index.html').read_text(encoding='utf-8')
+    assert 'Research Studio build unavailable' in text
+    assert 'EduEvidence 5.0' not in text
+    assert 'js/main.js' not in text
+    assert 'echarts' not in text.lower()
+
+
 def test_http_missing_reports_do_not_return_html_success(app):
     base, _ = app
     assert get(base, '/api/studio/projects/example--not-a-project/report?theme=claude').status == 404
