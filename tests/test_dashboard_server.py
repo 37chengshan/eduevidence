@@ -72,11 +72,11 @@ def test_known_project_viz_and_reports(server):
     # the canonical project id is the first-class Studio identity.
     assert _get(server, "/api/projects/ai-coding-assistant/viz")[0] == 200
     assert _get(server, "/api/projects/ai-coding-assistant-evidence/viz")[0] == 200
-    # This flagship currently ships the baked default report but no
-    # reports-5themes/ directory. Theme routes must reflect physical artifacts,
-    # not invent a variant that is not packaged.
     assert _get(server, "/report?id=ai-coding-assistant-evidence")[0] == 200
-    assert _get(server, "/report?id=ai-coding-assistant-evidence&theme=claude")[0] == 404
+    variant = ROOT / "examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_claude.html"
+    expected = 200 if variant.is_file() else 404
+    assert _get(server, "/report?id=ai-coding-assistant-evidence&theme=claude")[0] == expected
+
 
 
 def test_unknown_project_404(server):

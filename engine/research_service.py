@@ -68,7 +68,11 @@ class ResearchService:
     def submit_artifact(self, project_id: str, *, artifact_type: str, content: bytes, run_id: str | None = None,
                         metadata: dict[str, Any] | None = None) -> dict[str, Any]:
         digest = hashlib.sha256(content).hexdigest()
-        artifact_id = f"ART-{digest[:20]}"
+        # Bytes are content-addressed; association identity is project/run/type scoped.
+        # Identical bytes in two projects must not erase the second association.
+        identity = json.dumps([project_id, run_id, artifact_type, digest, metadata or {}],
+                              ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        artifact_id = f"ART-{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:24]}"
         directory = self.home / "artifacts" / digest[:2]
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / digest
@@ -80,6 +84,9 @@ class ResearchService:
         with self._connect() as db:
             db.execute("INSERT OR IGNORE INTO artifacts VALUES(?,?,?,?,?,?,?,?)",
                        (artifact_id, project_id, run_id, artifact_type, digest, str(path), record["created_at"], json.dumps(record["metadata"], ensure_ascii=False, sort_keys=True)))
+            persisted = db.execute("SELECT * FROM artifacts WHERE artifact_id=?", (artifact_id,)).fetchone()
+        record = dict(persisted)
+        record["metadata"] = json.loads(record["metadata"])
         self._event(project_id, "artifact_submitted", record, run_id)
         return record
 

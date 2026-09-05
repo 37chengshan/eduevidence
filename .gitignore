@@ -52,3 +52,10 @@ dist_gh_pages/
 # Node / puppeteer temp
 node_modules/
 package-lock.json
+
+# Reproducible frontend dependency graph
+!studio/package-lock.json
+studio/playwright-report/
+studio/test-results/
+
+studio/node_modules
