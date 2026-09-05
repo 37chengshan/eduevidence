@@ -281,7 +281,7 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
-After research completes, `result.json` is rendered by three deterministic Python adapters. The adapters use the standard library; the optional Web Studio chart enhancement has a separate browser dependency.
+After research completes, `result.json` is rendered by three deterministic Python adapters. The adapters use the standard library; legacy ECharts enhancement is optional and is not required by the new Research Studio.
 
 ```text
 result.json + result.zh.json
@@ -300,7 +300,11 @@ result.json + result.zh.json
 - **Static-first**: decision, matrix, tribunal, intervention and sources remain readable without JavaScript; ECharts is an optional enhancement.
 - **Integrity gate**: chart numbers are checked against result.json item by item; publishing is blocked with `REPORT_INVALID` on mismatch.
 
-**Local Web Studio** (`python3 scripts/dashboard_server.py --port 8765`) has exactly three read-only views: Dashboard, Report Browser and Data Visualization. It loads ECharts 5.4.3 from jsDelivr for interactive charts; the submission package does not bundle that runtime, so Web interactivity requires network access. The baked report's static HTML/SVG remains the offline artifact.
+**Research Studio 研究观察台**保持只读。运行 `python3 scripts/dashboard_server.py --port 8765`，打开 `/studio/`，即可查看研究项目、证据与来源、实际运行记录、已提交版本及五种风格报告。Skill 自进化实验单独展示；控制台不会启动研究、修改证据或派发代理。
+
+控制台采用 React + TypeScript，分发包已包含静态资源，使用者无需安装 Node。新图表不依赖远程 ECharts CDN，也不在浏览器中计算合并效应量。本地研究不会进入 GitHub Pages 公共导出。五主题从完整双语输入生成，缺失内容明确标记，不补造结论。
+
+详见[研究观察台流程与交付指南](docs/research-studio-guide.zh-CN.md)。
 
 > Open the example directly: `examples/ai-coding-assistant/EduEvidence_Report.html`
 

@@ -14,23 +14,12 @@ export function renderVizHeader(d) {
 
 function hasReportedCi(f) {
   return f.ci_lower != null && f.ci_upper != null &&
-    Number.isFinite(Number(f.ci_lower)) && Number.isFinite(Number(f.ci_upper));
+    typeof f.ci_lower === "number" && typeof f.ci_upper === "number" &&
+    Number.isFinite(f.ci_lower) && Number.isFinite(f.ci_upper) && f.ci_lower <= f.ci_upper;
 }
 
-function pooledMean(forest) {
-  let num = 0, den = 0;
-  forest.forEach(f => {
-    const g = Number(f.effect_size);
-    const hasCi = hasReportedCi(f);
-    const ci = hasCi ? Number(f.ci_upper) - Number(f.ci_lower) : 0;
-    const suppliedWeight = Number(f.weight);
-    const w = ci > 0 ? 3.84 / (ci * ci) :
-      (Number.isFinite(suppliedWeight) && suppliedWeight > 0 ? suppliedWeight : 0);
-    if (isFinite(g) && w > 0) { num += w * g; den += w; }
-  });
-  return den > 0 ? num / den : null;
-}
-
+// Legacy projection-only viewer. Statistical pooling belongs to the engine,
+// never to a browser-derived weight or an assumed standard error.
 export function renderForest(forest) {
   const el = $("#forest-plot");
   const c = getChart("forest", el);
@@ -38,13 +27,14 @@ export function renderForest(forest) {
     el.innerHTML = '<div class="empty-state">图表运行时未加载；森林图数据仍可在报告中查看。</div>';
     return;
   }
+  forest = forest.filter(f => typeof f.effect_size === "number" && Number.isFinite(f.effect_size));
   if (!forest.length) {
     el.innerHTML = '<div class="empty-state">该课题暂无可量化的森林图数据 (result.json → forest_plot_data)。</div>';
     return;
   }
   // Sort by effect size
   const sorted = forest.slice().sort((a, b) => (a.effect_size || 0) - (b.effect_size || 0));
-  const mean = pooledMean(sorted);
+
   
   const yAxisData = [];
   const scatterData = [];
@@ -58,7 +48,7 @@ export function renderForest(forest) {
     if (!hasCi) label += " [CI not reported]";
     yAxisData.push(label);
     const g = Number(f.effect_size);
-    const safeG = Number.isFinite(g) ? g : 0;
+    const safeG = g;
 
     scatterData.push({
       value: [safeG, idx],
@@ -73,15 +63,6 @@ export function renderForest(forest) {
       });
     }
   });
-
-  if (mean != null) {
-    yAxisData.push('合并效应量 (加权均值)');
-    scatterData.push({
-      value: [mean, sorted.length],
-      itemStyle: { color: '#F59E0B' },
-      info: { effect_size: mean, isMean: true }
-    });
-  }
 
   const renderItem = (params, api) => {
     const yValue = api.value(2);
@@ -121,14 +102,14 @@ export function renderForest(forest) {
       formatter: function (params) {
         if (params.seriesType === 'custom') return '';
         const f = params.data.info;
-        if (f.isMean) return `合并效应量: ${f.effect_size.toFixed(2)}`;
+
         const ci = hasReportedCi(f)
           ? ` [${Number(f.ci_lower).toFixed(2)}, ${Number(f.ci_upper).toFixed(2)}]`
           : " [CI not reported]";
         return `<div style="font-size:0.8rem;">
           <strong class="serif-text">${esc(f.study_label)}</strong><br/>
           维度: ${esc(f.outcome_dimension)}<br/>
-          样本量(N): ${f.sample_size == null ? '未知' : f.sample_size}<br/>
+          样本量(N): ${f.sample_size == null ? '未知' : esc(String(f.sample_size))}<br/>
           效应量(g): ${Number(f.effect_size).toFixed(2)}${ci}<br/>
           WWC评级: ${esc(f.wwc_rating || '—')}
         </div>`;

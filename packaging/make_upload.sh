@@ -4,6 +4,9 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST="${DIST_DIR:-$ROOT/dist/eduevidence-submission}"
 STAGING="${STAGING_DIR:-$(mktemp -d)}"
 
+# Build projections, never research facts. Node is not required at install time.
+python3 "$ROOT/scripts/build_report_variants.py"
+test -f "$ROOT/web/studio/index.html" || { echo "missing built Studio; run cd studio && npm ci && npm run build"; exit 1; }
 echo "==> Staging flat skill package at $STAGING"
 rm -rf "$STAGING"
 mkdir -p "$STAGING"
@@ -25,6 +28,7 @@ rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store"} \
   "$ROOT/visualization/eduevidence-report/" "$STAGING/visualization/eduevidence-report/"
 
 mkdir -p "$STAGING/web/js"
+cp -a "$ROOT/web/studio" "$STAGING/web/studio"
 cp "$ROOT/web/index.html" "$STAGING/web/index.html"
 cp "$ROOT/web/styles.css" "$STAGING/web/styles.css"
 for f in main.js state.js api.js charts.js dashboard.js viz.js; do
@@ -49,10 +53,15 @@ for d in highschool-math-ai-tutor esl-academic-writing-ai ai-tutor ai-writing-as
       "$STAGING/examples/$d/reports-5themes/"
 done
 
+# Prefer the current validated Claude projection as each default report.
+for variants in "$STAGING"/examples/*/reports-5themes; do
+  test -f "$variants/EduEvidence_Report_claude.html" || continue
+  cp "$variants/EduEvidence_Report_claude.html" "$(dirname "$variants")/EduEvidence_Report.html"
+done
 mkdir -p "$STAGING/docs"
 for f in architecture.md demo.md demo-storyboard.md install-guide.md \
          reproducibility.md release-contract.md autoresearch-evolution-plan.md \
-         orchestration-role-model.md autoresearch-implementation-status.md; do
+         orchestration-role-model.md autoresearch-implementation-status.md research-studio-guide.zh-CN.md; do
   test -f "$ROOT/docs/$f" && cp "$ROOT/docs/$f" "$STAGING/docs/$f"
 done
 cp "$ROOT/packaging/UPLOAD-README.md" "$STAGING/UPLOAD-README.md"

@@ -18,6 +18,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import errno
+import mimetypes
 import http.server
 import json
 import os
@@ -35,7 +37,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from engine.evidence_graph import EvidenceGraph  # noqa: E402
-from engine.research_service import ResearchService  # noqa: E402
+from engine.studio_read_model import StudioReader, numeric_effect  # noqa: E402
 
 import sys as _sys
 _VIZ_SCRIPTS = ROOT / "visualization" / "eduevidence-report" / "scripts"
@@ -77,16 +79,8 @@ def _decision_fields(decision: Any) -> tuple[Any, Any]:
 
 
 def _extract_effect(ev: Dict[str, Any]) -> tuple[Any, Any, Any]:
-    es = ev.get("effect_size")
-    if isinstance(es, dict):
-        return es.get("value"), (es.get("ci_lower") or es.get("ci_lo")), (es.get("ci_upper") or es.get("ci_hi"))
-    value = es if isinstance(es, (int, float)) else None
-    if value is None:
-        for key in ("hedges_g", "g", "effect_size_value"):
-            if isinstance(ev.get(key), (int, float)):
-                value = ev[key]
-                break
-    return value, ev.get("ci_lower"), ev.get("ci_upper")
+    numeric = numeric_effect(ev)
+    return numeric["value"], numeric["ci_lower"], numeric["ci_upper"]
 
 
 def _graph_node_count(path: Path) -> int:
@@ -111,7 +105,7 @@ def _direction_counts(evidence: list) -> Dict[str, int]:
         if not isinstance(ev, dict):
             continue
         d = (ev.get("relation_to_claim") or ev.get("direction")
-             or ev.get("effect_direction") or "").lower()
+             or "").lower()
         if d in ("support", "supports", "positive", "pos"):
             counts["support"] += 1
         elif d in ("contradict", "contradicts", "negative", "neg"):
@@ -128,7 +122,7 @@ def _outcome_rollup(evidence: list) -> List[Dict[str, Any]]:
             continue
         ot = ev.get("outcome_type") or ev.get("outcome") or "other"
         d = (ev.get("relation_to_claim") or ev.get("direction")
-             or ev.get("effect_direction") or "").lower()
+             or "").lower()
         bucket = roll.setdefault(ot, {"support": 0, "contradict": 0, "neutral": 0})
         if d in ("support", "supports", "positive", "pos"):
             bucket["support"] += 1
@@ -173,7 +167,9 @@ def scan_local_projects() -> List[Dict[str, Any]]:
             if isinstance(f.get("effect_size"), (int, float)):
                 effect_values.append(float(f["effect_size"]))
         graph_path = proj_dir / "evidence_graph.json"
-        html_path = proj_dir / "EduEvidence_Report.html"
+        html_path = proj_dir / "reports-5themes" / "EduEvidence_Report_claude.html"
+        if not html_path.is_file():
+            html_path = proj_dir / "EduEvidence_Report.html"
         report_variants: List[Dict[str, str]] = []
         themes_dir = proj_dir / "reports-5themes"
         if themes_dir.is_dir():
@@ -194,8 +190,14 @@ def scan_local_projects() -> List[Dict[str, Any]]:
             "confidence": confidence,
             "evidence_count": len(evidence) if isinstance(evidence, list) else 0,
             "forest_count": len(forest) if isinstance(forest, list) else 0,
-            "effect_count": len(effect_values),
-            "mean_effect_size": round(sum(effect_values) / len(effect_values), 3) if effect_values else None,
+            "effect_count": len({
+                ev.get("evidence_id") or ev.get("finding_id") or f"e-{i}"
+                for i, ev in enumerate(evidence) if _extract_effect(ev)[0] is not None
+            } | {
+                f.get("evidence_id") or f.get("finding_id") or f"f-{i}"
+                for i, f in enumerate(forest) if _extract_effect(f)[0] is not None
+            }),
+            "mean_effect_size": None,  # Distinct outcomes/metrics cannot be averaged by a viewer.
             "direction_counts": _direction_counts(evidence) if isinstance(evidence, list) else {"support": 0, "contradict": 0, "neutral": 0},
             "has_graph": graph_path.exists(),
             "node_count": _graph_node_count(graph_path) if graph_path.exists() else 0,
@@ -323,7 +325,9 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(data)))
-        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Cache-Control", "no-store")
         if extra_headers:
             for name, value in extra_headers.items():
                 self.send_header(name, value)
@@ -356,15 +360,69 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
         query = urllib.parse.parse_qs(parsed.query)
+        try:
+            host = urllib.parse.urlsplit("//" + self.headers.get("Host", "")).hostname
+        except ValueError:
+            self._send_json({"error": "invalid host"}, 403)
+            return
+        allowed_hosts = {"localhost", "127.0.0.1", "::1", str(self.server.server_address[0])}
+        if path.startswith("/api/") and host not in allowed_hosts:
+            self._send_json({"error": "untrusted host"}, 403)
+            return
+        if path.startswith("/api/") and self.headers.get("Sec-Fetch-Site") == "cross-site":
+            self._send_json({"error": "cross-origin access denied"}, 403)
+            return
+        if path == "/api/studio/catalog":
+            self._send_json(StudioReader(EXAMPLES_DIR, RESEARCH_HOME).catalog())
+            return
+        if path == "/api/studio/evolution":
+            self._send_json(StudioReader(EXAMPLES_DIR, RESEARCH_HOME).evolution())
+            return
+        if path.startswith("/api/studio/projects/"):
+            reader = StudioReader(EXAMPLES_DIR, RESEARCH_HOME)
+            suffix = urllib.parse.unquote(path[len("/api/studio/projects/"):])
+            parts = suffix.split("/")
+            try:
+                if len(parts) == 1:
+                    self._send_json(reader.detail(parts[0]))
+                elif len(parts) == 2 and parts[1] == "report":
+                    report = reader.report_path(parts[0], theme=query.get("theme", ["claude"])[0],
+                                                filename=query.get("file", [None])[0])
+                    self._send_report_bytes(report.read_bytes())
+                else:
+                    self._send_json({"error": "not found"}, 404)
+            except FileNotFoundError:
+                self._send_json({"error": "not found"}, 404)
+            except (OSError, ValueError, TypeError, AttributeError):
+                self._send_json({"error": "research projection unavailable"}, 422)
+            return
+        if path.startswith("/studio/"):
+            try:
+                asset = (WEB_DIR / unquote_path(path).lstrip("/")).resolve()
+                if not asset.is_relative_to((WEB_DIR / "studio").resolve()):
+                    raise ValueError("unsafe path")
+                if asset.is_dir():
+                    asset = asset / "index.html"
+                if asset.suffix not in {".html", ".js", ".css", ".json", ".svg", ".png", ".woff2", ".txt"}:
+                    raise ValueError("unsupported asset")
+                self._serve_file(asset, mimetypes.guess_type(asset)[0] or "application/octet-stream")
+            except (ValueError, OSError):
+                self._send_json({"error": "not found"}, 404)
+            return
         if path in ("/", "/index.html", "/dashboard", "/studio", "/console"):
-            self._serve_file(WEB_DIR / "index.html", "text/html; charset=utf-8")
+            built = WEB_DIR / "studio" / "index.html"
+            if built.is_file():
+                page = built.read_text(encoding="utf-8").replace("<head>", '<head><base href="/studio/">', 1)
+                self._send_bytes(page.encode("utf-8"), "text/html; charset=utf-8")
+            else:
+                self._serve_file(WEB_DIR / "index.html", "text/html; charset=utf-8")
             return
         if path == "/api/projects":
             projects = scan_local_projects()
             self._send_json({"projects": projects, "stats": build_stats(projects)})
             return
         if path == "/api/research/projects":
-            self._send_json({"projects": ResearchService(RESEARCH_HOME).projects()})
+            self._send_json({"projects": [p for p in StudioReader(EXAMPLES_DIR, RESEARCH_HOME).catalog()["projects"] if p["kind"] == "project"]})
             return
         if path.startswith("/api/research/projects/"):
             suffix = urllib.parse.unquote(path[len("/api/research/projects/"):]).strip("/")
@@ -373,17 +431,17 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
             if not project_id.startswith("PRJ-"):
                 self._send_json({"error": "unknown project"}, 404)
                 return
-            service = ResearchService(RESEARCH_HOME)
             try:
+                detail = StudioReader(EXAMPLES_DIR, RESEARCH_HOME).detail("project--" + project_id)
                 if len(parts) == 2 and parts[1] == "runs":
-                    self._send_json({"runs": service.runs(project_id)})
+                    self._send_json({"runs": detail["runs"]})
                     return
                 if len(parts) == 2 and parts[1] == "artifacts":
-                    self._send_json({"artifacts": service.artifacts(project_id)})
+                    self._send_json({"artifacts": detail["artifacts"]})
                     return
                 if len(parts) == 2 and parts[1] == "events":
                     after = int(query.get("after_seq", ["0"])[0])
-                    self._send_json({"events": service.events(project_id, after_seq=max(after, 0))})
+                    self._send_json({"events": [e for e in reversed(detail["events"]) if e.get("seq", 0) > max(after, 0)]})
                     return
             except (FileNotFoundError, ValueError):
                 self._send_json({"error": "unknown project"}, 404)
@@ -413,7 +471,7 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
         if path == "/report":
             self._serve_report(query)
             return
-        if path.startswith("/js/") or path.startswith("/css/") or path == "/styles.css":
+        if path.startswith("/js/") or path.startswith("/css/") or path in ("/styles.css", "/mobile-studio.css"):
             self._serve_web_asset(path)
             return
         self._send_json({"error": "not found"}, 404)
@@ -442,7 +500,9 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
             return
         proj_dir = EXAMPLES_DIR / proj_id
         if theme == "default":
-            html_path = proj_dir / "EduEvidence_Report.html"
+            html_path = proj_dir / "reports-5themes" / "EduEvidence_Report_claude.html"
+            if not html_path.is_file():
+                html_path = proj_dir / "EduEvidence_Report.html"
             if not html_path.is_file():
                 self._send_json({"error": "report not found"}, 404)
                 return
@@ -469,7 +529,7 @@ def run_dashboard_server(host: str = "127.0.0.1", port: int = 8765) -> None:
             actual_port = candidate
             break
         except OSError as e:
-            if e.errno == 48:
+            if e.errno == errno.EADDRINUSE:
                 continue
             raise
     if server is None:

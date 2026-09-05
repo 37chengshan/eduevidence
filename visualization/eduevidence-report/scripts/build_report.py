@@ -1555,55 +1555,15 @@ def first_screen(result: dict, lang: str, ui: dict) -> str:
     action = decision.get("recommended_action", "insufficient_evidence")
     cls = {"adopt": "adopt", "pilot": "pilot", "reject": "reject"}.get(action, "")
 
-    # 1. Strongest Supported Takeaway
-    if decision.get("strongest_support"):
-        strongest = decision.get("strongest_support")
-    elif can_claim:
-        strongest = can_claim[0]
-    elif supported_claims:
-        strongest = supported_claims[0]
-    else:
-        if lang == "zh":
-            strongest = f"即时编程任务编写耗时缩短 35%~50%，代码完成速度显著提升（综合效应量 g = +0.61, p < 0.001），在当堂受控实验中展现明显效率增益。"
-        else:
-            strongest = f"In-task programming completion time is shortened by 35%-50% with significant velocity gain (pooled g = +0.61, p < 0.001) in guided environments."
-
-    # 2. Key Uncertainty / Contradictions
-    if decision.get("key_uncertainty"):
-        uncertainty = decision.get("key_uncertainty")
-    elif uncertain_claims:
-        uncertainty = uncertain_claims[0]
-    elif contradicted_claims:
-        uncertainty = contradicted_claims[0]
-    elif decision.get("reason_for_disagreement"):
-        uncertainty = decision.get("reason_for_disagreement")
-    else:
-        if lang == "zh":
-            uncertainty = "撤除 AI 后的独立闭卷期末考试与概念迁移表现显著下滑（综合效应量 g = -0.28, p = 0.012），学生存在‘看似学会、实则不会’的认知盲区。"
-        else:
-            uncertainty = "Delayed solo exams and independent transfer performance decline significantly (pooled g = -0.28, p = 0.012) once scaffolding is removed."
-
-    # 3. Main Risk
-    if decision.get("main_risk"):
-        risk = decision.get("main_risk")
-    elif decision.get("risk_effect"):
-        risk = decision.get("risk_effect")
-    else:
-        if lang == "zh":
-            risk = "认知脚手架依赖陷阱（Scaffolding Dependency Trap）：过度依赖实时代码补全导致学生自主调试排错、边界测试与底层计算思维出现退化。"
-        else:
-            risk = "Scaffolding Dependency Trap: Over-reliance on code completion degrades novice debugging, boundary testing, and fundamental computational thinking."
-
-    # 4. Next Action / Policy Guidance
-    if decision.get("next_action"):
-        next_action = decision.get("next_action")
-    elif decision.get("next_steps"):
-        next_action = decision.get("next_steps")
-    else:
-        if lang == "zh":
-            next_action = "建议开展限制性教学试点：① 采用苏格拉底式概念引导，严禁直接给答案；② 实行 4 阶段脚手架渐进剥离；③ 坚持以无 AI 闭卷机试与独立随访作为最终考核标准。"
-        else:
-            next_action = "Execute restricted classroom pilot: ① Enforce Socratic guidance instead of direct code generation; ② Implement 4-phase scaffolding fading; ③ Anchor summative grading in unassisted closed-book exams."
+    missing = "当前结果未提供此项信息。" if lang == "zh" else "Not provided in this research result."
+    strongest = (decision.get("strongest_support") or (can_claim[0] if can_claim else None)
+                 or (supported_claims[0] if supported_claims else None) or missing)
+    uncertainty = (decision.get("key_uncertainty")
+                   or (uncertain_claims[0] if uncertain_claims else None)
+                   or (contradicted_claims[0] if contradicted_claims else None)
+                   or decision.get("reason_for_disagreement") or missing)
+    risk = decision.get("main_risk") or decision.get("risk_effect") or missing
+    next_action = decision.get("next_action") or decision.get("next_steps") or missing
 
     rationale = decision.get("decision_rationale") or decision.get("rationale") or ""
     rationale_html = expandable_text(rationale, ui["expand_details"], 380, "hero-rationale")
@@ -2656,6 +2616,17 @@ def _lang_switcher(ui_zh: dict, ui_en: dict) -> str:
         "</div>")
 
 
+def script_json(value: object) -> str:
+    """Serialize untrusted evidence/chart data for an inline script context."""
+    return (json.dumps(value, ensure_ascii=False, allow_nan=False)
+            .replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+            .replace("\u2028", "\\u2028").replace("\u2029", "\\u2029"))
+
+
+def _reader_asset(name: str) -> str:
+    return (Path(__file__).resolve().parent.parent / "assets" / name).read_text(encoding="utf-8")
+
+
 def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
     outcome_zh = next((c for c in charts_zh.get("charts", [])
                        if c.get("chart_id") == "outcome-evidence-overview"), None)
@@ -2700,7 +2671,8 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
   }}
   var savedLang = null;
   try {{ savedLang = localStorage.getItem('eduevidence-lang'); }} catch (e) {{}}
-  applyLang(savedLang === 'en' ? 'en' : 'zh');
+  var queryLang = new URLSearchParams(window.location.search).get('lang');
+  applyLang((queryLang || savedLang) === 'en' ? 'en' : 'zh');
   document.querySelectorAll('.lang-btn').forEach(function (btn) {{
     btn.addEventListener('click', function () {{ applyLang(btn.dataset.langTarget); }});
   }});
@@ -2721,7 +2693,8 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
   }}
   var savedView = null;
   try {{ savedView = localStorage.getItem('eduevidence-report-view'); }} catch (e) {{}}
-  applyReportView(savedView === 'full' ? 'full' : 'brief');
+  var queryView = new URLSearchParams(window.location.search).get('view');
+  applyReportView((queryView || savedView) === 'full' ? 'full' : 'brief');
   document.querySelectorAll('.report-view-btn').forEach(function (btn) {{
     btn.addEventListener('click', function () {{ applyReportView(btn.dataset.reportView); }});
   }});
@@ -2803,12 +2776,12 @@ def _enhancer_js(charts_zh: dict, charts_en: dict, result_en: dict) -> str:
     window.eduevidenceCharts = window.eduevidenceCharts || {{}};
     window.eduevidenceCharts[containerId] = chart;
   }}
-  mountChart('chart-outcome-zh', {json.dumps(outcome_zh or {}, ensure_ascii=False)});
-  mountChart('chart-trace-zh', {json.dumps(trace_zh or {}, ensure_ascii=False)});
-  mountChart('chart-benchmark-zh', {json.dumps(benchmark_zh, ensure_ascii=False)});
-  mountChart('chart-outcome-en', {json.dumps(outcome_en or {}, ensure_ascii=False)});
-  mountChart('chart-trace-en', {json.dumps(trace_en or {}, ensure_ascii=False)});
-  mountChart('chart-benchmark-en', {json.dumps(benchmark_en, ensure_ascii=False)});
+  mountChart('chart-outcome-zh', {script_json(outcome_zh or {})});
+  mountChart('chart-trace-zh', {script_json(trace_zh or {})});
+  mountChart('chart-benchmark-zh', {script_json(benchmark_zh)});
+  mountChart('chart-outcome-en', {script_json(outcome_en or {})});
+  mountChart('chart-trace-en', {script_json(trace_en or {})});
+  mountChart('chart-benchmark-en', {script_json(benchmark_en)});
 }})();
 """
 
@@ -2931,15 +2904,25 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
     brief_blocks = [
         render_brief_block(*brief_titles["decision"], first_screen(result, lang, ui), "brief-decision"),
     ]
-    if lieflat_gallery_html:
-        brief_blocks.append(render_brief_block(*brief_titles["lieflat"], lieflat_gallery_html, "brief-lieflat"))
     brief_blocks.extend([
         render_brief_block(*brief_titles["outcomes"], render_outcomes_brief(result, outcome_chart, lang, ui, viz), "brief-outcomes"),
         render_brief_block(*brief_titles["tribunal"], render_tribunal_visual(result, "", "", lang, ui, compact=True), "brief-tribunal"),
         render_brief_block(*brief_titles["action"], render_evidence_to_action(result, lang, ui), "brief-action"),
         render_brief_block(*brief_titles["sources"], render_brief_sources(result, lang, ui), "brief-sources"),
     ])
+    if lieflat_gallery_html:
+        brief_blocks.insert(-1, render_brief_block(*brief_titles["lieflat"], lieflat_gallery_html, "brief-lieflat"))
     brief = "".join(brief_blocks)
+    # Unique fragment targets per language, stable across theme variants.
+    for section_key in ("decision", "outcomes", "tribunal", "action", "lieflat", "sources"):
+        brief = brief.replace(f'class="brief-block brief-{section_key}"',
+                              f'class="brief-block brief-{section_key}" id="brief-{section_key}-{lang}"')
+    nav_items = [("decision", brief_titles["decision"][0]), ("outcomes", brief_titles["outcomes"][0]),
+                 ("tribunal", brief_titles["tribunal"][0]), ("action", brief_titles["action"][0]),
+                 ("sources", brief_titles["sources"][0])]
+    brief_nav = '<nav class="brief-navigation" aria-label="' + ("摘要导航" if lang == "zh" else "Brief navigation") + '">' + ''.join(
+        f'<a href="#brief-{key}-{lang}"><span>{i:02d}</span>{esc(title)}</a>'
+        for i, (key, title) in enumerate(nav_items, 1)) + '</nav>'
     full_report = render_full_report(result, lang, ui, charts, infographics, figures, viz)
     toc = render_full_toc(result, lang, ui)
 
@@ -2953,7 +2936,7 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
     else:
         origin_chip = ''
     meta_line = (f"{esc(ui['header_mode'])}{esc(label(lang, 'mode', meta.get('mode') or ''))}"
-                 f" · {esc(ui['header_generated'])}{esc(meta.get('generated_at') or '')}"
+                 f" · {esc(ui['header_generated'])}{esc(str(meta.get('generated_at') or '')[:10])}"
                  f" · {esc(ui['header_evidence'])}{len(result.get('evidence', []))}"
                  f"{esc(ui['header_evidence_suffix'])}"
                  f" · {esc(ui['header_sources'])}{len(result.get('sources', []))}"
@@ -2968,7 +2951,7 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
 <button type="button" class="report-view-btn" data-report-view="full" aria-pressed="false">{esc(ui['full_report'])}</button>
 </nav>
 </header>
-<div class="report-page report-page-brief" data-report-page="brief">{brief}</div>
+<div class="report-page report-page-brief" data-report-page="brief">{brief_nav}<div class="brief-reading-content">{brief}</div></div>
 <div class="report-page report-page-full" data-report-page="full" hidden>
 <div class="full-report-intro"><h2>{esc(ui['full_report'])}</h2><p>{esc(ui['full_report_intro'])}</p></div>
 <div class="full-report-layout">{toc}<main class="full-report-content">{full_report}</main></div>
@@ -2993,18 +2976,25 @@ def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: di
 <html lang="zh-CN" data-theme="{esc(theme)}">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'">
 {hash_meta}<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(result_zh.get("meta", {}).get("question") or result_en.get("meta", {}).get("question") or "EduEvidence Evidence Report")}</title>
 <style>
 {_theme_css()}
 {_base_css()}
 {_motion_css()}
+{_reader_asset("reader.css")}
 </style>
 </head>
 <body>
-<div class="controls">
-<span class="generated-theme">{esc(THEME_DISPLAY[theme])}</span>
-{_lang_switcher(UI_ZH, UI_EN)}
+<div class="reader-progress" aria-hidden="true"><span></span></div>
+<div class="controls reader-toolbar">
+<a class="reader-home" href="#" aria-label="Back to report start">EduEvidence<span class="generated-theme">{esc(THEME_DISPLAY[theme])}</span></a>
+<div class="reader-view-controls" role="group" aria-label="Report view">
+<button type="button" class="report-view-btn active" data-report-view="brief" data-copy="brief" aria-pressed="true">摘要</button>
+<button type="button" class="report-view-btn" data-report-view="full" data-copy="full" aria-pressed="false">完整报告</button>
+</div>
+<div class="reader-tools">{_lang_switcher(UI_ZH, UI_EN)}<button class="reader-print" type="button" data-copy="print">打印</button></div>
 </div>
 {body_zh}
 {body_en}
@@ -3013,6 +3003,7 @@ def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: di
 </script>
 <script>
 {_enhancer_js(charts_zh, charts_en, result_en)}
+{_reader_asset("reader.js")}
 </script>
 </body>
 </html>

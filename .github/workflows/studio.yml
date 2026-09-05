@@ -1,0 +1,65 @@
+name: Research Studio
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: studio-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser-and-distribution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - run: pip install -e '.[dev]'
+      - run: npm ci --prefix studio
+      - name: Dependency security gate
+        run: npm audit --prefix studio --audit-level=high
+      - name: Typecheck and build static application
+        run: npm run build --prefix studio
+      - name: Verify committed runtime assets are reproducible
+        run: git diff --exit-code -- web/studio
+      - name: Generate report identities and privacy-safe static site
+        run: python scripts/build_gh_pages.py
+      - name: Install browser
+        working-directory: studio
+        run: npx playwright install --with-deps chromium
+      - name: Browser navigation, five reports, accessibility, static deployment
+        working-directory: studio
+        run: npm run test:e2e
+      - name: Build final Skill closure
+        run: |
+          bash packaging/make_upload.sh
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          root=Path('dist/eduevidence-submission')
+          assert (root/'SKILL.md').is_file() and (root/'agents/openai.yaml').is_file()
+          assert (root/'web/studio/index.html').is_file()
+          with zipfile.ZipFile('dist/skill.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(root.rglob('*')):
+                  if p.is_file(): z.write(p,p.relative_to(root.parent))
+          assert Path('dist/skill.zip').stat().st_size <= 25*1024*1024
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: studio-browser-and-skill
+          path: |
+            studio/playwright-report/
+            studio/test-results/
+            dist/skill.zip
+          retention-days: 7

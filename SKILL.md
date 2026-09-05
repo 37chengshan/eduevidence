@@ -367,21 +367,20 @@ python3 visualization/eduevidence-report/scripts/build_figures.py \
   --out /tmp/figures.json \
   --theme okabe_ito
 ```
-Treat ECharts as an optional browser runtime used by the Web Studio, not as part of the core adapter contract.
+Treat ECharts option data as an adapter format. Legacy browser enhancement is optional; the read-only Research Studio uses bundled React/SVG rendering and does not require a remote ECharts runtime.
 
 ---
 
-## 19. Use the Local Web Studio Only as an Inspection Surface
-Start the optional local inspection surface with:
+## 19. Use Research Studio Only as an Inspection Surface
+Start the read-only local research workspace:
 ```bash
-python3 scripts/dashboard_server.py --port 8765
+python3 scripts/dashboard_server.py --host 127.0.0.1 --port 8765
 ```
-Expected local URL:
-```text
-http://127.0.0.1:8765/
-```
-Use the studio to inspect generated project artifacts. Do not route scientific reasoning through the Web Studio.
-A new project should appear automatically when it produces compatible `result.json` and `evidence_graph.json` artifacts.
+Open `http://127.0.0.1:8765/studio/`. Inspect local Projects, recorded Runs, staging/committed artifacts, Evidence Graph relationships, revision ancestry and generated reports. Keep project research iterations separate from Skill Autoevolve experiments.
+Do not route scientific reasoning or research mutations through the console. It cannot create studies, dispatch workers, stop runs, approve pilots or write canonical research state. Search, filtering, language and appearance controls change browser state only.
+Display missing artifacts, partial uncertainty and stale DecisionSnapshots explicitly. Never invent a conclusion, scientific gate result, progress percentage or pooled effect to fill a screen. Only show report variants that actually exist.
+Use `scripts/build_report_variants.py` during build to generate the five existing report identities from complete bilingual inputs. Preserve independent offline HTML, source provenance and scientific content across themes.
+Ship the prebuilt `web/studio/` resources with the Skill; Node is a development dependency only. Export public examples, never private `EDUEVIDENCE_HOME` research state, to static hosting. See `docs/research-studio-guide.zh-CN.md` for workflow and delivery contracts.
 
 ---
 
