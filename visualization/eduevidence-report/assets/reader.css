@@ -204,6 +204,9 @@ select:focus-visible,
   border-left: 2px solid transparent;
 }
 .brief-navigation a > span {
+  flex: 0 0 auto;
+  min-width: 18px;
+  white-space: nowrap;
   font: 10px/1.9 var(--font-mono);
   opacity: 0.8;
 }
@@ -470,6 +473,11 @@ select:focus-visible,
   line-height: 1.8;
   color: var(--reader-muted);
 }
+:root[data-theme="datalab"] .report-page-brief,
+:root[data-theme="datalab-dark"] .report-page-brief {
+  grid-template-columns: 190px minmax(0, 1fr);
+}
+
 :root[data-theme="academic"] .controls.reader-toolbar {
   font-family: var(--font-ui);
   border-bottom: 1px solid #222;
