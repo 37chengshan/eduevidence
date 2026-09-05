@@ -33,20 +33,22 @@ jobs:
           subprocess.run(['git','apply','--check','/tmp/studio.patch'],check=True)
           subprocess.run(['git','apply','--whitespace=fix','/tmp/studio.patch'],check=True)
           PY
-          git rm -r .studio-import .github/workflows/studio-materialize.yml .github/workflows/studio-workspace.yml
-      - name: Lock dependencies and format source
+          git rm -r .studio-import
+          git restore --source=HEAD --staged --worktree -- .github
+          rm -f .github/workflows/studio.yml
+      - name: Lock patched dependencies and format source
         run: |
           npm install --prefix studio
-          npm install --prefix studio --save-dev --save-exact prettier@3.6.2
+          npm install --prefix studio --save-dev --save-exact prettier@3.6.2 @playwright/test@1.55.1
           studio/node_modules/.bin/prettier --write 'studio/src/**/*.{ts,tsx,css}' 'studio/tests/*.ts' 'studio/*.ts' 'studio/*.json' 'studio/*.html' 'studio/public/*.json' 'studio/scripts/*.mjs' visualization/eduevidence-report/assets/reader.css visualization/eduevidence-report/assets/reader.js
           mkdir -p /tmp/studio-completed
           npm audit --prefix studio --json > /tmp/studio-completed/npm-audit.json || true
-          npm audit --prefix studio --omit=dev
+          npm audit --prefix studio --audit-level=high
       - name: Build and verify
         run: |
           npm run build --prefix studio
           python scripts/generate_metrics.py
-          git diff --exit-code -- integrations/agent_mcp.py benchmarks schemas references/scientific-invariants.md web/landing.html
+          git diff --exit-code -- .github integrations/agent_mcp.py benchmarks schemas references/scientific-invariants.md web/landing.html
           git diff --check
       - name: Commit completed source and static distribution
         run: |
