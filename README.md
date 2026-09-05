@@ -309,7 +309,7 @@ python3 scripts/citation_check.py --pack <pack_dir> --write-back   # DOI ✓ bad
 
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
-After research completes, `result.json` is rendered into three visualization outputs by deterministic Python adapters. The adapters themselves use the standard library; the optional Web Studio chart enhancement has a separate browser dependency.
+After research completes, `result.json` is rendered into three visualization outputs by deterministic Python adapters. The adapters themselves use the standard library; legacy ECharts enhancement is optional and is not required by the new Research Studio.
 
 ```text
 result.json + result.zh.json (Chinese parallel data)
@@ -328,7 +328,11 @@ result.json + result.zh.json (Chinese parallel data)
 - **Static-first**: decision, matrix, tribunal, intervention and sources remain readable without JavaScript; ECharts is an optional enhancement.
 - **Integrity gate**: chart numbers are checked against result.json item by item; publishing is blocked with `REPORT_INVALID` on mismatch.
 
-**Local Web Studio** (`python3 scripts/dashboard_server.py --port 8765`) has exactly three read-only views: Dashboard, Report Browser and Data Visualization. It loads ECharts 5.4.3 from jsDelivr for interactive charts; the submission package does not bundle that runtime, so Web interactivity requires network access. The baked report's static HTML/SVG remains the offline artifact.
+**Research Studio** is a read-only research workspace. Start `python3 scripts/dashboard_server.py --port 8765` and open `/studio/` to inspect projects, evidence, sources, recorded runs, committed revisions and five report identities. Skill Autoevolve has a separate observation view; the console cannot start research, mutate evidence or dispatch agents.
+
+The React + TypeScript frontend ships as static assets: Node is needed only for development, not for running the packaged Skill. Its charts do not depend on a remote ECharts CDN and never compute a pooled effect in the browser. Local research remains local; GitHub Pages exports public example packs only. Report themes are generated from complete bilingual inputs with explicit missing-data states, not fabricated fallback claims.
+
+See [Research Studio workflow and delivery guide](docs/research-studio-guide.zh-CN.md).
 
 > Open the example directly: `examples/ai-coding-assistant/EduEvidence_Report.html`
 
@@ -360,7 +364,7 @@ EduEvidence/  (= one Skill package)
 │                            bilingual HTML composer + V2 project surfaces)
 │
 ├─ Quality assurance
-│  ├─ tests/                 pytest test matrix (V1–V4, 752 test functions / 73 files — docs/metrics.json)
+│  ├─ tests/                 pytest test matrix (V1–V4, current counts in docs/metrics.json)
 │  └─ benchmarks/            V1 questions + benchmarks/v2/ (graph/contract metrics)
 │
 └─ Demos & distribution
