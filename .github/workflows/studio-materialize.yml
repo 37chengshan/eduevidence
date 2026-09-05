@@ -31,7 +31,7 @@ jobs:
           assert hashlib.sha256(patch).hexdigest()=='c4772fd2868690955a7ad182377273bf9b51cd42b4fa6c2377a62df38ce7b217'
           Path('/tmp/studio.patch').write_bytes(patch)
           subprocess.run(['git','apply','--check','/tmp/studio.patch'],check=True)
-          subprocess.run(['git','apply','/tmp/studio.patch'],check=True)
+          subprocess.run(['git','apply','--whitespace=fix','/tmp/studio.patch'],check=True)
           PY
           git rm -r .studio-import .github/workflows/studio-materialize.yml .github/workflows/studio-workspace.yml
       - name: Lock dependencies and format source
@@ -39,6 +39,9 @@ jobs:
           npm install --prefix studio
           npm install --prefix studio --save-dev --save-exact prettier@3.6.2
           studio/node_modules/.bin/prettier --write 'studio/src/**/*.{ts,tsx,css}' 'studio/tests/*.ts' 'studio/*.ts' 'studio/*.json' 'studio/*.html' 'studio/public/*.json' 'studio/scripts/*.mjs' visualization/eduevidence-report/assets/reader.css visualization/eduevidence-report/assets/reader.js
+          mkdir -p /tmp/studio-completed
+          npm audit --prefix studio --json > /tmp/studio-completed/npm-audit.json || true
+          npm audit --prefix studio --omit=dev
       - name: Build and verify
         run: |
           npm run build --prefix studio
@@ -51,7 +54,6 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'feat: rebuild read-only Research Studio and five-theme report reading'
-          mkdir -p /tmp/studio-completed
           git archive HEAD --format=tar.gz -o /tmp/studio-completed/source.tar.gz
       - name: Push only the authorized feature branch
         env:
@@ -64,7 +66,8 @@ jobs:
           auth=$(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)
           git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push https://github.com/37chengshan/eduevidence.git HEAD:refs/heads/feature/research-studio-redesign
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: studio-completed-source
-          path: /tmp/studio-completed/source.tar.gz
+          path: /tmp/studio-completed/*
           retention-days: 7
