@@ -1,59 +1,108 @@
-# EduEvidence Release Contract（开发事实表，2026-08-23）
+# EduEvidence Release Contract（当前实现事实表）
 
-> 状态：P0–P4 已完成并复核；本文件只记录当前实现与发布决策。
-> 权威运行定义：`SKILL.md`、`schemas/`、结果 JSON、`packaging/make_upload.sh`。
+> 本文件记录当前可发布实现与边界。权威运行定义仍以 `SKILL.md`、`schemas/`、结果 JSON、CI 与 `packaging/make_upload.sh` 为准。
 
-## 1. 最终提交包（P4 实测）
+## 1. 产品入口
 
-| 项 | 值 |
-|---|---|
-| 路径 | `dist/eduevidence-submission/`（每次构建清空重建） |
-| 文件数 | 301（manifest 不含自身） |
-| 总大小 | 24,693,641 bytes（约 23.5 MiB） |
-| 构建 | `bash packaging/make_upload.sh`（allowlist staging + Python manifest） |
-| 干净包 smoke | 任意 cwd：核心 import、DID error 契约、三适配器 envelope、主报告 integrity PASS、Web 启动（5 课题/96 证据、viz/report 200、landing 404）通过 |
-| 泄漏 | dist 内无 `__pycache__`/`*.pyc`/`.DS_Store`/competition-brief/superpowers/wizard/did_sandbox/landing/lieflat-charts |
-| F09 | `urls.jsonl` 不在包内；`MOE China Education News` 仅作为原始 benchmark fixture 标题，不是包级硬门 |
+- **介绍页**：`web/landing.html`，用于项目说明与进入 Research Studio。
+- **正式控制台开发源**：`studio/`（React + TypeScript + Vite）。
+- **正式控制台运行时**：`web/studio/`，由构建生成，不手工编辑。
+- **本地入口**：`python3 scripts/dashboard_server.py --host 127.0.0.1 --port 8765` 后访问 `/studio/`。
+- **公开静态入口**：GitHub Pages 根页保留介绍页，`/studio/` 提供只读公开示例。
+- `web/index.html`、`web/js/`、`web/styles.css` 是历史三页控制台的兼容实现，不再是产品开发主线。
 
-## 2. 本轮实现
+## 2. Research Studio 边界
 
-1. **科学失败关闭**：`scripts/did_regression.py` 对不可估计 DID 返回结构化 `status="error"` + 稳定 `error_code`，推断字段为 `null`；普通 DID 标记 `non_cluster_warning`；DID/QED 不越界为 `Meets Standards Without Reservations`。
-2. **学习证据门**：`engine/tribunal.py` 要求 learning/transfer 且 `directness=2` 才允许 High+support → `ADOPT`；任务表现、程序效率、主观体验不足时降级为 `PILOT`。
-3. **精度与图谱契约**：缺 CI 不生成代理误差线；meta 不使用默认 `se=0.20`；精度 provenance 与 `MEASURES` 幂等边均有契约测试。
-4. **可视化适配器**：三 CLI 共享 `adapter/contract_version/source_ref/source_sha256/locale/data` envelope；`build_figures --out-dir` 保留兼容解析。
-5. **报告**：forest plot、ticks、tspan、双语标签、ECharts mount/static fallback 与完整性门已验证。
-6. **Web Studio**：仅三页只读视图；POST 405；未知路由、项目、主题、路径越界均 404；前端动态值经 `esc()`；报告 iframe 使用 `sandbox="allow-scripts"`，响应含 CSP/nosniff。
-7. **发布脚本**：allowlist staging 输出 `dist/eduevidence-submission/`；manifest 排除自身并记录 POSIX 路径、字节数、SHA-256。
+Research Studio 是**只读研究驾驶舱**，可查看：
 
-## 3. 延后事项（明确不属于本轮）
+- Project / Decision / Applicability
+- Sources / Studies / Findings / Claims
+- Source → Finding → Claim 图谱
+- Runs / stage state / execution plan / gates
+- Artifacts / Events
+- GraphRevision / DecisionSnapshot
+- KnowledgeGap / ResearchIteration
+- 五主题报告库
+- Skill Autoevolve 观测记录
 
-- Liang–Zeger cluster-robust 推断：需完整统计规格、参考数值与下游消费测试。
-- EventBus 异步队列/SSE 完整重构：本轮保持现有实现。
-- 仓库级删除旧 Web 文件：旧入口仅从提交包 allowlist 排除。
-- `--out-dir` 参数移除：待真实调用闭包迁移后处理。
-- 官方比赛规则核验：提交媒介、大小限制、联网策略、Python/浏览器版本需以官方页面为准；当前 24.7MB 不代表官方上限。
+Studio 不拥有研究执行权，不提供绕过 Agent、CLI、Agent MCP、科学门或 canonical single-writer 的写入口。
 
-## 4. 核心验证证据
+## 3. 科学展示契约
 
-| 验证项 | 结果 |
-|---|---|
-| 开发仓库全量测试 | `786 passed, 1 skipped` |
-| Skill lint | PASS |
-| 主报告 | integrity `PASS` |
-| Web handler | 三页入口、项目/主题 allowlist、POST 405、路径越界 404 |
-| 浏览器 smoke | 3 nav、报告 iframe sandbox、5 主题、viz 图表渲染 |
-| 干净包 | 任意 cwd 可运行核心 import、适配器、报告和 Web |
-| manifest | 301 个内容文件，首项 hash 可复核；无缓存/敏感文件泄漏 |
+1. 缺失值保持缺失，不把 `None`、未报告 CI 或无检索命中转换为 0。
+2. 合法 `0.0` 端点必须保留。
+3. Studio 不自行计算 pooled effect、跨 outcome 平均值或根据数值正负推断 Claim relation。
+4. Finding 的 observed effect 与 Finding→Claim 的 relation 是不同概念。
+5. DecisionSnapshot 若未绑定当前 GraphRevision，前端必须暴露 stale 状态。
+6. Graph 只读取 committed HEAD ancestry；孤立 revision 不进入历史。
+7. 报告缺数据时应抑制不适用图表，而不是生成假效应量、假 p 值、假风险或假课堂处方。
 
-## 5. 运行时依赖口径
+## 4. 五主题报告契约
 
-- Python 核心与三适配器使用标准库。
-- 报告静态 HTML/SVG 是离线真实能力。
-- Web 交互图依赖 `web/index.html` 当前声明的 jsDelivr ECharts 5.4.3；未将 ECharts runtime 纳入提交包，因此不得宣称 Web 交互图离线独立运行。
-- 五主题是生成时烘焙的报告变体，不是 Web 运行时换肤。
+保留五个视觉身份：
 
-## 6. 提交边界
+- Claude Research
+- Academic Paper
+- DataLab
+- DataLab Dark
+- Presentation / Judge
 
-提交包包含 `SKILL.md`、运行时源码、schemas、references、报告渲染器、三页 Web、主 Demo、必要 docs 和 packaging 说明；排除 `.git`、`.venv`、缓存、`.agents`、`.mimosa`、内部 brief、旧 Web 归档、tests、benchmarks 和 `visualization/lieflat-charts`。仓库旧文件不在本轮删除。
+主题可以改变视觉语言、信息密度和阅读节奏，但同一研究版本的证据、来源、数值、适用边界与 Decision 必须一致。
 
-工作树中除本轮收尾改动外的既有用户变更不应被自动清理；提交前必须按明确文件范围暂存。
+报告包含 Visual Brief 与 Full Report 两种阅读层级。Full Report 由语义模块组成，允许上游 AI 组织通常 5–7 个章节；未提供有效 outline 时使用内置 fallback。图表选择可以由 AI 根据数据形态规划，但数值由确定性提取器从 `result.json` 读取。
+
+报告仍保持 single-file、双语、离线可读；JavaScript 是增强层，不得成为关键科学内容唯一载体。
+
+## 5. Evidence Autoresearch / Skill Autoevolve 边界
+
+- Evidence Autoresearch 可以优化检索策略和研究过程，但不能让 worker 直接解决 KnowledgeGap、修改 canonical scientific state 或自动决定最终结论。
+- Skill Autoevolve 不修改真实用户研究状态。
+- 自动流程不得自主发起人体研究、merge `main`、release 或 deploy。
+- Evidence revision 与 Skill revision 是两条独立历史。
+
+## 6. 静态发布与隐私
+
+GitHub Pages 构建只导出仓库中的公开 examples。以下内容不得进入静态站：
+
+- `EDUEVIDENCE_HOME`
+- 本地用户 projects
+- research-control SQLite 数据
+- 本地 run/event/artifact 历史
+- Autoevolve 私有 session / candidate 内容
+
+本地 Studio 的 SQLite 访问是只读；投影不得向浏览器暴露宿主机文件路径。
+
+## 7. 构建与门禁
+
+当前发布门包含：
+
+- Python 3.10 / 3.12 full pytest
+- Ruff E9/F63/F7/F82
+- metrics gate
+- schema smoke
+- isolated wheel smoke
+- upload build
+- SKILL parity
+- zero-leak
+- Autoresearch scientific / orchestration / protected gates
+- benchmark partition contract
+- npm locked install + high-severity audit
+- TypeScript build
+- `web/studio/` reproducible build check
+- Playwright browser / responsive / static deployment tests
+- serious / critical accessibility scan
+- five-theme standalone report validation
+- final Skill closure build
+- GitHub Pages build and deploy
+
+自动测试不是完整人工 WCAG 认证，也不能替代视觉审查；关键前端变更应同时检查 CI 截图。
+
+## 8. 分发边界
+
+`packaging/make_upload.sh` 以 allowlist 从干净 staging 重建最终 Skill。发布包应包含运行所需的 `SKILL.md`、agents 配置、engine、schemas、references、retrieval、integrations、visualization、构建后的 `web/studio/` 与必要文档；不得携带 `.git`、`.venv`、缓存、本地研究状态、私有 benchmark 历史或 Autoevolve 私有运行目录。
+
+Node 是 Research Studio **开发/构建依赖**，不是最终本地 Studio 的运行依赖；最终用户运行控制台只需要已构建的静态资源与 Python 服务。
+
+## 9. 仓库治理
+
+`main` 的代码合并应以 exact-head CI 为门。仓库当前应优先配置 GitHub branch protection / ruleset，至少要求 PR、CI、Autoresearch Gates 与 Research Studio 检查通过后才能合并；自动研究与 Autoevolve 永远不是 `main` 的 merge authority。

@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""scripts/serve_web.py — EduEvidence 落地页/静态资源预览服务器（CORS 开启）。
+"""scripts/serve_web.py — EduEvidence 介绍页/静态资源预览服务器（CORS 开启）。
 
-web/ 的营销落地页（landing.html 等）按架构是独立入口，不挂在
-dashboard_server 路由下（P3 gate: /landing.html 必须 404）。本脚本以只读方式
-静态托管 web/，并为所有响应加上 Access-Control-Allow-Origin: *，
-使落地页与不同端口的 Web Studio 控制台之间能做跨源探测与互相跳转。
+`web/landing.html` 是独立的公开介绍页；正式研究控制台由
+`scripts/dashboard_server.py` 提供 `web/studio/` 中的 Research Studio。
+本脚本只用于只读预览介绍页和静态展示资源，不承载研究状态或控制台 API。
 
     python3 scripts/serve_web.py --host 127.0.0.1 --port 8877
 
-首页入口：http://127.0.0.1:8877/landing.html
-控制台：  http://127.0.0.1:8766/（scripts/dashboard_server.py）
+介绍页：http://127.0.0.1:8877/landing.html
+Research Studio：http://127.0.0.1:8765/studio/
 """
 from __future__ import annotations
 
@@ -40,9 +39,9 @@ def main() -> None:
     server = http.server.ThreadingHTTPServer(
         (args.host, args.port), CORSStaticHandler)
     print("=" * 60)
-    print(f"🌐 EduEvidence 落地页 (CORS) running at http://{args.host}:{args.port}/")
-    print(f"   首页      /landing.html")
-    print(f"   控制台   http://{args.host}:8766/  (scripts/dashboard_server.py)")
+    print(f"🌐 EduEvidence 介绍页预览 running at http://{args.host}:{args.port}/")
+    print("   介绍页        /landing.html")
+    print(f"   Research Studio http://{args.host}:8765/studio/  (scripts/dashboard_server.py)")
     print("=" * 60)
     try:
         server.serve_forever()
