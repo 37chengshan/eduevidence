@@ -2,9 +2,11 @@
 
 EduEvidence 的 Lieflat 画廊是**数据驱动的手作图表组合**：上游 AI 按数据形状自由选型（只能选注册表内图型），渲染器从 `result.json` 提取真实数据渲染成主题化内联 SVG。AI 不直接写数值——所有数字经 `scripts/charts_data.py` 提取器出数，完整性门 `lieflat_data_bound` 逐值核对溯源。
 
-> 上游规范 = `visualization/lieflat-charts/`（Lupi 正本 + mono-tokens）。本文件只记录 EduEvidence 特有规则。
+> AI 选图规范已内置于 `chart-selection-catalog.md`；本文件记录可执行注册表、数据契约与渲染不变量。任何外部图库只可作为设计灵感，不能成为运行时依赖。
 
 ## 1. 注册表（type ↔ 目录编号 ↔ 数据形状 ↔ 提取器）
+
+选图前先读 `chart-selection-catalog.md`：表格负责逐行审计，图表负责模式表达；AI 通常比较至少 3 个**可行**候选并记录淘汰理由，但候选不足时不得为凑数量选择错误图型。
 
 | `type` | 目录编号 | 数据形状 | 提取器（scripts/charts_data.py） |
 |---|---|---|---|
