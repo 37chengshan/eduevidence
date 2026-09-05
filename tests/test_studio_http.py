@@ -52,6 +52,42 @@ def test_http_studio_assets_and_traversal(app):
     assert get(base, '/api/studio/projects/project--PRJ-..%2f..%2fsecret').status == 404
 
 
+def test_missing_built_studio_never_falls_back_to_v5_ui(tmp_path, monkeypatch):
+    """If the compiled Studio is absent, the compatibility target is an explicit tombstone."""
+    web = tmp_path / 'web'
+    web.mkdir()
+    tombstone = (
+        '<!doctype html><title>Research Studio build unavailable</title>'
+        '<main>Compatibility boundary: rebuild web/studio/.</main>'
+    )
+    (web / 'index.html').write_text(tombstone, encoding='utf-8')
+    monkeypatch.setattr(studio, 'WEB_DIR', web)
+
+    server = ThreadingHTTPServer(('127.0.0.1', 0), studio.StudioHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        base = f'http://127.0.0.1:{server.server_port}'
+        with get(base, '/') as response:
+            assert response.status == 200
+            body = response.read().decode('utf-8')
+        assert 'Research Studio build unavailable' in body
+        assert 'EduEvidence 5.0' not in body
+        assert get(base, '/studio/').status == 404
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)
+
+
+def test_repository_legacy_entry_is_fail_closed_tombstone():
+    text = (studio.WEB_DIR / 'index.html').read_text(encoding='utf-8')
+    assert 'Research Studio build unavailable' in text
+    assert 'EduEvidence 5.0' not in text
+    assert 'js/main.js' not in text
+    assert 'echarts' not in text.lower()
+
+
 def test_http_missing_reports_do_not_return_html_success(app):
     base, _ = app
     assert get(base, '/api/studio/projects/example--not-a-project/report?theme=claude').status == 404
