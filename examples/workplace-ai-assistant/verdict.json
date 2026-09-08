@@ -1,0 +1,52 @@
+{
+  "decision_question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+  "target_population": "Enterprise customer-support staff, stratified by tenure and baseline skill.",
+  "target_context": "Human-supervised support using an approved knowledge base.",
+  "recommended_action": "pilot",
+  "confidence": "Low",
+  "confidence_score": null,
+  "independent_studies": 3,
+  "independent_samples": 3,
+  "supported_claims": [
+    "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
+    "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
+    "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
+    "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits."
+  ],
+  "uncertain_claims": [
+    "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+  ],
+  "decision_rationale": "A supervised pilot is warranted because one direct field study supports efficiency gains but also reveals heterogeneous quality effects. Indirect experiments identify task boundaries, while local safety and net value remain unknown.",
+  "methodology_summary": "One staggered-rollout quasi-experiment and two randomized experiments. Only the support study is direct; no pooled standardized effect or model benchmark was computed.",
+  "what_cannot_be_claimed": [
+    "Universal gains, autonomous deployment safety, privacy protection, reduced staffing requirements or educational learning gains."
+  ],
+  "missing_evidence": [
+    "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+  ],
+  "applicability": {
+    "required_conditions": [
+      "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+      "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+      "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+      "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+    ]
+  },
+  "extensions": {
+    "data_origin": "manual_curated",
+    "benchmark_eligible": false,
+    "note": "Conservative manual judgment about broad deployment; not a deterministic confidence-policy run or a probability.",
+    "knowledge_gaps": [
+      {
+        "gap_id": "G-001",
+        "evidence_ids": [
+          "E-001",
+          "E-002",
+          "E-003",
+          "E-004"
+        ],
+        "summary": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+      }
+    ]
+  }
+}

@@ -1,80 +1,29 @@
 {
-  "id": "ai-coding-assistant",
-  "title": "We are considering allowing students to use generative AI coding assista",
-  "question": "We are considering allowing students to use generative AI coding assistants in the first-year C programming course. Will it actually improve learning outcomes? How should it be introduced?",
+  "id": "workplace-ai-assistant",
+  "title": "Should an enterprise customer-support team introduce a generative AI ass",
+  "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
   "verdict": "pilot",
-  "confidence": 0.612,
+  "confidence": "Low",
   "forest": [],
   "effect_sizes": [],
   "outcome_mapping": [
     {
-      "outcome_type": "ai_dependency",
-      "status": "no_evidence",
-      "support_count": 0,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
-      "outcome_type": "assignment_score",
-      "status": "supported",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
-      "outcome_type": "code_quality",
-      "status": "no_evidence",
-      "support_count": 0,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
       "outcome_type": "completion_time",
-      "status": "supported",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0
+      "support": 2,
+      "contradict": 0,
+      "neutral": 0
     },
     {
-      "outcome_type": "independent_problem_solving",
-      "status": "contested",
-      "support_count": 1,
-      "contradict_count": 1,
-      "neutral_count": 1
-    },
-    {
-      "outcome_type": "knowledge_gain",
-      "status": "supported",
-      "support_count": 1,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
-      "outcome_type": "over_reliance",
-      "status": "no_evidence",
-      "support_count": 0,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
-      "outcome_type": "reduced_transfer",
-      "status": "no_evidence",
-      "support_count": 0,
-      "contradict_count": 0,
-      "neutral_count": 0
-    },
-    {
-      "outcome_type": "retention",
-      "status": "null_evidence_only",
-      "support_count": 0,
-      "contradict_count": 0,
-      "neutral_count": 1
+      "outcome_type": "accuracy",
+      "support": 2,
+      "contradict": 0,
+      "neutral": 0
     }
   ],
   "direction_counts": {
-    "support": 12,
+    "support": 4,
     "contradict": 0,
-    "neutral": 1
+    "neutral": 0
   },
   "labels": {
     "outcomes": {

@@ -42,7 +42,9 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parent.parent
+from engine._resources import resource_root
+
+ROOT = resource_root()
 def _resolve_library_path() -> Path:
     """Repository layout first; wheel-installed share/ layout as fallback."""
     repo = ROOT / "benchmarks" / "evidence-library.json"

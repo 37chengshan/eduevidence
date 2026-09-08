@@ -1,0 +1,41 @@
+{
+  "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+  "decision_object": "adopt",
+  "intervention": {
+    "policy_name": "human_supervised_customer_support_assistant",
+    "policy_type": "institutional_reform",
+    "mechanism": "approved_knowledge_base_and_agent_review"
+  },
+  "population": {
+    "target_group": "enterprise_customer_support_staff",
+    "excluded_groups": "autonomous_agents_and_high_stakes_specialist_advice"
+  },
+  "comparison": "Existing support workflow without generative AI suggestions.",
+  "outcomes": {
+    "primary": [
+      "policy_effectiveness",
+      "implementation_risk"
+    ],
+    "secondary": [
+      "cost_effectiveness",
+      "equity",
+      "feasibility"
+    ]
+  },
+  "context": {
+    "policy_environment": "enterprise_customer_support"
+  },
+  "scope": {
+    "time_range": "2023–2026",
+    "evidence_types": [
+      "quasi_experimental",
+      "rct"
+    ]
+  },
+  "success_condition": "Improve verified resolutions per paid staff hour while preserving service quality, privacy and staff autonomy.",
+  "extensions": {
+    "domain": "policy",
+    "data_origin": "manual_curated",
+    "note": "Purposive evidence selection, not a systematic review or model execution benchmark."
+  }
+}

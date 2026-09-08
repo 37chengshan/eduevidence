@@ -1,0 +1,16 @@
+{
+  "checked_on": "2026-09-08",
+  "scope": "Two synthetic-demo DOI spot checks; not an exhaustive link audit",
+  "results": [
+    {
+      "url": "https://doi.org/10.125/llt.2024.08",
+      "status": 404,
+      "resolved_url": "https://doi.org/10.125/llt.2024.08"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.compedu.2025.104920",
+      "status": 404,
+      "resolved_url": "https://doi.org/10.1016/j.compedu.2025.104920"
+    }
+  ]
+}

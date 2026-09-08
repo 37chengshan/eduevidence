@@ -29,12 +29,15 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 ROOT = Path(__file__).resolve().parent.parent
-WEB_DIR = ROOT / "web"
-EXAMPLES_DIR = ROOT / "examples"
-RESEARCH_HOME = Path(os.environ.get("EDUEVIDENCE_HOME", ROOT / ".eduevidence"))
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+from engine._resources import resource_root  # noqa: E402
+ROOT = resource_root()
+WEB_DIR = ROOT / "web"
+EXAMPLES_DIR = ROOT / "examples"
+RESEARCH_HOME = Path(os.environ.get("EDUEVIDENCE_HOME", Path.cwd() / ".eduevidence"))
 
 from engine.evidence_graph import EvidenceGraph  # noqa: E402
 from engine.studio_read_model import StudioReader, numeric_effect  # noqa: E402
@@ -146,6 +149,9 @@ def scan_local_projects() -> List[Dict[str, Any]]:
         return projects
 
     for proj_dir in sorted(EXAMPLES_DIR.iterdir()):
+        # List canonical examples once; legacy aliases remain valid lookup IDs.
+        if proj_dir.is_symlink():
+            continue
         if not proj_dir.is_dir():
             continue
         result_path = proj_dir / "result.json"
@@ -184,7 +190,7 @@ def scan_local_projects() -> List[Dict[str, Any]]:
             "id": proj_dir.name,
             "title": PROJECT_TITLES.get(proj_dir.name) or (zh_question[:72] if zh_question else (question[:72] or proj_dir.name)),
             "title_zh": zh_question[:72] if zh_question else None,
-            "domain": meta.get("domain") or "education",
+            "domain": meta.get("domain") or result.get("research_frame", {}).get("extensions", {}).get("domain") or "education",
             "question": question,
             "verdict": verdict,
             "confidence": confidence,
@@ -537,10 +543,9 @@ def run_dashboard_server(host: str = "127.0.0.1", port: int = 8765) -> None:
         return
     print("============================================================")
     print(f"🚀 EduEvidence Web Studio running at http://{host}:{actual_port}/")
-    print("   📊 仪表盘        /dashboard")
-    print("   📄 报告浏览      /report")
-    print("   📈 数据可视化    /#viz (Web UI)")
-    print("   📦 数据契约      /api/projects  ·  /api/projects/<id>/viz")
+    print("   Research Studio  /studio/  (read-only)")
+    print("   Projects, evidence, revisions and five-theme reports")
+    print("   Projection API   /api/studio/catalog")
     print("============================================================")
     try:
         server.serve_forever()

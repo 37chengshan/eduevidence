@@ -121,7 +121,21 @@ class Validator:
         """Validate `value` against `schema` (draft-07 subset). Raises SchemaError."""
         if "$ref" in schema:
             # draft-07: $ref replaces sibling keywords entirely
-            self.validate(value, self._resolve_ref(schema["$ref"], path), path)
+            ref = schema["$ref"]
+            if not ref.startswith("#") and self.base_dir is not None:
+                filename, _, fragment = ref.partition("#")
+                target = self.base_dir / filename
+                if not target.is_file():
+                    raise SchemaError(f"{path}: unresolvable $ref {ref!r}")
+                cache_key = str(target.resolve())
+                if cache_key not in self._ref_cache:
+                    self._ref_cache[cache_key] = json.loads(target.read_text(encoding="utf-8"))
+                document = self._ref_cache[cache_key]
+                validator = Validator(document, base_dir=target.parent)
+                referenced = validator._resolve_ref("#" + fragment, path) if fragment else document
+                validator.validate(value, referenced, path)
+            else:
+                self.validate(value, self._resolve_ref(ref, path), path)
             return
 
         if "type" in schema:

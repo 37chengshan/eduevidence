@@ -1,18 +1,22 @@
+<p align="center">
+  <img src="assets/readme/logo.png" width="88" height="88" alt="EduEvidence logo" />
+</p>
+
 # EduEvidence
 
 > **🌐 English | [中文](README.zh-CN.md)**
 
-## EduEvidence Research Engine — Evidence-Based Education Decision Skill
+## EduEvidence Research Engine — Evidence Research & Decision Skill
 
-> **From Education Questions to Evidence-Based Decisions.**
+> **From Research Questions to Evidence-Based Decisions.**
 
 EduEvidence is delivered as an **AI Agent Skill**; inside the Skill operates
 the **EduEvidence Research Engine** — a persistent, auditable engine that
-turns education questions into evidence-grounded decisions.
+turns research questions into evidence-grounded decisions across education and organizational policy.
 
-- **Two Research Modes** — **Evidence Review** (secondary-evidence research)
-  and **Full Research Cycle** (Evidence Review → Knowledge Gap → study design
-  → your data → analysis → updated decision).
+- **Three public workflows** — **Evidence Review**, **Decision & Pilot**, and
+  **Evaluate & Update**. A full research cycle connects existing evidence,
+  grounded knowledge gaps, a study design, new data and a revised decision.
 - **Project Workspace + Evidence Graph** — long-lived Projects with versioned,
   immutable graph revisions; `result.json`/HTML/Markdown are projections, not
   fact stores.
@@ -21,14 +25,16 @@ turns education questions into evidence-grounded decisions.
 - **Frozen scientific rule** — *No new study design without evidence
   grounding*: designs must reference explicit, evidence-grounded Knowledge
   Gap IDs.
-- ⚖️ It does not generate answers for teachers — it shows what the evidence supports, what it cannot support, who it applies to, and how to pilot and verify it.
+- ⚖️ Inspect what the evidence supports, what it cannot support, who it applies to, and how to pilot and verify it.
 - 🧪 Built on real research (examples include CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 empirical evidence); no claims without sources.
-- 🚦 The output is not a binary "allow/forbid" answer but a four-state decision — **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** — plus an actionable teaching intervention and evaluation plan.
+- 🚦 The output is not a binary "allow/forbid" answer but a four-state decision — **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** — plus an actionable intervention and evaluation plan.
 - 🧩 The engine is an internal capability architecture — not a standalone
   server/app; Native Core runs on Python stdlib only and never requires
   Agent MCP or a daemon.
 
-![EduEvidence overview banner](assets/top-banner.jpg)
+![Actual Research Studio overview: workplace AI evidence](assets/readme/studio-overview.png)
+
+*Actual local Studio screenshot. This case is manually curated literature, with no attached research execution history.*
 
 ---
 
@@ -54,7 +60,7 @@ bash install.sh              # one-click: venv + deps + self-check + tests
 Open the example report right away:
 
 ```bash
-open examples/ai-coding-assistant/EduEvidence_Report.html
+open examples/ai-coding-assistant-evidence/EduEvidence_Report.html
 ```
 
 > Requires Python 3.10+; the core has zero third-party dependencies. `pip install matplotlib` is optional for academic-figure PNG/PDF export.
@@ -174,7 +180,7 @@ It answers six questions:
 | 155–170s | Teaching Intervention + Evaluation |
 | 170–180s | Benchmark |
 
-Full example pack: [`examples/ai-coding-assistant/`](examples/ai-coding-assistant/).
+Full example pack: [`examples/ai-coding-assistant-evidence/`](examples/ai-coding-assistant-evidence/).
 
 ## Why Education Evidence Is Hard
 
@@ -244,7 +250,7 @@ The demo's highlight: in Kazemitabaar et al. (CHI 2023), the AI code assistant r
 - Can Claim / Cannot Claim boundaries
 - four-state decision + Confidence (rule-based, not model-generated freely)
 
-![Evidence Tribunal Workflow](assets/tribunal-workflow.jpg)
+![Evidence Tribunal Workflow](assets/readme/research-workflow.svg)
 
 ## From Evidence to Action
 
@@ -276,26 +282,18 @@ Key metrics: Citation Support Precision / Unsupported Claim Rate / Contradiction
 
 > **Should first-year C programming students be allowed to use generative AI coding assistants?**
 
-`examples/ai-coding-assistant/` shows the full path from question to decision:
+`examples/ai-coding-assistant-evidence/` shows the full path from question to decision:
 
-- **Evidence** (7 items, all bound to real sources): task-performance gains (Kazemitabaar 2023), unguarded access harming independent exam performance by −17% (Bastani 2025, PNAS), guardrails eliminating the negative effect (Bastani 2025), formative-feedback writing evidence (Marzuki 2024).
+- **Evidence** (12 findings from 8 sources): task-performance gains (Kazemitabaar 2023), unguarded access harming independent exam performance by −17% (Bastani 2025, PNAS), guardrails eliminating the negative effect (Bastani 2025), formative-feedback writing evidence (Marzuki 2024).
 - **Decision**: **PILOT** — task-performance evidence is strong, but direct learning-effect evidence for university programming courses is missing, and the unguarded-access risk is documented.
 - **Intervention**: 4-phase pilot (Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check).
 - **Evaluation**: no-AI baseline / post-test / final-exam retention / no-AI transfer task + AI-dependency risk metrics.
 
-Two more examples — AI writing assistant (`examples/ai-writing-assistant/`) and a calculus AI tutor (`examples/ai-tutor/`) — show the skill is not hard-coded to one question.
+A second public example, `examples/workplace-ai-assistant/`, evaluates AI assistance in enterprise customer support using the policy domain: 4 findings from 3 studies, with direct and indirect evidence distinguished. Its proposed supervised pilot has not been executed.
 
-**Example provenance (read before citing)**: every example pack carries a `data_origin`
-badge in its report header and in `result.json.meta`:
+Both public examples are **manually curated literature demonstrations** (`manual_curated`). A generated report does not establish that an agent completed the nine-stage research workflow. The coding case contains 12 findings from 8 sources; the workplace case contains 4 findings from 3 sources. See [the workplace evidence notes](docs/demo-workplace-ai.md) for source versions and limitations.
 
-- `examples/ai-coding-assistant-evidence/` — **flagship, real literature**: 8 sources with
-  registry-verified DOIs (Crossref/DataCite audit: `benchmarks/doi-audit/report.md`),
-  engine-computed confidence; data_origin=`manual_curated`.
-- `examples/ai-coding-assistant/`, `ai-tutor/`, `ai-writing-assistant/` — real-source
-  walkthrough packs.
-- `examples/esl-academic-writing-ai/`, `highschool-math-ai-tutor/` — **synthetic
-  demonstrations** (data_origin=`synthetic`). Their numbers and citations are illustrative,
-  not real studies; reports carry a loud SYNTHETIC badge. Do not cite them as evidence.
+Four older teaching demos have moved to `tests/fixtures/legacy-examples/` for compatibility tests. They are excluded from public catalogs and distribution; their unverified or synthetic findings must not be cited as research evidence. The old `ai-coding-assistant` path remains a compatibility alias.
 
 ### Start your own research in ~30 minutes
 
@@ -306,6 +304,16 @@ python3 scripts/orchestrator.py adjudicate --project runs/<id>
 bash scripts/bake_pack.sh <pack_dir>                     # 5-theme bilingual report
 python3 scripts/citation_check.py --pack <pack_dir> --write-back   # DOI ✓ badges
 ```
+
+## Studio in use
+
+Select a graph node to trace source → finding → claim. The flow is a visual aid; it does not signal an active research run.
+
+![Actual provenance graph](assets/readme/studio-graph.png)
+
+Read the same evidence through five independent report themes, with bilingual and brief/full views.
+
+![Actual report reading room](assets/readme/studio-reports.png)
 
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
@@ -334,7 +342,7 @@ The React + TypeScript frontend ships as static assets: Node is needed only for 
 
 See [Research Studio workflow and delivery guide](docs/research-studio-guide.zh-CN.md).
 
-> Open the example directly: `examples/ai-coding-assistant/EduEvidence_Report.html`
+> Open the example directly: `examples/ai-coding-assistant-evidence/EduEvidence_Report.html`
 
 ## Architecture
 
@@ -371,7 +379,7 @@ EduEvidence/  (= one Skill package)
    ├─ examples/              Research & Decision Packs + full-research-cycle-fixture (synthetic)
    ├─ docs/                  architecture / methodology / benchmark / demo / reproducibility
    ├─ install.sh             one-click install (local / multi-agent Skill) + self-check
-   ├─ pyproject.toml         packaging metadata (wheel ships CLI + engine; stdlib-only core)
+   ├─ pyproject.toml         packaging metadata (wheel ships CLI, engine and installed runtime resources; stdlib-only core)
    └─ README(.en).md         bilingual docs
 ```
 
@@ -423,7 +431,7 @@ Agent MCP is a **performance & reliability enhancement layer, not a prerequisite
 
 > 🔒 Agent MCP principle: **Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** No spawn without user approval; reject → fall back to Native.
 
-![Controlled Multi-Agent Research](assets/multi-agent-research.jpg)
+![Controlled Multi-Agent Research](assets/readme/controlled-execution.svg)
 
 
 ## Usage
@@ -431,31 +439,31 @@ Agent MCP is a **performance & reliability enhancement layer, not a prerequisite
 ```bash
 # 1. Validate data against the schema contracts
 python3 scripts/validate_schema.py --schema schemas/evidence.schema.json \
-    --data examples/ai-coding-assistant/evidence.jsonl
+    --data examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 2. Compute evidence quality scores and Confidence
-python3 scripts/evidence_score.py examples/ai-coding-assistant/evidence.jsonl
+python3 scripts/evidence_score.py examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 3. Generate the Evidence Matrix (one of the core views)
-python3 scripts/evidence_matrix.py examples/ai-coding-assistant/evidence.jsonl
+python3 scripts/evidence_matrix.py examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 4. Run the Citation Audit (claim-evidence traceability)
 python3 scripts/claim_audit.py --claims claims.jsonl --evidence evidence.jsonl
 
 # 5. Render the Research & Decision Pack (Markdown)
 python3 scripts/render_report.py \
-    --frame examples/ai-coding-assistant/frame.json \
-    --evidence examples/ai-coding-assistant/evidence.jsonl \
-    --methodology examples/ai-coding-assistant/methodology.json \
-    --verdict examples/ai-coding-assistant/verdict.json \
-    --intervention examples/ai-coding-assistant/intervention.json \
-    --evaluation examples/ai-coding-assistant/evaluation.json \
+    --frame examples/ai-coding-assistant-evidence/frame.json \
+    --evidence examples/ai-coding-assistant-evidence/evidence.jsonl \
+    --methodology examples/ai-coding-assistant-evidence/methodology.json \
+    --verdict examples/ai-coding-assistant-evidence/verdict.json \
+    --intervention examples/ai-coding-assistant-evidence/intervention.json \
+    --evaluation examples/ai-coding-assistant-evidence/evaluation.json \
     --out REPORT.md
 
 # 6. Render the single-file bilingual HTML report (main deliverable)
 python3 visualization/eduevidence-report/scripts/build_report.py \
-    --result examples/ai-coding-assistant/result.json \
-    --out examples/ai-coding-assistant/EduEvidence_Report.html
+    --result examples/ai-coding-assistant-evidence/result.json \
+    --out examples/ai-coding-assistant-evidence/EduEvidence_Report.html
 
 # 7. Validate the benchmark question set
 python3 scripts/benchmark.py --questions benchmarks/questions.jsonl

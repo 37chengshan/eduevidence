@@ -12,8 +12,7 @@ v4 领域包机制：domains/ 注册表 + 领域契约加载 + frame 校验。
 education 域只是"指向现有契约"的注册：不新增任何逻辑路径、不引入新 schema
 或新校验器。领域选择（domain select）由主 agent 接 CLI 完成，引擎层不做选择。
 
-路径解析：当前按仓库布局（domains/ 在仓库根目录）解析；wheel 安装场景的
-share/ 回退留给后续步骤（pyproject data-files 未包含 domains/）。
+路径解析：支持仓库、独立 Skill 与 wheel 的 share/eduevidence 资源布局。
 """
 
 from __future__ import annotations
@@ -22,7 +21,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+from engine._resources import resource_root
+
+REPO_ROOT = resource_root()
 
 
 def _resolve_domains_dir() -> Path:
@@ -114,7 +115,7 @@ def _validate_contracts(entry: dict) -> None:
 
     - frame_schema / outcome_taxonomy / methodology_checklist：文件存在且
       为可解析 JSON（指针引用另校验指针内容）；
-    - golds_dir / references_dir：目录存在（null 视为"无此契约"，跳过）。
+    - references_dir：目录存在；golds_dir 属于独立 evaluator 资源，不是研究运行依赖。
     """
     domain_id = entry["id"]
 
@@ -142,7 +143,8 @@ def _validate_contracts(entry: dict) -> None:
     check_file("frame_schema")
     check_file("outcome_taxonomy")
     check_file("methodology_checklist")
-    check_dir("golds_dir")
+    # Evaluation annotations (including holdout answers) are intentionally absent
+    # from shipped Skills. Benchmark consumers validate their own input corpus.
     check_dir("references_dir")
 
 

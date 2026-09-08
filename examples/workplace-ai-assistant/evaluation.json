@@ -1,0 +1,19 @@
+{
+  "research_question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+  "groups": {
+    "treatment": "Eligible teams randomly assigned to supervised assistant access, stratified by tenure and baseline performance.",
+    "comparison": "Concurrent teams retaining the existing workflow; document contamination."
+  },
+  "baseline": "Record resolution rate, paid hours, repeat contacts, blinded quality and review costs before allocation.",
+  "post_test": "Assess the same outcomes at pilot end; separately audit privacy and unsafe commitments.",
+  "analysis_plan": "Preregister an intention-to-treat comparison with team-clustered uncertainty and subgroup estimates. Set sample size and noninferiority margins from local baseline variance and operational priorities before enrollment.",
+  "success_threshold": "Expand only if quality is noninferior, verified resolutions per paid hour improve, net cost is acceptable and no serious unresolved safety incident remains; thresholds require local agreement.",
+  "stop_conditions": [
+    "Pause immediately after a verified privacy leak or a serious unsafe or unauthorized customer commitment; investigate before resuming.",
+    "Pause expansion if blinded quality review crosses a pre-agreed noninferiority margin, including within experience strata."
+  ],
+  "extensions": {
+    "gap_id": "G-001",
+    "status": "proposed_not_executed"
+  }
+}

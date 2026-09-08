@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync } from "node:fs";
 const id = "example--ai-coding-assistant-evidence";
+const staticBase = `http://127.0.0.1:${process.env.STUDIO_STATIC_TEST_PORT || 8766}/dist_gh_pages/studio/`;
 const project = (tab = "overview") => `/studio/#/project/${id}/${tab}`;
 const themes = [
   "claude",
@@ -147,7 +148,7 @@ test("static subdirectory deployment does not disclose local research", async ({
   page.on("response", (r) => {
     if (r.status() >= 400) missing.push(r.url());
   });
-  await page.goto("http://127.0.0.1:8766/dist_gh_pages/studio/");
+  await page.goto(staticBase);
   await expect(page.locator("main h1")).toBeVisible();
   await expect(page.locator(".connection")).toContainText(
     /\u9759\u6001|Static/,
@@ -156,7 +157,7 @@ test("static subdirectory deployment does not disclose local research", async ({
     "Fixture-only local research",
   );
   await page.goto(
-    `http://127.0.0.1:8766/dist_gh_pages/studio/#/project/${id}/reports`,
+    `${staticBase}#/project/${id}/reports`,
   );
   await expect(page.frameLocator("iframe").locator("html")).toHaveAttribute(
     "data-theme",

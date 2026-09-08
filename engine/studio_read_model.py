@@ -344,7 +344,7 @@ class StudioReader:
             'title': manifest.get('title') or (zh.get('meta') or {}).get('question') or (zh.get('decision') or {}).get('decision_question') or meta.get('question') or directory.name,
             'title_en': manifest.get('title') or decision.get('decision_question') or meta.get('question') or directory.name,
             'question': manifest.get('question') or meta.get('question') or '',
-            'domain': manifest.get('domain') or meta.get('domain') or 'education',
+            'domain': manifest.get('domain') or meta.get('domain') or result.get('research_frame', {}).get('extensions', {}).get('domain') or 'education',
             'status': (runs[0].get('status') if runs else None) or manifest.get('status') or ('example' if kind == 'example' else 'not_started'),
             'data_origin': meta.get('data_origin') or ('local_project' if kind == 'project' else 'not_reported'),
             'updated_at': manifest.get('updated_at') or meta.get('generated_at'),

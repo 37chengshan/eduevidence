@@ -37,7 +37,7 @@ def _run_build() -> subprocess.CompletedProcess:
     # Deterministic timestamp keeps the committed artifact byte-stable so the
     # test run never dirties the working tree (review finding).
     return subprocess.run(
-        [sys.executable, str(BUILD_SCRIPT), "--generated-at",
+        [sys.executable, str(BUILD_SCRIPT), "--out", str(LIBRARY_JSON), "--generated-at",
          "2026-08-14T00:00:00+00:00"],
         capture_output=True,
         text=True,
@@ -46,14 +46,23 @@ def _run_build() -> subprocess.CompletedProcess:
 
 
 @pytest.fixture(scope="module", autouse=True)
-def _built_library():
-    """Rebuild the library once per module so tests run against a fresh artifact."""
-    result = _run_build()
-    assert result.returncode == 0, (
-        f"build_evidence_library.py failed ({result.returncode}):\n"
-        f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
-    )
-    yield
+def _built_library(tmp_path_factory):
+    """Build in an isolated directory; never rewrite the user's evidence library."""
+    import engine.library_builtin as builtin
+    with pytest.MonkeyPatch.context() as patch:
+        output = tmp_path_factory.mktemp("builtin-library") / "evidence-library.json"
+        patch.setattr(sys.modules[__name__], "LIBRARY_JSON", output)
+        patch.setattr(builtin, "LIBRARY_PATH", output)
+        builtin._read_library.cache_clear()
+        result = _run_build()
+        assert result.returncode == 0, (
+            f"build_evidence_library.py failed ({result.returncode}):\n"
+            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
+        )
+        try:
+            yield
+        finally:
+            builtin._read_library.cache_clear()
 
 
 def _load_library_json() -> dict:

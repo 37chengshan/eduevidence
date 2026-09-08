@@ -155,10 +155,11 @@ def test_example_confidence_reproducible():
     """confidence() recomputed from each example's evidence must match its shipped
     verdict.json confidence_breakdown (auditability guarantee)."""
     for ex in ("ai-coding-assistant", "ai-writing-assistant", "ai-tutor"):
+        parent = ROOT / ("examples" if ex == "ai-coding-assistant" else "tests/fixtures/legacy-examples")
         evidence = [json.loads(line) for line in
-                    (ROOT / f"examples/{ex}/evidence.jsonl").read_text(encoding="utf-8").splitlines()
+                    (parent / f"{ex}/evidence.jsonl").read_text(encoding="utf-8").splitlines()
                     if line.strip()]
-        verdict = json.loads((ROOT / f"examples/{ex}/verdict.json").read_text(encoding="utf-8"))
+        verdict = json.loads((parent / f"{ex}/verdict.json").read_text(encoding="utf-8"))
         computed = confidence(evidence)
         assert computed["confidence"] == verdict["confidence"], ex
         for key, value in verdict["confidence_breakdown"].items():

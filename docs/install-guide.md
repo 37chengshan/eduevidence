@@ -5,15 +5,15 @@
 
 ## 0. 这是什么
 
-EduEvidence 是一个**教育证据决策 Scientific Skill**：把"是否采用某种 AI 教学方式"从经验判断转化为可追溯、可验证的证据决策流程（检索→反证→方法学审计→证据裁决→干预设计→双语 HTML 报告）。
+EduEvidence 是一个**证据研究与决策 Scientific Skill**，内置教育与组织政策领域：把研究问题转化为可追溯、可验证的证据决策流程（检索→反证→方法学审计→证据裁决→干预设计→双语 HTML 报告）。
 
 Skill 本体结构：
 
 ```text
 SKILL.md             Skill 入口（When to Use / 9 步 Workflow / 输出契约）
-skill/agents/        8 角色协议（Planner / Retriever / Analyst / Skeptic / …）
-references/          11 个教育方法论文档
-schemas/             33 个 JSON Schema 数据契约（13 顶层 + 17 v2 + 3 v3）
+skill/agents/        角色协议（Planner / Retriever / Analyst / Skeptic / …）
+references/          研究方法与领域参考文档
+schemas/             JSON Schema 数据契约
 scripts/             确定性逻辑脚本（评分 / 审计 / 置信度 / 报告渲染）
 retrieval/           检索与抓取层（fetch / validate / dedupe）
 integrations/        Agent MCP 增强层 + Smart Web Fetch 集成
@@ -92,7 +92,7 @@ python3 scripts/validate_schema.py --schema schemas/evidence.schema.json \
 
 # 3. 渲染示例报告（验证 visualization 完整）
 python3 visualization/eduevidence-report/scripts/build_report.py \
-    --result examples/ai-coding-assistant/result.json \
+    --result examples/ai-coding-assistant-evidence/result.json \
     --out /tmp/eduevidence-smoke.html
 
 # 4. 运行全量测试（752 个测试函数，见 docs/metrics.json）
@@ -142,9 +142,9 @@ visualization/ 复制到我的 skill 目录（或按我的装载机制导入）�
 ## 5. 示例报告（安装后可直接看）
 
 ```text
-examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_claude.html   温暖研究风
-examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_academic.html  论文纯白风
-examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_datalab.html   数据实验室浅色
-examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_datalab-dark.html 数据实验室深色
-examples/ai-coding-assistant/reports-5themes/EduEvidence_Report_presentation.html 演讲深色评审
+examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_claude.html   温暖研究风
+examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_academic.html  论文纯白风
+examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_datalab.html   数据实验室浅色
+examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_datalab-dark.html 数据实验室深色
+examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_presentation.html 演讲深色评审
 ```

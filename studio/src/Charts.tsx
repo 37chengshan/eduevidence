@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Minus, Plus, RotateCcw } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Minus, Plus, RotateCcw, Play, Pause } from "lucide-react";
 import { text, type Detail, type Row } from "./data";
 import { useLocale } from "./i18n";
 import { Empty } from "./components";
@@ -13,9 +13,31 @@ export function EvidenceGraph({
   onSelect?: (r: Row) => void;
   compact?: boolean;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [selected, setSelected] = useState<string>("");
   const [zoom, setZoom] = useState(1);
+  const [motionRun, setMotionRun] = useState(1);
+  const panel = useRef<HTMLDivElement>(null);
+  const [motionAllowed, setMotionAllowed] = useState(false);
+  useEffect(() => {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    let inView = true;
+    const update = () =>
+      setMotionAllowed(!reduced.matches && !document.hidden && inView);
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      update();
+    });
+    if (panel.current) observer.observe(panel.current);
+    reduced.addEventListener("change", update);
+    document.addEventListener("visibilitychange", update);
+    update();
+    return () => {
+      observer.disconnect();
+      reduced.removeEventListener("change", update);
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, []);
   const groups = ["source", "finding", "claim"];
   const limit = compact ? 4 : 12;
   const nodes = useMemo<Array<Row & { x: number; y: number }>>(
@@ -29,14 +51,14 @@ export function EvidenceGraph({
             x: compact ? 90 + col * 210 : 110 + col * 260,
             y:
               68 +
-              ((i + 0.5) * (compact ? 150 : Math.max(280, arr.length * 45))) /
+              ((i + 0.5) * (compact ? 210 : Math.max(280, arr.length * 45))) /
                 arr.length,
           })),
       ),
     [data, compact],
   );
   const height = compact
-    ? 280
+    ? 340
     : Math.max(
         380,
         ...groups.map(
@@ -49,22 +71,71 @@ export function EvidenceGraph({
   const edges = data.edges.filter(
     (e) => map.has(e.source) && map.has(e.target),
   );
-  const neighbors = new Set([
-    selected,
-    ...edges
-      .filter((e) => e.source === selected || e.target === selected)
-      .flatMap((e) => [e.source, e.target]),
-  ]);
+  // Trace each direction separately over authored edges; never invent a shortcut.
+  const neighbors = new Set([selected]);
+  const tracedEdges = new Set<number>();
+  for (const reverse of [false, true]) {
+    const seen = new Set([selected]);
+    const queue = [selected];
+    for (let cursor = 0; cursor < queue.length; cursor++) {
+      const current = queue[cursor];
+      edges.forEach((edge, index) => {
+        if ((reverse ? edge.target : edge.source) !== current) return;
+        const next = reverse ? edge.source : edge.target;
+        tracedEdges.add(index);
+        neighbors.add(next);
+        if (!seen.has(next)) {
+          seen.add(next);
+          queue.push(next);
+        }
+      });
+    }
+  }
   const choose = (n: Row) => {
     setSelected(n.id);
+    if (!compact) setMotionRun((run) => run + 1);
     onSelect?.(data.nodes.find((v) => v.id === n.id) || n);
   };
   return (
-    <div className={`graph-panel ${compact ? "compact" : ""}`}>
+    <div ref={panel} className={`graph-panel ${compact ? "compact" : ""}`}>
+      {compact && (
+        <button
+          className="icon-button compact-flow-toggle"
+          aria-label={
+            locale === "zh"
+              ? motionRun
+                ? "暂停连线流动"
+                : "播放连线流动"
+              : motionRun
+                ? "Pause relationship flow"
+                : "Play relationship flow"
+          }
+          aria-pressed={Boolean(motionRun)}
+          onClick={() => setMotionRun((run) => (run ? 0 : 1))}
+        >
+          {motionRun ? <Pause size={13} /> : <Play size={13} />}
+        </button>
+      )}
       {!compact && (
         <div className="graph-toolbar">
           <p>{t("graphLead")}</p>
           <div className="button-group">
+            <button
+              className="icon-button"
+              aria-label={
+                locale === "zh"
+                  ? motionRun
+                    ? "暂停连线流动"
+                    : "播放连线流动"
+                  : motionRun
+                    ? "Pause relationship flow"
+                    : "Play relationship flow"
+              }
+              aria-pressed={Boolean(motionRun)}
+              onClick={() => setMotionRun((run) => (run ? 0 : 1))}
+            >
+              {motionRun ? <Pause size={15} /> : <Play size={15} />}
+            </button>
             <button
               className="icon-button"
               aria-label={t("zoomOut")}
@@ -129,18 +200,25 @@ export function EvidenceGraph({
             const s = map.get(e.source)!;
             const d = map.get(e.target)!;
             return (
-              <path
-                key={i}
-                d={`M ${s.x + 14} ${s.y} C ${(s.x + d.x) / 2} ${s.y}, ${(s.x + d.x) / 2} ${d.y}, ${d.x - 14} ${d.y}`}
-                fill="none"
-                className={`graph-edge ${e.relation}`}
-                opacity={
-                  !selected ||
-                  (neighbors.has(e.source) && neighbors.has(e.target))
-                    ? 0.65
-                    : 0.1
-                }
-              />
+              <g key={`${motionRun}-${i}`} aria-hidden="true">
+                <path
+                  d={`M ${s.x + 14} ${s.y} C ${(s.x + d.x) / 2} ${s.y}, ${(s.x + d.x) / 2} ${d.y}, ${d.x - 14} ${d.y}`}
+                  fill="none"
+                  className={`graph-edge ${e.relation}`}
+                  opacity={!selected || tracedEdges.has(i) ? 0.65 : 0.1}
+                />
+                {motionRun > 0 &&
+                  motionAllowed &&
+                  (!selected || tracedEdges.has(i)) && (
+                    <path
+                      d={`M ${s.x + 14} ${s.y} C ${(s.x + d.x) / 2} ${s.y}, ${(s.x + d.x) / 2} ${d.y}, ${d.x - 14} ${d.y}`}
+                      pathLength="100"
+                      fill="none"
+                      className={`graph-flow ${e.relation}`}
+                      style={{ animationDelay: `${(i % 5) * -0.6}s` }}
+                    />
+                  )}
+              </g>
             );
           })}
           {nodes.map((n) => (
@@ -160,6 +238,14 @@ export function EvidenceGraph({
               opacity={!selected || neighbors.has(n.id) ? 1 : 0.25}
             >
               <title>{text(n.label)}</title>
+              <rect
+                className="graph-focus-ring"
+                x={n.x - 22}
+                y={n.y - 19}
+                width="44"
+                height="38"
+                rx="9"
+              />
               <rect
                 x={n.x - 16}
                 y={n.y - 13}

@@ -43,7 +43,8 @@ from scripts.validate_schema import SchemaError, validate
 def _resolve_v4_schema_dir() -> Path:
     """Repository layout first; wheel-installed share/ layout as fallback
     (same pattern as engine/contracts._resolve_schema_dir)."""
-    repo = Path(__file__).resolve().parent.parent / "schemas" / "v4"
+    from engine._resources import resource_root
+    repo = resource_root() / "schemas" / "v4"
     if repo.is_dir():
         return repo
     import sys

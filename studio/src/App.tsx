@@ -38,6 +38,7 @@ import {
 import { Projects } from "./Projects";
 import { ProjectView } from "./Project";
 import { Reports } from "./Reports";
+import { SidebarField, WorkspaceGlow } from "./Ambient";
 function safeRead(k: string, fallback: string) {
   try {
     return localStorage.getItem(k) || fallback;
@@ -360,6 +361,7 @@ function Shell({
         {t("skip")}
       </a>
       <aside className={`sidebar ${menu ? "is-open" : ""}`}>
+        <SidebarField />
         <a className="brand" href="#/projects">
           <span className="brand-mark">
             e<span />
@@ -417,6 +419,7 @@ function Shell({
         />
       )}
       <div className="main-shell">
+        <WorkspaceGlow />
         <header className="topbar">
           <div className="breadcrumb">
             <button

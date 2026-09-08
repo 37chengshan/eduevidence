@@ -58,6 +58,8 @@
     --surface: #fff;
     --surface-alt: #f5f3ef;
     --rail: #f0eee9;
+    --ambient-ink: 112, 86, 66;
+    --ambient-glow: 174, 112, 71;
     --ink: #282722;
     --muted: #69665f;
     --faint: #a19c91;
@@ -88,6 +90,8 @@
     --surface: #222526;
     --surface-alt: #292c2c;
     --rail: #151718;
+    --ambient-ink: 205, 185, 162;
+    --ambient-glow: 209, 161, 126;
     --ink: #e9e6df;
     --muted: #b3b0a7;
     --faint: #83837d;
@@ -331,6 +335,7 @@
     min-height: 100vh;
   }
   .sidebar {
+    isolation: isolate;
     position: fixed;
     inset: 0 auto 0 0;
     width: 230px;
@@ -417,6 +422,8 @@
     gap: 3px;
   }
   .sidebar nav > a {
+    position: relative;
+    isolation: isolate;
     min-height: 42px;
     display: flex;
     align-items: center;
@@ -425,14 +432,35 @@
     border-radius: 7px;
     font-size: 12px;
     color: var(--muted);
+    transition: color 180ms ease;
+  }
+  .sidebar nav > a::before {
+    content: "";
+    position: absolute;
+    inset: 3px 42px 3px 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--surface);
+    transition:
+      right 380ms cubic-bezier(0.22, 1, 0.36, 1),
+      top 380ms cubic-bezier(0.22, 1, 0.36, 1),
+      bottom 380ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 220ms ease;
+  }
+  .sidebar nav > a:hover::before {
+    right: 34px;
   }
   .sidebar nav > a:hover {
-    background: var(--line);
+    color: var(--ink);
   }
   .sidebar nav > a[aria-current="page"] {
-    background: var(--surface);
-    box-shadow: var(--shadow);
     color: var(--ink);
+  }
+  .sidebar nav > a[aria-current="page"]::before {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    box-shadow: var(--shadow);
   }
   .sidebar nav > a[aria-current="page"] > svg {
     color: var(--accent);
@@ -470,8 +498,36 @@
     border-top: 1px solid var(--line);
   }
   .main-shell {
+    position: relative;
+    isolation: isolate;
     margin-left: 230px;
     min-width: 0;
+  }
+  .ambient-field, .ambient-glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .ambient-field canvas { display: block; width: 100%; height: 100%; }
+  .ambient-glow { position: fixed; opacity: 0; contain: strict; }
+  .ambient-glow i {
+    position: absolute;
+    left: -110px;
+    top: -110px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--ambient-glow), .065), transparent 72%);
+  }
+  .ambient-glow i:nth-child(2) {
+    left: -220px; top: -220px; width: 440px; height: 440px;
+    background: radial-gradient(circle, rgba(var(--ambient-glow), .035), transparent 72%);
+  }
+  .ambient-glow i:nth-child(3) {
+    left: -340px; top: -340px; width: 680px; height: 680px;
+    background: radial-gradient(circle, rgba(var(--ambient-glow), .025), transparent 72%);
   }
   .topbar {
     position: sticky;
@@ -1296,6 +1352,31 @@
   .graph-node {
     cursor: pointer;
   }
+  .graph-node:focus { outline: none; }
+  .graph-node .graph-focus-ring { display: none; }
+  .graph-node:focus-visible .graph-focus-ring {
+    display: block;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 2;
+  }
+  .graph-flow {
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-dasharray: 16 84;
+    stroke-linecap: round;
+    opacity: .65;
+    pointer-events: none;
+    animation: relationship-flow 3.5s linear infinite;
+  }
+  .graph-panel.compact { position: relative; }
+  .compact-flow-toggle { position: absolute; top: 5px; right: 5px; z-index: 1; background: var(--surface); }
+  .graph-flow.support { stroke: var(--success); }
+  .graph-flow.contradict { stroke: var(--danger); }
+  @keyframes relationship-flow { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .graph-flow { display: none; animation: none; } }
+  @media print { .ambient-field, .ambient-glow, .graph-flow { display: none; } }
   .graph-node rect {
     fill: var(--surface-alt);
     stroke: var(--line-strong);

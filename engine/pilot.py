@@ -83,7 +83,8 @@ def _load_pilot(project: ProjectWorkspace, pilot_id: str) -> dict:
 def _save_pilot(project: ProjectWorkspace, pilot: dict) -> Path:
     from scripts.validate_schema import SchemaError, validate  # noqa: PLC0415
 
-    schema_path = (Path(__file__).resolve().parent.parent / "schemas" / "v3"
+    from engine._resources import resource_root
+    schema_path = (resource_root() / "schemas" / "v3"
                    / "pilot-outcome.schema.json")
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     try:

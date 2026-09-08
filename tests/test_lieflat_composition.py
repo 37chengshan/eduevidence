@@ -26,7 +26,7 @@ FIXTURE = ROOT / "examples" / "ai-coding-assistant-evidence" / "result.json"
 FIXTURE_13 = ROOT / "examples" / "ai-coding-assistant" / "result.json"
 # 数值型夹具：旗舰包为真实文献，摘要不暴露 g/SE 时 effect_size 按策略留空；
 # g/CI 的格式与追溯正确性用带完整数值的（已打 SYNTHETIC 徽章的）演示包验证。
-FIXTURE_NUMERIC = ROOT / "examples" / "highschool-math-ai-tutor" / "result.json"
+FIXTURE_NUMERIC = ROOT / "tests" / "fixtures" / "legacy-examples" / "highschool-math-ai-tutor" / "result.json"
 LAYOUT_SCHEMA = (ROOT / "visualization" / "eduevidence-report" / "schemas"
                  / "visual-layout.schema.json")
 

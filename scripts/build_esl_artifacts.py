@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 # Add project root to sys.path
-BASE_DIR = Path("/Users/cc/edu").resolve()
+BASE_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE_DIR))
 
 from engine.evidence_graph import (
@@ -18,7 +18,7 @@ from engine.evidence_graph import (
     ClaimNode, RiskNode, GapNode, DecisionNode, GraphEdge
 )
 
-ESL_DIR = BASE_DIR / "examples" / "esl-academic-writing-ai"
+ESL_DIR = BASE_DIR / "tests" / "fixtures" / "legacy-examples" / "esl-academic-writing-ai"
 ESL_DIR.mkdir(parents=True, exist_ok=True)
 THEMES_DIR = ESL_DIR / "reports-5themes"
 THEMES_DIR.mkdir(parents=True, exist_ok=True)

@@ -80,7 +80,7 @@ jobs:
         run: |
           set -euo pipefail
           validate() { python scripts/validate_schema.py --schema "$1" --data "$2"; }
-          for pack in ai-tutor ai-writing-assistant ai-coding-assistant-evidence; do
+          for pack in ai-coding-assistant-evidence; do
             validate schemas/verdict.schema.json         "examples/$pack/verdict.json"
             validate schemas/evidence.schema.json        "examples/$pack/evidence.jsonl"
             validate schemas/intervention.schema.json    "examples/$pack/intervention.json"
@@ -90,6 +90,7 @@ jobs:
             validate schemas/report-result.schema.json   "examples/$pack/result.json"
           done
           validate schemas/source.schema.json "examples/ai-coding-assistant-evidence/sources.jsonl"
+          python examples/workplace-ai-assistant/validate.py
           python - <<'PY'
           import json
           from pathlib import Path

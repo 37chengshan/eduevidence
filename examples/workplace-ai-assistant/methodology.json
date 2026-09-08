@@ -1,0 +1,60 @@
+{
+  "target": "overall",
+  "verdict": "CONCERN",
+  "audit_items": {
+    "evidence_level": {
+      "status": "met"
+    },
+    "causal_identification": {
+      "status": "partial"
+    },
+    "external_validity": {
+      "status": "partial"
+    },
+    "cost_evidence": {
+      "status": "missing"
+    },
+    "stakeholder_representation": {
+      "status": "partial"
+    },
+    "implementation_evidence": {
+      "status": "partial"
+    },
+    "equity_analysis": {
+      "status": "partial"
+    },
+    "effect_size_reported": {
+      "status": "partial"
+    },
+    "uncertainty_quantified": {
+      "status": "partial"
+    },
+    "comparator_clarity": {
+      "status": "met"
+    },
+    "publication_bias_risk": {
+      "status": "partial"
+    },
+    "generalizability_claims": {
+      "status": "met"
+    }
+  },
+  "task_vs_learning_guard": {
+    "measured_construct": "workplace_task_performance",
+    "equates_task_with_learning": false,
+    "note": "Teaching outcomes are not applicable; productivity is not a claim about student learning."
+  },
+  "limitations": [
+    "One firm, one tool and a staggered nonrandom rollout; causal interpretation depends on identification assumptions.",
+    "Indirect evidence, not directly generalizable: brief incentivized writing tasks did not demand precise factual accuracy or customer-specific context.",
+    "Indirect evidence, not directly generalizable: consultants solving an experimental business case, not live customer tickets.",
+    "Same study as E-001; subgroup sample size was not extracted. This is not an independent replication."
+  ],
+  "suggestions": [
+    "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+    "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+    "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+    "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+  ],
+  "extensions": {}
+}

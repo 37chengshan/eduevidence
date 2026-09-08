@@ -62,7 +62,10 @@ def test_studio_entry_and_api(server):
     status, body = _get(server, "/api/projects")
     assert status == 200
     data = json.loads(body)
-    assert data["stats"]["total_projects"] >= 3
+    assert {p["id"] for p in data["projects"]} == {
+        "ai-coding-assistant-evidence", "workplace-ai-assistant",
+    }
+    assert data["stats"]["total_projects"] == 2
     assert _get(server, "/api/labels")[0] == 200
     assert _get(server, "/api/research/projects")[0] == 200
 

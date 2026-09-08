@@ -59,8 +59,8 @@ ANNOTATIONS_DIR = ROOT / "benchmarks" / "annotations"
 QUESTIONS_PATH = ROOT / "benchmarks" / "questions.jsonl"
 EXAMPLE_EVIDENCE = {
     "ai-coding-assistant": ROOT / "examples" / "ai-coding-assistant" / "evidence.jsonl",
-    "ai-tutor": ROOT / "examples" / "ai-tutor" / "evidence.jsonl",
-    "ai-writing-assistant": ROOT / "examples" / "ai-writing-assistant" / "evidence.jsonl",
+    "ai-tutor": ROOT / "tests" / "fixtures" / "legacy-examples" / "ai-tutor" / "evidence.jsonl",
+    "ai-writing-assistant": ROOT / "tests" / "fixtures" / "legacy-examples" / "ai-writing-assistant" / "evidence.jsonl",
 }
 
 _WS_RE = re.compile(r"\s+")

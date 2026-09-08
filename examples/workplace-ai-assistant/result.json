@@ -1,0 +1,553 @@
+{
+  "meta": {
+    "skill": "eduevidence",
+    "domain": "policy",
+    "version": "6.0.0",
+    "mode": "platform_native",
+    "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+    "data_origin": "manual_curated"
+  },
+  "research_frame": {
+    "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+    "decision_object": "adopt",
+    "intervention": {
+      "policy_name": "human_supervised_customer_support_assistant",
+      "policy_type": "institutional_reform",
+      "mechanism": "approved_knowledge_base_and_agent_review"
+    },
+    "population": {
+      "target_group": "enterprise_customer_support_staff",
+      "excluded_groups": "autonomous_agents_and_high_stakes_specialist_advice"
+    },
+    "comparison": "Existing support workflow without generative AI suggestions.",
+    "outcomes": {
+      "primary": [
+        "policy_effectiveness",
+        "implementation_risk"
+      ],
+      "secondary": [
+        "cost_effectiveness",
+        "equity",
+        "feasibility"
+      ]
+    },
+    "context": {
+      "policy_environment": "enterprise_customer_support"
+    },
+    "scope": {
+      "time_range": "2023–2026",
+      "evidence_types": [
+        "quasi_experimental",
+        "rct"
+      ]
+    },
+    "success_condition": "Improve verified resolutions per paid staff hour while preserving service quality, privacy and staff autonomy.",
+    "extensions": {
+      "domain": "policy",
+      "data_origin": "manual_curated",
+      "note": "Purposive evidence selection, not a systematic review or model execution benchmark."
+    }
+  },
+  "decision": {
+    "decision_question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+    "target_population": "Enterprise customer-support staff, stratified by tenure and baseline skill.",
+    "target_context": "Human-supervised support using an approved knowledge base.",
+    "recommended_action": "pilot",
+    "confidence": "Low",
+    "confidence_score": null,
+    "independent_studies": 3,
+    "independent_samples": 3,
+    "supported_claims": [
+      "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
+      "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
+      "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
+      "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits."
+    ],
+    "uncertain_claims": [
+      "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+    ],
+    "decision_rationale": "A supervised pilot is warranted because one direct field study supports efficiency gains but also reveals heterogeneous quality effects. Indirect experiments identify task boundaries, while local safety and net value remain unknown.",
+    "methodology_summary": "One staggered-rollout quasi-experiment and two randomized experiments. Only the support study is direct; no pooled standardized effect or model benchmark was computed.",
+    "what_cannot_be_claimed": [
+      "Universal gains, autonomous deployment safety, privacy protection, reduced staffing requirements or educational learning gains."
+    ],
+    "missing_evidence": [
+      "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+    ],
+    "applicability": {
+      "required_conditions": [
+        "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+        "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+        "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+        "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+      ]
+    },
+    "extensions": {
+      "data_origin": "manual_curated",
+      "benchmark_eligible": false,
+      "note": "Conservative manual judgment about broad deployment; not a deterministic confidence-policy run or a probability.",
+      "knowledge_gaps": [
+        {
+          "gap_id": "G-001",
+          "evidence_ids": [
+            "E-001",
+            "E-002",
+            "E-003",
+            "E-004"
+          ],
+          "summary": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "source_id": "S-001",
+      "title": "Generative AI at Work",
+      "authors": [
+        "Erik Brynjolfsson",
+        "Danielle Li",
+        "Lindsey Raymond"
+      ],
+      "year": 2025,
+      "doi": "10.1093/qje/qjae044",
+      "canonical_url": "https://academic.oup.com/qje/article/140/2/889/7990658",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "status": "VALID",
+      "source_locator": {
+        "type": "section",
+        "section": "Abstract; III.B and Table I; IV.A and Table II; IV.B; VIII"
+      },
+      "fetch": {
+        "original_url": "https://academic.oup.com/qje/article/140/2/889/7990658",
+        "fetch_method": "native",
+        "fetch_provider": "builtin",
+        "fetch_status": "FETCH_VALID"
+      },
+      "extensions": {
+        "verified_on": "2026-09-08",
+        "data_origin": "manual_curated",
+        "version": "published QJE article",
+        "verification_scope": "Full primary text read through web tool; no Crossref registry or retraction check claimed."
+      }
+    },
+    {
+      "source_id": "S-002",
+      "title": "Experimental evidence on the productivity effects of generative artificial intelligence",
+      "authors": [
+        "Shakked Noy",
+        "Whitney Zhang"
+      ],
+      "year": 2023,
+      "doi": "10.1126/science.adh2586",
+      "canonical_url": "https://shakkednoy.com/Noy%20Zhang%20NBER%20SI.pdf",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "status": "VALID",
+      "source_locator": {
+        "type": "section",
+        "section": "Author manuscript pp. 1, 3–4, 7; Figure 1 (p. 12)"
+      },
+      "fetch": {
+        "original_url": "https://shakkednoy.com/Noy%20Zhang%20NBER%20SI.pdf",
+        "fetch_method": "native",
+        "fetch_provider": "builtin",
+        "fetch_status": "FETCH_VALID"
+      },
+      "extensions": {
+        "verified_on": "2026-09-08",
+        "data_origin": "manual_curated",
+        "version": "author manuscript associated with Science 2023; not the March 444-person draft",
+        "verification_scope": "Full primary text read through web tool; no Crossref registry or retraction check claimed."
+      }
+    },
+    {
+      "source_id": "S-003",
+      "title": "Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of Artificial Intelligence on Knowledge Worker Productivity and Quality",
+      "authors": [
+        "Fabrizio Dell’Acqua",
+        "Edward McFowland III",
+        "Ethan Mollick",
+        "Hila Lifshitz-Assaf",
+        "Katherine C. Kellogg",
+        "Saran Rajendran",
+        "Lisa Krayer",
+        "François Candelon",
+        "Karim R. Lakhani"
+      ],
+      "year": 2026,
+      "doi": "10.1287/orsc.2025.21838",
+      "canonical_url": "https://pubsonline.informs.org/doi/10.1287/orsc.2025.21838",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "status": "VALID",
+      "source_locator": {
+        "type": "section",
+        "section": "Sections 3 and 4.2; Figure 5; Table 7"
+      },
+      "fetch": {
+        "original_url": "https://pubsonline.informs.org/doi/10.1287/orsc.2025.21838",
+        "fetch_method": "native",
+        "fetch_provider": "builtin",
+        "fetch_status": "FETCH_VALID"
+      },
+      "extensions": {
+        "verified_on": "2026-09-08",
+        "data_origin": "manual_curated",
+        "version": "published Organization Science 2026 article",
+        "verification_scope": "Full primary text read through web tool; no Crossref registry or retraction check claimed."
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E-001",
+      "source_id": "S-001",
+      "study_id": "ST-001",
+      "sample_id": "SAMPLE-support-all",
+      "claim_id": "C-001",
+      "title": "Generative AI at Work",
+      "year": 2025,
+      "study_type": "quasi_experimental",
+      "population": "Customer-support agents",
+      "sample_size": 5172,
+      "outcome_type": "completion_time",
+      "outcome_measure": "Chat handling time; separate throughput summary: about 15% more issues resolved per hour.",
+      "claim": "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
+      "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "decision_relation": "conditional",
+      "source_location": "https://academic.oup.com/qje/article/140/2/889/7990658",
+      "limitations": [
+        "One firm, one tool and a staggered nonrandom rollout; causal interpretation depends on identification assumptions."
+      ],
+      "status": "SUPPORTED",
+      "extensions": {
+        "domain": "policy",
+        "policy_outcome": "policy_effectiveness",
+        "directness": "direct",
+        "raw_result": {
+          "metric": "issues_resolved_per_hour_relative_change",
+          "value": 15,
+          "unit": "percent",
+          "role": "separate_throughput_measure_not_completion_time",
+          "ci_lower": null,
+          "ci_upper": null,
+          "p_value": null,
+          "uncertainty_status": "not_extracted_for_this_summary_estimand"
+        },
+        "standardized_effect": null,
+        "study_total_n": 5172,
+        "note": "Row-specific sample; study_total_n must not replace the analyzed sample. E-004 shares the S-001 cohort and is not separately counted."
+      }
+    },
+    {
+      "evidence_id": "E-002",
+      "source_id": "S-002",
+      "study_id": "ST-002",
+      "sample_id": "SAMPLE-writing",
+      "claim_id": "C-002",
+      "title": "Experimental evidence on the productivity effects of generative artificial intelligence",
+      "year": 2023,
+      "study_type": "rct",
+      "population": "College-educated working professionals",
+      "sample_size": 453,
+      "outcome_type": "completion_time",
+      "outcome_measure": "Self-reported task time: approximately 40% lower; assessed writing quality approximately 18% higher is a separate measure.",
+      "claim": "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
+      "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "decision_relation": "conditional",
+      "source_location": "https://shakkednoy.com/Noy%20Zhang%20NBER%20SI.pdf",
+      "limitations": [
+        "Indirect evidence, not directly generalizable: brief incentivized writing tasks did not demand precise factual accuracy or customer-specific context."
+      ],
+      "status": "SUPPORTED",
+      "extensions": {
+        "domain": "policy",
+        "policy_outcome": "policy_effectiveness",
+        "directness": "indirect",
+        "raw_result": {
+          "metric": "task_time_relative_change",
+          "value": -40,
+          "unit": "percent",
+          "ci_lower": null,
+          "ci_upper": null,
+          "p_value": null,
+          "uncertainty_status": "not_extracted_for_this_summary_estimand"
+        },
+        "standardized_effect": null,
+        "study_total_n": 453,
+        "note": "Row-specific sample; study_total_n must not replace the analyzed sample. E-004 shares the S-001 cohort and is not separately counted."
+      }
+    },
+    {
+      "evidence_id": "E-003",
+      "source_id": "S-003",
+      "study_id": "ST-003",
+      "sample_id": "SAMPLE-consulting-outside",
+      "claim_id": "C-003",
+      "title": "Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of Artificial Intelligence on Knowledge Worker Productivity and Quality",
+      "year": 2026,
+      "study_type": "rct",
+      "population": "BCG consultants in the outside-frontier experiment",
+      "sample_size": 373,
+      "outcome_type": "accuracy",
+      "outcome_measure": "Correct business recommendation: about 19 percentage points lower across AI arms; Table 7 has 373 participants, not 758.",
+      "claim": "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
+      "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "negative",
+      "decision_relation": "conditional",
+      "source_location": "https://pubsonline.informs.org/doi/10.1287/orsc.2025.21838",
+      "limitations": [
+        "Indirect evidence, not directly generalizable: consultants solving an experimental business case, not live customer tickets."
+      ],
+      "status": "SUPPORTED",
+      "extensions": {
+        "domain": "policy",
+        "policy_outcome": "implementation_risk",
+        "directness": "indirect",
+        "raw_result": {
+          "metric": "correctness_absolute_change",
+          "value": -19,
+          "unit": "percentage_points",
+          "ci_lower": null,
+          "ci_upper": null,
+          "p_value": null,
+          "uncertainty_status": "not_extracted_for_this_summary_estimand"
+        },
+        "standardized_effect": null,
+        "study_total_n": 758,
+        "note": "Row-specific sample; study_total_n must not replace the analyzed sample. E-004 shares the S-001 cohort and is not separately counted."
+      }
+    },
+    {
+      "evidence_id": "E-004",
+      "source_id": "S-001",
+      "study_id": "ST-001",
+      "sample_id": "SAMPLE-support-all",
+      "claim_id": "C-004",
+      "title": "Generative AI at Work",
+      "year": 2025,
+      "study_type": "quasi_experimental",
+      "population": "Experienced and high-skill customer-support agents",
+      "sample_size": null,
+      "outcome_type": "accuracy",
+      "outcome_measure": "Small quality declines among the most experienced and highest-skilled support staff.",
+      "claim": "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits.",
+      "direction": "support",
+      "relation_to_claim": "support",
+      "effect_direction": "negative",
+      "decision_relation": "conditional",
+      "source_location": "https://academic.oup.com/qje/article/140/2/889/7990658",
+      "limitations": [
+        "Same study as E-001; subgroup sample size was not extracted. This is not an independent replication."
+      ],
+      "status": "SUPPORTED",
+      "extensions": {
+        "domain": "policy",
+        "policy_outcome": "implementation_risk",
+        "directness": "direct",
+        "raw_result": {
+          "metric": "experienced_staff_quality",
+          "value": null,
+          "unit": "not_extracted",
+          "ci_lower": null,
+          "ci_upper": null,
+          "p_value": null,
+          "uncertainty_status": "not_extracted_for_this_summary_estimand"
+        },
+        "standardized_effect": null,
+        "study_total_n": 5172,
+        "note": "Row-specific sample; study_total_n must not replace the analyzed sample. E-004 shares the S-001 cohort and is not separately counted."
+      }
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C-001",
+      "claim": "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
+      "outcome_type": "completion_time",
+      "evidence_ids": [
+        "E-001"
+      ],
+      "status": "SUPPORTED",
+      "pooled_effect_g": null
+    },
+    {
+      "claim_id": "C-002",
+      "claim": "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
+      "outcome_type": "completion_time",
+      "evidence_ids": [
+        "E-002"
+      ],
+      "status": "SUPPORTED",
+      "pooled_effect_g": null
+    },
+    {
+      "claim_id": "C-003",
+      "claim": "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
+      "outcome_type": "accuracy",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "status": "SUPPORTED",
+      "pooled_effect_g": null
+    },
+    {
+      "claim_id": "C-004",
+      "claim": "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits.",
+      "outcome_type": "accuracy",
+      "evidence_ids": [
+        "E-004"
+      ],
+      "status": "SUPPORTED",
+      "pooled_effect_g": null
+    }
+  ],
+  "outcomes": [
+    {
+      "outcome_type": "completion_time",
+      "positive_count": 2,
+      "negative_count": 0,
+      "null_count": 0,
+      "evidence_ids": [
+        "E-001",
+        "E-002"
+      ]
+    },
+    {
+      "outcome_type": "accuracy",
+      "positive_count": 0,
+      "negative_count": 2,
+      "null_count": 0,
+      "evidence_ids": [
+        "E-003",
+        "E-004"
+      ]
+    }
+  ],
+  "methodology_reviews": [
+    {
+      "target": "overall",
+      "verdict": "CONCERN",
+      "audit_items": {
+        "evidence_level": {
+          "status": "met"
+        },
+        "causal_identification": {
+          "status": "partial"
+        },
+        "external_validity": {
+          "status": "partial"
+        },
+        "cost_evidence": {
+          "status": "missing"
+        },
+        "stakeholder_representation": {
+          "status": "partial"
+        },
+        "implementation_evidence": {
+          "status": "partial"
+        },
+        "equity_analysis": {
+          "status": "partial"
+        },
+        "effect_size_reported": {
+          "status": "partial"
+        },
+        "uncertainty_quantified": {
+          "status": "partial"
+        },
+        "comparator_clarity": {
+          "status": "met"
+        },
+        "publication_bias_risk": {
+          "status": "partial"
+        },
+        "generalizability_claims": {
+          "status": "met"
+        }
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "workplace_task_performance",
+        "equates_task_with_learning": false,
+        "note": "Teaching outcomes are not applicable; productivity is not a claim about student learning."
+      },
+      "limitations": [
+        "One firm, one tool and a staggered nonrandom rollout; causal interpretation depends on identification assumptions.",
+        "Indirect evidence, not directly generalizable: brief incentivized writing tasks did not demand precise factual accuracy or customer-specific context.",
+        "Indirect evidence, not directly generalizable: consultants solving an experimental business case, not live customer tickets.",
+        "Same study as E-001; subgroup sample size was not extracted. This is not an independent replication."
+      ],
+      "suggestions": [
+        "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+        "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+        "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+        "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+      ],
+      "extensions": {}
+    }
+  ],
+  "applicability": {
+    "suitable_for": "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+    "required_conditions": [
+      "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+      "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+      "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+      "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+    ],
+    "not_suitable_for": "Universal gains, autonomous deployment safety, privacy protection, reduced staffing requirements or educational learning gains."
+  },
+  "intervention": {
+    "decision": "pilot",
+    "target_population": "Enterprise customer-support staff, stratified by tenure and baseline skill.",
+    "pilot_duration": "Proposed: two baseline weeks and six pilot weeks; not executed.",
+    "ai_usage_policy": "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+    "risk_control": [
+      "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+      "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+      "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+      "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+    ],
+    "stop_conditions": [
+      "Pause immediately after a verified privacy leak or a serious unsafe or unauthorized customer commitment; investigate before resuming.",
+      "Pause expansion if blinded quality review crosses a pre-agreed noninferiority margin, including within experience strata."
+    ],
+    "evidence_alignment": [
+      "E-001",
+      "E-002",
+      "E-003",
+      "E-004"
+    ],
+    "extensions": {
+      "gap_id": "G-001",
+      "target_population": "enterprise_customer_support_staff",
+      "status": "proposed_not_executed"
+    }
+  },
+  "evaluation": {
+    "research_question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+    "groups": {
+      "treatment": "Eligible teams randomly assigned to supervised assistant access, stratified by tenure and baseline performance.",
+      "comparison": "Concurrent teams retaining the existing workflow; document contamination."
+    },
+    "baseline": "Record resolution rate, paid hours, repeat contacts, blinded quality and review costs before allocation.",
+    "post_test": "Assess the same outcomes at pilot end; separately audit privacy and unsafe commitments.",
+    "analysis_plan": "Preregister an intention-to-treat comparison with team-clustered uncertainty and subgroup estimates. Set sample size and noninferiority margins from local baseline variance and operational priorities before enrollment.",
+    "success_threshold": "Expand only if quality is noninferior, verified resolutions per paid hour improve, net cost is acceptable and no serious unresolved safety incident remains; thresholds require local agreement.",
+    "stop_conditions": [
+      "Pause immediately after a verified privacy leak or a serious unsafe or unauthorized customer commitment; investigate before resuming.",
+      "Pause expansion if blinded quality review crosses a pre-agreed noninferiority margin, including within experience strata."
+    ],
+    "extensions": {
+      "gap_id": "G-001",
+      "status": "proposed_not_executed"
+    }
+  },
+  "forest_plot_data": []
+}

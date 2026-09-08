@@ -1,0 +1,55 @@
+{
+  "title": "Should an enterprise customer-support team introduce a generative AI assistant?",
+  "theme": "claude",
+  "mode": "demo",
+  "sections": [
+    {
+      "id": "decision",
+      "title": "Decision and boundaries",
+      "component": "DecisionCard",
+      "data_ref": "decision"
+    },
+    {
+      "id": "evidence",
+      "title": "Direct and indirect evidence",
+      "component": "EvidenceMatrix",
+      "data_ref": "evidence"
+    },
+    {
+      "id": "methodology_reviews",
+      "title": "Methodological limits",
+      "component": "MethodologyPanel",
+      "data_ref": "methodology_reviews"
+    },
+    {
+      "id": "applicability",
+      "title": "Deployment conditions",
+      "component": "ApplicabilityCard",
+      "data_ref": "applicability"
+    },
+    {
+      "id": "intervention",
+      "title": "Proposed pilot",
+      "component": "InterventionTimeline",
+      "data_ref": "intervention"
+    },
+    {
+      "id": "evaluation",
+      "title": "Evaluation and stopping",
+      "component": "EvaluationFlow",
+      "data_ref": "evaluation"
+    },
+    {
+      "id": "sources",
+      "title": "Verified primary sources",
+      "component": "SourceList",
+      "data_ref": "sources"
+    }
+  ],
+  "extensions": {
+    "data_origin": "manual_curated",
+    "domain": "policy",
+    "benchmark_eligible": false,
+    "render_status": "not_generated"
+  }
+}

@@ -51,6 +51,9 @@ for _p in (str(ROOT), str(ROOT / "scripts")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+from engine._resources import resource_root  # noqa: E402
+ROOT = resource_root()
+
 from run_workspace import (RESOURCE_POLICY_VERSION, STAGES, RunWorkspace,  # noqa: E402
                            load_json, load_jsonl, next_run_id, save_jsonl)
 from pre_verdict_gate import apply_enforcement, evaluate_workspace  # noqa: E402

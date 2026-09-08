@@ -1,0 +1,444 @@
+{
+  "project_id": "workplace-ai-assistant",
+  "revision_id": 1,
+  "intent": {
+    "domain": "policy",
+    "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+    "data_origin": "manual_curated",
+    "benchmark_eligible": false,
+    "timestamp_note": "Date-only curation marker, not execution time."
+  },
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "audit_warnings": [],
+  "papers": {
+    "S-001": {
+      "paper_id": "S-001",
+      "title": "Generative AI at Work",
+      "authors": [
+        "Erik Brynjolfsson",
+        "Danielle Li",
+        "Lindsey Raymond"
+      ],
+      "year": 2025,
+      "venue": "Academic Publication",
+      "doi": "10.1093/qje/qjae044",
+      "url": "https://academic.oup.com/qje/article/140/2/889/7990658",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": ""
+    },
+    "S-002": {
+      "paper_id": "S-002",
+      "title": "Experimental evidence on the productivity effects of generative artificial intelligence",
+      "authors": [
+        "Shakked Noy",
+        "Whitney Zhang"
+      ],
+      "year": 2023,
+      "venue": "Academic Publication",
+      "doi": "10.1126/science.adh2586",
+      "url": "https://shakkednoy.com/Noy%20Zhang%20NBER%20SI.pdf",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": ""
+    },
+    "S-003": {
+      "paper_id": "S-003",
+      "title": "Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of Artificial Intelligence on Knowledge Worker Productivity and Quality",
+      "authors": [
+        "Fabrizio Dell’Acqua",
+        "Edward McFowland III",
+        "Ethan Mollick",
+        "Hila Lifshitz-Assaf",
+        "Katherine C. Kellogg",
+        "Saran Rajendran",
+        "Lisa Krayer",
+        "François Candelon",
+        "Karim R. Lakhani"
+      ],
+      "year": 2026,
+      "venue": "Academic Publication",
+      "doi": "10.1287/orsc.2025.21838",
+      "url": "https://pubsonline.informs.org/doi/10.1287/orsc.2025.21838",
+      "authority_tier": 1,
+      "peer_reviewed": true,
+      "summary": ""
+    }
+  },
+  "evidence": {
+    "E-001": {
+      "evidence_id": "E-001",
+      "paper_id": "S-001",
+      "outcome_metric": "Chat handling time; separate throughput summary: about 15% more issues resolved per hour.",
+      "outcome_dimension": "Policy",
+      "claim_id": "C-001",
+      "outcome_id": "completion_time",
+      "effect_size": {
+        "metric": "not_standardized",
+        "value": null,
+        "ci_lower": null,
+        "ci_upper": null,
+        "p_value": null
+      },
+      "sample_size": 5172,
+      "sample_description": "Customer-support agents",
+      "study_design": "quasi_experimental",
+      "direction": "SUPPORTS",
+      "confidence_score": null,
+      "wwc_rating": "Not applicable: organizational policy",
+      "key_quote": "",
+      "calibrated_weight": null,
+      "bias_flag": "One firm, one tool and a staggered nonrandom rollout; causal interpretation depends on identification assumptions."
+    },
+    "E-002": {
+      "evidence_id": "E-002",
+      "paper_id": "S-002",
+      "outcome_metric": "Self-reported task time: approximately 40% lower; assessed writing quality approximately 18% higher is a separate measure.",
+      "outcome_dimension": "Policy",
+      "claim_id": "C-002",
+      "outcome_id": "completion_time",
+      "effect_size": {
+        "metric": "not_standardized",
+        "value": null,
+        "ci_lower": null,
+        "ci_upper": null,
+        "p_value": null
+      },
+      "sample_size": 453,
+      "sample_description": "College-educated working professionals",
+      "study_design": "rct",
+      "direction": "SUPPORTS",
+      "confidence_score": null,
+      "wwc_rating": "Not applicable: organizational policy",
+      "key_quote": "",
+      "calibrated_weight": null,
+      "bias_flag": "Indirect evidence, not directly generalizable: brief incentivized writing tasks did not demand precise factual accuracy or customer-specific context."
+    },
+    "E-003": {
+      "evidence_id": "E-003",
+      "paper_id": "S-003",
+      "outcome_metric": "Correct business recommendation: about 19 percentage points lower across AI arms; Table 7 has 373 participants, not 758.",
+      "outcome_dimension": "Policy",
+      "claim_id": "C-003",
+      "outcome_id": "accuracy",
+      "effect_size": {
+        "metric": "not_standardized",
+        "value": null,
+        "ci_lower": null,
+        "ci_upper": null,
+        "p_value": null
+      },
+      "sample_size": 373,
+      "sample_description": "BCG consultants in the outside-frontier experiment",
+      "study_design": "rct",
+      "direction": "SUPPORTS",
+      "confidence_score": null,
+      "wwc_rating": "Not applicable: organizational policy",
+      "key_quote": "",
+      "calibrated_weight": null,
+      "bias_flag": "Indirect evidence, not directly generalizable: consultants solving an experimental business case, not live customer tickets."
+    },
+    "E-004": {
+      "evidence_id": "E-004",
+      "paper_id": "S-001",
+      "outcome_metric": "Small quality declines among the most experienced and highest-skilled support staff.",
+      "outcome_dimension": "Policy",
+      "claim_id": "C-004",
+      "outcome_id": "accuracy",
+      "effect_size": {
+        "metric": "not_standardized",
+        "value": null,
+        "ci_lower": null,
+        "ci_upper": null,
+        "p_value": null
+      },
+      "sample_size": null,
+      "sample_description": "Experienced and high-skill customer-support agents",
+      "study_design": "quasi_experimental",
+      "direction": "SUPPORTS",
+      "confidence_score": null,
+      "wwc_rating": "Not applicable: organizational policy",
+      "key_quote": "",
+      "calibrated_weight": null,
+      "bias_flag": "Same study as E-001; subgroup sample size was not extracted. This is not an independent replication."
+    }
+  },
+  "outcomes": {
+    "completion_time": {
+      "outcome_id": "completion_time",
+      "name": "completion_time",
+      "dimension": "Policy",
+      "category": "Policy",
+      "description": ""
+    },
+    "accuracy": {
+      "outcome_id": "accuracy",
+      "name": "accuracy",
+      "dimension": "Policy",
+      "category": "Policy",
+      "description": ""
+    }
+  },
+  "claims": {
+    "C-001": {
+      "claim_id": "C-001",
+      "statement": "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
+      "outcome_dimension": "Policy",
+      "outcome_metric": "",
+      "status": "SUPPORTED",
+      "pooled_effect_g": null,
+      "evidence_ids": [
+        "E-001"
+      ],
+      "bias_warning": ""
+    },
+    "C-002": {
+      "claim_id": "C-002",
+      "statement": "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
+      "outcome_dimension": "Policy",
+      "outcome_metric": "",
+      "status": "SUPPORTED",
+      "pooled_effect_g": null,
+      "evidence_ids": [
+        "E-002"
+      ],
+      "bias_warning": ""
+    },
+    "C-003": {
+      "claim_id": "C-003",
+      "statement": "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
+      "outcome_dimension": "Policy",
+      "outcome_metric": "",
+      "status": "SUPPORTED",
+      "pooled_effect_g": null,
+      "evidence_ids": [
+        "E-003"
+      ],
+      "bias_warning": ""
+    },
+    "C-004": {
+      "claim_id": "C-004",
+      "statement": "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits.",
+      "outcome_dimension": "Policy",
+      "outcome_metric": "",
+      "status": "SUPPORTED",
+      "pooled_effect_g": null,
+      "evidence_ids": [
+        "E-004"
+      ],
+      "bias_warning": ""
+    }
+  },
+  "risks": {},
+  "gaps": {
+    "G-001": {
+      "gap_id": "G-001",
+      "gap_type": "Local applicability and safety",
+      "description": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set.",
+      "target_outcome": "",
+      "existing_evidence_summary": "E-001 through E-004",
+      "recommended_trial_design": "Preregister an intention-to-treat comparison with team-clustered uncertainty and subgroup estimates. Set sample size and noninferiority margins from local baseline variance and operational priorities before enrollment."
+    }
+  },
+  "decision": {
+    "decision_id": "D-001",
+    "verdict": "PILOT",
+    "confidence_score": null,
+    "rationale": "A supervised pilot is warranted because one direct field study supports efficiency gains but also reveals heterogeneous quality effects. Indirect experiments identify task boundaries, while local safety and net value remain unknown.",
+    "applicability_boundary": "",
+    "intervention_plan": {
+      "decision": "pilot",
+      "target_population": "Enterprise customer-support staff, stratified by tenure and baseline skill.",
+      "pilot_duration": "Proposed: two baseline weeks and six pilot weeks; not executed.",
+      "ai_usage_policy": "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+      "risk_control": [
+        "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+        "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+        "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+        "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+      ],
+      "stop_conditions": [
+        "Pause immediately after a verified privacy leak or a serious unsafe or unauthorized customer commitment; investigate before resuming.",
+        "Pause expansion if blinded quality review crosses a pre-agreed noninferiority margin, including within experience strata."
+      ],
+      "evidence_alignment": [
+        "E-001",
+        "E-002",
+        "E-003",
+        "E-004"
+      ],
+      "extensions": {
+        "gap_id": "G-001",
+        "target_population": "enterprise_customer_support_staff",
+        "status": "proposed_not_executed"
+      }
+    },
+    "evaluation_plan": {
+      "research_question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+      "groups": {
+        "treatment": "Eligible teams randomly assigned to supervised assistant access, stratified by tenure and baseline performance.",
+        "comparison": "Concurrent teams retaining the existing workflow; document contamination."
+      },
+      "baseline": "Record resolution rate, paid hours, repeat contacts, blinded quality and review costs before allocation.",
+      "post_test": "Assess the same outcomes at pilot end; separately audit privacy and unsafe commitments.",
+      "analysis_plan": "Preregister an intention-to-treat comparison with team-clustered uncertainty and subgroup estimates. Set sample size and noninferiority margins from local baseline variance and operational priorities before enrollment.",
+      "success_threshold": "Expand only if quality is noninferior, verified resolutions per paid hour improve, net cost is acceptable and no serious unresolved safety incident remains; thresholds require local agreement.",
+      "stop_conditions": [
+        "Pause immediately after a verified privacy leak or a serious unsafe or unauthorized customer commitment; investigate before resuming.",
+        "Pause expansion if blinded quality review crosses a pre-agreed noninferiority margin, including within experience strata."
+      ],
+      "extensions": {
+        "gap_id": "G-001",
+        "status": "proposed_not_executed"
+      }
+    },
+    "stop_conditions": [
+      "Pause immediately after a verified privacy leak or a serious unsafe or unauthorized customer commitment; investigate before resuming.",
+      "Pause expansion if blinded quality review crosses a pre-agreed noninferiority margin, including within experience strata."
+    ],
+    "timestamp": "2026-09-08T00:00:00Z"
+  },
+  "edges": [
+    {
+      "source_id": "E-001",
+      "target_id": "S-001",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-001",
+      "target_id": "C-001",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-001",
+      "target_id": "completion_time",
+      "relation": "MEASURES",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-001",
+      "target_id": "G-001",
+      "relation": "IDENTIFIES_GAP",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-001",
+      "target_id": "D-001",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-002",
+      "target_id": "S-002",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-002",
+      "target_id": "C-002",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-002",
+      "target_id": "completion_time",
+      "relation": "MEASURES",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-002",
+      "target_id": "G-001",
+      "relation": "IDENTIFIES_GAP",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-002",
+      "target_id": "D-001",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-003",
+      "target_id": "S-003",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-003",
+      "target_id": "C-003",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-003",
+      "target_id": "accuracy",
+      "relation": "MEASURES",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-003",
+      "target_id": "G-001",
+      "relation": "IDENTIFIES_GAP",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-003",
+      "target_id": "D-001",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-004",
+      "target_id": "S-001",
+      "relation": "EXTRACTED_FROM",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-004",
+      "target_id": "C-004",
+      "relation": "SUPPORTS",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-004",
+      "target_id": "accuracy",
+      "relation": "MEASURES",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "E-004",
+      "target_id": "G-001",
+      "relation": "IDENTIFIES_GAP",
+      "weight": 1.0,
+      "metadata": {}
+    },
+    {
+      "source_id": "C-004",
+      "target_id": "D-001",
+      "relation": "GROUNDS_DECISION",
+      "weight": 1.0,
+      "metadata": {}
+    }
+  ]
+}

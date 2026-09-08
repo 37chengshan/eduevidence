@@ -1,0 +1,27 @@
+{
+  "decision": "pilot",
+  "target_population": "Enterprise customer-support staff, stratified by tenure and baseline skill.",
+  "pilot_duration": "Proposed: two baseline weeks and six pilot weeks; not executed.",
+  "ai_usage_policy": "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+  "risk_control": [
+    "Start with low-risk, knowledge-base-covered queues; agents inspect and edit every proposed reply.",
+    "Stratify by tenure and baseline skill; retain expert discretion and measure review workload.",
+    "Minimize and redact customer data, restrict access and retention, and review supplier data-use terms before a pilot.",
+    "Escalate unfamiliar, ambiguous, sensitive or high-stakes requests to qualified humans; no autonomous commitments."
+  ],
+  "stop_conditions": [
+    "Pause immediately after a verified privacy leak or a serious unsafe or unauthorized customer commitment; investigate before resuming.",
+    "Pause expansion if blinded quality review crosses a pre-agreed noninferiority margin, including within experience strata."
+  ],
+  "evidence_alignment": [
+    "E-001",
+    "E-002",
+    "E-003",
+    "E-004"
+  ],
+  "extensions": {
+    "gap_id": "G-001",
+    "target_population": "enterprise_customer_support_staff",
+    "status": "proposed_not_executed"
+  }
+}

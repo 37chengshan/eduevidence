@@ -1,0 +1,19 @@
+{
+  "data_origin": "manual_curated",
+  "checked_on": "2026-09-08",
+  "scope": "Purposive primary-source review for a bounded organizational-policy demo; not a systematic search or model benchmark",
+  "plan": ["Prioritize field evidence from customer support", "Check task-boundary counterevidence from randomized workplace experiments", "Read original text and distinguish publication versions and analyzed samples"],
+  "queries": ["site.academic.oup.com Generative AI at Work 5172 15%", "site.science.org Noy Zhang experimental evidence productivity generative artificial intelligence 453", "site.hbs.edu Dell Acqua navigating jagged technological frontier 758 19 percentage points pdf", "site.hbs.edu 24-013 pdf", "site.shakkednoy.com science pdf productivity"],
+  "included": ["S-001", "S-002", "S-003"],
+  "attempts": [
+    {"url": "https://academic.oup.com/qje/article/140/2/889/7990658", "result": "Full publisher text read; redirected to https://oup.silverchair-cdn.com/article-minimal/7990658"},
+    {"url": "https://www.science.org/doi/10.1126/science.adh2586", "result": "Web tool internal error; no successful publisher fetch claimed"},
+    {"url": "https://economics.mit.edu/sites/default/files/inline-files/Noy_Zhang_1.pdf", "result": "Read early March 2023 working paper with 444 participants; excluded to avoid mixing versions"},
+    {"url": "https://shakkednoy.com/Noy%20Zhang%20NBER%20SI.pdf", "result": "Read author manuscript, including Method and Limitations; 453 participants"},
+    {"url": "https://www.hbs.edu/ris/Publication%20Files/24-013_d9b45b68-9e74-42d6-a1c6-c72fb70c7282.pdf", "result": "Web tool internal error; used published primary text instead"},
+    {"url": "https://pubsonline.informs.org/doi/10.1287/orsc.2025.21838", "result": "Read published 2026 text, section 4.2, Figure 5 and Table 7; outside-frontier sample 373"}
+  ],
+  "counterevidence": "S-003 outside-frontier correctness decline; S-001 experienced-worker quality heterogeneity",
+  "excluded_discovery_results": "Generated research assessments and secondary summaries were not used as evidence",
+  "stopping_reason": "Three verified primary studies meet demo scope; only one is directly in customer support. No claim of exhaustive retrieval or absence of other null findings."
+}

@@ -28,7 +28,7 @@ REPO_URL="https://github.com/37chengshan/eduevidence"
 SKILL_NAME="eduevidence"
 # Skill 本体（运行协议 + 确定性脚本 + 检索/集成层 + 展示层）。
 # retrieval/ 与 integrations/ 会被 scripts/ 直接 import；visualization/ 负责最终 HTML 渲染。
-SKILL_PAYLOAD=(SKILL.md engine domains skill references schemas scripts retrieval integrations visualization)
+SKILL_PAYLOAD=(SKILL.md agents engine domains skill references schemas scripts retrieval integrations visualization web examples docs autoevolve eduevidence_cli.py)
 # Agent MCP 声明文件：安装完成后写入 AGENT_MCP_INSTALLED=1，供
 # integrations/agent_mcp.py 作为 env 后备来源读取（真实环境变量优先于该文件）。
 AGENT_MCP_ENV_FILE="${AGENT_MCP_ENV_FILE:-$HOME/.eduevidence/env}"
@@ -149,7 +149,7 @@ host_skill_root() {
 
 # ---------- 通用提示词（方式三：宿主不在支持列表时交给任意 AI） ----------
 UNIVERSAL_PROMPT="请把 https://github.com/37chengshan/eduevidence 仓库中的 EduEvidence 安装为 skill：
-1. 将仓库根目录的 SKILL.md、skill/、references/、schemas/、scripts/、retrieval/、integrations/、visualization/ 复制到你的 skill 目录
+1. 将仓库根目录的 完整分发目录（含 SKILL.md、engine/、domains/、skill/、schemas/、scripts/、web/studio/ 等）复制到你的 skill 目录
    （如 ~/.claude/skills/eduevidence/、~/.omp/agent/skills/eduevidence/、~/.agents/skills/eduevidence/ 等），
    或按你的 skill 装载机制导入；
 2. 安装完成后确认能读取 SKILL.md，并能运行 scripts/ 下的确定性脚本；
@@ -268,13 +268,13 @@ local_setup() {
     # 5. 自检：Schema 校验 + 报告渲染
     echo "==> 自检：Schema 校验"
     python scripts/validate_schema.py --schema schemas/verdict.schema.json \
-        --data examples/ai-coding-assistant/verdict.json
+        --data examples/ai-coding-assistant-evidence/verdict.json
     python scripts/validate_schema.py --schema schemas/evidence.schema.json \
-        --data examples/ai-coding-assistant/evidence.jsonl
+        --data examples/ai-coding-assistant-evidence/evidence.jsonl
 
     echo "==> 自检：渲染双语 HTML 报告"
     python visualization/eduevidence-report/scripts/build_report.py \
-        --result examples/ai-coding-assistant/result.json \
+        --result examples/ai-coding-assistant-evidence/result.json \
         --out /tmp/eduevidence-smoke.html
     rm -f /tmp/eduevidence-smoke.html
 
@@ -291,7 +291,7 @@ local_setup() {
 local_finish() {
     echo ""
     echo "安装完成。下一步："
-    echo "  1. 查看示例报告:  open examples/ai-coding-assistant/EduEvidence_Report.html"
+    echo "  1. 查看示例报告:  open examples/ai-coding-assistant-evidence/EduEvidence_Report.html"
     echo "  2. 渲染自己的 result.json（需同时准备 result.zh.json 中文平行数据）:"
     echo "     python visualization/eduevidence-report/scripts/build_report.py \\"
     echo "         --result <你的 result.json> --out REPORT.html"
@@ -315,7 +315,7 @@ install_to_dir() {
         rm -rf "$dest"
     fi
     mkdir -p "$dest"
-    cp -R "${SKILL_PAYLOAD[@]}" "$dest"/
+    python3 scripts/skill_payload.py "$PWD" "$dest"
     echo "    ✅ 已安装: $dest"
 }
 

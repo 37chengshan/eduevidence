@@ -9,7 +9,7 @@
 - **正式控制台运行时**：`web/studio/`，由构建生成，不手工编辑。
 - **本地入口**：`python3 scripts/dashboard_server.py --host 127.0.0.1 --port 8765` 后访问 `/studio/`。
 - **公开静态入口**：GitHub Pages 根页保留介绍页，`/studio/` 提供只读公开示例。
-- `web/index.html`、`web/js/`、`web/styles.css` 是历史三页控制台的兼容实现，不再是产品开发主线。
+- `web/index.html` 是新版构建缺失时的明确提示页，不会回退到旧版 v5 控制台。旧 `web/js/` 与 `web/styles.css` 仅保留在仓库中供兼容维护，不进入正式 Skill 包。
 
 ## 2. Research Studio 边界
 
@@ -93,7 +93,7 @@ GitHub Pages 构建只导出仓库中的公开 examples。以下内容不得进�
 - serious / critical accessibility scan
 - five-theme standalone report validation
 - final Skill closure build
-- GitHub Pages build and deploy
+- GitHub Pages local build (remote deployment requires separate authorization)
 
 自动测试不是完整人工 WCAG 认证，也不能替代视觉审查；关键前端变更应同时检查 CI 截图。
 

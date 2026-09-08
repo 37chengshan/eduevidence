@@ -11,60 +11,11 @@ echo "==> Staging flat skill package at $STAGING"
 rm -rf "$STAGING"
 mkdir -p "$STAGING"
 
-cp "$ROOT/SKILL.md" "$STAGING/SKILL.md"
+# One runtime allowlist is shared with the host installer and wheel.
+python3 "$ROOT/scripts/skill_payload.py" "$ROOT" "$STAGING"
 
-# Runtime + vNext self-evolution control plane. Benchmarks/tests remain excluded.
-for d in agents engine domains scripts retrieval integrations schemas skill references autoevolve; do
-  test -d "$ROOT/$d" || { echo "missing allowlist dir: $d"; exit 1; }
-  rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store","runs"} "$ROOT/$d/" "$STAGING/$d/"
-done
-for f in eduevidence_cli.py install.sh pyproject.toml LICENSE CHANGELOG.md; do
-  test -f "$ROOT/$f" || { echo "missing allowlist file: $f"; exit 1; }
-  cp "$ROOT/$f" "$STAGING/$f"
-done
-
-mkdir -p "$STAGING/visualization"
-rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store"} \
-  "$ROOT/visualization/eduevidence-report/" "$STAGING/visualization/eduevidence-report/"
-
-mkdir -p "$STAGING/web/js"
-cp -a "$ROOT/web/studio" "$STAGING/web/studio"
-cp "$ROOT/web/index.html" "$STAGING/web/index.html"
-cp "$ROOT/web/styles.css" "$STAGING/web/styles.css"
-for f in main.js state.js api.js charts.js dashboard.js viz.js; do
-  test -f "$ROOT/web/js/$f" || { echo "missing allowlist web/js/$f"; exit 1; }
-  cp "$ROOT/web/js/$f" "$STAGING/web/js/$f"
-done
-
-mkdir -p "$STAGING/examples"
-for d in ai-coding-assistant-evidence; do
-  test -d "$ROOT/examples/$d" || { echo "missing flagship example: $d"; exit 1; }
-  rsync -a --exclude={".venv","__pycache__","*.pyc",".DS_Store","figures"} \
-    "$ROOT/examples/$d/" "$STAGING/examples/$d/"
-done
-for d in highschool-math-ai-tutor esl-academic-writing-ai ai-tutor ai-writing-assistant; do
-  test -d "$ROOT/examples/$d" || continue
-  mkdir -p "$STAGING/examples/$d"
-  for f in result.json result.zh.json evidence_graph.json report_spec.json EduEvidence_Report.html; do
-    test -f "$ROOT/examples/$d/$f" && cp "$ROOT/examples/$d/$f" "$STAGING/examples/$d/$f"
-  done
-  test -d "$ROOT/examples/$d/reports-5themes" && \
-    rsync -a --exclude={"*.png","*.pdf"} "$ROOT/examples/$d/reports-5themes/" \
-      "$STAGING/examples/$d/reports-5themes/"
-done
-
-# Prefer the current validated Claude projection as each default report.
-for variants in "$STAGING"/examples/*/reports-5themes; do
-  test -f "$variants/EduEvidence_Report_claude.html" || continue
-  cp "$variants/EduEvidence_Report_claude.html" "$(dirname "$variants")/EduEvidence_Report.html"
-done
-mkdir -p "$STAGING/docs"
-for f in architecture.md demo.md demo-storyboard.md install-guide.md \
-         reproducibility.md release-contract.md autoresearch-evolution-plan.md \
-         orchestration-role-model.md autoresearch-implementation-status.md research-studio-guide.zh-CN.md; do
-  test -f "$ROOT/docs/$f" && cp "$ROOT/docs/$f" "$STAGING/docs/$f"
-done
 cp "$ROOT/packaging/UPLOAD-README.md" "$STAGING/UPLOAD-README.md"
+cp "$ROOT/packaging/START-HERE.md" "$STAGING/START-HERE.md"
 cp "$ROOT/packaging/scp-manifest.json" "$STAGING/scp-manifest.json"
 cp "$ROOT/packaging/upload-layout.md" "$STAGING/upload-layout.md"
 cp "$ROOT/README.md" "$STAGING/README.md"
@@ -113,7 +64,7 @@ manifest = {
         "docs/competition-brief.md", "docs/superpowers", ".agents", ".mimosa",
         "runs/", "autoevolve/runs/", "upload/", "web/landing*", "web/archive_*",
         "web/showcase_v2", "web/js/{wizard,did_sandbox,motion}.js", "web/assets/*",
-        "visualization/lieflat-charts", "benchmarks/", "tests/", "assets/",
+        "visualization/lieflat-charts", "benchmarks/baselines", "benchmarks/results", "tests/", "assets/ except assets/readme/",
         "examples/*/figures"
     ],
     "files": entries,

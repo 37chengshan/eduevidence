@@ -21,7 +21,9 @@ from engine.ids import new_local_id
 from engine.library import ResearchLibrary
 from scripts.validate_schema import SchemaError, validate
 
-_SYNTHESIS_SCHEMA = (Path(__file__).resolve().parent.parent / "schemas" / "v3"
+from engine._resources import resource_root
+
+_SYNTHESIS_SCHEMA = (resource_root() / "schemas" / "v3"
                      / "synthesis.schema.json")
 
 

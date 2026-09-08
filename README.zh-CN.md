@@ -1,19 +1,26 @@
+<p align="center">
+  <img src="assets/readme/logo.png" width="88" height="88" alt="EduEvidence logo" />
+</p>
+
 # EduEvidence
 
 > **🌐 [English](README.md) | 中文**
 
-## EduEvidence Research Engine — Evidence-Based Education Decision Skill
+## EduEvidence Research Engine — Evidence Research & Decision Skill
 
-> **From Education Questions to Evidence-Based Decisions.**
-> **从教育问题，到有证据支撑的教育决策。**
+> **From Research Questions to Evidence-Based Decisions.**
+> **从研究问题，到有证据支撑的决策。**
 
-EduEvidence 面向教师、教学研究者与教学管理者，把"是否采用某教学法、课程设计、评估方式或 AI 教学工具"从经验判断转化为**可追溯、可质疑、可验证的证据决策流程**——教学法、课程、评估、学习干预与 AI 工具均是应用域，引擎方法学教育通用。
+EduEvidence 面向研究者与实践决策者，将教育、组织政策和 AI 工具采用等问题转化为**可追溯、可质疑、可验证的证据决策流程**。当前公开案例涵盖编程学习和企业客服，分别使用教育与组织政策领域契约。
 
-- ⚖️ 不是替教师生成答案，而是帮助教师知道：证据支持什么、不能支持什么、适用于谁、应该怎样试点并验证。
+- **三条公开工作流**：Evidence Review（证据综述）、Decision & Pilot（决策与试点）、Evaluate & Update（评估与更新）。完整研究周期将文献证据、有依据的知识缺口、研究设计、新数据和决策修订连接起来。
+- ⚖️ 帮助研究者与实践决策者判断：证据支持什么、不能支持什么、适用于谁、应该怎样试点并验证。
 - 🧪 基于真实研究（示例包含 CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 的实证证据），不做无来源断言。
-- 🚦 最终输出不是"允许/禁止"的二元结论，而是 **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** 四态决策 + 可落地的教学干预与评价方案。
+- 🚦 最终输出不是"允许/禁止"的二元结论，而是 **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** 四态决策 + 可落地的干预与评价方案。
 
-![EduEvidence 顶层宣传图](assets/top-banner.jpg)
+![实际研究概览：企业客服 AI 证据案例](assets/readme/studio-overview.png)
+
+*本地 Studio 实际截图。案例为人工整理文献，未附研究执行历史。*
 
 ---
 
@@ -52,7 +59,7 @@ bash install.sh              # 一键：venv + 依赖 + 自检 + 测试
 安装后直接打开示例报告：
 
 ```bash
-open examples/ai-coding-assistant/EduEvidence_Report.html
+open examples/ai-coding-assistant-evidence/EduEvidence_Report.html
 ```
 
 > 需要 Python 3.10+；核心零第三方依赖。学术图 PNG/PDF 导出可选装 matplotlib。
@@ -169,7 +176,7 @@ EduEvidence 执行：
 | 155–170s | Teaching Intervention + Evaluation |
 | 170–180s | Benchmark |
 
-完整示例包见 [`examples/ai-coding-assistant/`](examples/ai-coding-assistant/)。
+完整示例包见 [`examples/ai-coding-assistant-evidence/`](examples/ai-coding-assistant-evidence/)。
 
 ## Why Education Evidence Is Hard
 
@@ -238,7 +245,7 @@ EduEvidence 强制区分 20 类 Outcome（`references/outcome-taxonomy.md`）：
 - Can Claim / Cannot Claim 边界
 - 四态决策 + Confidence（规则化计算，不由模型自由生成）
 
-![Evidence Tribunal Workflow](assets/tribunal-workflow.jpg)
+![Evidence Tribunal Workflow](assets/readme/research-workflow.svg)
 
 ## From Evidence to Action
 
@@ -270,14 +277,26 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 
 > **大学一年级 C 语言课程是否应该允许学生使用生成式 AI 编程助手？**
 
-`examples/ai-coding-assistant/` 完整展示了从问题到决策的全过程：
+`examples/ai-coding-assistant-evidence/` 完整展示了从问题到决策的全过程：
 
-- **证据**（7 条，均绑定真实来源）：任务表现提升（Kazemitabaar 2023）、无护栏访问损害独立考试表现 -17%（Bastani 2025, PNAS）、护栏设计消除负效应（Bastani 2025）、形成性反馈写作证据（Marzuki 2024）。
+- **证据**（12 条发现、8 个来源）：任务表现提升（Kazemitabaar 2023）、无护栏访问损害独立考试表现 -17%（Bastani 2025, PNAS）、护栏设计消除负效应（Bastani 2025）、形成性反馈写作证据（Marzuki 2024）。
 - **决策**：**PILOT** —— 任务表现证据强，但大学编程课程的直接学习效应证据缺失，无护栏风险已被证实。
 - **干预**：4 阶段试点（Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check）。
 - **评价**：无 AI 基线/后测/期末考试保持/无 AI 迁移任务 + AI 依赖风险指标。
 
-另外两个示例：AI 写作助手（`examples/ai-writing-assistant/`）、高数 AI Tutor（`examples/ai-tutor/`）——证明 Skill 不是为一个问题写死。
+另一公开案例 `examples/workplace-ai-assistant/` 使用组织政策领域，讨论企业客服是否引入 AI 助手：3 项研究、4 条发现，区分直接客服证据与间接写作/咨询证据，建议有监督试点。详见 [来源核验与边界](docs/demo-workplace-ai.md)。
+
+两个公开案例均为人工整理文献（`manual_curated`），报告生成不等于九阶段模型研究已运行，也不代表试点已经执行。四个旧教学示例迁入 `tests/fixtures/legacy-examples/`，仅供软件兼容测试，排除于公共目录和分发包；未核验或合成数据不能引用为研究证据。旧 `ai-coding-assistant` 路径保留兼容别名。
+
+## Studio 实际界面
+
+点击图谱节点可以追溯“来源 → 发现 → 主张”。连线流动用于辅助阅读，不表示后台研究正在执行。
+
+![实际溯源图谱](assets/readme/studio-graph.png)
+
+同一份证据可以用五个独立主题阅读，支持中英文及简报/全文切换。
+
+![实际报告阅读室](assets/readme/studio-reports.png)
 
 ## Visualization: Bilingual HTML Report + Infographics + Academic Figures
 
@@ -306,7 +325,7 @@ result.json + result.zh.json
 
 详见[研究观察台流程与交付指南](docs/research-studio-guide.zh-CN.md)。
 
-> Open the example directly: `examples/ai-coding-assistant/EduEvidence_Report.html`
+> Open the example directly: `examples/ai-coding-assistant-evidence/EduEvidence_Report.html`
 
 ## Architecture
 
@@ -363,38 +382,38 @@ Agent MCP 是**性能与可靠性增强层，不是 EduEvidence 成立的前提*
 
 > 🔒 Agent MCP 原则：**Scan first. Recommend second. Ask the user. Execute only after explicit confirmation.** 未经用户确认不得 spawn；用户拒绝则回退 Native。
 
-![Controlled Multi-Agent Research](assets/multi-agent-research.jpg)
+![Controlled Multi-Agent Research](assets/readme/controlled-execution.svg)
 
 ## Usage
 
 ```bash
 # 1. 验证数据符合 Schema 契约
 python3 scripts/validate_schema.py --schema schemas/evidence.schema.json \
-    --data examples/ai-coding-assistant/evidence.jsonl
+    --data examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 2. 计算证据质量分与 Confidence
-python3 scripts/evidence_score.py examples/ai-coding-assistant/evidence.jsonl
+python3 scripts/evidence_score.py examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 3. 生成 Evidence Matrix（主产品界面之一）
-python3 scripts/evidence_matrix.py examples/ai-coding-assistant/evidence.jsonl
+python3 scripts/evidence_matrix.py examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 4. 运行 Citation Audit（Claim-证据追溯）
 python3 scripts/claim_audit.py --claims claims.jsonl --evidence evidence.jsonl
 
 # 5. 渲染 Research & Decision Pack（Markdown）
 python3 scripts/render_report.py \
-    --frame examples/ai-coding-assistant/frame.json \
-    --evidence examples/ai-coding-assistant/evidence.jsonl \
-    --methodology examples/ai-coding-assistant/methodology.json \
-    --verdict examples/ai-coding-assistant/verdict.json \
-    --intervention examples/ai-coding-assistant/intervention.json \
-    --evaluation examples/ai-coding-assistant/evaluation.json \
+    --frame examples/ai-coding-assistant-evidence/frame.json \
+    --evidence examples/ai-coding-assistant-evidence/evidence.jsonl \
+    --methodology examples/ai-coding-assistant-evidence/methodology.json \
+    --verdict examples/ai-coding-assistant-evidence/verdict.json \
+    --intervention examples/ai-coding-assistant-evidence/intervention.json \
+    --evaluation examples/ai-coding-assistant-evidence/evaluation.json \
     --out REPORT.md
 
 # 6. 渲染单文件双语 HTML 报告（主产物）
 python3 visualization/eduevidence-report/scripts/build_report.py \
-    --result examples/ai-coding-assistant/result.json \
-    --out examples/ai-coding-assistant/EduEvidence_Report.html
+    --result examples/ai-coding-assistant-evidence/result.json \
+    --out examples/ai-coding-assistant-evidence/EduEvidence_Report.html
 
 # 7. 校验 Benchmark 题目集
 python3 scripts/benchmark.py --questions benchmarks/questions.jsonl

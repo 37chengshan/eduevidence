@@ -151,15 +151,28 @@ def test_example_packs_pass_their_schemas():
         ("education-frame.schema.json", "examples/ai-coding-assistant/frame.json"),
         ("evidence.schema.json", "examples/ai-coding-assistant/evidence.jsonl"),
         ("verdict.schema.json", "examples/ai-coding-assistant/verdict.json"),
-        ("education-frame.schema.json", "examples/ai-writing-assistant/frame.json"),
-        ("evidence.schema.json", "examples/ai-writing-assistant/evidence.jsonl"),
-        ("verdict.schema.json", "examples/ai-writing-assistant/verdict.json"),
-        ("education-frame.schema.json", "examples/ai-tutor/frame.json"),
-        ("evidence.schema.json", "examples/ai-tutor/evidence.jsonl"),
-        ("verdict.schema.json", "examples/ai-tutor/verdict.json"),
+        ("education-frame.schema.json", "tests/fixtures/legacy-examples/ai-writing-assistant/frame.json"),
+        ("evidence.schema.json", "tests/fixtures/legacy-examples/ai-writing-assistant/evidence.jsonl"),
+        ("verdict.schema.json", "tests/fixtures/legacy-examples/ai-writing-assistant/verdict.json"),
+        ("education-frame.schema.json", "tests/fixtures/legacy-examples/ai-tutor/frame.json"),
+        ("evidence.schema.json", "tests/fixtures/legacy-examples/ai-tutor/evidence.jsonl"),
+        ("verdict.schema.json", "tests/fixtures/legacy-examples/ai-tutor/verdict.json"),
     ]
     for schema_name, data_rel in cases:
         schema = load_schema(schema_name)
         records = load_records(ROOT / data_rel)
         for record in records:
             validate(record, schema)
+
+
+def test_external_reference_uses_its_own_definitions(tmp_path):
+    from scripts.validate_schema import Validator, SchemaError
+    import json
+    child = {'type': 'object', 'properties': {'value': {'$ref': '#/definitions/value'}},
+             'definitions': {'value': {'type': 'integer'}}}
+    (tmp_path / 'child.json').write_text(json.dumps(child))
+    root = {'$ref': 'child.json', 'definitions': {'value': {'type': 'string'}}}
+    validator = Validator(root, base_dir=tmp_path)
+    validator.validate({'value': 3}, root)
+    with pytest.raises(SchemaError):
+        validator.validate({'value': 'wrong document scope'}, root)

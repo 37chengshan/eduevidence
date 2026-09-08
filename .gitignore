@@ -26,6 +26,7 @@ runs/
 # Local runtime
 *.log
 .env
+.eduevidence/
 
 # Local briefs (not for distribution)
 docs/competition-brief.md
@@ -59,3 +60,6 @@ studio/playwright-report/
 studio/test-results/
 
 studio/node_modules
+
+# Retired fixture projections are not release artifacts
+tests/fixtures/legacy-examples/**/reports-5themes*/

@@ -211,7 +211,7 @@ def test_v1_result_renders_without_v2_surfaces(tmp_path):
     spec.loader.exec_module(mod)
     # ai-tutor is retained as a legacy compatibility pack; the deleted
     # ai-coding-assistant directory must not be referenced by live tests.
-    v1_path = Path(__file__).resolve().parent.parent / "examples" / "ai-tutor" / "result.json"
+    v1_path = Path(__file__).resolve().parent.parent / "tests" / "fixtures" / "legacy-examples" / "ai-tutor" / "result.json"
     v1 = json.loads(v1_path.read_text(encoding="utf-8"))
     viz = mod.visualization_decisions(v1, {})
     html = mod.render_html(v1, v1, {}, {}, {}, {}, {}, {}, "claude", viz)

@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "schema_objects_validated": 27,
+  "graph_roundtrip": "PASS",
+  "report_input_gates": "PASS",
+  "studio_scanned": "workplace-ai-assistant",
+  "studio_domain": "education",
+  "reports_generated": false
+}

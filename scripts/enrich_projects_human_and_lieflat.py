@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-EXAMPLES_DIR = ROOT / "examples"
+EXAMPLES_DIR = ROOT / "tests" / "fixtures" / "legacy-examples"
 
 
 def enrich_math_project():

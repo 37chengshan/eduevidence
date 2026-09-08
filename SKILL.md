@@ -357,13 +357,13 @@ data
 Example commands:
 ```bash
 python3 visualization/eduevidence-report/scripts/build_charts.py \
-  --result examples/ai-coding-assistant/result.json \
+  --result examples/ai-coding-assistant-evidence/result.json \
   --out /tmp/charts.json
 python3 visualization/eduevidence-report/scripts/build_infographics.py \
-  --result examples/ai-coding-assistant/result.json \
+  --result examples/ai-coding-assistant-evidence/result.json \
   --out /tmp/infographics.json
 python3 visualization/eduevidence-report/scripts/build_figures.py \
-  --result examples/ai-coding-assistant/result.json \
+  --result examples/ai-coding-assistant-evidence/result.json \
   --out /tmp/figures.json \
   --theme okabe_ito
 ```

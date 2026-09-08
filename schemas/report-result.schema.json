@@ -49,6 +49,14 @@
             "manual_curated"
           ],
           "description": "Provenance of the pack data (plan R4). real=pipeline-generated from real studies; manual_curated=hand-curated from real verified studies; synthetic=demonstration content, not real studies; hybrid=mixed."
+        },
+        "domain": {
+          "type": "string",
+          "enum": [
+            "education",
+            "policy"
+          ],
+          "description": "Registered research domain; policy covers non-teaching organizational and public-policy interventions."
         }
       }
     },

@@ -12,7 +12,9 @@ from typing import Callable
 
 from scripts.validate_schema import SchemaError, validate
 
-_REPO_SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas" / "v2"
+from engine._resources import resource_root
+
+_REPO_SCHEMA_DIR = resource_root() / "schemas" / "v2"
 
 
 def _resolve_schema_dir() -> Path:

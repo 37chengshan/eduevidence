@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="704" viewBox="0 0 1200 704" role="img" aria-label="From evidence to a decision you can inspect">
+<title>From evidence to a decision you can inspect</title><desc>Nine scientific stages · 三条公开工作流 · Education + organizational policy</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="none" stroke="#a15c40" stroke-width="1.5"/></marker></defs>
+<rect width="1200" height="704" rx="24" fill="#f7f5f0"/>
+<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif">
+<text x="48" y="43" font-size="12" letter-spacing="3" fill="#9b5e45">EDUEVIDENCE / RESEARCH STUDIO</text>
+<text x="48" y="92" font-size="32" font-weight="600" fill="#272924">From evidence to a decision you can inspect</text>
+<text x="48" y="126" font-size="16" fill="#6f7068">Nine scientific stages · 三条公开工作流 · Education + organizational policy</text>
+<rect x="48" y="166" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="68" y="194" font-size="12" fill="#a15c40">01</text>
+<text x="68" y="220" font-size="21" font-weight="600" fill="#30332e">Frame / 定义问题</text>
+<text x="68" y="244" font-size="13" fill="#6f7068">Question, population, comparison, outcomes</text>
+<path d="M400 214 H418" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="424" y="166" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="444" y="194" font-size="12" fill="#a15c40">02</text>
+<text x="444" y="220" font-size="21" font-weight="600" fill="#30332e">Retrieve / 检索来源</text>
+<text x="444" y="244" font-size="13" fill="#6f7068">Primary sources and retrieval provenance</text>
+<path d="M776 214 H794" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="800" y="166" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="820" y="194" font-size="12" fill="#a15c40">03</text>
+<text x="820" y="220" font-size="21" font-weight="600" fill="#30332e">Extract / 提取证据</text>
+<text x="820" y="244" font-size="13" fill="#6f7068">Study findings, measures and uncertainty</text>
+<path d="M976 262 V287" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="800" y="294" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="820" y="322" font-size="12" fill="#a15c40">04</text>
+<text x="820" y="348" font-size="21" font-weight="600" fill="#30332e">Challenge / 反证质疑</text>
+<text x="820" y="372" font-size="13" fill="#6f7068">Counter-evidence and alternative explanations</text>
+<path d="M800 342 H782" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="424" y="294" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="444" y="322" font-size="12" fill="#a15c40">05</text>
+<text x="444" y="348" font-size="21" font-weight="600" fill="#30332e">Audit / 方法审计</text>
+<text x="444" y="372" font-size="13" fill="#6f7068">Study quality, bias and evidence limitations</text>
+<path d="M424 342 H406" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="48" y="294" width="352" height="96" rx="14" fill="#eee2d8" stroke="#dcd8ce"/>
+<text x="68" y="322" font-size="12" fill="#a15c40">06</text>
+<text x="68" y="348" font-size="21" font-weight="600" fill="#30332e">Adjudicate / 证据裁决</text>
+<text x="68" y="372" font-size="13" fill="#6f7068">Supported claims and bounded decisions</text>
+<path d="M224 390 V415" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="48" y="422" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="68" y="450" font-size="12" fill="#a15c40">07</text>
+<text x="68" y="476" font-size="21" font-weight="600" fill="#30332e">Applicability / 适用边界</text>
+<text x="68" y="500" font-size="13" fill="#6f7068">For whom, where and under which conditions</text>
+<path d="M400 470 H418" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="424" y="422" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="444" y="450" font-size="12" fill="#a15c40">08</text>
+<text x="444" y="476" font-size="21" font-weight="600" fill="#30332e">Intervene / 设计试点</text>
+<text x="444" y="500" font-size="13" fill="#6f7068">A grounded knowledge gap before a new design</text>
+<path d="M776 470 H794" fill="none" stroke="#a15c40" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="800" y="422" width="352" height="96" rx="14" fill="#ffffff" stroke="#dcd8ce"/>
+<text x="820" y="450" font-size="12" fill="#a15c40">09</text>
+<text x="820" y="476" font-size="21" font-weight="600" fill="#30332e">Evaluate / 评估更新</text>
+<text x="820" y="500" font-size="13" fill="#6f7068">Validate new data and revise the decision</text>
+<rect x="48" y="568" width="1104" height="88" rx="14" fill="#e9eee7"/>
+<text x="70" y="600" font-size="18" font-weight="600" fill="#456450">Projection / 展示制品</text>
+<text x="70" y="627" font-size="15" fill="#456450">Read-only Studio · Five report themes · Bilingual HTML · A report is not proof of an executed study.</text>
+<text x="48" y="682" font-size="12" fill="#6f7068">Evidence Review 01–07   /   Decision &amp; Pilot 01–08   /   Evaluate &amp; Update 09</text></g></svg>

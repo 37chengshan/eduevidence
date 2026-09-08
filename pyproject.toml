@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "eduevidence"
 version = "6.0.0"
-description = "Evidence-Based Education Decision Skill — from any education question (teaching methods, curriculum, assessment, learning interventions, AI tools) to an evidence-based decision."
+description = "Evidence research and decision skill with education and organizational policy domains."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -35,16 +35,6 @@ py-modules = ["eduevidence_cli"]
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["engine*", "scripts*", "retrieval*", "integrations*"]
-
-[tool.setuptools.data-files]
-"share/eduevidence/schemas" = ["schemas/*.json"]
-"share/eduevidence/schemas/v2" = ["schemas/v2/*.json"]
-"share/eduevidence/schemas/v3" = ["schemas/v3/*.json"]
-"share/eduevidence/schemas/v4" = ["schemas/v4/*.json"]
-"share/eduevidence/schemas/vNext" = ["schemas/vNext/*.json"]
-"share/eduevidence/domains" = ["domains/manifest.json", "domains/education/manifest.json", "domains/education/outcome_taxonomy.json", "domains/policy/manifest.json", "domains/policy/frame.schema.json", "domains/policy/outcome_taxonomy.json", "domains/policy/methodology_checklist.json"]
-"share/eduevidence/domains/policy/references" = ["domains/policy/references/*.md"]
-"share/eduevidence/benchmarks" = ["benchmarks/evidence-library.json"]
 
 [tool.ruff.lint]
 select = ["E9", "F63", "F7", "F82"]

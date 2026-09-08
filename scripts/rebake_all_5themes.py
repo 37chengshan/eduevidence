@@ -10,8 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 PROJECTS = [
-    "examples/highschool-math-ai-tutor",
-    "examples/esl-academic-writing-ai",
+    "examples/workplace-ai-assistant",
     "examples/ai-coding-assistant-evidence"
 ]
 

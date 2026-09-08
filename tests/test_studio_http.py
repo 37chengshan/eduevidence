@@ -22,7 +22,9 @@ def app(tmp_path, monkeypatch):
 
 def get(base, path, **kwargs):
     try:
-        return urllib.request.urlopen(urllib.request.Request(base + path, **kwargs))
+        # Loopback security tests must reach our handler, even on a proxy-configured host.
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        return opener.open(urllib.request.Request(base + path, **kwargs))
     except urllib.error.HTTPError as error:
         return error
 

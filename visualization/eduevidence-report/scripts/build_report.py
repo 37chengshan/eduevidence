@@ -2090,7 +2090,9 @@ def render_intervention(result: dict, svg: str, lang: str, ui: dict) -> str:
     intervention = result.get("intervention", {})
     if not intervention:
         return f"<p>{esc(ui['no_data'])}</p>"
-    lines = [f"<p><strong>{esc(ui['intervention_learners'])}{esc(ui['colon'])}</strong>{esc(intervention.get('target_learners'))} · "
+    population = intervention.get("target_population") or intervention.get("target_learners")
+    population_label = ("目标人群" if lang == "zh" else "Target population") if intervention.get("target_population") else ui['intervention_learners']
+    lines = [f"<p><strong>{esc(population_label)}{esc(ui['colon'])}</strong>{esc(population)} · "
              f"<strong>{esc(ui['intervention_duration'])}{esc(ui['colon'])}</strong>{esc(intervention.get('pilot_duration'))}</p>"]
     if intervention.get("ai_usage_policy"):
         lines.append(f"<p><strong>{esc(ui['intervention_policy'])}{esc(ui['colon'])}</strong>{esc(intervention['ai_usage_policy'])}</p>")

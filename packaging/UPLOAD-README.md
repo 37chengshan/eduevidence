@@ -96,8 +96,8 @@ eduevidence gate --run-id <id>
 
 - 可编辑控制台源：`studio/`。
 - 构建后的运行时控制台：`web/studio/`；不要手工编辑 bundle。
-- `web/landing.html`：介绍页。
-- `web/index.html` + `web/js/` + `web/styles.css`：旧三页控制台兼容实现，不再作为新 UI 的开发入口。
+- `web/landing.html`：仓库与公开站的介绍页，不包含在精简 Skill 包中。
+- `web/index.html`：构建缺失提示页。旧 `web/js/`、`web/styles.css` 不进入正式 Skill 包。
 - 报告主题在生成时固定；五种视觉身份可以改变排版密度与阅读节奏，但不能改变科学内容。
 - 报告数值由确定性代码从 `result.json` 提取；AI 不直接填写图表数值。
 - 数据不足时图表被抑制，不使用伪造的效应量、置信区间或结论填充空白。
@@ -143,9 +143,9 @@ CI 还会验证：
 | `retrieval/` | 检索与抓取 |
 | `integrations/` | Agent MCP 等可选集成 |
 | `visualization/eduevidence-report/` | 双语五主题报告系统 |
-| `studio/` | Research Studio 可编辑前端源 |
+| `studio/` | 仅源码仓库中的可编辑前端，不是运行必需项 |
 | `web/studio/` | Research Studio 构建产物 |
-| `web/landing.*` | 公开介绍页 |
+| `assets/readme/` | 中英文 README 的 Logo、流程图与真实界面截图 |
 | `examples/` | 可公开演示的研究示例 |
 | `docs/` | 架构、流程和发布文档 |
 
@@ -154,3 +154,7 @@ CI 还会验证：
 最终提交包由 `packaging/make_upload.sh` 以 allowlist 方式构建。不得把 `.git/`、`.venv/`、本地研究数据库、用户项目、Autoevolve 私有运行目录、测试缓存或内部 benchmark 历史带入发布包。
 
 GitHub Pages 同样只导出仓库内公开示例；本地 `EDUEVIDENCE_HOME`、项目状态、运行事件与 Autoevolve 会话不会进入公开静态站。
+
+## 九、本次交付核验
+
+见 `docs/release-closeout/README.md`。本次交付完整目录，不是压缩包。两个公开案例为人工文献整理；真实模型九阶段研究及企业试点不属于本次已验证结果。

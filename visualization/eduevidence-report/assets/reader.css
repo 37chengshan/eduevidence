@@ -391,6 +391,7 @@ select:focus-visible,
   min-width: 0;
   width: 100%;
   max-width: none;
+  overflow-wrap: anywhere;
 }
 :root[data-theme] .report-section {
   margin-bottom: 56px;
@@ -735,8 +736,13 @@ select:focus-visible,
 }
 :root[data-theme] .evidence-to-action {
   max-width: 100%;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+:root[data-theme] .evidence-to-action .action-node {
+  flex: 1 1 140px;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 :root[data-theme="claude"] {
   --insufficient: #69655d;
