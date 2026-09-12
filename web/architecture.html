@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EduEvidence 架构导读 — 九步流程 · 8 个角色 · 产物状态 · 两种跑法</title>
+<style>
+  :root { --bg:#F7F4ED; --surface:#FFFFFF; --text:#3A3833; --primary:#B8694A;
+          --ok:#166534; --bad:#991b1b; --border:#E5E0D5; --muted:#6B675F; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:1080px; margin:0 auto; padding:32px 20px 72px; }
+  h1 { font-size:1.7rem; margin:.2em 0 .3em; letter-spacing:-.01em; }
+  h2 { font-size:1.15rem; margin:2.2em 0 .6em; padding-bottom:.28em; border-bottom:1px solid var(--border); }
+  h3 { font-size:.98rem; margin:1.4em 0 .4em; }
+  .lead { color:var(--muted); max-width:52em; }
+  .eyebrow { text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--primary); margin:0; }
+  table { width:100%; border-collapse:collapse; background:var(--surface);
+          border:1px solid var(--border); margin:18px 0; font-size:.9rem; }
+  th,td { border:1px solid var(--border); padding:9px 11px; text-align:left;
+          vertical-align:top; overflow-wrap:anywhere; }
+  th { background:#FCFAF6; }
+  td.dim { color:var(--muted); }
+  code { background:#FCFAF6; border:1px solid var(--border); border-radius:5px;
+         padding:1px 6px; font-size:.85em; overflow-wrap:anywhere; }
+  pre { background:var(--surface); border:1px solid var(--border); border-radius:8px;
+        padding:14px 16px; overflow-x:auto; font-size:.85rem; line-height:1.55; }
+  .pill { display:inline-block; padding:1px 9px; border-radius:999px; font-size:.72rem;
+          border:1px solid var(--border); }
+  .pill.ok { color:var(--ok); border-color:#16a34a55; background:rgba(22,163,74,.08); }
+  .pill.warn { color:var(--bad); border-color:#dc262688; background:rgba(220,38,38,.10); }
+  .note { background:#FCFAF6; border:1px dashed var(--border); padding:12px 14px;
+          border-radius:8px; font-size:.88rem; color:var(--muted); }
+  figure { margin:20px 0; }
+  svg { max-width:100%; height:auto; display:block; }
+  figcaption { font-size:.8rem; color:var(--muted); margin-top:6px; }
+  ul { padding-left:1.15em; }
+  a { color:var(--primary); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="eyebrow">EduEvidence · 架构导读</p>
+<h1>一个问题进来，一份能核对的结论出去，中间发生了什么</h1>
+<p class="lead">EduEvidence 是一套开源的"决策级证据合成"流程：你把一个"要不要采用、怎么采用"的问题交给它，
+它去读真实文献、主动找反证、审研究质量，最后给出<strong>可以推广 / 先试点 / 不采用 / 证据不足</strong>四选一的判定，
+并附上试点方案与评价方案。它面向教育与政策等应用社科场景，也适用于企业管理、公共服务等同类决策。
+这一页讲清四件事：<strong>九步流程怎么走</strong>、<strong>八个角色各管什么</strong>、<strong>结论存在哪、什么算事实</strong>、<strong>用什么跑</strong>。
+本文所有说法都能在仓库里对应的文件核到（流程定义 <code>engine/workflows.py</code>，角色 <code>skill/roles/registry.yaml</code>，
+产物在运行工作区 run workspace，示例 <code>examples/ai-coding-assistant-evidence/</code>）；文字版全文见 <code>docs/architecture.md</code>。</p>
+
+<h2>1. 一句话架构：一条带闸门的流水线</h2>
+<p>它不是"会聊天的证据助手"，而是一条<strong>每一步都要过检查的流水线</strong>：每一步有自己的输入、产物和校验门，
+产物一旦落盘就是事实、只增不改，报告只是这些事实的<strong>投影</strong>（可以删掉重建，改了报告也改不了结论）。
+"跳过验证直接给结论"这条路在结构上就走不通。</p>
+
+<pre>框定 → 检索 → 抽取 → 质询 → 审计 → 裁决              （Research Core 前 6 步 · 证据纪律）
+    → 适用性 → 干预设计 → 评价方案                    （Decision Extension 后 3 步 · 证据到行动）
+
+Projection 投影（报告 / 导出）在科学流程之外：渲染失败只影响产物，不影响任何结论。</pre>
+<p>说人话的版本：<strong>先把问题框清楚</strong> → <strong>去读真实文献</strong>（读全文，不看摘要）→ <strong>把每条发现抽出来</strong> →
+<strong>专门去找反证</strong> → <strong>审这些研究做得够不够好</strong> → <strong>下判定</strong> → <strong>说清适用边界</strong> →
+<strong>设计一个最小试点</strong> → <strong>写清怎么验收</strong>。前六步管"证据站不站得住"，后三步把证据变成可执行的行动。</p>
+
+<figure>
+  <svg viewBox="0 0 980 250" role="img" aria-label="九步协议链路图">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#B8694A"/>
+      </marker>
+    </defs>
+    <g font-family="-apple-system,PingFang SC,sans-serif" font-size="13">
+      <text x="0" y="18" fill="#6B675F" font-size="12">Research Core（前 6 步）· 证据纪律</text>
+      <text x="560" y="18" fill="#6B675F" font-size="12">Decision Extension（后 3 步）· 证据到行动</text>
+      <g>
+        <rect x="0"   y="30" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="59"  y="58" text-anchor="middle" fill="#3A3833">Frame 框定</text>
+        <rect x="132" y="30" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="191" y="58" text-anchor="middle" fill="#3A3833">Retrieve 检索</text>
+        <rect x="264" y="30" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="323" y="58" text-anchor="middle" fill="#3A3833">Extract 抽取</text>
+        <rect x="396" y="30" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="455" y="58" text-anchor="middle" fill="#3A3833">Challenge 质询</text>
+        <rect x="528" y="30" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="587" y="58" text-anchor="middle" fill="#3A3833">Audit 审计</text>
+        <rect x="660" y="30" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="719" y="58" text-anchor="middle" fill="#3A3833">Adjudicate 裁决</text>
+        <rect x="792" y="30" width="118" height="46" rx="9" fill="#FDF3EC" stroke="#B8694A"/>
+        <text x="851" y="58" text-anchor="middle" fill="#B8694A">Applicability 适用</text>
+      </g>
+      <g stroke="#B8694A" stroke-width="1.4" marker-end="url(#arrow)">
+        <line x1="118" y1="53" x2="132" y2="53"/><line x1="250" y1="53" x2="264" y2="53"/>
+        <line x1="382" y1="53" x2="396" y2="53"/><line x1="514" y1="53" x2="528" y2="53"/>
+        <line x1="646" y1="53" x2="660" y2="53"/><line x1="778" y1="53" x2="792" y2="53"/>
+      </g>
+      <g>
+        <rect x="660" y="118" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="719" y="146" text-anchor="middle" fill="#3A3833">Intervene 干预</text>
+        <rect x="792" y="118" width="118" height="46" rx="9" fill="#FFFFFF" stroke="#E5E0D5"/>
+        <text x="851" y="146" text-anchor="middle" fill="#3A3833">Evaluate 评价</text>
+      </g>
+      <g stroke="#B8694A" stroke-width="1.4" marker-end="url(#arrow)" fill="none">
+        <path d="M 851 76 L 851 118"/>
+        <line x1="778" y1="141" x2="792" y2="141"/>
+      </g>
+      <rect x="0" y="182" width="910" height="46" rx="9" fill="#FCFAF6" stroke="#E5E0D5" stroke-dasharray="5 4"/>
+      <text x="18" y="210" fill="#6B675F">Projection 投影（报告 / 导出）· 不在科学流程内 · 只读快照 · 删掉可重建</text>
+      <text x="700" y="210" fill="#B8694A">报告渲染失败 ≠ 结论改变</text>
+    </g>
+  </svg>
+  <figcaption>九步流程与投影层。步骤清单的唯一权威定义在 <code>engine/workflows.py::SCIENTIFIC_STAGE_IDS</code>
+  （另有三种按需求裁剪的工作流：只做证据综述、做到试点、或只做评价与更新）。</figcaption>
+</figure>
+
+<h2>2. 每一步留下什么文件</h2>
+<p>流程说"做什么"，能力（capability，即"用什么本事做"）说"靠什么动作完成"，产物说"做完了留在磁盘上的东西"。
+这条对应关系是写死的：能力在 <code>engine/capabilities.py</code> 注册、输入输出契约固定，
+每一步的产物文件名固定在 <code>scripts/orchestrator.py::STAGE_SPEC</code>。</p>
+<p>另外三条硬规则，让"结论可查"不是一句口号：<strong>① 能力注册项自带输入/输出契约</strong>（少一个字段就过不了门）；
+<strong>② 产物文件名固定</strong>（下一步只认这个名字）；<strong>③ 每个产物要过自己的校验门</strong>（下表的右列）。
+所以"这一步做没做"不靠人嘴说，看文件在不在、合不合法即可。</p>
+
+<figure>
+  <svg viewBox="0 0 980 300" role="img" aria-label="能力与产物链">
+    <g font-family="-apple-system,PingFang SC,sans-serif" font-size="12.5">
+      <text x="0" y="16" fill="#6B675F" font-size="11.5">这一步靠什么动作完成（能力）</text>
+      <text x="470" y="16" fill="#6B675F" font-size="11.5">产物（run workspace 文件）</text>
+      <text x="790" y="16" fill="#6B675F" font-size="11.5">校验门</text>
+      <g fill="#3A3833">
+        <text x="0" y="52">框定研究问题与边界</text>
+        <text x="0" y="86">文献检索 · 反方证据检索</text>
+        <text x="0" y="120">抓取全文 · 来源校验</text>
+        <text x="0" y="154">抽取研究 · 抽取发现 · 绑定主张</text>
+        <text x="0" y="188">方法学与测量效度评估</text>
+        <text x="0" y="222">证据合成 · 裁决</text>
+        <text x="0" y="256">研究设计 · 评价设计 · 数据分析</text>
+      </g>
+      <g fill="#B8694A">
+        <text x="470" y="52">frame.json</text>
+        <text x="470" y="86">sources.jsonl</text>
+        <text x="470" y="120">fetch/（抓回来的正文 + 降级记录）</text>
+        <text x="470" y="154">evidence.jsonl</text>
+        <text x="470" y="188">methodology.json</text>
+        <text x="470" y="222">final_verdict.json</text>
+        <text x="470" y="256">intervention.json · evaluation.json</text>
+      </g>
+      <g fill="#6B675F" font-size="11.5">
+        <text x="790" y="52">框架必须齐全</text>
+        <text x="790" y="86">来源必须可核验</text>
+        <text x="790" y="120">摘要不算证据</text>
+        <text x="790" y="154">要绑原文 + 分清测的是什么</text>
+        <text x="790" y="188">"做题快"≠"学会了"</text>
+        <text x="790" y="222">11 项定稿前检查</text>
+        <text x="790" y="256">试点与验收必须齐备</text>
+      </g>
+      <g stroke="#E5E0D5" stroke-width="1">
+        <line x1="0" y1="26" x2="960" y2="26"/>
+        <line x1="0" y1="60" x2="960" y2="60"/><line x1="0" y1="94" x2="960" y2="94"/>
+        <line x1="0" y1="128" x2="960" y2="128"/><line x1="0" y1="162" x2="960" y2="162"/>
+        <line x1="0" y1="196" x2="960" y2="196"/><line x1="0" y1="230" x2="960" y2="230"/>
+      </g>
+    </g>
+  </svg>
+  <figcaption>左列为能力注册项、右列为产物与门；能力 ID（如 <code>research_framing</code>、<code>methodology_appraisal</code>）在
+  <code>engine/capabilities.py</code> 注册并自带输入/输出契约，产物名固定在 <code>scripts/orchestrator.py::STAGE_SPEC</code>。</figcaption>
+</figure>
+<p class="note">右列那几句"门"是什么意思，展开说：<br>
+<strong>摘要不算证据</strong>——搜索给出的摘要只能当线索，必须把正文抓回来才能进证据；<br>
+<strong>要绑原文、分清测的是什么</strong>——每条证据都要绑定可回查的原文位置，并标明它测的是哪一种结果（做题速度、考试成绩、长期保持、还是迁移）；<br>
+<strong>"做题快"≠"学会了"</strong>——系统内置护栏，禁止把任务表现当作学习效果（仓库里的说法是 <code>task_vs_learning_guard</code>）；<br>
+<strong>11 项定稿前检查</strong>——判定定稿前的机器检查（Pre-Verdict Gate，见 §5）。<br>
+完整方法与判据见 <code>references/methodology-audit.md</code>、<code>references/tribunal-policy.md</code>。</p>
+
+<h2>3. 八个角色：谁负责说"不"</h2>
+<p>角色是<strong>责任单元</strong>，不是"必须真的开出 8 个 Agent"。任务量分级（S/M/L）决定是一个模型依次扮演全部角色，
+还是多个模型分工——但三条独立性约束不可协商：<strong>找反证的人必须换一个模型家族</strong>、<strong>审方法的人不看结论</strong>、
+<strong>写进证据图的只能有一个人</strong>。这三条是"结论不自己给自己背书"的技术保证。</p>
+
+<figure>
+  <svg viewBox="0 0 980 190" role="img" aria-label="角色与阶段映射">
+    <g font-family="-apple-system,PingFang SC,sans-serif" font-size="12">
+      <g fill="#3A3833">
+        <text x="0" y="34">research-planner</text>
+        <text x="0" y="62">evidence-retriever</text>
+        <text x="0" y="90">evidence-analyst</text>
+        <text x="0" y="118">skeptic</text>
+        <text x="0" y="146">method-reviewer</text>
+        <text x="0" y="174">evidence-judge</text>
+      </g>
+      <g fill="#B8694A">
+        <rect x="230" y="20" width="76" height="20" rx="10" fill="#FDF3EC" stroke="#E5E0D5"/>
+        <text x="268" y="34" text-anchor="middle" font-size="11">frame</text>
+        <rect x="230" y="48" width="76" height="20" rx="10" fill="#FDF3EC" stroke="#E5E0D5"/>
+        <text x="268" y="62" text-anchor="middle" font-size="11">retrieve</text>
+        <rect x="230" y="76" width="76" height="20" rx="10" fill="#FDF3EC" stroke="#E5E0D5"/>
+        <text x="268" y="90" text-anchor="middle" font-size="11">extract</text>
+        <rect x="230" y="104" width="88" height="20" rx="10" fill="#FDF3EC" stroke="#E5E0D5"/>
+        <text x="274" y="118" text-anchor="middle" font-size="11">challenge</text>
+        <rect x="230" y="132" width="76" height="20" rx="10" fill="#FDF3EC" stroke="#E5E0D5"/>
+        <text x="268" y="146" text-anchor="middle" font-size="11">audit</text>
+        <rect x="230" y="160" width="120" height="20" rx="10" fill="#FDF3EC" stroke="#E5E0D5"/>
+        <text x="290" y="174" text-anchor="middle" font-size="11">adjudicate · applic.</text>
+      </g>
+      <g>
+        <rect x="430" y="100" width="252" height="30" rx="8" fill="#FEF2F2" stroke="#dc262688"/>
+        <text x="556" y="120" text-anchor="middle" fill="#991b1b" font-size="11.5">skeptic 必须换一个模型家族（硬约束）</text>
+        <rect x="430" y="136" width="252" height="30" rx="8" fill="#FCFAF6" stroke="#E5E0D5"/>
+        <text x="556" y="156" text-anchor="middle" fill="#6B675F" font-size="11.5">method-reviewer 只看方法、不看结论</text>
+      </g>
+    </g>
+  </svg>
+  <figcaption>角色映射由 <code>skill/roles/registry.yaml</code> 声明；独立性由对齐门强制。</figcaption>
+</figure>
+
+<ul>
+  <li><strong>skeptic（找反证的人）必须来自不同模型家族</strong>：同一个模型换个会话，会沿用同一套宽容标准，等于没有独立审核。</li>
+  <li><strong>method-reviewer（审方法的人）与内容判断分离</strong>：只审"怎么测的"，输入里不含结论评价，避免为结论辩护。</li>
+  <li><strong>写入者唯一</strong>：证据图的版本只能由指定的写入者提交，并行的工人不能直接写图。</li>
+</ul>
+<p>八个角色依次是：<strong>research-planner</strong>（把问题框清楚：人群、干预、对照、要看的结果）、
+<strong>evidence-retriever</strong>（找来源并保住出处，摘要不算证据）、
+<strong>evidence-analyst</strong>（把发现抽成结构化条目）、<strong>skeptic</strong>（独立去找反证）、
+<strong>method-reviewer</strong>（审研究质量与测量效度）、<strong>evidence-judge</strong>（在证据边界内下判定、划适用边界）、
+<strong>intervention-designer</strong>（设计有证据支撑的试点与叫停条件）、<strong>evaluation-designer</strong>（设计能算得出的验收方案）。
+角色分工写在 <code>skill/roles/registry.yaml</code>，提示词在 <code>skill/agents/</code>；
+跨模型复核只在执行层真的开了多个模型时才发生，没有独立模型就如实降级为自审并标注——绝不假装做过独立复核。</p>
+
+<h2>4. 结论存在哪：事实 / 一次运行 / 投影</h2>
+<pre>Project（一个研究问题一个项目）
+  └── Evidence Graph（append-only revision）        ← 事实层（唯一真相源）
+      Source → Study → Finding → EvidenceLink → Claim → Outcome → Decision
+  └── Run（一次执行）
+      frame.json · sources.jsonl · fetch/ · evidence.jsonl · skeptic.json
+      methodology.json · raw_verdict.json · final_verdict.json · applicability.json
+      intervention.json · evaluation.json · state.json · trace.jsonl
+      检索审计：search-provenance / attempts / screening / exclusion（+ Sciverse chunks.jsonl）
+  └── DecisionSnapshot（每次裁决的不可变快照）
+  └── Projections（可删可重建）
+      result.json / result.zh.json / HTML 报告 / 图表 / 导出包</pre>
+
+<div class="note">三条边界，值得记一下：① <strong>事实只存在证据图里，不在报告里</strong>——报告坏了、重渲染了，结论不会变；
+② <strong>投影（Projection）不属于科学流程</strong>，它不在九步之内，渲染失败只影响发布，不影响任何判定；
+③ <strong>检索留痕本身就是证据链的一部分</strong>——没有出处记录的检索结果只是"候选"，不能算证据。
+Sciverse 通道拿到的段落定位就按第 ③ 条写进 <code>chunks.jsonl</code>，并标注
+<code>discovery_only_requires_content_fetch</code>（意思是：这只是定位，必须再读回正文）。</div>
+<p>三层的差别，用一句话说清：<strong>Project 是长期研究项目</strong>（一个问题对应一个项目，能跨学期一直用）；
+<strong>Run 是一次执行</strong>（这一轮跑到哪、留下哪些文件）；<strong>Projection 是投影</strong>（给人看的报告、图表、导出包）。
+事实层只有一份：证据图。图上每次提交都生成一个完整的新版本（<code>rev-N</code>）并原子切换指针，旧版本只增不改；
+每次裁决另外留下一个不可变的决定快照，报告落款绑定的是具体哪个版本——所以"引用的是哪一版证据"永远查得到。</p>
+
+<h2>5. 定稿前的机器检查：Pre-Verdict Gate</h2>
+<p>判定不是模型写完就算数。定稿前有一道确定性检查（不调模型、不联网，只读这次运行的产物），共 <strong>11 项</strong>，
+每项给 pass / warn / fail 三种结论：</p>
+<table>
+  <tr><th style="width:34%">检查项</th><th>不通过会怎样</th></tr>
+  <tr><td>研究框架合法</td><td>问题没框清楚，后面全部无效</td></tr>
+  <tr><td>来源非空且合法</td><td>没有可用来源，不能往下走</td></tr>
+  <tr><td>证据非空且合法</td><td>抽不出结构化证据，不能裁决</td></tr>
+  <tr><td>来源已去重</td><td>同一篇论文的镜像 URL 会重复计数，必须先合并</td></tr>
+  <tr><td>反证检索确实做过</td><td>没有真正找过反证，不许下结论</td></tr>
+  <tr><td>方法学审计有效</td><td>审计缺失、判 FAIL，或把"任务表现"等同于"学习"，都会挡住</td></tr>
+  <tr><td>主张与证据对得上</td><td>引用的证据必须真实存在，且不能和自己主张的方向相反</td></tr>
+  <tr><td>结果映射完整</td><td>结论用到的结果类型必须是登记过的，框架里声明要查的不能漏</td></tr>
+  <tr><td>结论边界写清楚</td><td>必须写明"能主张什么、不能主张什么、哪里超出了证据"</td></tr>
+  <tr><td>独立研究计数</td><td>独立研究/样本要数清楚；只有 1 项独立研究时不允许给 High</td></tr>
+  <tr><td>置信度可复算</td><td>最终置信度必须是公式算出来的，并保留模型原值以便对比</td></tr>
+</table>
+<p>关键项失败会<strong>封顶</strong>：不允许高置信度，也不允许直接给"可以推广"，只能降到"先试点"或"证据不足"。
+结果写在运行目录的 <code>gate_report.json</code> 里，可复核。</p>
+
+<h2>6. 执行层：两种跑法，和一道审批闸门</h2>
+<table>
+  <tr><th style="width:18%">维度</th><th>Mode A · Platform Native</th><th>Mode B · Agent MCP Enhanced</th></tr>
+  <tr><td class="dim">依赖</td><td>无（提示词 + 标准库脚本）</td><td>daemon / CLI / MCP Server</td></tr>
+  <tr><td class="dim">检索</td><td>内建通道（含 Sciverse 等 key 通道）</td><td>同上 + 多 CLI 派遣</td></tr>
+  <tr><td class="dim">模型</td><td>单模型</td><td>按角色分工的多模型</td></tr>
+  <tr><td class="dim">失败语义</td><td>直接降级</td><td>超时/失败降级回 Mode A 语义</td></tr>
+</table>
+<pre>detect_agent_mcp()            → 扫描可用 CLI 与模型（无预设默认值）
+build_recommendation_table()  → 按 ROLE_REQUIREMENTS 生成"角色 → 模型"候选表
+用户确认                       → write_approval()：写入 approval.json（含角色映射哈希）
+safe_spawn(role)              → 未确认 / 哈希不匹配 / CLI 越权 ⇒ AGENT_MCP_APPROVAL_REQUIRED（不 spawn）
+cross_model_review()          → 独立模型复核草稿裁决；无独立模型时降级为原生自审并标注</pre>
+<p><span class="pill warn">要点</span> 两种跑法只影响"谁来执行"，不影响科学标准：Mode A 没有任何外部依赖，
+用提示词加标准库脚本就能跑完九步；Mode B 才接入外部 CLI / 多模型，失败时照样降级回 Mode A（并如实标注）。
+模型清单来自真实扫描，角色提示词里不写模型名——一旦允许"悄悄换模型"，skeptic 的跨家族独立性就名存实亡，
+而报告读起来毫无差别；审批哈希（<code>agent_mcp_approval.json</code>）把"用户同意的是哪套映射"钉死，
+未经确认的派遣一律返回 <code>AGENT_MCP_APPROVAL_REQUIRED</code> 且不启动。</p>
+
+<h2>7. 跟着一条真实证据链走一遍</h2>
+<p>抽象流程读十遍，不如跟一条真的走一遍。这里用仓库里两个真实产物包，把九步落到<strong>具体文件</strong>上。
+先说最值得记住的一课：下面这个例子中，"练习时做题变快"和"撤掉 AI 后还能不能自己做"是两回事，
+而这正是判定从"可以推广"降到"先试点"的原因。</p>
+<table>
+  <tr><th style="width:16%">这一步做什么</th><th style="width:22%">留下什么文件</th><th>这一份里到底是什么</th></tr>
+  <tr><td>框定问题</td><td><code>frame.json</code></td><td>问题、人群、对照、要看的结果写清楚；本例是"大一 C 语言课该不该放开生成式 AI 编程助手"</td></tr>
+  <tr><td>检索文献</td><td><code>sources.jsonl</code> + <code>fetch/</code></td><td>8 篇来源（7 篇带 DOI 的期刊/会议论文 + 1 篇预印本），正文抓到本地，另附检索审计四件套</td></tr>
+  <tr><td>抽取证据</td><td><code>evidence.jsonl</code></td><td>12 条证据，每条绑定原文位置；把"任务表现"和"学习效果"分开记，不混为一谈</td></tr>
+  <tr><td>反向质疑</td><td><code>skeptic.json</code></td><td>9 项反证检查逐条给结论；本例最有力的反证是：撤掉 AI 后独立考试 −17%（950 人）</td></tr>
+  <tr><td>方法学审计</td><td><code>methodology.json</code></td><td>15 项审计；明确写下"练习涨 48–127% 与独立考试 −17% 同时存在，不能等同"</td></tr>
+  <tr><td>下判定</td><td><code>final_verdict.json</code></td><td><strong>PILOT（先试点）</strong>；把握程度 Moderate，分数按公式算出可复算</td></tr>
+  <tr><td>报告</td><td><code>reports-5themes/*.html</code></td><td>五种版式的双语报告（中英各一份结果文件），里面的数字由提取器从结果文件读出，不是手写的</td></tr>
+</table>
+<table>
+  <tr><th style="width:34%">四种判定</th><th>什么时候给</th></tr>
+  <tr><td><strong>ADOPT</strong> · 可以推广</td><td>关键结果有较强的直接证据、风险可控、且场景对得上。教育场景还要求直接测到"学习/保持/迁移"——只测出"做题变快"不给</td></tr>
+  <tr><td><strong>PILOT</strong> · 先小范围试点</td><td>方向有积极证据，但长期效果、迁移或风险还不清楚；先在有界范围内试，用统一的延迟测评验收</td></tr>
+  <tr><td><strong>REJECT</strong> · 不采用</td><td>关键结果稳定为负，或风险明显大于收益；此时<strong>不输出</strong>试点方案</td></tr>
+  <tr><td><strong>INSUFFICIENT EVIDENCE</strong> · 证据不足</td><td>来源太少、太间接、研究设计太弱，或分歧无法解释；写明"什么证据会改变这个判断"</td></tr>
+</table>
+<p>四态之上还有一条机器规则：判定由公式与门决定，<strong>不是模型自由发挥</strong>——
+只要存在"反对采用"的独立证据，结果就会走到 REJECT；把握程度为 Low 或 Insufficient 时永远不可能给 ADOPT。</p>
+<p>另一个例子是 <code>examples/spaced-retrieval-practice/</code>（间隔重复与检索练习能否替代集中式复习）。
+它的特别之处在于：7 篇来源全部走 Sciverse 通道——先用语义检索定位段落，再按定位把正文读回来核验，全部带 DOI；
+6 条证据聚成 3 条主张（延迟保持、收益大小取决于设计、迁移也受益）；结论同样是 PILOT，
+理由是"延迟保持的证据一致，但直接来自程序设计课堂的现场证据偏少"。它给出的试点很具体：
+第 1 周统一前测 → 第 2–13 周每周 10 分钟闭卷检索练习 → 第 14–16 周无辅助延迟测试与新题型迁移任务；
+只要延迟测试低于基线、或完成率掉到 60% 以下，就叫停。
+两个例子都说明同一件事：<strong>判定偏保守，不是不敢下结论，而是证据只支持到这里</strong>。</p>
+<p class="note">两个例子的诚实标注：主例的文献是人工整理（<code>data_origin=manual_curated</code>），
+它演示的是"一份完成的评审长什么样"，<strong>不代表</strong>已经跑过模型研究运行；
+第二例的检索是真实联网的（<code>data_origin=real_run_sciverse</code>），但结论针对的是演示问题，不等于任何真实学校的现场结论。</p>
+<pre>eduevidence run --question "大一 C 语言课程是否应该允许学生使用生成式 AI 编程助手？" --run-id ai-cs1
+eduevidence status --run-id ai-cs1     # 阶段状态与待补产物
+eduevidence gate   --run-id ai-cs1     # Pre-Verdict Gate
+eduevidence report --run-id ai-cs1 --theme claude</pre>
+
+<h2>8. 这套说明凭什么不跑偏</h2>
+<p>同一套约定会同时出现在好几个地方：流程注册表、能力注册表、角色注册表、角色提示词、每一步的任务简报、
+子技能配方、工作流手册、打包清单。只要有一处改漏，"可追溯"就变成口号。所以这里不靠人工校对，靠机器对账：</p>
+<pre>python scripts/skill_lint.py                  # 结构：文件在不在、frontmatter 对不对
+python scripts/check_protocol_alignment.py    # 语义：五方说的是不是同一件事
+python scripts/check_version_consistency.py   # 版本：单一权威
+python scripts/generate_metrics.py --check    # 数字：文档与仓库一致</pre>
+<div class="note">对齐门是真的会抓到问题的——在本版本开发中它抓出过 4 个不存在的能力 ID、1 份落后两个大版本的打包清单、
+以及 2 处过期的测试计数。新增一项能力 / 子技能 / 角色 / 检索通道的步骤见 <code>CONTRIBUTING.md</code>。</div>
+
+<h2>9. 想再往下看</h2>
+<ul>
+  <li><a href="../docs/architecture.md"><code>docs/architecture.md</code></a> — 文字版全文，含完整目录结构与设计原则</li>
+  <li><code>engine/workflows.py</code> — 九步流程与四种工作流的唯一权威定义（本文 §1 的出处）</li>
+  <li><code>skill/roles/registry.yaml</code> · <code>skill/agents/*.md</code> — 八个角色与其独立性要求</li>
+  <li><code>scripts/pre_verdict_gate.py</code> — 定稿前 11 项检查的实现</li>
+  <li><code>references/retrieval-protocol.md</code> · <code>references/retrieval-compliance.md</code> · <code>docs/sciverse-api.md</code> — 检索规则、合规与 Sciverse 通道契约</li>
+  <li><code>docs/reproducibility.md</code> — 哪一层是确定性的、哪一层依赖模型（复现边界）</li>
+  <li><code>CONTRIBUTING.md</code> — 想参与开发从这里开始</li>
+</ul>
+
+</div>
+</body>
+</html>

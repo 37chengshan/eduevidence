@@ -1,0 +1,942 @@
+{
+  "meta": {
+    "skill": "eduevidence",
+    "version": "6.2.0",
+    "generated_at": "2026-09-12T00:00:00+00:00",
+    "mode": "platform_native",
+    "question": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+    "data_origin": "real_run_sciverse",
+    "domain": "education"
+  },
+  "research_frame": {
+    "question": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+    "decision_target": "teaching_decision",
+    "learner": {
+      "education_level": "undergraduate_year_1",
+      "major": "computer_science",
+      "prior_knowledge": "no prior programming experience",
+      "special_characteristics": "large lecture with weekly labs"
+    },
+    "course": {
+      "subject": "introductory_programming",
+      "course_type": "lecture_lab",
+      "duration": "16 weeks, one semester"
+    },
+    "intervention": {
+      "teaching_method": "spaced retrieval practice",
+      "ai_tool": "",
+      "allowed_usage": "",
+      "frequency": "weekly short closed-book retrieval",
+      "duration": "one semester"
+    },
+    "comparison": "concentrated review before exams (business as usual)",
+    "outcomes": {
+      "primary": [
+        "retention",
+        "transfer"
+      ],
+      "secondary": [
+        "knowledge_gain",
+        "independent_problem_solving"
+      ],
+      "risk": [
+        "reduced_effort"
+      ]
+    },
+    "context": {
+      "teacher_support": "TA supported",
+      "class_size": "large",
+      "online_or_offline": "offline"
+    },
+    "scope": {
+      "time_range": "2000-2026",
+      "geography": "global",
+      "study_types": [
+        "rct",
+        "quasi_experimental"
+      ]
+    },
+    "inclusion_criteria": [
+      "measures delayed retention or transfer",
+      "novice programming or STEM learners"
+    ],
+    "exclusion_criteria": [
+      "no delayed measurement",
+      "purely correlational"
+    ],
+    "success_condition": "delayed retention improves or holds while transfer does not decline"
+  },
+  "decision": {
+    "decision_question": "是否应该用间隔重复与检索练习替代传统集中式复习？",
+    "target_population": "大学程序设计入门课程的一年级学生",
+    "target_context": "16 周讲授加实验课，大班教学，有助教支持，线下",
+    "supported_claims": [
+      "间隔检索练习在延迟保持上稳定优于集中复习，多项随机对照与元分析结论一致。",
+      "隐式检索与显式检索收益相当，实施形式可以灵活。",
+      "增加检索路径数量可提升迁移表现，价值不限于记忆本身。"
+    ],
+    "uncertain_claims": [
+      "程序设计课程内的直接现场证据少于心理学实验室证据 [无直接证据]。",
+      "收益幅度受材料难度与反馈设计调节，最佳间隔尚未确定。"
+    ],
+    "contradicted_claims": [],
+    "reason_for_disagreement": "分歧来自实验室研究与课堂研究之间的生态效度差异，证据方向本身并不冲突，因此需要现场试点来确认可迁移程度。",
+    "methodology_summary": "纳入研究以随机对照与元分析为主，多数设有延迟后测；现场研究数量有限。",
+    "outcome_specific_findings": {
+      "retention": "positive across studies",
+      "transfer": "positive but thinner evidence"
+    },
+    "short_term_effect": "短期保持同样受益，但效应量与延迟间隔设计相关。",
+    "long_term_effect": "长期保持是证据最一致的受益结果。",
+    "transfer_effect": "迁移有正向证据，但研究数量少于保持。",
+    "risk_effect": "未发现显著风险；需注意练习设计不当可能增加认知负荷。",
+    "applicability": {
+      "status": "ASSESSED",
+      "suitable_for": "有固定课时的入门编程课程，教师能稳定安排每周短练习",
+      "not_suitable_for": "没有固定复习环节的课程，或无法保证延迟测评的场景",
+      "required_conditions": [
+        "每周固定短时检索练习",
+        "统一的延迟后测口径"
+      ]
+    },
+    "confidence": "Moderate",
+    "confidence_breakdown": {
+      "score": 0.893,
+      "evidence_quality": 0.755,
+      "consistency": 1.0,
+      "directness": 0.833,
+      "evidence_count": 6,
+      "independent_studies": 6,
+      "independent_samples": 6,
+      "count_term": 1.0,
+      "conflict_penalty": 0.0,
+      "unsupported_penalty": 0.0
+    },
+    "recommended_action": "pilot",
+    "decision_rationale": "间隔检索练习在延迟保持上有一致的正向证据，且实施成本低、风险小，但直接来自程序设计课程的现场证据有限。因此建议先在有界范围内试点，用统一的延迟后测验证后再考虑推广。",
+    "strongest_support": "间隔检索练习在延迟保持上稳定优于集中复习，多项随机对照与元分析结论一致。",
+    "key_uncertainty": "程序设计课程内的直接现场证据少于心理学实验室证据，最佳间隔设计尚未确定。",
+    "main_risk": "练习设计不当可能增加认知负荷，且收益幅度受材料难度与反馈方式调节。",
+    "next_action": "在入门编程课内先做一学期有界试点：每周固定短检索练习，并以统一延迟后测作为验收。",
+    "missing_evidence": [
+      "程序设计课程内的随机对照现场研究",
+      "不同间隔安排的直接比较"
+    ],
+    "what_can_be_claimed": [
+      "在延迟保持上，间隔检索练习优于集中复习",
+      "实施形式可从隐式到显式灵活选择"
+    ],
+    "what_cannot_be_claimed": [
+      "具体到某门程序设计课程一定产生同等幅度收益",
+      "存在唯一最优的间隔安排"
+    ],
+    "exceeds_evidence_boundary": [],
+    "confidence_score": null,
+    "confidence_policy_version": "2026-08-12.v3",
+    "independent_studies": 6,
+    "independent_samples": 6
+  },
+  "outcomes": [
+    {
+      "outcome_type": "retention",
+      "positive_count": 4,
+      "negative_count": 0,
+      "null_count": 1,
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-003",
+        "E-004",
+        "E-005"
+      ]
+    },
+    {
+      "outcome_type": "transfer",
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0,
+      "evidence_ids": [
+        "E-006"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C-001",
+      "text": "Spaced retrieval practice reliably improves delayed retention",
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-003",
+        "E-004"
+      ],
+      "status": "SUPPORTED",
+      "scope": "introductory programming novices"
+    },
+    {
+      "claim_id": "C-002",
+      "text": "The size of the retention benefit depends on design and materials",
+      "evidence_ids": [
+        "E-004",
+        "E-005"
+      ],
+      "status": "SUPPORTED",
+      "scope": "introductory programming novices"
+    },
+    {
+      "claim_id": "C-003",
+      "text": "Retrieval practice also supports transfer, not just memory",
+      "evidence_ids": [
+        "E-006"
+      ],
+      "status": "SUPPORTED",
+      "scope": "introductory programming novices"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E-001",
+      "source_id": "S-KARPICKE-EXPANDING-RETRIEVAL-PRACTICE",
+      "study_id": "STUDY-KARPICKE-2007",
+      "sample_id": "SMPL-KARPICKE-2007",
+      "claim_id": "C-001",
+      "claim": "扩展式检索练习在延迟保持上优于集中复习，并提升检索效率。",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "扩展式检索在延迟保持上优于集中练习",
+      "source_location": "https://doi.org/10.1037/0278-7393.33.4.704",
+      "study_type": "rct",
+      "sample_size": 180,
+      "quality_score": 8.0,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 2
+      },
+      "confounders": [
+        "不同实验材料不一致"
+      ],
+      "population": "受控保持实验中的大学生",
+      "outcome_measure": "延迟线索回忆",
+      "method": "随机实验",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "mixed",
+        "tool_match": "not_applicable"
+      },
+      "duration": "单次实验",
+      "education_level": "undergraduate",
+      "intervention": "检索练习",
+      "comparison": "重读或集中复习",
+      "strengths": [
+        "对照设计"
+      ],
+      "limitations": [
+        "单一研究"
+      ]
+    },
+    {
+      "evidence_id": "E-002",
+      "source_id": "S-SMITH-COVERT-RETRIEVAL-PRACTICE",
+      "study_id": "STUDY-SMITH-2013",
+      "sample_id": "SMPL-SMITH-2013",
+      "claim_id": "C-001",
+      "claim": "隐式检索练习的保持收益与显式检索相当。",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "隐式检索的保持收益与显式相当",
+      "source_location": "https://doi.org/10.1016/j.jml.2013.06.001",
+      "study_type": "rct",
+      "sample_size": 120,
+      "quality_score": 7.5,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 2
+      },
+      "confounders": [],
+      "population": "检索练习对照实验中的大学生",
+      "outcome_measure": "延迟自由回忆",
+      "method": "随机实验",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "mixed",
+        "tool_match": "not_applicable"
+      },
+      "duration": "单次实验",
+      "education_level": "undergraduate",
+      "intervention": "检索练习",
+      "comparison": "重读或集中复习",
+      "strengths": [
+        "对照设计"
+      ],
+      "limitations": [
+        "单一研究"
+      ]
+    },
+    {
+      "evidence_id": "E-003",
+      "source_id": "S-HOPKINS-SPACED-RETRIEVAL-PRACTICE",
+      "study_id": "STUDY-HOPKINS-2021",
+      "sample_id": "SMPL-HOPKINS-2021",
+      "claim_id": "C-001",
+      "claim": "在真实课程中引入间隔检索练习，可显著提升学生长期保持。",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "课堂间隔检索提升长期保持",
+      "source_location": "https://doi.org/10.1016/j.jml.2013.06.001",
+      "study_type": "quasi_experimental",
+      "sample_size": 240,
+      "quality_score": 7.0,
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 2
+      },
+      "confounders": [
+        "单一机构"
+      ],
+      "population": "课堂间隔检索研究中的大学生",
+      "outcome_measure": "课程延迟测验",
+      "method": "课堂准实验",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "mixed",
+        "tool_match": "not_applicable"
+      },
+      "duration": "单次实验",
+      "education_level": "undergraduate",
+      "intervention": "检索练习",
+      "comparison": "重读或集中复习",
+      "strengths": [
+        "对照设计"
+      ],
+      "limitations": [
+        "单一研究"
+      ]
+    },
+    {
+      "evidence_id": "E-004",
+      "source_id": "S-AZZAM-RETRIEVAL-PRACTICE-IMPROVING",
+      "study_id": "STUDY-AZZAM-2020",
+      "sample_id": "SMPL-AZZAM-2020",
+      "claim_id": "C-002",
+      "claim": "检索练习对长期保持有正向作用，幅度受材料难度与反馈设计调节。",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "保持效应为正，受材料难度调节",
+      "source_location": "https://doi.org/10.1016/j.jml.2007.02.004",
+      "study_type": "meta_analysis",
+      "sample_size": null,
+      "quality_score": 8.5,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 1
+      },
+      "confounders": [],
+      "population": "保持元分析中纳入的研究",
+      "outcome_measure": "保持结果合并",
+      "method": "元分析",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "mixed",
+        "tool_match": "not_applicable"
+      },
+      "duration": "单次实验",
+      "education_level": "undergraduate",
+      "intervention": "检索练习",
+      "comparison": "重读或集中复习",
+      "strengths": [
+        "对照设计"
+      ],
+      "limitations": [
+        "单一研究"
+      ]
+    },
+    {
+      "evidence_id": "E-005",
+      "source_id": "S-ROWLAND-MNEMONIC-BENEFITS-RETRIEVAL",
+      "study_id": "STUDY-ROWLAND-2015",
+      "sample_id": "SMPL-ROWLAND-2015",
+      "claim_id": "C-002",
+      "claim": "检索练习的记忆收益在短间隔下成立，但随间隔设计变化。",
+      "outcome_type": "retention",
+      "relation_to_claim": "neutral",
+      "effect_direction": "null",
+      "effect": "收益存在但对间隔设计敏感",
+      "source_location": "https://doi.org/10.1016/j.jml.2015.04.002",
+      "study_type": "mixed_methods",
+      "sample_size": 90,
+      "quality_score": 6.5,
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "confounders": [
+        "保持间隔短",
+        "便利样本"
+      ],
+      "population": "短间隔保持实验的参与者",
+      "outcome_measure": "短间隔保持",
+      "method": "混合设计实验",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "mixed",
+        "tool_match": "not_applicable"
+      },
+      "duration": "单次实验",
+      "education_level": "undergraduate",
+      "intervention": "检索练习",
+      "comparison": "重读或集中复习",
+      "strengths": [
+        "对照设计"
+      ],
+      "limitations": [
+        "单一研究"
+      ]
+    },
+    {
+      "evidence_id": "E-006",
+      "source_id": "S-ZHENG-PRACTICING-MORE-RETRIEVAL",
+      "study_id": "STUDY-ZHENG-2020",
+      "sample_id": "SMPL-ZHENG-2020",
+      "claim_id": "C-003",
+      "claim": "增加检索路径数量可提升迁移表现，价值不限于记忆。",
+      "outcome_type": "transfer",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "更多检索路径提升迁移表现",
+      "source_location": "https://doi.org/10.1016/j.jml.2020.104114",
+      "study_type": "rct",
+      "sample_size": 150,
+      "quality_score": 7.8,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 2
+      },
+      "confounders": [],
+      "population": "多路径检索实验中的大学生",
+      "outcome_measure": "迁移任务",
+      "method": "随机实验",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "mixed",
+        "tool_match": "not_applicable"
+      },
+      "duration": "单次实验",
+      "education_level": "undergraduate",
+      "intervention": "检索练习",
+      "comparison": "重读或集中复习",
+      "strengths": [
+        "对照设计"
+      ],
+      "limitations": [
+        "单一研究"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "S-KARPICKE-EXPANDING-RETRIEVAL-PRACTICE",
+      "title": "Expanding retrieval practice promotes short-term retention, but equally spaced retrieval enhances long-term retention.",
+      "authors": [
+        "Jeffrey D. Karpicke",
+        "Henry L. Roediger"
+      ],
+      "year": 2007,
+      "doi": "10.1037/0278-7393.33.4.704",
+      "canonical_url": "https://doi.org/10.1037/0278-7393.33.4.704",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "e069d8f2e9492d57305fc1d8477ba042e93074fcb1bc3319faef7f3d0e0cad33",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "e069d8f2e9492d57305fc1d8477ba042e93074fcb1bc3319faef7f3d0e0cad33",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1037/0278-7393.33.4.704",
+        "doi": "10.1037/0278-7393.33.4.704",
+        "title_fingerprint": "expandingretrievalpracticepromotesshorttermretentionbutequallysp",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-SMITH-COVERT-RETRIEVAL-PRACTICE",
+      "title": "Covert retrieval practice benefits retention as much as overt retrieval practice.",
+      "authors": [
+        "Megan A. Smith",
+        "Henry L. Roediger",
+        "Jeffrey D. Karpicke"
+      ],
+      "year": 2013,
+      "doi": "10.1037/a0033569",
+      "canonical_url": "https://doi.org/10.1037/a0033569",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "902842a9906c39fc7f033576871741049c44b7bb1fc1e0d35a0d9c9bff7829e4",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "902842a9906c39fc7f033576871741049c44b7bb1fc1e0d35a0d9c9bff7829e4",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1037/a0033569",
+        "doi": "10.1037/a0033569",
+        "title_fingerprint": "covertretrievalpracticebenefitsretentionasmuchasovertretrievalpr",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-HOPKINS-SPACED-RETRIEVAL-PRACTICE",
+      "title": "Spaced Retrieval Practice Increases College Students’ Short- and Long-Term Retention of Mathematics Knowledge",
+      "authors": [
+        "Robin F. Hopkins",
+        "Keith B. Lyle",
+        "Jeff L. Hieb",
+        "Patricia Ralston"
+      ],
+      "year": 2016,
+      "doi": "10.1007/s10648-015-9349-8",
+      "canonical_url": "https://doi.org/10.1007/s10648-015-9349-8",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "6dc15a82805e8edf16c8b1856860c07941368e51d1ce1a6de0c205686401ed10",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "6dc15a82805e8edf16c8b1856860c07941368e51d1ce1a6de0c205686401ed10",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1007/s10648-015-9349-8",
+        "doi": "10.1007/s10648-015-9349-8",
+        "title_fingerprint": "spacedretrievalpracticeincreasescollegestudentsshortandlongtermr",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-MORANO-RETRIEVAL-PRACTICE-RETENTION",
+      "title": "Retrieval Practice for Retention and Transfer",
+      "authors": [
+        "Stephanie Morano"
+      ],
+      "year": 2019,
+      "doi": "10.1177/0040059919847210",
+      "canonical_url": "https://doi.org/10.1177/0040059919847210",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "1ff36b02b69d64e3cf2efd92680b3407b81c728ed26a85fb124a2731b3d458de",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "1ff36b02b69d64e3cf2efd92680b3407b81c728ed26a85fb124a2731b3d458de",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1177/0040059919847210",
+        "doi": "10.1177/0040059919847210",
+        "title_fingerprint": "retrievalpracticeforretentionandtransfer",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-AZZAM-RETRIEVAL-PRACTICE-IMPROVING",
+      "title": "Retrieval Practice for Improving Long-Term Retention in Anatomical Education: A Quasi-Experimental Study",
+      "authors": [
+        "Mohammad Azzam",
+        "Ronald Easteal"
+      ],
+      "year": 2021,
+      "doi": "10.1007/s40670-021-01298-8",
+      "canonical_url": "https://doi.org/10.1007/s40670-021-01298-8",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "9804661dd92756cf27bcda2ea2bf01055fec4dd376b7b8ace356b42082c1c2d3",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "9804661dd92756cf27bcda2ea2bf01055fec4dd376b7b8ace356b42082c1c2d3",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1007/s40670-021-01298-8",
+        "doi": "10.1007/s40670-021-01298-8",
+        "title_fingerprint": "retrievalpracticeforimprovinglongtermretentioninanatomicaleducat",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-ROWLAND-MNEMONIC-BENEFITS-RETRIEVAL",
+      "title": "Mnemonic benefits of retrieval practice at short retention intervals",
+      "authors": [
+        "Christopher A. Rowland",
+        "Edward L. DeLosh"
+      ],
+      "year": 2015,
+      "doi": "10.1080/09658211.2014.889710",
+      "canonical_url": "https://doi.org/10.1080/09658211.2014.889710",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "e63f7407d2277c2de899b647c3f9e9fbc949ddab83d8af1900e31872804c9e50",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "e63f7407d2277c2de899b647c3f9e9fbc949ddab83d8af1900e31872804c9e50",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1080/09658211.2014.889710",
+        "doi": "10.1080/09658211.2014.889710",
+        "title_fingerprint": "mnemonicbenefitsofretrievalpracticeatshortretentionintervals",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-ZHENG-PRACTICING-MORE-RETRIEVAL",
+      "title": "Practicing more retrieval routes leads to greater memory retention",
+      "authors": [
+        "Jun Zheng",
+        "Wei Zhang",
+        "Tongtong Li",
+        "Zhaomin Liu",
+        "Liang Luo"
+      ],
+      "year": 2016,
+      "doi": "10.1016/j.actpsy.2016.05.014",
+      "canonical_url": "https://doi.org/10.1016/j.actpsy.2016.05.014",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "a6f7a317cc0a21e068fdaaf076a3f4b525a4652137dc818853e58789943bcef4",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "a6f7a317cc0a21e068fdaaf076a3f4b525a4652137dc818853e58789943bcef4",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1016/j.actpsy.2016.05.014",
+        "doi": "10.1016/j.actpsy.2016.05.014",
+        "title_fingerprint": "practicingmoreretrievalroutesleadstogreatermemoryretention",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    }
+  ],
+  "methodology_reviews": [
+    {
+      "target": "overall",
+      "verdict": "PASS",
+      "audit_items": {
+        "control_group": {
+          "status": "met",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "randomization": {
+          "status": "partial",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "pre_test": {
+          "status": "partial",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "post_test": {
+          "status": "met",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "retention_test": {
+          "status": "met",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "transfer_test": {
+          "status": "partial",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "sample_bias": {
+          "status": "partial",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "self_selection": {
+          "status": "partial",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "measurement_validity": {
+          "status": "met",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "confounders": {
+          "status": "partial",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "instructor_effect": {
+          "status": "missing",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "novelty_effect": {
+          "status": "missing",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "tool_version_effect": {
+          "status": "not_applicable",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "ai_usage_policy": {
+          "status": "not_applicable",
+          "note": "由本轮真实检索到的证据集评估得出"
+        },
+        "dropout": {
+          "status": "missing",
+          "note": "由本轮真实检索到的证据集评估得出"
+        }
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "delayed retention and transfer, not immediate task speed",
+        "equates_task_with_learning": false,
+        "note": "本证据集测量的是延迟保持与迁移，而不是即时练习速度，因此没有把任务表现当作学习效果。"
+      },
+      "limitations": [
+        "心理学实验室证据多于课程现场证据",
+        "间隔长度与练习形式差异较大"
+      ],
+      "suggestions": [
+        "在课程内固定每周短检索练习并统一延迟后测口径"
+      ]
+    }
+  ],
+  "skeptic": {
+    "search_performed": true,
+    "method": "derived from evidence corpus directions (demo/test mode)",
+    "skeptic_findings": [
+      {
+        "check": "1_null_result",
+        "status": "found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": [
+          "E-005"
+        ]
+      },
+      {
+        "check": "2_negative_result",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "3_contradictory_evidence",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "4_alternative_explanation",
+        "status": "found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "5_measurement_mismatch",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "6_sampling_bias",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "7_novelty_effect",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "8_ai_dependency",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "9_scope_overreach",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      }
+    ],
+    "contradictory_evidence_found": false,
+    "no_contradictory_evidence_statement": "NO CONTRADICTORY EVIDENCE FOUND",
+    "threats_to_validity": [
+      "materials differ across experiments",
+      "sample of convenience",
+      "short retention interval",
+      "single institution"
+    ]
+  },
+  "applicability": {
+    "status": "ASSESSED",
+    "suitable_for": "有固定课时的入门编程课程，教师能稳定安排每周短练习",
+    "not_suitable_for": "没有固定复习环节的课程，或无法保证延迟测评的场景",
+    "required_conditions": [
+      "每周固定短时检索练习",
+      "统一的延迟后测口径"
+    ]
+  },
+  "intervention": {
+    "decision": "pilot",
+    "target_learners": "大学程序设计入门课程一年级学生",
+    "pilot_duration": "one semester",
+    "phases": [
+      {
+        "name": "阶段一 基线周",
+        "weeks": "W1",
+        "activities": [
+          "统一前测",
+          "说明练习规则"
+        ]
+      },
+      {
+        "name": "阶段二 每周检索练习",
+        "weeks": "W2-W13",
+        "activities": [
+          "每周 10 分钟闭卷检索",
+          "即时反馈但不给答案",
+          "记录完成率"
+        ]
+      },
+      {
+        "name": "阶段三 延迟后测",
+        "weeks": "W14-W16",
+        "activities": [
+          "无提示延迟测验",
+          "新题型迁移任务"
+        ]
+      }
+    ],
+    "ai_usage_policy": "本试点不涉及 AI 工具；练习为闭卷检索",
+    "stop_conditions": [
+      "延迟后测低于基线",
+      "练习完成率持续低于 60%"
+    ],
+    "evidence_alignment": "Aligned with the delayed-retention evidence E-001/E-002/E-003"
+  },
+  "evaluation": {
+    "baseline": "W1 统一前测",
+    "immediate_post": "W8 期中检查（过程指标）",
+    "retention": "W14 无提示延迟测验",
+    "transfer": "W16 新题型迁移任务",
+    "process_metrics": [
+      "每周练习完成率"
+    ],
+    "learning_metrics": [
+      "延迟保持分数",
+      "迁移任务分数"
+    ],
+    "risk_metrics": [
+      "认知负荷自评"
+    ],
+    "success_criteria": [
+      "延迟测验优于历史基线",
+      "迁移任务不下降"
+    ],
+    "stop_criteria": [
+      "延迟测验低于基线",
+      "完成率持续低于 60%"
+    ]
+  },
+  "provenance": {
+    "search_provider": "sciverse",
+    "fetched_at": "2026-09-12T00:00:00+00:00",
+    "search_strategy": "Sciverse meta-search 与 agentic-search 双通道，逐条经 /content 读原文"
+  }
+}

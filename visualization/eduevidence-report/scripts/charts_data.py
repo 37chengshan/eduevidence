@@ -224,6 +224,8 @@ def extract_year_x_dimension(result: dict, params: dict, lang: str = "en") -> tu
     if len(grid) < 3:
         return None, f"fewer than 3 populated year×dimension cells (got {len(grid)})"
     return {"years": years, "dimensions": dims, "cells": grid,
+            "dimension_labels": [{"label": d, "label_zh": outcome_label(d, "zh"),
+                                  "label_en": outcome_label(d, "en")} for d in dims],
             "unit": "1 study", "label_zh": "年份 × 维度文献年历", "label_en": "Year × dimension almanac"}, None
 
 

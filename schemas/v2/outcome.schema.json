@@ -5,14 +5,37 @@
   "description": "A measurable education outcome from the Outcome Taxonomy: learning / task performance / process / risk.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["outcome_id", "name", "outcome_type", "extensions"],
+  "required": [
+    "outcome_id",
+    "name",
+    "outcome_type",
+    "extensions"
+  ],
   "properties": {
-    "outcome_id": { "type": "string", "pattern": "^OUT-" },
-    "name": { "type": "string", "minLength": 1 },
+    "outcome_id": {
+      "type": "string",
+      "pattern": "^OUT-"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
     "outcome_type": {
       "type": "string",
-      "enum": ["learning", "task_performance", "process", "risk"]
+      "enum": [
+        "learning",
+        "task_performance",
+        "process",
+        "risk",
+        "effectiveness",
+        "cost",
+        "equity",
+        "feasibility"
+      ],
+      "description": "Outcome category bucket. The education domain declares learning / task_performance / process / risk; the policy domain declares effectiveness / cost / equity / feasibility / risk. domains/<id>/outcome_taxonomy.json is the authority and scripts/check_protocol_alignment.py fails if this enum drifts from it."
     },
-    "extensions": { "type": "object" }
+    "extensions": {
+      "type": "object"
+    }
   }
 }

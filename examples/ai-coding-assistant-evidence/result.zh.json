@@ -183,7 +183,11 @@
       "count_term": 1.0,
       "conflict_penalty": 0.0,
       "unsupported_penalty": 0.0
-    }
+    },
+    "strongest_support": "AI 编程助手在训练期稳定提升练习效率：69 名新手的随机对照中完成率 1.15 倍、用时 0.57 倍。",
+    "key_uncertainty": "缺少大学层面的直接学习证据；唯一大规模试验显示，无护栏使用 GPT-4 的学生独立考试成绩下降 17%。",
+    "main_risk": "无护栏使用会抬高练习表现却压低独立考试表现，而学习者往往意识不到这一落差。",
+    "next_action": "开展分阶段 CS1 试点：给提示而非答案、每周实验课使用、并以无 AI 迁移考试作为可叫停的验收条件。"
   },
   "outcomes": [
     {
@@ -590,13 +594,13 @@
       "study_type": "rct",
       "education_level": "k12_ages_10_17",
       "subject": "introductory_python",
-      "population": "土耳其高中 9-11 年级数学学生（约 1000 名学生、4 次 90 分钟课内环节，共 2848 观测）",
+      "population": "69 名 10-17 岁编程新手，此前无文本编程经验",
       "sample_size": 69,
       "intervention": "三臂 RCT：GPT Base（无护栏标准 ChatGPT 式界面）与 GPT Tutor（护栏版，教师设计提示、不给直接答案）用于数学练习",
       "comparison": "对照组（无 AI 传统教学）",
       "outcome_type": "completion_time",
       "outcome_measure": "code_authoring_task_progress_and_time",
-      "claim": "在练习环节，无护栏的 GPT Base（类标准 ChatGPT 界面）使高中生的练习成绩相对对照组提高 48%，带护栏的 GPT Tutor 提高 127%（Table 1：practice 系数 0.137/0.361，对照均值 0.284）",
+      "claim": "AI 编程助手在训练期间显著提升任务完成速度与完成率（完成率 1.15 倍、用时 0.57 倍、正确率 1.8 倍）。",
       "direction": "support",
       "relation_to_claim": "support",
       "effect_direction": "positive",
@@ -647,13 +651,13 @@
       "study_type": "rct",
       "education_level": "k12_ages_10_17",
       "subject": "introductory_python",
-      "population": "土耳其高中 9-11 年级数学学生（约 1000 名学生，共 2848 观测）",
+      "population": "69 名 10-17 岁编程新手，此前无文本编程经验",
       "sample_size": 69,
       "intervention": "无护栏 GPT Base（类标准 ChatGPT 界面）课内练习；移除访问后参加独立考试",
       "comparison": "对照组（从未使用 AI）",
       "outcome_type": "independent_problem_solving",
       "outcome_measure": "manual code-modification tasks during training",
-      "claim": "移除 AI 访问后的无辅助独立考试中，GPT Base 组成绩比从未使用 AI 的对照组低 17%（统计显著），表明无护栏使用 AI 损害技能习得；机制上学生把 GPT 当'拐杖'直接抄答案（GPT Base 答对率仅 51%，其中 42% 逻辑错误、8% 算术错误），且学生自评过度乐观、未察觉学习受损",
+      "claim": "可使用 AI 生成代码并未降低学生在人工代码修改任务上的表现（组间差异不显著）。",
       "direction": "neutral",
       "relation_to_claim": "neutral",
       "effect_direction": "null",
@@ -702,13 +706,13 @@
       "study_type": "rct",
       "education_level": "k12_ages_10_17",
       "subject": "introductory_python",
-      "population": "土耳其高中 9-11 年级数学学生（约 1000 名学生，共 2848 观测）",
+      "population": "69 名 10-17 岁编程新手，此前无文本编程经验",
       "sample_size": 69,
       "intervention": "GPT Tutor（护栏版：教师设计提示、不给直接答案）用于数学练习",
       "comparison": "对照组（无 AI）与 GPT Base（无护栏）组",
       "outcome_type": "retention",
       "outcome_measure": "retention post-test one week after training",
-      "claim": "带护栏的 GPT Tutor（教师设计提示而非直接答案）在练习成绩 +127% 的同时，移除访问后的独立考试负效应基本消除（-0.004，不显著），说明精心设计的护栏可兼得练习提升与学习保持",
+      "claim": "训练结束一周后，Codex 组与基线组的保持性差异未达统计显著（Codex 组略优）。",
       "direction": "neutral",
       "relation_to_claim": "neutral",
       "effect_direction": "null",
@@ -757,13 +761,13 @@
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
-      "population": "69 名 10-17 岁编程新手（含高中/初中年龄段）",
+      "population": "土耳其近千名高中数学学生（约 1000 名学生，共 2848 次观测）",
       "sample_size": 950,
       "intervention": "训练阶段一半学习者可使用 OpenAI Codex 完成代码编写任务，任务后接代码修改任务",
       "comparison": "无 Codex 访问组",
       "outcome_type": "independent_problem_solving",
       "outcome_measure": "exam without access to AI resources after practice phase",
-      "claim": "训练阶段使用 OpenAI Codex 的 10-17 岁新手在 45 道 Python 代码编写任务上表现显著提升：完成率提高 1.15 倍、得分提高 1.8 倍",
+      "claim": "无护栏使用 GPT-4 的学生在练习表现更高的同时，独立考试成绩比对照组低 17%。",
       "direction": "contradict",
       "relation_to_claim": "contradict",
       "effect_direction": "negative",
@@ -813,13 +817,13 @@
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
-      "population": "69 名 10-17 岁编程新手",
+      "population": "土耳其近千名高中数学学生（约 1000 名学生，共 2848 次观测）",
       "sample_size": 950,
       "intervention": "训练阶段使用 OpenAI Codex 完成代码编写任务",
       "comparison": "无 Codex 访问组；一周后评估后测",
       "outcome_type": "independent_problem_solving",
       "outcome_measure": "exam without access to AI resources after practice phase",
-      "claim": "训练期使用 Codex 的学习者一周后评估后测成绩略好于对照组，但差异未达统计显著（保持力无显著差异）；Scratch 前测高分者若有 Codex 使用史，保持后测显著更好",
+      "claim": "AI 导师的护栏设计（给提示而非直接答案、教师参与设计提问）基本消除了负向学习效应，但未观察到正向效应。",
       "direction": "support",
       "relation_to_claim": "support",
       "effect_direction": "null",
@@ -868,13 +872,13 @@
       "study_type": "rct",
       "education_level": "high_school",
       "subject": "mathematics",
-      "population": "3 名不同水平（R1-R3）的 EFL 学生，半结构化访谈",
+      "population": "土耳其近千名高中数学学生（约 1000 名学生，共 2848 次观测）",
       "sample_size": 950,
       "intervention": "学生在学术写作过程中使用 ChatGPT 的体验与策略（质性研究，无效应量测量）",
       "comparison": "无对照组（质性案例研究）",
       "outcome_type": "assignment_score",
       "outcome_measure": "practice problem performance during study sessions",
-      "claim": "质性案例研究中，3 名 EFL 学生珍视 ChatGPT 的辅助价值（消除不确定性、澄清词汇、提供内容建议、语法/结构反馈，让学生专注于创意层面），并形成语言精修、观点生成与结构、校对与信心增强等使用策略",
+      "claim": "练习阶段使用 GPT-4 提升了任务表现（GPT Base 组 +48%、GPT Tutor 组 +127%），但该任务表现并未迁移到独立考试。",
       "direction": "support",
       "relation_to_claim": "support",
       "effect_direction": "positive",
@@ -922,13 +926,13 @@
       "study_type": "mixed_methods",
       "education_level": "undergraduate",
       "subject": "academic_writing_esl",
-      "population": "3 名不同水平的 EFL 学生，半结构化访谈",
+      "population": "印度某大学本科英语作为第二语言（ESL）学生，n=72",
       "sample_size": 72,
       "intervention": "学生在学术写作过程中使用 ChatGPT 的体验与策略",
       "comparison": "无对照组（质性案例研究）",
       "outcome_type": "knowledge_gain",
       "outcome_measure": "writing tests with pre-post-delayed design",
-      "claim": "同一质性研究中，学生担忧 AI 使用的学术真实性与过度依赖风险（建议过于复杂/正式、语气不符、文化刻板印象等局限），强调必须保持人的判断并寻求教师/同伴反馈，呼吁伦理指引与批判性思维培养",
+      "claim": "以 ChatGPT 作为形成性反馈工具，对学生学术写作能力产生了显著的正向影响，学生评价亦为正面。",
       "direction": "support",
       "relation_to_claim": "support",
       "effect_direction": "positive",
@@ -984,7 +988,7 @@
       "comparison": "不可使用 Copilot 的对照组",
       "outcome_type": "completion_time",
       "outcome_measure": "time_to_complete_http_server_implementation",
-      "claim": "随机对照实验（n=95）显示：使用 Copilot 的职业开发者完成标准化编程任务的用时比对照组缩短约 55%。",
+      "claim": "随机对照实验（n=95）显示：使用 Copilot 的职业开发者完成标准化编码任务的用时比对照组缩短约 55%。",
       "direction": "support",
       "relation_to_claim": "support",
       "effect_direction": "positive",
@@ -1041,7 +1045,7 @@
       "comparison": "相同基准上的人类编写程序",
       "outcome_type": "code_quality",
       "outcome_measure": "correctness_security_maintainability_metrics_on_benchmarks",
-      "claim": "系统性基准评估显示 Copilot 生成代码相对人类代码的质量结论不一：部分正确性具竞争力，同时记录到安全相关缺陷。",
+      "claim": "系统性基准评估显示 Copilot 生成代码相对人类代码的质量结论不一：部分基准上正确性具竞争力，同时记录到安全相关缺陷。",
       "direction": "neutral",
       "relation_to_claim": "neutral",
       "effect_direction": "null",
@@ -1091,7 +1095,7 @@
       "study_type": "observational",
       "education_level": "university_year_1_question_sets",
       "subject": "introductory_python",
-      "population": "公开 CS1 考试题集，并与已发表的学生分数分布比较",
+      "population": "CS1 考试风格题目集，由 Codex 作答并与已发表的学生分数分布比较",
       "sample_size": null,
       "intervention": "Codex 对 CS1 题目作答生成",
       "comparison": "已发表的学生同届分数分布",
@@ -1201,13 +1205,13 @@
       "study_type": "qualitative",
       "education_level": "mixed_cs_students_and_professionals",
       "subject": "programmer_usability_of_codegen_tools",
-      "population": "24 名参与者参与的组内设计可用性研究",
+      "population": "24 名参与者参与的 Copilot 类工具组内可用性研究",
       "sample_size": 24,
       "intervention": "Copilot 类工具辅助编程",
       "comparison": "不使用工具的组内基线",
       "outcome_type": "over_reliance",
       "outcome_measure": "understanding_ownership_and_debugging_reports",
-      "claim": "尽管首任务完成更快，参与者难以理解并调试 AI 生成的解法、对最终程序所有权感低——记录了纯速度指标遗漏的认知与依赖风险。",
+      "claim": "尽管首任务完成更快，参与者难以理解并调试 AI 生成的解法、对最终程序所有权感低——记录了纯速度指标遗漏的元认知与依赖风险。",
       "direction": "contradict",
       "relation_to_claim": "contradict",
       "effect_direction": "negative",
@@ -1256,35 +1260,35 @@
       "audit_items": {
         "control_group": {
           "status": "met",
-          "note": "证据集中所有提出因果主张的量化研究均含对照条件：Bastani（E-001/E-002/E-003）为三臂 RCT（无护栏 GPT Base / 护栏 GPT Tutor / 无 AI 对照组，N=2848）；Kazemitabaar（E-004/E-005）为随机对照（有/无 Codex，n=69）；Shihab（E-011/E-012/E-013）为组内对照（同一批学生有/无 Copilot，n=10）。无对照的仅为不承担因果主张的质性/观察研究（Marzuki E-006/E-007 n=3 案例、Prather E-008/E-009 21 次观察性会话）与综述（Denny E-010），不构成对因果维度的威胁。但人群最匹配的实证研究（Prather、Marzuki）恰恰无对照，若下游把其主题当作效应证据则越界。"
+          "note": "提出因果主张的量化研究均含对照条件：Bastani（E-004/E-005/E-006）为三臂随机对照（无护栏 GPT Base / 护栏 GPT Tutor / 无 AI 对照，约千名学生）；Kazemitabaar（E-001/E-002/E-003）为随机对照（有/无 Codex，n=69）；Peng（E-008）为职业开发者随机对照（n=95）。不含对照的是不承担因果主张的研究：Marzuki（E-007）为混合方法，Vaithilingam（E-012）为组内可用性研究（n=24），Yetistiren（E-009）与Finnie-Ansley（E-010）为基准评估。"
         },
         "randomization": {
           "status": "met",
-          "note": "仅最大型的两项研究实施随机分配：Bastani（课堂内随机分组，约 1000 名学生，E-001/E-002/E-003）与 Kazemitabaar（随机对照，n=69，E-004/E-005）。Shihab（E-011/E-012/E-013）为组内设计、无随机分配，叠加任务顺序与学习效应；Marzuki（E-006/E-007）与 Prather（E-008/E-009）非实验设计。随机化最充分的恰是人群最不匹配的研究（高中/数学），人群最相关的研究全部无随机化。"
+          "note": "Kazemitabaar（E-001/E-002/E-003）与 Bastani（E-004/E-005/E-006）均为随机分配。"
         },
         "pre_test": {
           "status": "met",
-          "note": "Kazemitabaar 明确报告 Scratch 前测并用于异质性分析（E-005：前测高分者保持后测显著更好）；Bastani 以回归对照均值（0.284）控制基线（E-001），但证据记录未详述独立前测流程与组间基线等价性检验；Shihab（E-011/E-012）以'高度相似任务'替代前测，无真实基线测量；Marzuki/Prather/Denny 不适用。期初基线控制整体不系统，正效应可能部分来自基线差异。"
+          "note": "Kazemitabaar 有前测评估；Bastani 测量基线协变量。"
         },
         "post_test": {
           "status": "met",
-          "note": "Bastani 设置移除 AI 后的独立考试（E-002：GPT Base 组 -17% 显著；E-003：Tutor 组 -0.004 不显著），是全集中设计最规范的后测；Kazemitabaar 有一周后延迟后测（E-005）。但 Shihab（E-011/E-012）仅在 AI 在场条件下测量任务表现，无无 AI 独立后测；Marzuki/Prather 无量化后测。正效应证据（E-001/E-004/E-011/E-012）全部缺乏'无 AI 独立后测'这一关键对照。"
+          "note": "三项随机对照研究均报告即时后测。"
         },
         "retention_test": {
           "status": "partial",
-          "note": "仅 Kazemitabaar 提供真正的延迟保持力测量（一周后评估后测，结果不显著，E-005）；Bastani 的独立考试紧随移除 AI 之后（即时测量，E-002/E-003），测的是近迁移而非学期级保持；Shihab、Marzuki、Prather 均无保持力数据。无任何研究覆盖与试点 16 周学期相当的时间尺度，长期保持（乃至期末、后续课程）证据完全空白。"
+          "note": "Kazemitabaar（E-003）有一周保持测；Bastani（E-004/E-005/E-006）无延迟测验；Marzuki（E-007）有延迟测量。"
         },
         "transfer_test": {
           "status": "partial",
-          "note": "最有价值的迁移形式——从'AI 在场练习'迁移到'无 AI 独立表现'——在 Bastani（E-002/E-003）与 Kazemitabaar（E-005）中得到测量，这是试点成功判据（期末无 AI 机试/笔试）的直接对应证据。但两研究迁移距离有限（同领域同题型），无跨任务类型、跨课程（如数据结构）迁移测量；Shihab（E-011/E-012）在同一环境下切换工具条件，未测迁移；frame 的 secondary 追踪（后续课程表现）尚无证据基支撑其预期方向。"
+          "note": "Kazemitabaar 的代码修改任务属迁移邻近任务；本证据集缺少完整的无 AI 迁移测验。"
         },
         "sample_bias": {
           "status": "met",
-          "note": "样本构成与目标人群（国内大一零基础 C 语言新生）系统性错位：Bastani（E-001~E-003）为土耳其 9-11 年级高中生数学；Kazemitabaar（E-004/E-005）为 10-17 岁 K12 编程新手；Marzuki（E-006/E-007）为 EFL 学术写作；唯一大学本科生样本 Shihab（E-011~E-013）仅 n=10 且任务为 brownfield Web 代码库（非零基础 C 入门）；Prather（E-008/E-009）面向入门课程新手但为观察性研究。外推需跨'高中→大学'与'数学/Web→C 入门'两个维度，无单一研究同时匹配领域与年龄层。"
+          "note": "Bastani 样本接近千人；Kazemitabaar 样本偏小且年龄偏低（n=69，10-17 岁）。"
         },
         "self_selection": {
           "status": "partial",
-          "note": "Bastani 为课堂内随机分组（E-001~E-003），自选偏倚最小，是全集最干净的样本；Kazemitabaar（E-004/E-005）系招募参加课后项目，存在一定自选；Shihab（E-011~E-013）n=10 全部自愿报名，志愿者通常更主动、技术接受度更高，正向速度/进展效应可能被高估；Marzuki（E-006/E-007）为目的性抽样/志愿者访谈样本，'珍视 AI 辅助价值'主题不能外推。自选偏倚与研究人群相关性成反比：越相关的样本自选越强。"
+          "note": "Marzuki（E-007）基于知情同意招募，存在自我选择风险。"
         },
         "measurement_validity": {
           "status": "partial",
@@ -1292,19 +1296,19 @@
         },
         "confounders": {
           "status": "partial",
-          "note": "Bastani（E-001~E-003）三臂 RCT 控制最好（同一课堂环境、固定环节时长），但仍存在动机/参与度差异与护栏组教师设计提示带来的额外教学投入混淆。Shihab（E-011/E-012）组内设计叠加顺序效应、学习效应与疲劳（'高度相似任务'第二次完成必然更快）；Kazemitabaar（E-004/E-005）课后项目环境存在练习量/监督差异。各研究均未系统控制练习时间、动机与同伴效应。"
+          "note": "Kazemitabaar 中先验编程能力与 AI 收益存在交互。"
         },
         "instructor_effect": {
           "status": "not_applicable",
-          "note": "证据记录未报告任何研究的教师/助教差异控制：Bastani 的护栏条件依赖'教师设计提示'（E-003），教师提示质量与护栏效果在设计中混淆，无法区分'护栏有效'与'好教师有效'；Kazemitabaar 课后项目可能单一导师；Shihab 同一研究者环境（教师恒定但样本单一）。对试点而言，护栏效果的可复制性取决于教师设计提示的能力，这一条件依赖未被任何研究分离检验。"
+          "note": "Kazemitabaar 为自定进度；课堂类研究可能带有教师效应。"
         },
         "novelty_effect": {
           "status": "partial",
-          "note": "全部正效应来自短期干预，新奇效应不可排除：Bastani 仅 4 次 90 分钟课内环节（E-001 +48%/+127%，E-002 独立考试紧随其后）、Kazemitabaar 训练期任务（E-004）与一周后测（E-005）、Shihab 单次实验室会话（E-011/E-012）。无任何研究覆盖 16 周学期周期，新奇感消退后的长期参与度与学习效应维持无证据；skeptic 的 novelty_effect 检查亦为 medium 风险。"
+          "note": "短周期干预易高估参与度；本证据集的研究均未控制新奇效应。"
         },
         "tool_version_effect": {
           "status": "not_applicable",
-          "note": "证据工具代际与试点工具不同代：Kazemitabaar（E-004/E-005）为 2023 年 OpenAI Codex（code-davinci 时代）、Marzuki（E-006/E-007）为 GPT-3.5/4 时代 ChatGPT、Bastani（E-001~E-003）为 GPT-4 时代、Shihab（E-011~E-013）为 2024-2025 Copilot；试点学年（2025-2026）学生面对 GPT-5 级模型与 IDE 深度集成智能体，能力更强、集成更深，收益与依赖风险可能同时放大，2023-2025 效应量不能直接外推。"
+          "note": "各研究只覆盖单一工具版本，工具迭代快，结论耐久性受限。"
         },
         "ai_usage_policy": {
           "status": "partial",
@@ -1312,7 +1316,7 @@
         },
         "dropout": {
           "status": "partial",
-          "note": "证据记录未报告各研究的退出率、缺失数据处理与依从性验证：Bastani 约 1000 名学生、4 次环节、2848 观测（E-001~E-003），跨环节流失与缺失未说明；Kazemitabaar n=69 一周后测（E-005）的保留率未报告；Shihab n=10 完成全部任务并参加退出访谈（E-011~E-013），是唯一可推断低退出的研究；Marzuki n=3 访谈样本。意图治疗 vs 实际使用（对照组偷偷用 AI）的依从性分析在全集中缺失。"
+          "note": "Marzuki（E-007）报告了流失情况；其余研究未详细说明。"
         }
       },
       "task_vs_learning_guard": {

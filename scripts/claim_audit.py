@@ -27,14 +27,19 @@ from pathlib import Path
 
 from evidence_semantics import claim_relation
 
-SUPPORTED_OUTCOMES = {
-    "knowledge_gain", "concept_understanding", "retention", "transfer",
-    "independent_problem_solving", "completion_time", "accuracy",
-    "code_quality", "assignment_score", "engagement", "motivation",
-    "cognitive_load", "help_seeking", "metacognition", "ai_dependency",
-    "over_reliance", "reduced_effort", "reduced_transfer",
-    "academic_integrity_risk", "false_confidence",
-}
+def _supported_outcomes() -> set[str]:
+    """Every registered outcome token, read from the domain registry.
+
+    This was a hand-copied 20-token education list in three separate files;
+    it silently rejected policy tokens such as policy_effectiveness. The
+    registry (domains/<id>/outcome_taxonomy.json) is the single authority.
+    """
+    from engine.taxonomy import all_tokens_ordered
+
+    return set(all_tokens_ordered())
+
+
+SUPPORTED_OUTCOMES = _supported_outcomes()
 
 
 def load_records(path: Path) -> list[dict]:

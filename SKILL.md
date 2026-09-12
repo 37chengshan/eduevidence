@@ -2,7 +2,7 @@
 name: eduevidence
 description: "Decision-grade evidence synthesis for education and applied social science intervention decisions. Use when a user needs to determine whether, when, for whom, or how to adopt, pilot, evaluate, or revise a teaching method, curriculum change, AI tool, program, or policy intervention. Run an auditable evidence-to-decision workflow spanning systematic retrieval, counter-evidence challenge, methodological quality and evidence-certainty appraisal, provenance-traceable evidence graphs, applicability boundaries, evidence-grounded gap detection, preregistration-ready study or pilot design, empirical evidence re-injection, and decision revision."
 ---
-# EduEvidence 6.0 — Decision-Grade Evidence Engine
+# EduEvidence 6.2 — Decision-Grade Evidence Engine
 > **AI4SS Track | Art–Science Integration · General Intelligence**  
 > **From empirical questions to decision-grade evidence and evidence-to-action loops.**
 
@@ -391,7 +391,8 @@ python3 scripts/dashboard_server.py --port 8765
 # Search academic and current evidence
 python3 -m retrieval.search "AI coding assistants learning transfer"
 # Run the DID fixture / empirical analysis path
-python3 scripts/did_regression.py examples/full-research-cycle-fixture/data.csv
+python3 scripts/did_regression.py <your.csv>   # needs treat / post / outcome columns
+# column names are matched case-insensitively; see scripts/did_regression.py
 # Compute an effect size
 python3 scripts/effect_calculator.py \
   --mean1 78.5 --sd1 10.2 --n1 90 \

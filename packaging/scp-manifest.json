@@ -13,7 +13,7 @@
   },
   "skill": {
     "name": "eduevidence",
-    "version": "4.0.0",
+    "version": "6.2.0",
     "entry": "SKILL.md",
     "one_line": "把教育决策问题转化为可追溯、可反驳、可验证的证据决策流程",
     "required_materials": [
@@ -25,7 +25,6 @@
   "included": [
     "SKILL.md",
     "README.md",
-    "README.en.md",
     "LICENSE",
     "CHANGELOG.md",
     "pyproject.toml",
@@ -45,7 +44,8 @@
     "docs/（必要发布与演示文档）",
     "UPLOAD-README.md",
     "upload-layout.md",
-    "scp-manifest.json"
+    "scp-manifest.json",
+    "package.json"
   ],
   "excluded": [
     ".git/",
@@ -89,9 +89,9 @@
       "id": "report",
       "item": "main report artifacts exist",
       "paths": [
-        "examples/ai-coding-assistant/result.json",
-        "examples/ai-coding-assistant/result.zh.json",
-        "examples/ai-coding-assistant/EduEvidence_Report.html"
+        "examples/ai-coding-assistant-evidence/result.json",
+        "examples/ai-coding-assistant-evidence/result.zh.json",
+        "examples/ai-coding-assistant-evidence/EduEvidence_Report.html"
       ]
     },
     {

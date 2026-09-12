@@ -95,7 +95,7 @@ python3 visualization/eduevidence-report/scripts/build_report.py \
     --result examples/ai-coding-assistant-evidence/result.json \
     --out /tmp/eduevidence-smoke.html
 
-# 4. 运行全量测试（752 个测试函数，见 docs/metrics.json）
+# 4. 运行全量测试（测试数量见 docs/metrics.json，由 metrics 门校验）
 python3 -m pytest -q
 ```
 

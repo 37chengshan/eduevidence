@@ -212,7 +212,8 @@
             "markdown_new",
             "defuddle",
             "raw_html",
-            "pdf_parser"
+            "pdf_parser",
+            "sciverse_content"
           ]
         },
         "fetch_status": {
@@ -304,6 +305,24 @@
               }
             }
           }
+        },
+        "extensions": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Structured extension container. Provider-specific locators live here - e.g. sciverse: {doc_id, offset, next_offset, more} - so the closed fetch contract can carry them without new top-level fields."
+        },
+        "doc_id": {
+          "type": "string",
+          "description": "Full-text artifact id (Sciverse)."
+        },
+        "chunk_id": {
+          "type": "string",
+          "description": "Retrieved chunk id (Sciverse)."
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unicode code-point offset of the fetched slice (Sciverse /content)."
         }
       }
     }

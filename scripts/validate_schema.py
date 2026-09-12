@@ -3,7 +3,8 @@
 
 Zero-dependency JSON Schema (draft-07 subset) validator covering the constructs
 used by schemas/*.schema.json: $id, title, description, type, properties,
-required, enum, minimum, maximum, minLength, additionalProperties, $ref
+required, enum, minimum, maximum, minLength, additionalProperties, $ref,
+anyOf / oneOf / allOf
 (local #/definitions and relative-file references), const, format (uri,
 date-time), pattern.
 
@@ -137,6 +138,35 @@ class Validator:
             else:
                 self.validate(value, self._resolve_ref(ref, path), path)
             return
+
+        # Combinators (draft-07 subset): anyOf / oneOf / allOf. Without
+        # these a schema can express a real alternative shape and be
+        # silently ignored - which is how report-spec (two accepted
+        # shapes) and visual-layout (oneOf) became dead weight.
+        for key in ("anyOf", "oneOf", "allOf"):
+            subschemas = schema.get(key)
+            if not isinstance(subschemas, list) or not subschemas:
+                continue
+            matched = 0
+            first_error = None
+            for sub in subschemas:
+                try:
+                    self.validate(value, sub, path)
+                    matched += 1
+                except SchemaError as exc:
+                    if first_error is None:
+                        first_error = exc
+            if key == "allOf" and matched != len(subschemas):
+                raise first_error or SchemaError(
+                    f"{path}: allOf not satisfied")
+            if key in ("anyOf", "oneOf") and matched == 0:
+                detail = f" (first: {first_error})" if first_error else ""
+                raise SchemaError(
+                    f"{path}: matches none of the {key} alternatives" + detail)
+            if key == "oneOf" and matched > 1:
+                raise SchemaError(
+                    f"{path}: matches {matched} oneOf alternatives "
+                    "(exactly one required)")
 
         if "type" in schema:
             types = schema["type"]

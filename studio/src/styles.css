@@ -420,10 +420,21 @@
   .sidebar nav {
     display: grid;
     gap: 3px;
+    /* The rows are chips (width: fit-content) so an unselected pill hugs its
+       label instead of trailing empty white. Without this, `fit-content` is a
+       keyword size and browsers snap it straight to `100%` with no transition,
+       which is why selecting a row used to jump instead of gliding. */
+    interpolate-size: allow-keywords;
   }
   .sidebar nav > a {
     position: relative;
     isolation: isolate;
+    /* Chip layout: an unselected row is only as wide as its icon + label, so
+       the white surface (::before) hugs the text instead of trailing a band
+       of empty white. The active row widens back to the full rail so its pill
+       still spans the sidebar. Labels differ per locale ("Report library" vs
+       "报告阅读室"), which is why a fixed right inset could not work. */
+    width: fit-content;
     min-height: 42px;
     display: flex;
     align-items: center;
@@ -432,33 +443,41 @@
     border-radius: 7px;
     font-size: 12px;
     color: var(--muted);
-    transition: color 180ms ease;
+    transition:
+      color 180ms ease,
+      width 380ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .sidebar nav > a::before {
     content: "";
     position: absolute;
-    inset: 3px 42px 3px 0;
+    /* The chip keeps its 3px vertical breathing room; the surface spans the
+       chip's own width, so growing on hover/lock glides with the row. */
+    inset: 3px 0 3px 0;
     z-index: -1;
     border-radius: inherit;
     background: var(--surface);
     transition:
+      left 380ms cubic-bezier(0.22, 1, 0.36, 1),
       right 380ms cubic-bezier(0.22, 1, 0.36, 1),
       top 380ms cubic-bezier(0.22, 1, 0.36, 1),
       bottom 380ms cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 220ms ease;
   }
   .sidebar nav > a:hover::before {
-    right: 34px;
+    left: -4px;
+    right: -4px;
   }
   .sidebar nav > a:hover {
     color: var(--ink);
   }
   .sidebar nav > a[aria-current="page"] {
     color: var(--ink);
+    width: 100%;
   }
   .sidebar nav > a[aria-current="page"]::before {
     top: 0;
     bottom: 0;
+    left: 0;
     right: 0;
     box-shadow: var(--shadow);
   }

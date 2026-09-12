@@ -1,42 +1,42 @@
 roles:
-  education-planner:
+  research-planner:
     responsibility: framing completeness and scope
     stages: [frame]
-    capabilities: [research-planning]
+    capabilities: [research_framing]
     critical_path: true
   evidence-retriever:
     responsibility: source acquisition and provenance
     stages: [retrieve]
-    capabilities: [literature-review, full-text-fetch, source-validation]
+    capabilities: [literature_search, counter_evidence_search, source_fetch, source_validation]
   evidence-analyst:
     responsibility: structured finding extraction
     stages: [extract]
-    capabilities: [evidence-extraction]
+    capabilities: [study_extraction, finding_extraction, claim_linking]
   skeptic:
     responsibility: independent counter-evidence coverage
     stages: [challenge]
-    capabilities: [contradiction-analysis, counter-retrieval]
-    independence_required: true
+    capabilities: [counter_evidence_search]
+    independence_required: different-model-family
     critical_path: true
   method-reviewer:
     responsibility: methodology and construct-validity appraisal
     stages: [audit]
-    capabilities: [methodology-audit]
-    independence_required: true
+    capabilities: [methodology_appraisal]
+    independence_required: role-separation
     critical_path: true
   evidence-judge:
     responsibility: evidence-bounded adjudication and applicability
     stages: [adjudicate, applicability]
-    capabilities: [evidence-review, decision-adjudication, applicability]
+    capabilities: [evidence_synthesis, tribunal, applicability_analysis, knowledge_gap_detection]
     critical_path: true
   intervention-designer:
     responsibility: grounded intervention or pilot design
     stages: [intervene]
-    capabilities: [study-design, intervention-design]
+    capabilities: [study_design, measurement_design, intervention_design]
   evaluation-designer:
     responsibility: estimable evaluation and update logic
     stages: [evaluate]
-    capabilities: [evaluation-design, data-analysis]
+    capabilities: [evaluation_design, data_validation, data_analysis]
 
 execution:
   max_parallel_workers: 6

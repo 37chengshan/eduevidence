@@ -1,8 +1,10 @@
 ---
 name: evidence-analyst
 description: EduEvidence 证据分析者。把候选 Source 抽取为 Claim-Level Evidence Object（绑定 Outcome、direction、quality_dimensions），执行 Outcome Separation；只结构化，不裁决。
-default_cli: claude
-default_model: claude-sonnet-4-6
+role_id: evidence-analyst
+capabilities: study_extraction, finding_extraction, claim_linking
+output_contracts: evidence.jsonl (schemas/evidence.schema.json)
+recommended_reasoning: medium+   # capability hint only — no model or CLI name is bound here
 default_permission: read
 default_summary_chars: 1200
 default_context_mode: full
@@ -81,7 +83,7 @@ critical_path: true
 
 - `relation_to_claim`：该证据支持/反驳某条 claim（Claim Audit 只依据此字段）；
 - `effect_direction`：研究观察到的效应方向（Outcome 可视化/聚合只依据此字段）；
-- `decision_relation`：对最终教学决策的意义（Consistency/Tribunal 依据此字段）；
+- `decision_relation`：对最终决策的意义（Consistency/Tribunal 依据此字段）；
 - 旧字段 `direction` 已废弃（deprecated），优先使用 `relation_to_claim`，不要再新写。
 
 **类型/格式硬约束（FIX-2 实测违规项，逐条禁止）**：
@@ -104,3 +106,17 @@ critical_path: true
 ## 卡住升级
 
 原文不可得回传 `NEEDS_CONTEXT: <缺哪篇原文>`；原文声称与抽取冲突回传 BLOCKED 并说明。
+
+## 独立性与交叉评审
+
+- 抽取只结构化、不裁决；`relation_to_claim` 的最终归属由 Evidence Judge 在裁决阶段复核。
+- 与宿主的模型选择解耦：本文件只声明能力要求（`recommended_reasoning: medium+`、结构化输出强），具体 CLI/模型由用户确认的模型映射决定。
+
+## 失败模式与回退
+
+| 失败 | 处理 |
+|---|---|
+| 强制字段缺失 | 该对象标 `UNSUPPORTED`，不得带缺陷进入合成。 |
+| 原文不可得 | `NEEDS_CONTEXT: <缺哪篇原文>`；禁止从摘要或记忆补全。 |
+| 原文与结论冲突 | 回传 BLOCKED 并说明冲突点，交审计阶段处理。 |
+| 统计量未报告 | 保持缺失，禁止由显著性反推。 |

@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await p.goto('http://127.0.0.1:8766/', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1500);
+await p.screenshot({ path: '/tmp/final-landing.png' });
+const txt = await p.evaluate(() => (document.body.innerText || '').replace(/\n+/g, ' ').slice(0, 220));
+console.log('LANDING:', JSON.stringify(txt));
+console.log('tour-section present:', await p.evaluate(() => !!document.getElementById('tour-section')));
+await b.close();

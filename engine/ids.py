@@ -17,6 +17,8 @@ keep stable Project-local IDs across edits; version/revision metadata records
 change instead of silently re-identifying.
 """
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 import hashlib
 import secrets

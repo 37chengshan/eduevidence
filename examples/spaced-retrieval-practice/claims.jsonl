@@ -1,0 +1,3 @@
+{"claim_id": "C-001", "text": "Spaced retrieval practice reliably improves delayed retention", "evidence_ids": ["E-001", "E-002", "E-003", "E-004"], "status": "SUPPORTED", "scope": "introductory programming novices"}
+{"claim_id": "C-002", "text": "The size of the retention benefit depends on design and materials", "evidence_ids": ["E-004", "E-005"], "status": "SUPPORTED", "scope": "introductory programming novices"}
+{"claim_id": "C-003", "text": "Retrieval practice also supports transfer, not just memory", "evidence_ids": ["E-006"], "status": "SUPPORTED", "scope": "introductory programming novices"}

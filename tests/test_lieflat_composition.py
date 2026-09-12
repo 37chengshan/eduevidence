@@ -141,13 +141,26 @@ def test_sparse_fixture_forest_suppressed():
 
 
 def test_gallery_suppresses_insufficient_charts():
+    """An explicitly requested chart with too little data is suppressed WITH a reason.
+
+    The data-driven fallback only offers shapes the data already supports, so it
+    cannot report a suppression by construction; suppression has to be exercised
+    through an explicit layout - which is exactly the case that matters, because
+    a reader following an AI-written visual_layout needs to know why a requested
+    chart is absent.
+    """
     result = _load(FIXTURE_13)
+    result["visual_layout"] = [{
+        "type": "forest_plot",
+        "title_zh": "效应量森林图", "title_en": "Forest plot",
+        "subtitle_zh": "逐研究 g 与 CI", "subtitle_en": "Per-study g with CI",
+    }]
     layout = BR.resolve_visual_layout(result)
+    assert layout["fallback"] is False
     figures, meta = BF.render_lieflat_gallery(result, "claude", "zh", layout["entries"])
-    assert figures, "deterministic fallback must render at least one chart"
-    assert meta["suppressed"], "sparse fixture must record suppressed charts with reasons"
+    assert meta["suppressed"], "a requested chart with too little data must be recorded"
     for s in meta["suppressed"]:
-        assert s["reason"]
+        assert s["reason"], "every suppression carries a reason"
 
 
 # ---------------------------------------------------------------------------
@@ -245,8 +258,17 @@ def test_resolve_missing_layout_uses_fallback():
     result.pop("visual_layout", None)
     layout = BR.resolve_visual_layout(result)
     assert layout["fallback"] is True
-    assert [e["type"] for e in layout["entries"]] == ["forest_plot", "dot_cascade",
-                                                       "bubble_almanac", "tick_rows"]
+    # The fallback is data-driven: it probes the registry and keeps only the
+    # shapes this result can support (one per data source, capped at six),
+    # instead of a fixed quartet that suppressed most charts on packs without
+    # numeric effect sizes. Assert the contract, not one frozen combination.
+    types = [e["type"] for e in layout["entries"]]
+    assert types, "fallback must select at least one supported chart"
+    assert len(types) <= 6, "fallback is capped at six charts"
+    assert len(set(types)) == len(types), "fallback never repeats a chart type"
+    registry = {name for name in LE.REGISTRY} if "LE" in dir() else None
+    from lieflat_engine import REGISTRY as _REGISTRY
+    assert set(types) <= set(_REGISTRY), f"unknown chart type selected: {types}"
 
 
 def test_academic_chart_id_namespaced():
@@ -322,3 +344,228 @@ def test_render_lieflat_gallery_keys_by_chart_id():
     for entry in layout["entries"]:
         if any(s["chart_id"] == entry["chart_id"] for s in meta["selected"]):
             assert entry["chart_id"] in figures
+
+
+# ---------------------------------------------------------------------------
+# 9. 几何防线：任何画布外的绘制都必须失败，而不是被浏览器裁掉
+# ---------------------------------------------------------------------------
+
+FIXTURE_DIRS = (
+    ROOT / "examples",
+    ROOT / "tests" / "fixtures" / "legacy-examples",
+)
+
+
+def _fixture_results():
+    """每个真实 result*.json 夹具（旗舰包 + 旧演示包）。"""
+    seen, out = set(), []
+    for base in FIXTURE_DIRS:
+        for path in sorted(base.glob("**/result*.json")):
+            if path not in seen:
+                seen.add(path)
+                out.append(path)
+    return out
+
+
+def _render_all(path, lang):
+    result = _load(path)
+    for fig_type, reg in LE.REGISTRY.items():
+        bundle, _reason = reg["extractor"](result, {}, lang)
+        if bundle is None:
+            continue
+        yield fig_type, LE.render_figure(
+            fig_type, bundle, "claude",
+            {"lang": lang, "title": "T", "subtitle": "S"}, audit=[])
+
+
+def test_geometry_overflow_raises():
+    """越界图必须抛错：固定画布 + 行数由数据决定就是被裁的那一类。"""
+    overflowing = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 300">'
+        '<circle cx="150" cy="318" r="7.5"/></svg>'
+    )
+    assert LE.geometry_overflows(overflowing), "the guard must see the escape"
+    with pytest.raises(LE.GeometryOverflowError) as excinfo:
+        LE.check_geometry(overflowing, "brand_spectrum")
+    message = str(excinfo.value)
+    assert "brand_spectrum" in message, "错误信息必须含图类型"
+    # 错误信息必须给到越界元素的坐标（圆心 318 + r 7.5 = 325.5）
+    assert "325.5" in message and "25.5px" in message, message
+    # GeometryOverflowError 是 ValueError 子类：gallery 会记录抑制原因后继续
+    assert issubclass(LE.GeometryOverflowError, ValueError)
+
+
+def test_overflow_bundle_raises_through_render_figure(monkeypatch):
+    """数据驱动的行数撞上固定画布：render_figure 必须当场报错，不是静默裁掉。"""
+    bundle = {"rows": [{"label": f"r{i}"} for i in range(12)]}
+
+    def fixed_canvas_renderer(b, theme, meta, audit=None):
+        """The regression shape: 300px canvas, one 46px row per data item."""
+        p = LE.get_theme(theme)
+        out = LE._svg_open(p, 540, 300, "overflow probe")
+        for i, row in enumerate(b["rows"]):
+            out.append(f'<text x="30" y="{88 + i * 46}" font-size="9">{row["label"]}</text>')
+        out.append("</svg>")
+        return "\n".join(out)
+
+    monkeypatch.setitem(LE.REGISTRY, "overflow_probe",
+                        {"catalog_ref": "probe", "source": "probe",
+                         "extractor": lambda result, params, lang: (bundle, None),
+                         "renderer": fixed_canvas_renderer, "params": {}})
+    with pytest.raises(LE.GeometryOverflowError) as excinfo:
+        LE.render_figure("overflow_probe", bundle, "claude", {"lang": "en", "title": "T"})
+    message = str(excinfo.value)
+    assert "overflow_probe" in message, "错误信息必须含图类型"
+    assert "y=" in message and "outside" in message, message
+
+    # 同一 bundle 用会成长的画布渲染就不再越界 —— 防线针对几何，不针对数据
+    def growing_canvas_renderer(b, theme, meta, audit=None):
+        p = LE.get_theme(theme)
+        body = [f'<text x="30" y="{88 + i * 46}" font-size="9">{row["label"]}</text>'
+                for i, row in enumerate(b["rows"])]
+        w, h = LE._fit_canvas(body)
+        return "\n".join(LE._svg_open(p, w, h, "probe") + body + ["</svg>"])
+
+    monkeypatch.setitem(LE.REGISTRY, "overflow_probe",
+                        dict(LE.REGISTRY["overflow_probe"],
+                             renderer=growing_canvas_renderer))
+    svg = LE.render_figure("overflow_probe", bundle, "claude", {"lang": "en", "title": "T"})
+    assert LE.geometry_overflows(svg) == []
+
+
+def test_render_figure_enforces_geometry_for_every_type():
+    """REGISTRY 里每个 type 的渲染结果都必须过防线（合成越界会被抓到）。"""
+    entries = {}
+    for path in _fixture_results():
+        for lang in ("zh", "en"):
+            for fig_type, svg in _render_all(path, lang):
+                entries.setdefault(fig_type, svg)
+    assert set(entries) == set(LE.REGISTRY), \
+        f"每个注册类型都要有可渲染夹具: missing {sorted(set(LE.REGISTRY) - set(entries))}"
+    for fig_type, svg in entries.items():
+        assert LE.geometry_overflows(svg) == [], f"{fig_type} draws outside its viewBox"
+
+
+@pytest.mark.parametrize("lang", ["zh", "en"])
+def test_no_fixture_figure_overflows(lang):
+    """现有全部夹具 × 全部图型：没有任何元素落在 viewBox 之外。"""
+    checked, offenders = 0, []
+    for path in _fixture_results():
+        for fig_type, svg in _render_all(path, lang):
+            checked += 1
+            hits = LE.geometry_overflows(svg)
+            if hits:
+                offenders.append((path.name, fig_type, max(hits, key=lambda h: h[3])))
+    assert checked > 100, f"夹具覆盖太少 ({checked})"
+    assert offenders == [], f"overflowing figures: {offenders[:5]}"
+
+
+def test_dynamic_canvas_never_shrinks_below_design_minimum():
+    """动态画布只在装不下时增长：既有形状的比例与最小尺寸不变。"""
+    result = _load(FIXTURE)
+    bundle, _reason = CD.extract_bipolar_axes(result, {}, "en")
+    axis = bundle["axes"][0]
+    heights = {}
+    for count in (2, 6, 12):
+        trimmed = dict(bundle, axes=[dict(axis) for _ in range(count)])
+        svg = LE.render_figure("brand_spectrum", trimmed, "claude",
+                               {"lang": "en", "title": "T"})
+        w, h = (int(v) for v in re.search(r'viewBox="0 0 (\d+) (\d+)"', svg).groups())
+        heights[count] = h
+        assert w >= LE.MIN_CANVAS_W and h >= LE.MIN_CANVAS_H
+        assert LE.geometry_overflows(svg) == []
+    assert heights[2] == LE.MIN_CANVAS_H, "少行数仍用设计最小高度"
+    assert heights[12] > heights[6] > heights[2], "行数增加时画布必须跟着长高"
+
+
+def test_brand_spectrum_six_axis_case_is_whole():
+    """用户实测的裁切案例：6 个 axes 时最后一行标签与圆点都要在画布内。"""
+    result = _load(FIXTURE)
+    bundle, _reason = CD.extract_bipolar_axes(result, {}, "zh")
+    assert len(bundle["axes"]) >= 6, "旗舰夹具必须有 6 条双极轴"
+    svg = LE.render_figure("brand_spectrum", bundle, "claude",
+                           {"lang": "zh", "title": "结果双极光谱"}, audit=[])
+    assert LE.geometry_overflows(svg) == []
+    w, h = (int(v) for v in re.search(r'viewBox="0 0 (\d+) (\d+)"', svg).groups())
+    assert h > 300, f"6 行必须长高（旧画布 300px 会裁掉最后一行），实际 {h}"
+    last_row_y = 88 + 5 * 46
+    assert last_row_y + 7.5 <= h, "最后一行圆点必须完整落在画布内"
+
+
+# ---------------------------------------------------------------------------
+# 9. 几何防线：数据量扫描（行数 / 列数 / 标签宽度都随数据变化）
+# ---------------------------------------------------------------------------
+
+def _film(fig_type, bundle, lang="en"):
+    return LE.render_figure(fig_type, bundle, "claude",
+                            {"lang": lang, "title": "T"}, audit=[])
+
+
+@pytest.mark.parametrize("count", [2, 5, 6, 8, 12, 20, 30])
+def test_brand_spectrum_grows_with_axis_count(count):
+    """行数由 axes 决定：任何条数都不许被固定画布裁掉。"""
+    axis = {"label": "outcome", "position": 0.5, "net": 0.1,
+            "positive": 2, "negative": 1, "null": 0}
+    svg = _film("brand_spectrum", {"axes": [dict(axis) for _ in range(count)],
+                                   "left_en": "neg", "right_en": "pos"})
+    assert LE.geometry_overflows(svg) == [], f"{count} axes overflow"
+    w, h = (int(v) for v in re.search(r'viewBox="0 0 (\d+) (\d+)"', svg).groups())
+    assert w >= LE.MIN_CANVAS_W and h >= LE.MIN_CANVAS_H
+
+
+@pytest.mark.parametrize("fig_type,bundle", [
+    ("bubble_almanac", {"years": [str(2000 + i) for i in range(12)],
+                        "dimensions": ["a", "b"],
+                        "cells": [{"year": str(2000 + i), "dim": d, "n": 12, "sig": 1}
+                                  for i in range(12) for d in ("a", "b")]}),
+    ("dotty_matrix", {"layers": [{"label": f"Phase {i}",
+                                  "cells": [{"r": r, "c": c}
+                                            for r in range(6) for c in range(6)]}
+                                 for i in range(6)]}),
+    ("dot_cascade", {"studies": [{"label": f"LongStudyName{i}", "g": 0.4 + i * 0.02,
+                                  "n": 90 + i} for i in range(20)]}),
+    ("tick_rows", {"rows": [{"label": f"o{i}", "positive": 5, "negative": 3,
+                             "null": 2} for i in range(14)]}),
+    ("rung_bars", {"rows": [{"label": f"o{i}", "positive": 8, "negative": 6,
+                             "null": 2} for i in range(14)]}),
+    ("paired_rungs", {"rows": [{"label": f"o{i}", "positive": 9, "negative": 7}
+                               for i in range(14)]}),
+    ("ballot_tally", {"items": [{"label": f"f{i}", "total": 20, "flagged": 4}
+                                for i in range(14)]}),
+    ("jitter_strip", {"groups": [{"label": f"g{i}", "values": [0.1, 0.4, 0.9]}
+                                 for i in range(14)]}),
+    ("launch_fan", {"items": [{"label": f"activity-set-{i}", "w": 7 + i}
+                              for i in range(10)]}),
+    ("hundred_field", {"categories": [{"label": f"cat-{i}", "count": 9}
+                                      for i in range(12)]}),
+    ("tick_donut", {"total": 60, "categories": [{"label": f"cat-{i}", "count": 15}
+                                                for i in range(6)]}),
+    ("parallel_coordinates", {
+        "axes": [{"key": k, "label_en": k} for k in ("g", "n", "quality", "year")],
+        "rows": [{"label": f"s{i}", "g": 0.2, "n": 100, "quality": 7, "year": 2020}
+                 for i in range(14)]}),
+    ("barcode_lollipop", {
+        "weeks": [{"week": w, "phase": (w % 4) + 1} for w in range(1, 121)],
+        "peaks": [{"week": 1, "phase": 1, "label_en": "Phase 1 starts"}],
+        "phases": [{"phase": 1, "label_en": "Phase 1", "start": 1, "end": 5}],
+        "first": 1, "derived": "stem height = phase index"}),
+    ("forest_plot", {"studies": [{"label": f"study-{i}", "dimension": "d", "g": 0.3,
+                                  "ci_lower": 0.1, "ci_upper": 0.5, "n": 200}
+                                 for i in range(12)], "pooled": None}),
+    ("tick_gauge", {"score": 0.815, "label": "WWWWWWWWWWWWWWWWWWWWWWWW"}),
+    ("bubble_almanac", {"years": ["2020", "2021"], "dimensions": ["a", "b"],
+                        "cells": [{"year": "2020", "dim": "a", "n": 900, "sig": 1},
+                                  {"year": "2021", "dim": "b", "n": 900, "sig": 1}]}),
+    ("ballot_tally", {"items": [{"label": "WWWWWWWWWWWW", "total": 60,
+                                 "flagged": 30}]}),
+    ("tick_rows", {"rows": [{"label": "WWWWWWWWWWWW", "positive": 60,
+                             "negative": 40, "null": 20}]}),
+])
+def test_dense_and_extreme_data_stays_inside_the_canvas(fig_type, bundle):
+    """高密度行数与极端值（巨大气泡、满宽标签、六位数 N）都不许越界。
+
+    这些数据来自 render_* 的对抗性扫描：固定画布 + 数据决定的行数是裁切的
+    成因，而防线只在越界时抛错，所以每个图型的边界都要真的走在画布内。
+    """
+    svg = _film(fig_type, bundle)
+    assert LE.geometry_overflows(svg) == [], f"{fig_type} draws outside its viewBox"

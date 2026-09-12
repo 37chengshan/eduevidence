@@ -48,5 +48,9 @@
         "summary": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
       }
     ]
-  }
+  },
+  "strongest_support": "Supervised AI assistance improves handling speed and answer consistency in customer-support work, with quality maintained.",
+  "key_uncertainty": "Evidence comes from adjacent writing and advisory settings rather than the support floor, so transfer to live customer conversations is unproven.",
+  "main_risk": "Unsupervised or knowledge-base-free use can produce confident wrong answers to customers, and over-reliance erodes agent skill over time.",
+  "next_action": "Run a supervised pilot on approved knowledge bases with human review on every reply, and track escalation and correction rates."
 }

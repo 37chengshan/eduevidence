@@ -1,31 +1,50 @@
 ---
 name: aihot-trend-analysis
 description: "Real-time horizon scanning and dynamic trend ingestion for emerging AI educational tools, model benchmarks, and EdTech releases via AIHot."
+capability: literature_search (grey-literature channel)
 ---
 
-# aihot-trend-analysis — Real-Time AI & EdTech Trend Ingestion Sub-Skill
+# aihot-trend-analysis — Real-Time AI & EdTech Trend Ingestion
 
 ## When to Use
-Triggered when an educational or social science research inquiry involves fast-moving generative AI tools (e.g. Cursor, Claude 3.5, Socratic LLM tutors, Copilot) where peer-reviewed academic literature may have a 6-18 month publication lag.
+Triggered when an inquiry involves fast-moving generative AI tools (Cursor, Claude, Socratic LLM tutors, Copilot) where peer-reviewed literature may lag 6–18 months.
 
-## Input Requirements
-- `keyword`: Target technology or pedagogy topic (e.g. `"AI programming assistant"`, `"Socratic coding tutor"`).
-- `time_window`: Optional lookup horizon (`"24h"`, `"7d"`, `"30d"`).
-- `category`: `"EdTech"`, `"Agents"`, `"Reasoning"`, `"LLMs"`.
+## Inputs
+- `keyword`: target technology or pedagogy topic.
+- `time_window` (optional): `24h` / `7d` / `30d`.
+- `category` (optional): `EdTech` / `Agents` / `Reasoning` / `LLMs`.
+
+## Process
+1. Query the AIHot channel through `retrieval/search.py` (`AIHotProvider`).
+2. Record every hit as grey literature with its publication time.
+3. Route any factual claim that would enter the decision back through Retrieve → Fetch → Validate: trend items never bypass RULE 2.
 
 ## Output Contract
-Returns structured `SearchHit` objects tagged with `provider: "aihot"` and `tier: 5` (grey literature / technical trend), providing zero-day context before empirical trials are designed.
+`SearchHit` objects tagged `provider: "aihot"` with grey-literature authority (`tier5_general_web`); they inform horizon scanning, not effect estimation.
 
 ```json
 {
   "trend_items": [
     {
-      "title": "OpenAI Socratic Tutoring Framework Evaluated Across 10 Universities",
+      "title": "Socratic tutoring framework evaluated across 10 universities",
       "url": "https://aihot.virxact.com/api/item/...",
-      "summary": "Benchmark evaluation on novice cognitive retention and prompt scaffolding.",
+      "summary": "Benchmark evaluation on novice retention and prompt scaffolding.",
       "category": "EdTech",
       "publish_time": "2026-08-15"
     }
   ]
 }
 ```
+
+## Quality Gates
+- [ ] 每条 trend 项带 URL 与时间戳。
+- [ ] 明确标注为灰来源，不进入效应量合成。
+
+## Anti-Patterns
+- 用产品博客宣称的效果当作实证证据；把版本发布日期当研究发表时间。
+
+## Worked Example
+关键词 "AI programming assistant" → 返回 30 天内的发布与基准报道，用于判断文献滞后期内是否出现新的风险信号。
+
+## References
+- `retrieval/search.py::AIHotProvider`、`references/retrieval-compliance.md`

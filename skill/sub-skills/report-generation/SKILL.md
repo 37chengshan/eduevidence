@@ -1,6 +1,7 @@
 ---
 name: report-generation
 description: "Renders 5 baked-theme single-file bilingual HTML reports, executive Visual Briefs, and Markdown reports, powered by Lieflat Charts editorial visualization standards and AI-composed, data-driven chart galleries."
+capability: report_projection + report_rendering
 ---
 # Report Generation Skill
 
@@ -55,3 +56,30 @@ Dark themes draw on the theme's `card_bg`; text contrast is checked against the 
 
 ## 4. Web Studio Sync
 The Local Web Studio (`scripts/dashboard_server.py`) serves the baked HTML reports and Lieflat figures directly.
+
+## Inputs
+- `result.json` / `result.zh.json`（叙述字段先过语言门禁 `check_language_parallel`）
+- 当前 Graph Revision 与 decision snapshot 标识
+
+## Quality Gates
+- [ ] 双语语义对齐（数字 / ID / 枚举 / URL 不变）。
+- [ ] 渲染完整性门通过：显示数值可回溯到 `result.json`，探针无 `REPORT_INVALID`。
+- [ ] 布局不变量通过 `scripts/lint_report_layout.py`（390 / 768 / 1280 × brief/full）。
+- [ ] 溯源表格保留（来源表 / 证据矩阵 / Claim Trace），图表只作补充。
+- [ ] `artifact_manifest.json` 记录来源 revision 与各产物哈希。
+
+## Anti-Patterns
+- 由模型写入图表数值（数值必须来自 `scripts/charts_data.py` 提取器）。
+- 为了"更可视化"而删除可核验表格；用占位或虚构数据补齐缺失图表。
+- 报告与快照不一致时改报告不改结论；在 HTML 内提供运行时换肤。
+
+## Failure Handling
+| 失败 | 处理 |
+|---|---|
+| `REPORT_INVALID` | 阻断发布并重跑渲染，不带缺陷投放。 |
+| 双语不对齐 | 修复 `result.zh.json` 后重新烘焙。 |
+| 数据不足以支撑某图 | 抑制该图并记录原因，不补造数据。 |
+| 快照缺失 | 回到上游科学阶段补齐；禁止用默认值生成报告。 |
+
+## References
+- `skill/task-briefs/present.md`、`skill/task-briefs/projection.md`、`visualization/eduevidence-report/references/layout-constraints.md`

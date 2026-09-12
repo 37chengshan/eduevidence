@@ -1,0 +1,70 @@
+{
+  "search_performed": true,
+  "method": "derived from evidence corpus directions (demo/test mode)",
+  "skeptic_findings": [
+    {
+      "check": "1_null_result",
+      "status": "found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": [
+        "E-005"
+      ]
+    },
+    {
+      "check": "2_negative_result",
+      "status": "not_found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "3_contradictory_evidence",
+      "status": "not_found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "4_alternative_explanation",
+      "status": "found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "5_measurement_mismatch",
+      "status": "not_found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "6_sampling_bias",
+      "status": "not_found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "7_novelty_effect",
+      "status": "not_found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "8_ai_dependency",
+      "status": "not_found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "9_scope_overreach",
+      "status": "not_found",
+      "detail": "derived from the evidence corpus in demo/test mode",
+      "related_evidence_ids": []
+    }
+  ],
+  "contradictory_evidence_found": false,
+  "no_contradictory_evidence_statement": "NO CONTRADICTORY EVIDENCE FOUND",
+  "threats_to_validity": [
+    "materials differ across experiments",
+    "sample of convenience",
+    "short retention interval",
+    "single institution"
+  ]
+}

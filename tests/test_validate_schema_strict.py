@@ -71,6 +71,7 @@ VALID_SAMPLES = {
         "chart_id": "outcome-evidence-overview",
         "purpose": "interactive_analysis",
         "engine": "echarts",
+        "data_ref": None,
         "chart_type": "diverging_bar",
         "semantic_basis": "effect_direction",
         "title": "结果证据概览",
@@ -82,9 +83,9 @@ VALID_SAMPLES = {
                       "colorblind_safe": "NOT_CHECKED"},
     },
     "report-spec.schema.json": {
-        "title": "EduEvidence Report",
-        "theme": "claude",
-        "sections": [],
+        "theme_selected": "claude",
+        "theme_display": "Claude Research [Light]",
+        "integrity_gate": {"status": "PASS"},
     },
     "report-result.schema.json": {
         "meta": {"skill": "eduevidence"},
@@ -99,6 +100,18 @@ VALID_SAMPLES = {
     "cross-model-review.schema.json": {
         "agreement": "high",
         "final_recommendation": "approve with revisions",
+    },
+    "skeptic.schema.json": {
+        "search_performed": True,
+        "skeptic_findings": [
+            {"check": "1_null_result", "status": "not_found", "detail": "checked and nothing found"}, {"check": "2_negative_result", "status": "not_found", "detail": "checked and nothing found"}, {"check": "3_contradictory_evidence", "status": "not_found", "detail": "checked and nothing found"}, {"check": "4_alternative_explanation", "status": "not_found", "detail": "checked and nothing found"}, {"check": "5_measurement_mismatch", "status": "not_found", "detail": "checked and nothing found"}, {"check": "6_sampling_bias", "status": "not_found", "detail": "checked and nothing found"}, {"check": "7_novelty_effect", "status": "not_found", "detail": "checked and nothing found"}, {"check": "8_ai_dependency", "status": "not_found", "detail": "checked and nothing found"}, {"check": "9_scope_overreach", "status": "not_found", "detail": "checked and nothing found"}
+        ],
+        "contradictory_evidence_found": False,
+        "no_contradictory_evidence_statement": "NO CONTRADICTORY EVIDENCE FOUND",
+    },
+    "applicability.schema.json": {
+        "status": "NOT_CAPTURED",
+        "reason": "demo pack without an assessment",
     },
     "agent-mcp-approval.schema.json": {
         "approved": True,
@@ -128,8 +141,10 @@ def test_all_schemas_are_strict(schema_file):
         validate(bad, schema)
 
 
-def test_schema_count_is_thirteen():
-    assert len(SCHEMA_FILES) == 13
+def test_schema_count_matches_top_level_contracts():
+    # The 13 original V1 contracts plus the skeptic and applicability
+    # stage contracts that previously had no schema gate at all.
+    assert len(SCHEMA_FILES) == 15
 
 
 def test_extensions_container_allowed():

@@ -40,7 +40,9 @@ def bake(examples: Path, *, force: bool = False) -> list[dict]:
         if not force and manifest.is_file():
             try:
                 prior = json.loads(manifest.read_text(encoding='utf-8'))
-                valid = prior.get('cache_key') == cache_key and all(
+                main = prior.get('main_report') or {}
+                main_ok = bool(main.get('file')) and (directory / main['file']).is_file() and                     hashlib.sha256((directory / main['file']).read_bytes()).hexdigest() == main.get('sha256')
+                valid = prior.get('cache_key') == cache_key and main_ok and all(
                     (out_dir / record['file']).is_file() and hashlib.sha256((out_dir / record['file']).read_bytes()).hexdigest() == record['sha256']
                     for record in prior.get('reports', [])) and len(prior.get('reports', [])) == len(THEMES)
                 if valid:
@@ -64,8 +66,22 @@ def bake(examples: Path, *, force: bool = False) -> list[dict]:
                 raise RuntimeError(f'{directory.name}/{theme}: renderer rejected input\n{completed.stdout}\n{completed.stderr}')
             os.replace(temporary, target)
             records.append({'theme': theme, 'file': target.name, 'sha256': hashlib.sha256(target.read_bytes()).hexdigest()})
+        # Also refresh the pack-root report. This used to write only the themed
+        # variants, so examples/*/EduEvidence_Report.html kept whatever bytes it
+        # was first rendered with - the packaged example shipped a report the
+        # current renderer would not produce.
+        from_default = next((r for r in records if r['theme'] == 'claude'), records[0])
+        main_target = directory / 'EduEvidence_Report.html'
+        main_temp = directory / '.EduEvidence_Report.pending.html'
+        main_temp.write_bytes((out_dir / from_default['file']).read_bytes())
+        os.replace(main_temp, main_target)
+        main_sha = hashlib.sha256(main_target.read_bytes()).hexdigest()
+
         value = {'schema_version': 1, 'project': directory.name, 'cache_key': cache_key,
-                 'result_sha256': result_hash, 'renderer_sha256': engine_hash, 'reports': records}
+                 'result_sha256': result_hash, 'renderer_sha256': engine_hash,
+                 'main_report': {'file': main_target.name, 'sha256': main_sha,
+                                 'theme': from_default['theme']},
+                 'reports': records}
         manifest.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8')
         reports.append(value)
         print(f'{directory.name}: {len(records)} verified report variants')

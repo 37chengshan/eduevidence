@@ -87,9 +87,8 @@ def test_eventbus_concurrency():
         t.join()
 
     print(f"[*] Concurrent subscribe/unsubscribe completed. Race errors caught: {len(race_errors)}")
-    if race_errors:
-        for err in race_errors[:5]:
-            print(f"    - [BUG FOUND] {err}")
+    assert not race_errors, (
+        f"EventBus raised under concurrent subscribe/unsubscribe: {race_errors[:3]}")
 
     # 2. Test Subscribe Non-Atomic Check (Duplicate Subscriber Appending)
     bus._subscribers.clear()
@@ -105,8 +104,9 @@ def test_eventbus_concurrency():
         t.join()
 
     print(f"[*] Subscribed same callback across 10 threads. Total registered subscribers: {len(bus._subscribers)} (Expected: 1)")
-    if len(bus._subscribers) > 1:
-        print(f"    - [BUG FOUND] Race condition in subscribe: duplicate callbacks registered ({len(bus._subscribers)})")
+    assert len(bus._subscribers) == 1, (
+        f"subscribe() is not atomic: {len(bus._subscribers)} copies of one callback "
+        "registered from 10 threads")
 
     # 3. Concurrent Publish & Unbounded Memory Leak
     bus.clear()
@@ -156,21 +156,23 @@ def test_did_regression_adversarial():
     results = {}
 
     # Case 2.1: Column Name Parsing Collision
+    # Enough rows for a DID fit (n - 4 > 0): this case is about COLUMN MAPPING,
+    # not about saturation, so a 4-row fixture would test the wrong thing.
     with tempfile.NamedTemporaryFile("w", suffix=".csv", delete=False) as f:
         writer = csv.writer(f)
         writer.writerow(["student_id", "treatment_group", "post_test_score", "time_period"])
-        writer.writerow([1, 1, 85.0, 1])
-        writer.writerow([2, 1, 70.0, 0])
-        writer.writerow([3, 0, 80.0, 1])
-        writer.writerow([4, 0, 75.0, 0])
+        for i in range(1, 13):
+            treat = 1 if i % 2 else 0
+            post = 1 if i % 3 else 0
+            writer.writerow([i, treat, 60.0 + 4 * treat + 3 * post + 2 * treat * post, post])
         col_test_path = f.name
 
     res_col = run_did_analysis(col_test_path)
     os.remove(col_test_path)
     print(f"[*] Case 2.1: Column name collision ('treatment_group', 'post_test_score', 'time_period'):")
     print(f"    Result: {res_col}")
-    if res_col.get("status") == "error":
-        print(f"    - [BUG FOUND] Column mapper failed to parse outcome column due to 'post' keyword priority collision!")
+    assert res_col.get("status") != "error", (
+        "DID column mapper failed to parse the outcome column (keyword collision)")
     results["column_mapping_bug"] = res_col
 
     # Case 2.2: Perfect Multicollinearity / Singular Design Matrix
@@ -187,8 +189,10 @@ def test_did_regression_adversarial():
     os.remove(collinear_path)
     print(f"\n[*] Case 2.2: Singular Matrix / Perfect Multicollinearity:")
     print(f"    Result: {json.dumps(res_coll, indent=2)}")
-    if res_coll.get("status") == "success" and res_coll.get("standard_error") == 1.0:
-        print(f"    - [BUG FOUND] Matrix inversion failed on singular matrix, but returned fake standard_error=1.0 and fake p_value={res_coll.get('p_value')} instead of reporting collinearity/singular error!")
+    assert not (res_coll.get("status") == "success"
+                and res_coll.get("standard_error") == 1.0), (
+        "singular design matrix produced a fabricated standard error of 1.0 "
+        "instead of reporting collinearity")
     results["singular_matrix_fallback"] = res_coll
 
     # Case 2.3: Zero Variance in Outcome
@@ -228,8 +232,9 @@ def test_did_regression_adversarial():
     # Case 2.5: WWC Baseline Equivalence Rating for QED
     print(f"\n[*] Case 2.5: WWC 5.0 Baseline Rating Check for QED:")
     print(f"    When baseline_equivalence_g = {res_sat.get('baseline_equivalence_g')}, WWC rating reported is: '{res_sat.get('wwc_baseline_rating')}'")
-    if res_sat.get("wwc_baseline_rating") == "Meets Standards Without Reservations":
-        print(f"    - [BUG FOUND] Methodological violation: Quasi-Experimental Designs (QED/DID) can NEVER meet WWC standards without reservations; maximum possible rating is 'Meets Standards With Reservations'!")
+    assert res_sat.get("wwc_baseline_rating") != "Meets Standards Without Reservations", (
+        "methodological violation: a quasi-experimental design was rated as meeting "
+        "WWC standards without reservations")
     results["wwc_rating_bug"] = res_sat.get("wwc_baseline_rating")
 
     # Case 2.6: Small Sample Normal Z-Test vs Student t-distribution
@@ -307,8 +312,8 @@ def test_evidence_graph_adversarial():
     print(f"[*] Meta-synthesis with NaN effect and negative weight:")
     print(f"    - Pooled g: {proc_syn.get('pooled_g')}")
     print(f"    - Q statistic: {proc_syn.get('q_statistic')}")
-    if math.isnan(proc_syn.get("pooled_g", 0.0)):
-        print(f"    - [BUG FOUND] NaN effect size propagated directly into meta_synthesis without input validation!")
+    assert not math.isnan(proc_syn.get("pooled_g", 0.0)), (
+        "NaN effect size propagated into meta-synthesis without validation")
 
     return {
         "json_roundtrip": len(reloaded.edges),
@@ -495,8 +500,10 @@ def test_dashboard_server_adversarial():
             except Exception as e:
                 leakage_results[tf] = False
 
-        if any(leakage_results.values()):
-            print(f"    - [SECURITY DEFECT] StudioHandler exposes arbitrary local project source files through unauthenticated HTTP GET via super().do_GET() fallback!")
+        leaked = [path for path, ok in leakage_results.items() if ok]
+        assert not leaked, (
+            "StudioHandler served local source files over unauthenticated GET: "
+            f"{leaked}")
         results["file_leakage"] = leakage_results
 
         # 3. Concurrency Stress Test (30 Concurrent HTTP Clients)

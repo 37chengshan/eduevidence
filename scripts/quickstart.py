@@ -40,8 +40,23 @@ STAGE_BRIEFS = {
 }
 
 
+def runs_root() -> Path:
+    """Runs directory, honouring EDUEVIDENCE_RUNS_DIR like the orchestrator does.
+
+    Without this the quickstart wrote into the repository even when the user had
+    pointed the runs directory elsewhere.
+    """
+    import os
+
+    return Path(os.environ.get("EDUEVIDENCE_RUNS_DIR") or (ROOT / "runs"))
+
+
 def newest_run_dir() -> Path:
-    runs_dir = ROOT / "runs"
+    runs_dir = runs_root()
+    if not runs_dir.is_dir():
+        raise SystemExit(
+            f"no runs directory at {runs_dir}; run `eduevidence run --question ...` first "
+            "(or set EDUEVIDENCE_RUNS_DIR)")
     candidates = sorted((p for p in runs_dir.iterdir() if p.is_dir()),
                         key=lambda p: p.stat().st_mtime, reverse=True)
     if not candidates:
@@ -86,7 +101,8 @@ def build_next_steps(run_dir: Path, question: str, depth: str) -> str:
         "",
         "## 可信度自检",
         "",
-        "- 引用逐条核验报告：`benchmarks/doi-audit/report.md` 与包内 `citation_check.md`",
+        "- 引用逐条核验报告：包内 `citation_check.md`"
+        "（源码仓库另见 `benchmarks/doi-audit/report.md`）",
         "- 报告头徽章标注 data_origin；synthetic 演示不得当作实证引用",
         ""]
     return "\n".join(lines)

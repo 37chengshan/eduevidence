@@ -142,12 +142,36 @@ class AuditedSearchExecutor:
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (output_dir / "search-attempts.jsonl").write_text(
             "".join(json.dumps(item.to_dict(), ensure_ascii=False) + "\n" for item in attempts), encoding="utf-8")
+        # Sciverse chunk locators are a working set, never evidence: /content
+        # must expand them and the fetch/validate gate must pass first (RULE 2).
+        chunk_records = [
+            {"chunk_id": hit.chunk_id, "doc_id": hit.doc_id, "offset": hit.offset,
+             "title": hit.title, "doi": hit.doi, "provider": hit.provider,
+             "score": hit.score, "locator_state": "discovery_only_requires_content_fetch"}
+            for hit in hits
+            if getattr(hit, "doc_id", None)
+        ]
+        if chunk_records:
+            (output_dir / "chunks.jsonl").write_text(
+                "".join(json.dumps(record, ensure_ascii=False) + "\n" for record in chunk_records),
+                encoding="utf-8")
         with (output_dir / "source-screening.csv").open("w", newline="", encoding="utf-8") as fh:
-            writer = csv.DictWriter(fh, fieldnames=["title", "doi", "url", "provider", "year", "screening_status", "reason"])
+            writer = csv.DictWriter(fh, fieldnames=["title", "doi", "url", "provider", "year",
+                                                    "doc_id", "chunk_id", "offset", "screening_status", "reason"])
             writer.writeheader()
             for hit in hits:
-                writer.writerow({"title": hit.title, "doi": hit.doi or parse_doi_from_url(hit.url) or "", "url": hit.url,
-                                 "provider": hit.provider, "year": hit.year or "", "screening_status": "candidate",
+                doi = hit.doi or parse_doi_from_url(hit.url) or ""
+                url = hit.url
+                # Never fabricate a location for a DOI-less record; the explicit
+                # marker routes it to manual screening instead.
+                if not url and not doi:
+                    url = "needs_manual_location"
+                writer.writerow({"title": hit.title, "doi": doi, "url": url,
+                                 "provider": hit.provider, "year": hit.year or "",
+                                 "doc_id": getattr(hit, "doc_id", None) or "",
+                                 "chunk_id": getattr(hit, "chunk_id", None) or "",
+                                 "offset": getattr(hit, "offset", None) if getattr(hit, "offset", None) is not None else "",
+                                 "screening_status": "candidate",
                                  "reason": "discovery metadata only; fetch and validation required before evidence extraction"})
         with (output_dir / "exclusion-log.csv").open("w", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=["identifier", "reason"])

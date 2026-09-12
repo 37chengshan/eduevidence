@@ -1,0 +1,78 @@
+{
+  "target": "overall",
+  "verdict": "PASS",
+  "audit_items": {
+    "control_group": {
+      "status": "met",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "randomization": {
+      "status": "partial",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "pre_test": {
+      "status": "partial",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "post_test": {
+      "status": "met",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "retention_test": {
+      "status": "met",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "transfer_test": {
+      "status": "partial",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "sample_bias": {
+      "status": "partial",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "self_selection": {
+      "status": "partial",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "measurement_validity": {
+      "status": "met",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "confounders": {
+      "status": "partial",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "instructor_effect": {
+      "status": "missing",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "novelty_effect": {
+      "status": "missing",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "tool_version_effect": {
+      "status": "not_applicable",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "ai_usage_policy": {
+      "status": "not_applicable",
+      "note": "由本轮真实检索到的证据集评估得出"
+    },
+    "dropout": {
+      "status": "missing",
+      "note": "由本轮真实检索到的证据集评估得出"
+    }
+  },
+  "task_vs_learning_guard": {
+    "measured_construct": "delayed retention and transfer, not immediate task speed",
+    "equates_task_with_learning": false,
+    "note": "本证据集以延迟保持与迁移为主要结果，未把即时练习表现等同于学习。"
+  },
+  "limitations": [
+    "多数研究来自心理学实验室材料，程序设计课程的现场证据相对有限",
+    "间隔长度与练习形式在研究中差异较大"
+  ],
+  "suggestions": [
+    "在课程内固定每周短检索练习并统一延迟后测口径"
+  ]
+}

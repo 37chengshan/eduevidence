@@ -1,0 +1,14 @@
+{
+  "status": "ASSESSED",
+  "suitable_for": "有固定课时的入门编程课程，教师能稳定安排每周短练习",
+  "not_suitable_for": "没有固定复习环节的课程，或无法保证延迟测评的场景",
+  "required_conditions": [
+    "每周固定短时检索练习",
+    "统一的延迟后测口径"
+  ],
+  "excluded_populations": [
+    "无固定课时的选修课学生"
+  ],
+  "outcome_limits": "迁移证据少于保持证据",
+  "uncertainty": "课程现场研究的数量有限"
+}

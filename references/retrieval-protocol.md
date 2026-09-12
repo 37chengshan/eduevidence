@@ -68,6 +68,24 @@ source-validity.md）后才能进入 Evidence Extraction。
 | RP-03 | 厂商/行业声明（如 Copilot 官方博客、AI 产品宣传页）**一律不得**作为独立证据，即使域名是 `.edu` / `.gov`（需核查内容是否厂商资助）。 |
 | RP-04 | 无法回溯到原始来源的二手转述，不得进入 Evidence Matrix。 |
 
+### 3.1 Sciverse 通道使用规则（key-based 学术通道）
+
+Sciverse（`retrieval/sciverse.py`，需 `SCIVERSE_API_TOKEN`）提供引用级学术检索与全文定位。使用时必须遵守以下语义，否则结论口径会被静默夸大：
+
+| 编号 | 规则 |
+| --- | --- |
+| RP-SV-01 | `/agentic-search` 返回的 chunk 是**定位子**（`doc_id` + Unicode 码点 `offset`），必须经 `/content` 读出正文并通过 `retrieval/validate.py` 校验门，才可进入 Extract（RULE 2 的机器化）。定位写入 `chunks.jsonl`，标注 `discovery_only_requires_content_fetch`。 |
+| RP-SV-02 | `filters` 是**软过滤**：chunk 元数据缺失的文档不会被排除。按年份等条件过滤时，结论与筛选表必须写"近似范围"；需要严格范围时改用 `/meta-search` 的结构化过滤并逐条核对返回记录。 |
+| RP-SV-03 | `offset` / `limit` 以 **Unicode 码点**计（与 Python `len` 一致）；翻页使用返回的 `next_offset`，不得用 `bytes_returned` 推算。 |
+| RP-SV-04 | 调用 `/content` 必须显式传 `offset`（省略会返回整篇全文并忽略 `limit`）。 |
+| RP-SV-05 | 同一篇论文最多返回约 3 个 chunk，`balanced` 模式服务端约截断至 50 条；高 `top_k` 需要足够多的不同论文，不得用同一篇的多个 chunk 充当多项独立证据。 |
+| RP-SV-06 | 引用目标永远是论文本身（DOI / `unique_id`），**不得把 Sciverse 记为来源或抓取渠道**。 |
+| RP-SV-07 | 无 DOI、无 URL 的记录标 `needs_manual_location` 进入人工筛选，**禁止伪造定位**。 |
+| RP-SV-08 | 引文链（`/meta-paper-relations`）用于饱和判断与滚雪球检索，对应 `SearchQuery.purpose = citation_chain`，其方向语义（CITATIONS 被引 / REFERENCES 参考文献）必须在记录中保留。 |
+| RP-SV-09 | 通道不可用（无 token / 401 / 429 / 5xx / 网络失败）时按定型状态记录并切换其他通道；不得因配额耗尽放宽证据标准。 |
+
+端点契约与限制见 `docs/sciverse-api.md`；配额、缓存与署名见 `references/retrieval-compliance.md`。
+
 ## 4. 检索轮次与饱和规则
 
 ### 4.1 最小轮次
@@ -140,3 +158,5 @@ Skeptic 的 9 项固定任务（skeptic-protocol.md）需要对应的独立查�
 | RP-09 | snippet 与摘要不得直接作为证据内容（RULE 2）；检索阶段产物只能是线索。 |
 | RP-10 | 厂商声明与二手转述不得作为独立证据（RP-03 / RP-04）。 |
 | RP-11 | 达到饱和规则或数量下限后仍不足的，如实输出 `INSUFFICIENT_SOURCES`，禁止降低纳入标准凑数。 |
+
+来源合规（robots、限速、paywall、署名与凭据）统一见 `references/retrieval-compliance.md`；Sciverse 通道附加约定见本文 §3.1。

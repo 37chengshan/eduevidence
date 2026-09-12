@@ -54,7 +54,11 @@ class EvidenceNode:
     outcome_dimension: str = OutcomeDimension.GENERAL_MEASURE
     claim_id: Optional[str] = None
     outcome_id: Optional[str] = None
-    effect_size: Dict[str, Any] = field(default_factory=lambda: {"metric": "Hedges g", "value": 0.0, "ci_lower": 0.0, "ci_upper": 0.0, "p_value": 0.05})
+    # A missing effect must stay missing: the old default fabricated a
+    # g = 0.0 with a p = 0.05, which would serialise as a real (and
+    # false) "no effect" result. Callers that need a number must supply
+    # one; the extractors already suppress charts when it is absent.
+    effect_size: Optional[Dict[str, Any]] = None
     sample_size: int = 0
     sample_description: str = ""
     study_design: str = "Quasi-Experimental"  # RCT, Quasi-Experimental DID, Meta-Analysis, Observational
@@ -292,9 +296,9 @@ class EvidenceGraph:
         for ev in self.evidence.values():
             paper = self.papers.get(ev.paper_id)
             study_label = f"{paper.authors[0] if paper and paper.authors else ev.paper_id} ({paper.year if paper else ''})"
-            effect_val = ev.effect_size.get("value", 0.0)
-            ci_l = ev.effect_size.get("ci_lower")
-            ci_u = ev.effect_size.get("ci_upper")
+            effect_val = (ev.effect_size or {}).get("value") or 0.0
+            ci_l = (ev.effect_size or {}).get("ci_lower")
+            ci_u = (ev.effect_size or {}).get("ci_upper")
             has_ci = ci_l is not None and ci_u is not None and float(ci_u) >= float(ci_l)
             points.append({
                 "evidence_id": ev.evidence_id,
@@ -327,13 +331,13 @@ class EvidenceGraph:
             precision_counts = {"reported_ci": 0, "derived_from_sample_size": 0}
             excluded_no_precision = 0
             for n in nodes:
-                eff = n.effect_size.get("value")
+                eff = (n.effect_size or {}).get("value")
                 if eff is None or math.isnan(float(eff)) or math.isinf(float(eff)):
                     continue
 
                 # Statistical variance derivation (Borenstein et al. 2009)
-                ci_l = n.effect_size.get("ci_lower")
-                ci_u = n.effect_size.get("ci_upper")
+                ci_l = (n.effect_size or {}).get("ci_lower")
+                ci_u = (n.effect_size or {}).get("ci_upper")
                 if ci_l is not None and ci_u is not None and float(ci_u) > float(ci_l):
                     se = (float(ci_u) - float(ci_l)) / (2.0 * 1.95996)
                     precision_counts["reported_ci"] += 1
@@ -422,7 +426,7 @@ class EvidenceGraph:
                 "quote": p.summary,
             })
         for ev in self.evidence.values():
-            effect_val = ev.effect_size.get("value", 0.0)
+            effect_val = (ev.effect_size or {}).get("value") or 0.0
             symbol_size = max(18, min(45, int(18 + abs(effect_val) * 20)))
             nodes.append({
                 "id": ev.evidence_id,
@@ -433,8 +437,8 @@ class EvidenceGraph:
                 "dimension": ev.outcome_dimension,
                 "direction": ev.direction,
                 "effect_size": effect_val,
-                "ci_lower": ev.effect_size.get("ci_lower", "N/A"),
-                "ci_upper": ev.effect_size.get("ci_upper", "N/A"),
+                "ci_lower": (ev.effect_size or {}).get("ci_lower", "N/A"),
+                "ci_upper": (ev.effect_size or {}).get("ci_upper", "N/A"),
                 "sample_size": ev.sample_size,
                 "wwc_rating": ev.wwc_rating,
                 "quote": ev.key_quote,

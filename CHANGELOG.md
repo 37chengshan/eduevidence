@@ -3,6 +3,97 @@
 所有显著变更均记录于此。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)；版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
 
+## [6.2.0] — 2026-09-12
+
+> Audit remediation: the domain registry becomes the single authority, the report
+> first screen is written by the adjudicator, and the delivery pipeline proves parity.
+
+### Domain registry as the single authority
+- New `engine/taxonomy.py` reads `domains/<id>/outcome_taxonomy.json`; unknown tokens fail
+  closed instead of defaulting to a learning outcome.
+- `engine/pilot.py`, `engine/tribunal.py`, `engine/gaps.py`, `scripts/pre_verdict_gate.py`,
+  `scripts/claim_audit.py` and `scripts/build_result.py` no longer keep private copies of
+  the token list or the token-to-category map.
+- The frame stage resolves its schema from the run domain; `run` gains `--domain`; a policy
+  run validates against `domains/policy/frame.schema.json` instead of the education one.
+- `check_protocol_alignment.py` gained the taxonomy dimension: schema enums, ADOPT gate
+  categories and V2 buckets must all agree with the registry.
+
+### Report copy is written, not assembled
+- `verdict.schema.json` declares `strongest_support` / `key_uncertainty` / `main_risk` /
+  `next_action` as reader-facing prose; the judge prompt carries the writing contract.
+- The renderer no longer synthesises the first screen from claim fragments.
+- New `references/report-copy-style.md`; the language gate enforces length ceilings and
+  structural parallelism between the en and zh evidence sets.
+- Chinese example data corrected: population and claim were rotated across a three-item
+  block, and audit notes cited a non-existent evidence id.
+
+### Contract repair
+- Removed the deprecated `direction` from the result evidence contract; aligned
+  `report-spec` / `chart-spec` with their real producers; declared the effect-size family.
+- `EvidenceNode.effect_size` no longer defaults to a fabricated zero effect.
+- Added `skeptic.schema.json` / `applicability.schema.json` and wired both into the stage
+  gates; the counter-evidence gate now requires all nine checks.
+- Sciverse locators survive the Source contract; `study_audits` gained a producer; V1 to V2
+  migration keeps effect magnitudes; the confidence policy version has one authority.
+- The validator implements anyOf / oneOf / allOf, so alternative-shape contracts are real.
+
+### Gates and delivery
+- The red-team suite gained seven real assertions (it previously never failed) and it
+  immediately exposed a DID column-mapping defect, now fixed.
+- New `scripts/check_package_parity.py` proves the shipped package is byte-identical to
+  the source tree; CI runs it, and also runs the skill linter and covers `visualization/`.
+- Docs, npm ignores and a Python-version guard corrected; audit checklist in
+  `docs/audit-2026-09-12.md`.
+
+## [6.1.0] — 2026-09-12
+
+> Content and protocol depth: a citation-grade retrieval channel, runnable
+> runbooks, and a mechanical alignment gate.
+
+### Sciverse retrieval channel (key-based academic)
+- New `retrieval/sciverse.py`: `/meta-search`, `/agentic-search`, `/content` and
+  `/meta-paper-relations` with typed failure statuses, Unicode code-point
+  locators and no credential leakage. Inactive without `SCIVERSE_API_TOKEN`.
+- `SearchHit` gains optional `doc_id` / `chunk_id` / `offset` / `unique_id`;
+  `MultiSearchRouter` runs the key-based academic channel ahead of the
+  zero-config ones and reports it in `get_provider_status()`.
+- `retrieval/fetch.py::fetch_sciverse_content()` expands a chunk locator into a
+  FetchResult-shaped record, so RULE 2 (snippet ≠ evidence) is machine-enforced:
+  a chunk must be read through `/content` and pass the validation gate first.
+- Audit exports carry the locator: `chunks.jsonl` plus `doc_id`/`chunk_id`/`offset`
+  columns in `source-screening.csv`; DOI-less records are flagged
+  `needs_manual_location` instead of receiving a fabricated URL.
+- New `docs/sciverse-api.md`, `references/retrieval-compliance.md` (robots,
+  rate limits, paywalls, attribution, credentials) and Sciverse rules in
+  `references/retrieval-protocol.md`.
+
+### Runnable content depth
+- The three user workflows became full runbooks (step tables, gates, failure
+  handling, human hand-off points, resume semantics, acceptance checklists).
+- All stage briefs were rebuilt on one template (goal / prerequisites / artifacts
+  + schema / rules / quality gates / failure modes / language contract / hand-off).
+- All 12 sub-skill recipes were rebuilt on one template (When to Use / Inputs /
+  Process / Output Contract / Quality Gates / Anti-Patterns / Worked Example /
+  References) and mapped to engine capability IDs via frontmatter.
+- Role prompts declare `role_id` / `capabilities` / `output_contracts` /
+  `recommended_reasoning` instead of binding `default_cli` / `default_model`,
+  and gain independence + failure-mode sections; independence is graded
+  (`different-model-family` for the skeptic, `role-separation` for the reviewer).
+- `skill/roles/registry.yaml` capabilities now use the engine capability IDs.
+
+### Mechanical alignment
+- New `scripts/check_protocol_alignment.py` (+ `tests/test_protocol_alignment.py`,
+  wired into CI): stages ↔ briefs ↔ roles ↔ prompts ↔ capabilities ↔ sub-skills ↔
+  workflows ↔ packaging must agree, role prompts may not bind model/CLI names,
+  and packaging versions must equal `ENGINE_VERSION`.
+- New `CONTRIBUTING.md` (gates, scientific invariants, how to add a capability /
+  sub-skill / role / retrieval channel).
+- Fixed real drift: `retrieval/search.py` advertised four providers that do not
+  exist, `packaging/scp-manifest.json` was pinned at 4.0.0, and two docs carried
+  a stale test count.
+
+
 ## [6.0.0] — 2026-08-31
 
 > Competition kernel convergence: Workflow → Capability → Contract.

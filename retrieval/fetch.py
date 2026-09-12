@@ -210,6 +210,98 @@ def _fetch_raw_html(url: str, timeout: int) -> tuple[int, str, str]:
     return _http_get(url, timeout=timeout)
 
 
+def fetch_sciverse_content(
+    doc_id: str,
+    *,
+    offset: int = 0,
+    limit: int = 4096,
+    canonical_url: str | None = None,
+    expect_title: str | None = None,
+) -> dict[str, Any]:
+    """Read a Sciverse full-text slice through the same FetchResult contract.
+
+    This is the machine-enforced half of RULE 2: a ``/agentic-search`` chunk is
+    a locator (doc_id + code-point offset), and only the text returned here —
+    after passing the Fetch Validation Gate — may enter Evidence Extraction.
+
+    ``offset``/``limit`` count Unicode code points, exactly like Python ``len``.
+    The locator is recorded inside ``extensions`` because the FetchResult
+    contract is closed (``additionalProperties: false``). ``canonical_url``
+    carries the source's own citation pointer when one exists; the locator URL
+    is used otherwise and is a provenance pointer, never a citation target.
+    """
+    from retrieval.sciverse import (
+        STATUS_OK,
+        STATUS_UNAVAILABLE,
+        read_content,
+    )
+
+    fetched_at = datetime.now(timezone.utc).isoformat()
+    resolved_url = canonical_url or f"https://sciverse.space/doc/{doc_id}"
+    response = read_content(doc_id, offset=offset, limit=limit)
+
+    if response.status == STATUS_UNAVAILABLE:
+        return FetchResult(
+            original_url=resolved_url,
+            fetch_provider="sciverse_content",
+            fetch_status="FETCH_FAILED",
+            fetched_at=fetched_at,
+            validation={"passed": False,
+                        "checks": {"http_success": False, "body_length_ok": False},
+                        "issues": ["SCIVERSE_UNAVAILABLE: no API token configured"]},
+            extensions={"sciverse": {"doc_id": doc_id, "offset": offset,
+                                      "status": response.status, "error": response.error}},
+        ).to_dict()
+
+    if response.status != STATUS_OK:
+        return FetchResult(
+            original_url=resolved_url,
+            fetch_provider="sciverse_content",
+            fetch_status="FETCH_FAILED",
+            fetched_at=fetched_at,
+            validation={"passed": False,
+                        "checks": {"http_success": False, "body_length_ok": False},
+                        "issues": [f"{response.status}: {response.error}".strip(": ")]},
+            extensions={"sciverse": {"doc_id": doc_id, "offset": offset,
+                                      "status": response.status,
+                                      "http_status": response.http_status,
+                                      "error": response.error}},
+        ).to_dict()
+
+    content = str(response.data.get("text") or "")
+    next_offset = response.data.get("next_offset")
+    more = bool(response.data.get("more"))
+    candidate = FetchResult(
+        original_url=resolved_url,
+        resolved_url=resolved_url,
+        fetch_method="smart_web_fetch",
+        fetch_provider="sciverse_content",
+        fetch_status="FETCH_VALID" if content.strip() else "FETCH_FAILED",
+        fetched_at=fetched_at,
+        raw_size=len(content.encode("utf-8")),
+        content=content,
+        extensions={"sciverse": {
+            "doc_id": doc_id,
+            "offset": offset,
+            "limit": limit,
+            "next_offset": next_offset,
+            "more": more,
+            "location_unit": "unicode_code_point",
+        }},
+    )
+    candidate.clean_size = candidate.raw_size
+    candidate.content_length = candidate.raw_size
+    candidate.content_hash = _hash(content) if content else ""
+    # A Sciverse locator URL is not an http(s) target: the scheme/URL-match and
+    # private-target checks do not apply; length and error-page checks do.
+    candidate.validation = validate_fetch_result(
+        candidate.to_dict(), expect_title=expect_title,
+    )
+    if not candidate.validation.get("passed") and candidate.fetch_status == "FETCH_VALID":
+        candidate.fetch_status = "FETCH_PARTIAL"
+    return candidate.to_dict()
+
+
 _PROVIDER_FETCHERS: dict[str, Callable[[str, int], tuple[int, str, str]]] = {
     "builtin": _fetch_builtin,
     "jina_reader": _fetch_jina_reader,
@@ -299,6 +391,9 @@ class FetchResult:
     fallback_chain: list[str] = field(default_factory=list)
     content: str = ""
     validation: dict[str, Any] = field(default_factory=dict)
+    #: Structured extension container (schema: fetch-result.extensions).
+    #: Sciverse locators live here because the top level is closed.
+    extensions: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -317,6 +412,7 @@ class FetchResult:
             "fallback_chain": self.fallback_chain,
             "content": self.content if self.fetch_status != "FETCH_FAILED" else "",
             "validation": self.validation,
+            "extensions": self.extensions,
         }
 
 

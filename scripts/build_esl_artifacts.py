@@ -1552,7 +1552,7 @@ result_en = {
         "complexity": "L",
         "mode": "agent_mcp_enhanced",
         "agents": [
-            "education-planner",
+            "research-planner",
             "evidence-retriever",
             "evidence-analyst",
             "skeptic",
@@ -1651,7 +1651,7 @@ result_zh = {
         "complexity": "L",
         "mode": "agent_mcp_enhanced",
         "agents": [
-            "education-planner",
+            "research-planner",
             "evidence-retriever",
             "evidence-analyst",
             "skeptic",

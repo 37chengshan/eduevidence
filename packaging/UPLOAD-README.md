@@ -102,6 +102,20 @@ eduevidence gate --run-id <id>
 - 报告数值由确定性代码从 `result.json` 提取；AI 不直接填写图表数值。
 - 数据不足时图表被抑制，不使用伪造的效应量、置信区间或结论填充空白。
 
+### 可选检索通道（key-based）
+
+零配置检索（OpenAlex / Semantic Scholar / CrossRef / AIHot / AgentSearch）开箱可用。以下通道配置 key 后自动启用，未配置时静默失活：
+
+| 环境变量 | 通道 | 作用 |
+|---|---|---|
+| `SCIVERSE_API_TOKEN` | Sciverse | 引用级学术检索 + 全文定位（`/meta-search`、`/agentic-search`、`/content`、`/meta-paper-relations`）；chunk 定位必须经 `content` 读原文并过校验门 |
+| `TAVILY_API_KEY` | Tavily | 通用网页检索 |
+| `BRAVE_API_KEY` | Brave | 通用网页检索 |
+
+```bash
+export SCIVERSE_API_TOKEN=sv-...   # sciverse.space 控制台 Tokens 页获取
+```
+
 ## 六、构建与验证
 
 ```bash

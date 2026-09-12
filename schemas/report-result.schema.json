@@ -232,9 +232,9 @@
         "required": [
           "evidence_id",
           "source_id",
-          "outcome_type",
-          "direction"
-        ]
+          "outcome_type"
+        ],
+        "description": "Evidence row as embedded in a rendered result. `direction` is NOT required: it is deprecated in schemas/evidence.schema.json, and consumers must read relation_to_claim (claim support) and effect_direction (observed effect) instead."
       },
       "description": "Evidence rows (projection of evidence.schema.json; stage-level gate enforces the full contract)."
     },

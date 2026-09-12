@@ -113,6 +113,7 @@ def _new_evidence(direction="contradict", tag="new1"):
                     "extensions": {}},
         "evidence_link": {"evidence_link_id": f"LNK-{tag}", "claim_id": "CLM-1",
                           "relation_to_claim": "support" if positive else "contradict",
+                          "directness": 2,
                           "reasoning_note": f"new {direction}ing RCT",
                           "applicability": {"scope_match": "direct"}},
         "audit": {"audit_id": f"AUD-{tag}", "study_id": f"STU-{tag}",

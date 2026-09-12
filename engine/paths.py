@@ -4,6 +4,8 @@ EDUEVIDENCE_HOME (default `~/.eduevidence`) is the root that owns the Shared
 Research Library and all Projects. An explicit path always wins.
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 import os
 

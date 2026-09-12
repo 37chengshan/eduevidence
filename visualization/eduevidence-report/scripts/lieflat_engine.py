@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import html
 import math
+import re
 from typing import Any, Dict, List, Optional, Tuple
 
 import charts_data as CD
@@ -37,6 +38,232 @@ THEME_PALETTES = {
 STAGGER_DOT = 12
 STAGGER_BAR = 100
 MIN_FONT = 6.5
+LANE_MIN_H = 15.0          # a data-driven row lane never renders thinner than this
+ROT45 = 0.7071067811865476  # cos/sin 45°, used by rotated tick labels
+
+
+# ---------------------------------------------------------------------------
+# Geometry guard — every renderer's output is measured against its own viewBox
+# ---------------------------------------------------------------------------
+#
+# A fixed canvas plus data-driven row counts silently clips a figure: shapes get
+# drawn outside the viewBox and the browser cuts them off. Renderers therefore
+# size their canvas from the content (see _svg_open) and every figure is measured
+# once more after rendering, so a renderer that forgets fails loudly instead of
+# shipping a clipped figure into the HTML report and its PNG exports.
+#
+# The measurement is a pure-stdlib, deterministic parse of the emitted markup: no
+# DOM, no font metrics, no I/O. Text boxes use a conservative advance-width model
+# calibrated against the shipped UI stack ("Helvetica Neue", "PingFang SC",
+# Arial) measured in Chrome via canvas measureText:
+#   CJK/full-width glyphs  = 1.00 em  (measured exactly 1.0)
+#   latin average          ≈ 0.62 em  ("Independent problem solving" at 11px)
+#   latin worst case       ≈ 0.94 em  (all-caps/like "WWWWWWWWWWWW" at 9px)
+# so latin is charged at a cap-height upper bound rather than an average, making
+# every measured box an over-estimate for ordinary labels.
+
+CHAR_W = 0.75          # latin advance width, in em (cap-height upper bound)
+CHAR_W_WIDE = 1.0      # CJK / full-width advance width, in em
+LATIN_WIDE_ABOVE = 18  # font sizes above this are display numbers, not words
+CHAR_W_BIG = 0.85      # wider cap-only glyphs at display sizes
+ASCENT = 0.85          # baseline to glyph top, in em
+DESCENT = 0.30         # baseline to glyph bottom, in em
+
+_NUM_RE = re.compile(r"-?\d+(?:\.\d+)?")
+_ATTR_RE = re.compile(r'([\w:-]+)="([^"]*)"')
+_ELEM_RE = re.compile(
+    r"<(rect|circle|ellipse|line|polyline|polygon|path|text)\b([^>]*?)"
+    r"(?:/>|>(.*?)</\1>)",
+    re.S,
+)
+_TAG_RE = re.compile(r"<[^>]*>")
+_TRANSLATE_RE = re.compile(r"translate\(([^)]*)\)")
+_ROTATE_RE = re.compile(r"rotate\(([^)]*)\)")
+_VIEWBOX_RE = re.compile(r'viewBox="([^"]+)"')
+
+
+class GeometryOverflowError(ValueError):
+    """A renderer drew outside its own viewBox, so content would be clipped."""
+
+
+def _enum(raw: str) -> List[float]:
+    return [float(x) for x in _NUM_RE.findall(raw or "")]
+
+
+def _pairs(values: List[float]) -> List[Tuple[float, float]]:
+    return list(zip(values[0::2], values[1::2]))
+
+
+def _unescape(raw: str) -> str:
+    return (raw.replace("&lt;", "<").replace("&gt;", ">")
+            .replace("&quot;", '"').replace("&#39;", "'").replace("&#x27;", "'")
+            .replace("&amp;", "&").replace("&nbsp;", " "))
+
+
+def text_width(text: str, font_size: float) -> float:
+    """Conservative advance width of a label at a given font size."""
+    latin = CHAR_W_BIG if font_size >= LATIN_WIDE_ABOVE else CHAR_W
+    total = 0.0
+    for ch in _unescape(text):
+        total += CHAR_W_WIDE if ch > "\u2e7f" else latin
+    return total * font_size
+
+
+def _element_boxes(svg: str):
+    """Yield (tag, x0, y0, x1, y1) for every element that draws ink."""
+    for match in _ELEM_RE.finditer(svg):
+        tag, raw_attrs, raw_body = match.group(1), match.group(2), match.group(3)
+        a = dict(_ATTR_RE.findall(raw_attrs))
+        box = None
+        if tag == "rect":
+            x, y = float(a.get("x", 0)), float(a.get("y", 0))
+            w, h = float(a.get("width", 0)), float(a.get("height", 0))
+            box = (x, y, x + w, y + h)
+        elif tag == "circle":
+            cx, cy, r = float(a.get("cx", 0)), float(a.get("cy", 0)), float(a.get("r", 0))
+            box = (cx - r, cy - r, cx + r, cy + r)
+        elif tag == "ellipse":
+            cx, cy = float(a.get("cx", 0)), float(a.get("cy", 0))
+            rx, ry = float(a.get("rx", 0)), float(a.get("ry", 0))
+            box = (cx - rx, cy - ry, cx + rx, cy + ry)
+        elif tag == "line":
+            x1, y1 = float(a.get("x1", 0)), float(a.get("y1", 0))
+            x2, y2 = float(a.get("x2", 0)), float(a.get("y2", 0))
+            box = (min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2))
+        elif tag in ("polyline", "polygon"):
+            pts = _pairs(_enum(a.get("points", "")))
+            if pts:
+                box = (min(p[0] for p in pts), min(p[1] for p in pts),
+                       max(p[0] for p in pts), max(p[1] for p in pts))
+        elif tag == "path":
+            # Control points over-approximate the ink box: exactly what a bound
+            # check wants, since a curve never leaves its control hull.
+            pts = []
+            for seg in re.finditer(r"([A-Za-z])([^A-Za-z]*)", a.get("d", "")):
+                if seg.group(1).upper() != "Z":
+                    pts += _pairs(_enum(seg.group(2)))
+            if pts:
+                box = (min(p[0] for p in pts), min(p[1] for p in pts),
+                       max(p[0] for p in pts), max(p[1] for p in pts))
+        elif tag == "text":
+            x, y = float(a.get("x", 0)), float(a.get("y", 0))
+            size = float(a.get("font-size", 10))
+            width = text_width(_TAG_RE.sub("", raw_body or ""), size)
+            anchor = a.get("text-anchor", "start")
+            x0 = x - (width if anchor == "end" else width / 2.0 if anchor == "middle" else 0.0)
+            box = (x0, y - size * ASCENT, x0 + width, y + size * DESCENT)
+        if box is None:
+            continue
+        tx0, ty0, tx1, ty1 = _apply_transform(a.get("transform", ""), box)
+        yield tag, tx0, ty0, tx1, ty1
+
+
+def _transform_matrix(transform: str) -> Optional[Tuple[float, float, float, float, float, float]]:
+    """Compose an SVG transform list into a 2x3 affine matrix (a b c d e f)."""
+    ops = re.findall(r"(translate|rotate|scale|matrix)\(([^)]*)\)", transform or "")
+    if not ops:
+        return None
+    m = (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+
+    def mul(n, by):
+        return (by[0] * n[0] + by[2] * n[1], by[1] * n[0] + by[3] * n[1],
+                by[0] * n[2] + by[2] * n[3], by[1] * n[2] + by[3] * n[3],
+                by[0] * n[4] + by[2] * n[5] + by[4],
+                by[1] * n[4] + by[3] * n[5] + by[5])
+
+    for name, raw in ops:
+        v = _enum(raw)
+        if name == "translate":
+            dx, dy = (v + [0.0, 0.0])[:2]
+            op = (1.0, 0.0, 0.0, 1.0, dx, dy)
+        elif name == "scale":
+            sx = v[0] if v else 1.0
+            sy = v[1] if len(v) > 1 else sx
+            op = (sx, 0.0, 0.0, sy, 0.0, 0.0)
+        elif name == "matrix" and len(v) >= 6:
+            op = tuple(v[:6])  # type: ignore[assignment]
+        else:  # rotate(angle [cx cy])
+            angle = math.radians(v[0] if v else 0.0)
+            cos_a, sin_a = math.cos(angle), math.sin(angle)
+            rot = (cos_a, sin_a, -sin_a, cos_a, 0.0, 0.0)
+            ox, oy = (v[1], v[2]) if len(v) > 2 else (0.0, 0.0)
+            op = mul(rot, mul((1.0, 0.0, 0.0, 1.0, -ox, -oy), (1.0, 0.0, 0.0, 1.0, ox, oy)))
+        m = mul(op, m)
+    return m
+
+
+def _apply_transform(transform: str, box) -> Tuple[float, float, float, float]:
+    """Map an element box through its transform list (SVG user-space order)."""
+    m = _transform_matrix(transform)
+    if m is None:
+        return box
+    x0, y0, x1, y1 = box
+    a, b, c, d, e, f = m
+    corners = [(a * px + c * py + e, b * px + d * py + f)
+               for px, py in ((x0, y0), (x0, y1), (x1, y0), (x1, y1))]
+    return (min(p[0] for p in corners), min(p[1] for p in corners),
+            max(p[0] for p in corners), max(p[1] for p in corners))
+
+
+def geometry_overflows(svg: str, tolerance: float = 0.5) -> List[Tuple[str, float, float, float]]:
+    """Measure an emitted SVG against its own viewBox.
+
+    Returns one (tag, max_x, max_y, overflow) entry per offending element, in
+    viewBox coordinates. An empty list means every drawn element sits inside the
+    canvas within tolerance px, which absorbs sub-pixel label rounding.
+    """
+    view = _VIEWBOX_RE.search(svg)
+    if view is None:
+        return [("svg", 0.0, 0.0, float("inf"))]
+    vx0, vy0, vw, vh = _enum(view.group(1))[:4]
+    right, bottom = vx0 + vw, vy0 + vh
+    out: List[Tuple[str, float, float, float]] = []
+    for tag, x0, y0, x1, y1 in _element_boxes(svg):
+        over = max(x1 - right, y1 - bottom, vx0 - x0, vy0 - y0)
+        if over > tolerance:
+            out.append((tag, round(max(x0, x1), 1), round(max(y0, y1), 1), round(over, 2)))
+    return out
+
+
+def check_geometry(svg: str, fig_type: str, tolerance: float = 0.5) -> None:
+    """Raise GeometryOverflowError if a figure escapes its own viewBox."""
+    bad = geometry_overflows(svg, tolerance)
+    if not bad:
+        return
+    tag, x, y, over = max(bad, key=lambda item: item[3])
+    raise GeometryOverflowError(
+        f"{fig_type}: drawing escapes its viewBox by {over}px "
+        f"(<{tag}> reaches x={x}, y={y}; {len(bad)} element(s) outside). "
+        f"Size the canvas from the content instead of a fixed w/h."
+    )
+
+
+# Designed canvas minimums. A figure never shrinks below these, so charts whose
+# data already fits keep their exact proportions and byte-identical output.
+MIN_CANVAS_W = 540
+MIN_CANVAS_H = 300
+PAD_RIGHT = 14.0
+PAD_BOTTOM = 16.0
+
+
+def _fit_canvas(body: List[str], w_min: int = MIN_CANVAS_W, h_min: int = MIN_CANVAS_H,
+                pad_right: float = PAD_RIGHT,
+                pad_bottom: float = PAD_BOTTOM) -> Tuple[int, int]:
+    """Size a canvas from the elements already drawn, never below the minimum.
+
+    A renderer whose geometry follows the data — row counts, axis counts, label
+    lengths, effect magnitudes — must not draw on a fixed canvas: whatever lands
+    past the edge is silently clipped by the browser. Measuring the emitted
+    elements against a provisional canvas and growing to fit keeps the figure
+    whole, while max() with the designed minimum preserves both proportions and
+    byte-identical output for the shapes that already fit.
+    """
+    probe = "<svg>" + "\n".join(body) + "</svg>"
+    max_x = max_y = 0.0
+    for _tag, _x0, _y0, x1, y1 in _element_boxes(probe):
+        max_x, max_y = max(max_x, x1), max(max_y, y1)
+    return (int(math.ceil(max(max_x + pad_right, w_min))),
+            int(math.ceil(max(max_y + pad_bottom, h_min))))
 
 
 def get_theme(theme: str = "claude") -> Dict[str, str]:
@@ -161,11 +388,20 @@ def render_dot_cascade(bundle: dict, theme: str, meta: dict, audit: Optional[lis
     p = get_theme(theme)
     A = Audit(audit)
     studies = bundle.get("studies") or []
-    w, h = 540, 300
-    out = _svg_open(p, w, h, meta.get("title", "dot cascade"))
+    out_title = meta.get("title", "dot cascade")
     n = len(studies)
     x_start, x_end, y_base = 64, 516, 236
+    # The 45° study labels under the axis are as wide as they are tall, so a
+    # packed cascade can need a wider canvas than the 540px default. Positions
+    # are untouched; only the canvas grows, and never below the old minimum.
     x_gap = (x_end - x_start) / max(1, n)
+    label_fs = MIN_FONT + 1.5
+    labels = [str(s["label"])[:12] for s in studies]
+    label_w = max((text_width(label, label_fs) for label in labels), default=0.0)
+    last_label_x = x_start + (n - 0.5) * x_gap
+    w = max(540, int(math.ceil(last_label_x + label_w * ROT45 + label_fs * ASCENT * ROT45)) + 16)
+    h = max(300, int(math.ceil(y_base + 18 + label_w * ROT45 + label_fs * DESCENT * ROT45)) + 10)
+    out = _svg_open(p, w, h, out_title)
     gmax = max(abs(s["g"]) for s in studies) or 1.0
     scale = 92 / gmax
     for i, s in enumerate(studies):
@@ -198,19 +434,48 @@ def render_bubble_almanac(bundle: dict, theme: str, meta: dict, audit: Optional[
     years = bundle.get("years") or []
     dims = bundle.get("dimensions") or []
     cells = bundle.get("cells") or []
-    w, h = 540, 300
-    out = _svg_open(p, w, h, meta.get("title", "bubble almanac"))
-    for y in range(70, 262, 7):
-        out.append(f'<line x1="44" y1="{y}" x2="520" y2="{y}" stroke="{p["grid"]}" stroke-width="0.5" {lf_fade((y - 70) * 2)}/>')
     x_start, x_gap = 150, (520 - 150) / max(1, len(dims) - 1) if len(dims) > 1 else 0
     if len(dims) == 1:
         x_start = 335
     y_start, y_gap = 92, 44
+    # Bubble radius mirrors the draw loop below (sqrt area encoding). Bubbles are
+    # area-encoded and are never rescaled (the sqrt encoding is a contract), so
+    # the largest one decides how far the grid reaches: the canvas clears it on
+    # the right and below, and shifts the grid down when it would cross the top.
+    def bubble_r(n: int) -> float:
+        return max(3.5, math.sqrt(max(1, n)) * 3.6)
+
+    max_r = max((bubble_r(int(c["n"])) for c in cells), default=0.0)
+    shift_y = max(0.0, 70.0 + max_r + 4 - y_start)
+    last_col = x_start + max(0, len(dims) - 1) * x_gap
+    # One row per publication year: the year axis is data-driven, so a fixed 300
+    # canvas clipped every row past the fifth. The grid band grows with the rows
+    # and the canvas keeps its original minimum and 540px width.
+    band_bottom = max(262, y_start + max(0, len(years) - 1) * y_gap + 22)
+    h = max(300, int(math.ceil(band_bottom + shift_y + max_r + 4)))
+    w = max(540, int(math.ceil(last_col + max_r + 4)))
+    out = _svg_open(p, w, h, meta.get("title", "bubble almanac"))
+    for y in range(70, band_bottom, 7):
+        out.append(f'<line x1="44" y1="{y + shift_y:.1f}" x2="520" y2="{y + shift_y:.1f}" stroke="{p["grid"]}" stroke-width="0.5" {lf_fade((y - 70) * 2)}/>')
+    dim_labels = {item["label"]: item for item in (bundle.get("dimension_labels") or [])}
+    is_zh = meta.get("lang", "en") == "zh"
     for j, d in enumerate(dims):
         x = x_start + j * x_gap
-        out.append(f'<text x="{x:.0f}" y="76" fill="{p["text"]}" font-size="9" font-weight="600" text-anchor="middle" {lf_fade(j * STAGGER_BAR + 40)}>{esc(str(d).replace("_", " ")[:14])}</text>')
+        dim_item = dim_labels.get(d, {})
+        dim_text = (dim_item.get("label_zh" if is_zh else "label_en")
+                    or str(d).replace("_", " "))
+        # The last column label is centred on the grid edge and would be clipped
+        # half-way; clamp it inside the canvas instead (label only, not the data).
+        dim_fs = 9
+        half = text_width(dim_text[:14], dim_fs) / 2
+        # Keep an 8px margin: the label must not sit flush against the canvas
+        # edge, where glyph rounding would clip the last stroke.
+        tx = min(max(x, 40 + half), w - half - 8)
+        # Untouched labels keep their exact old markup: only a clamp changes bytes.
+        x_attr = f"{x:.0f}" if abs(tx - x) < 0.05 else f"{tx:.1f}"
+        out.append(f'<text x="{x_attr}" y="76" fill="{p["text"]}" font-size="{dim_fs}" font-weight="600" text-anchor="middle" {lf_fade(j * STAGGER_BAR + 40)}>{esc(dim_text[:14])}</text>')
     for i, y_str in enumerate(years):
-        y = y_start + i * y_gap
+        y = y_start + i * y_gap + shift_y
         out.append(f'<text x="96" y="{y + 4}" fill="{p["subtext"]}" font-size="9" font-weight="800" text-anchor="end" {lf_fade(i * STAGGER_BAR + 80)}>{esc(y_str)}</text>')
     for k, c in enumerate(cells):
         j = dims.index(c["dim"]) if c["dim"] in dims else 0
@@ -220,11 +485,11 @@ def render_bubble_almanac(bundle: dict, theme: str, meta: dict, audit: Optional[
         if c.get("sig") is not None:
             A.log(f"cells[{k}].sig", int(c["sig"]))
         bx = x_start + j * x_gap
-        by = y_start + i * y_gap
+        by = y_start + i * y_gap + shift_y
         r = max(3.5, math.sqrt(n) * 3.6)
         color = p["secondary"] if int(c.get("sig") or 0) > 0 else p["primary"]
         out.append(f'<circle cx="{bx:.1f}" cy="{by:.1f}" r="{r:.1f}" fill="{color}" fill-opacity="0.22" stroke="{color}" stroke-width="1.2" {lf_pop(k * STAGGER_DOT + 100)}>'
-                   f'<title>{esc(str(c["dim"]))} ({esc(str(c["year"]))}) — N = {n} studies, significant = {c.get("sig", 0)}</title></circle>')
+                   f'<title>{esc(dim_labels.get(c["dim"], {}).get("label_zh" if is_zh else "label_en") or str(c["dim"]).replace("_", " "))} ({esc(str(c["year"]))}) — {"N = " + str(n) + " 篇研究" if is_zh else "N = " + str(n) + " studies"}, {"显著 = " if is_zh else "significant = "}{c.get("sig", 0)}</title></circle>')
         if int(c.get("sig") or 0) > 0:
             out.append(f'<circle cx="{bx:.1f}" cy="{by:.1f}" r="3.2" fill="{color}" {lf_pop(k * STAGGER_DOT + 160)}/>')
     out.append("</svg>")
@@ -448,15 +713,18 @@ def render_paired_rungs(bundle: dict, theme: str, meta: dict, audit: Optional[li
     p = get_theme(theme)
     A = Audit(audit)
     rows = bundle.get("rows") or []
-    w, h = 540, 300
-    out = _svg_open(p, w, h, meta.get("title", "paired rungs"))
-    colors = _dir_colors(p)
+    # Group width follows the row count, so each centered pair column walks
+    # rightwards as outcomes are added: past eight rows the last group's value
+    # label hangs over the 540px edge. The 480px group band keeps the designed
+    # spacing when it fits, and the canvas grows with it when it does not.
     group_w = 480 / max(1, len(rows))
+    colors = _dir_colors(p)
+    body: List[str] = []
     col_w = 13
     y_base = 238
     lang = meta.get("lang", "en")
-    out.append(f'<text x="60" y="76" font-size="8" font-weight="700" fill="{colors["positive"]}" {lf_fade(40)}>{esc(lang == "zh" and "正向" or "POSITIVE")}</text>')
-    out.append(f'<text x="60" y="92" font-size="8" font-weight="700" fill="{colors["negative"]}" {lf_fade(80)}>{esc(lang == "zh" and "负向" or "NEGATIVE")}</text>')
+    body.append(f'<text x="60" y="76" font-size="8" font-weight="700" fill="{colors["positive"]}" {lf_fade(40)}>{esc(lang == "zh" and "正向" or "POSITIVE")}</text>')
+    body.append(f'<text x="60" y="92" font-size="8" font-weight="700" fill="{colors["negative"]}" {lf_fade(80)}>{esc(lang == "zh" and "负向" or "NEGATIVE")}</text>')
     for r_i, r in enumerate(rows):
         cx = 60 + (r_i + 0.5) * group_w
         label = r.get("label_" + lang, r.get("label_en", r["label"]))
@@ -471,14 +739,16 @@ def render_paired_rungs(bundle: dict, theme: str, meta: dict, audit: Optional[li
                     break
                 y -= 7.7
                 x = cx - col_w - 4 + col * (col_w + 8)
-                out.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{col_w}" height="5.5" rx="2.6" fill="{colors[key]}" {lf_fade(r_i * STAGGER_BAR + shown * STAGGER_DOT + 60)}><title>{esc(str(label))} — {key}</title></rect>')
+                body.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{col_w}" height="5.5" rx="2.6" fill="{colors[key]}" {lf_fade(r_i * STAGGER_BAR + shown * STAGGER_DOT + 60)}><title>{esc(str(label))} — {key}</title></rect>')
                 shown += 1
             last_y = min(last_y, y)
             if shown < count:
-                out.append(f'<text x="{cx:.1f}" y="{y - 4:.1f}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="800" fill="{p["subtext"]}" {lf_fade(r_i * STAGGER_BAR + 500)}>+{count - shown}</text>')
-        out.append(f'<text x="{cx:.1f}" y="{y_base + 16}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="600" fill="{p["subtext"]}" {lf_fade(r_i * STAGGER_BAR + 100)}>{esc(str(label)[:10])}</text>')
-        out.append(f'<text x="{cx:.1f}" y="{last_y - 8:.1f}" text-anchor="middle" font-size="8" font-weight="800" fill="{p["text"]}" {lf_fade(r_i * STAGGER_BAR + 520)}>{r["positive"]} / {r["negative"]}</text>')
-    out.append(f'<line x1="46" y1="{y_base}" x2="512" y2="{y_base}" stroke="{p["text"]}" stroke-width="1.2" {lf_draw(120)}/>')
+                body.append(f'<text x="{cx:.1f}" y="{y - 4:.1f}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="800" fill="{p["subtext"]}" {lf_fade(r_i * STAGGER_BAR + 500)}>+{count - shown}</text>')
+        body.append(f'<text x="{cx:.1f}" y="{y_base + 16}" text-anchor="middle" font-size="{MIN_FONT + 1.5}" font-weight="600" fill="{p["subtext"]}" {lf_fade(r_i * STAGGER_BAR + 100)}>{esc(str(label)[:10])}</text>')
+        body.append(f'<text x="{cx:.1f}" y="{last_y - 8:.1f}" text-anchor="middle" font-size="8" font-weight="800" fill="{p["text"]}" {lf_fade(r_i * STAGGER_BAR + 520)}>{r["positive"]} / {r["negative"]}</text>')
+    body.append(f'<line x1="46" y1="{y_base}" x2="512" y2="{y_base}" stroke="{p["text"]}" stroke-width="1.2" {lf_draw(120)}/>')
+    w, h = _fit_canvas(body)
+    out = _svg_open(p, w, h, meta.get("title", "paired rungs")) + body
     out.append("</svg>")
     return "\n".join(out)
 
@@ -487,13 +757,20 @@ def render_brand_spectrum(bundle: dict, theme: str, meta: dict, audit: Optional[
     p = get_theme(theme)
     A = Audit(audit)
     axes = bundle.get("axes") or []
-    w, h = 540, 300
-    out = _svg_open(p, w, h, meta.get("title", "brand spectrum"))
     lang = meta.get("lang", "en")
     left_t = bundle.get("left_zh" if lang == "zh" else "left_en", "negative")
     right_t = bundle.get("right_zh" if lang == "zh" else "right_en", "positive")
     x0, x1 = 150, 400
     y0, gap = 88, 46
+    # One row per bipolar axis: a fixed 300px canvas clipped the sixth row
+    # (y = 88 + 5·46 = 318, plus a 7.5px dot and its value label). The canvas
+    # grows with the row count and keeps the original minimum and top margin.
+    last_y = y0 + max(0, len(axes) - 1) * gap
+    # The derived-stat note keeps its old baseline until the rows grow into it.
+    caption_y = max(278, int(math.ceil(last_y + 7.5 + 12)))
+    h = max(300, caption_y + 22)
+    w = 540
+    out = _svg_open(p, w, h, meta.get("title", "brand spectrum"))
     out.append(f'<text x="{x0 - 12}" y="62" text-anchor="end" font-size="9" font-weight="700" fill="{p["subtext"]}" {lf_fade(40)}>{esc(left_t)}</text>')
     out.append(f'<text x="{x1 + 12}" y="62" font-size="9" font-weight="700" fill="{p["subtext"]}" {lf_fade(80)}>{esc(right_t)}</text>')
     px = lambda t: x0 + t * (x1 - x0)
@@ -521,7 +798,7 @@ def render_brand_spectrum(bundle: dict, theme: str, meta: dict, audit: Optional[
         net_txt = f"{net * 100:+.0f}%"
         out.append(f'<circle cx="{ux:.1f}" cy="{y}" r="7.5" fill="{p["primary"] if net < 0 else p["secondary"]}" stroke="{p["card_bg"]}" stroke-width="1.8" {lf_pop(i * STAGGER_BAR + 160)}><title>{esc(str(label))} — {esc(left_t)}↔{esc(right_t)}: {net_txt} (pos {ax["positive"]} / neg {ax["negative"]} / null {ax["null"]})</title></circle>')
         out.append(f'<text x="{ux:.1f}" y="{y - 11}" fill="{p["text"]}" font-size="8" font-weight="800" text-anchor="middle" {lf_fade(i * STAGGER_BAR + 220)}>{net_txt}</text>')
-    out.append(f'<text x="30" y="278" font-size="8" font-weight="600" fill="{p["muted"]}" {lf_fade(400)}>{esc(bundle.get("derived", ""))[:64]}</text>')
+    out.append(f'<text x="30" y="{caption_y}" font-size="8" font-weight="600" fill="{p["muted"]}" {lf_fade(400)}>{esc(bundle.get("derived", ""))[:64]}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -596,27 +873,53 @@ def render_dotty_matrix(bundle: dict, theme: str, meta: dict, audit: Optional[li
     p = get_theme(theme)
     A = Audit(audit)
     layers = bundle.get("layers") or []
-    w, h = 540, 310
-    out = _svg_open(p, w, h, meta.get("title", "dotty matrix"))
     shades = [p["text"], p["secondary"], p["accent"], p["muted"]]
 
-    def P(c, r, k):
-        return 236 + (c - r) * 17, 244 + (c + r) * 8.4 - k * 52
+    # The layer plates are parallelograms stacked in depth. Each extra phase
+    # lifts the stack, so the front plate keeps its position while every plate
+    # behind it moves up: the canvas follows the projections the data actually
+    # draws. Cells are clamped into the 6x6 footprint, which is what keeps the
+    # plates a readable square.
+    top_margin = 24.0
+    n_layers = max(1, len(layers))
+    # Depth walks the stack upwards, so past the fifth phase the back plates
+    # cross y=0 and are clipped off the top. Shift the whole projection down by
+    # exactly what the deepest plate needs; figures that already clear the top
+    # margin keep shift 0 and their original geometry.
+    stack_top = 244 + (-1.2) * 8.4 - (n_layers - 1) * 52
+    shift_y = max(0.0, top_margin - stack_top)
 
+    def P(c, r, k):
+        return 236 + (c - r) * 17, 244 + (c + r) * 8.4 - k * 52 + shift_y
+
+    max_r = min(5, max((int(cell["r"]) for layer in layers
+                        for cell in layer.get("cells") or []), default=5))
+    max_c = min(5, max((int(cell["c"]) for layer in layers
+                        for cell in layer.get("cells") or []), default=5))
+    # The phase legend sits beside each plate and the derived note under the
+    # stack, so the canvas has to fit both the widest plate + its label and the
+    # lowest plate + the note.
+    depths = [P(max_c + 0.6, max_r + 0.6, k)[1] for k in range(n_layers)]
+    derived_y = max(294.0 + shift_y, max(depths) + 12)
+    body: List[str] = []
     for k in range(len(layers)):
+        # The plate keeps the designed 6x6 footprint so sparse phases do not
+        # shrink the stack; only the dots follow the data.
         cs = [P(-0.6, -0.6, k), P(5.6, -0.6, k), P(5.6, 5.6, k), P(-0.6, 5.6, k)]
         poly_d = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in cs) + " Z"
-        out.append(f'<path d="{poly_d}" fill="{p["card_bg"]}" fill-opacity="0.96" stroke="{p["border"]}" stroke-width="0.9" {lf_fade(k * STAGGER_BAR + 40)}/>')
+        body.append(f'<path d="{poly_d}" fill="{p["card_bg"]}" fill-opacity="0.96" stroke="{p["border"]}" stroke-width="0.9" {lf_fade(k * STAGGER_BAR + 40)}/>')
         layer = layers[k]
         for ci, cell in enumerate(layer["cells"]):
             A.log(f"layers[{k}].cells[{ci}].r", int(cell["r"]))
             A.log(f"layers[{k}].cells[{ci}].c", int(cell["c"]))
-            x, y = P(cell["c"], cell["r"], k)
-            out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="1.5" fill="{shades[k % len(shades)]}" {lf_pop(min(k * STAGGER_BAR + ci * STAGGER_DOT, 1400))}><title>{esc(str(layer["label"]))} — activity #{ci + 1}</title></circle>')
+            x, y = P(min(5, int(cell["c"])), min(5, int(cell["r"])), k)
+            body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="1.5" fill="{shades[k % len(shades)]}" {lf_pop(min(k * STAGGER_BAR + ci * STAGGER_DOT, 1400))}><title>{esc(str(layer["label"]))} — activity #{ci + 1}</title></circle>')
         cxr, cyr = P(5.6, -0.6, k)
-        out.append(f'<line x1="{cxr + 4:.1f}" y1="{cyr:.1f}" x2="{cxr + 20:.1f}" y2="{cyr:.1f}" stroke="{p["muted"]}" stroke-width="0.8" {lf_fade(k * STAGGER_BAR + 200)}/>')
-        out.append(f'<text x="{cxr + 24:.1f}" y="{cyr + 2.5:.1f}" font-size="8" font-weight="700" fill="{shades[k % len(shades)]}" {lf_fade(k * STAGGER_BAR + 220)}>{esc(str(layer["label"])[:18])}</text>')
-    out.append(f'<text x="30" y="294" font-size="7.5" font-weight="600" fill="{p["muted"]}" {lf_fade(500)}>{esc(str(bundle.get("derived", ""))[:70])}</text>')
+        body.append(f'<line x1="{cxr + 4:.1f}" y1="{cyr:.1f}" x2="{cxr + 20:.1f}" y2="{cyr:.1f}" stroke="{p["muted"]}" stroke-width="0.8" {lf_fade(k * STAGGER_BAR + 200)}/>')
+        body.append(f'<text x="{cxr + 24:.1f}" y="{cyr + 2.5:.1f}" font-size="8" font-weight="700" fill="{shades[k % len(shades)]}" {lf_fade(k * STAGGER_BAR + 220)}>{esc(str(layer["label"])[:18])}</text>')
+    body.append(f'<text x="30" y="{derived_y:.0f}" font-size="7.5" font-weight="600" fill="{p["muted"]}" {lf_fade(500)}>{esc(str(bundle.get("derived", ""))[:70])}</text>')
+    w, h = _fit_canvas(body, h_min=310)
+    out = _svg_open(p, w, h, meta.get("title", "dotty matrix")) + body
     out.append("</svg>")
     return "\n".join(out)
 
@@ -678,13 +981,19 @@ def render_matrix_heat(bundle: dict, theme: str, meta: dict, audit: Optional[lis
     years = bundle.get("years") or []
     outcomes = bundle.get("outcomes") or []
     cells = bundle.get("cells") or []
-    w = 540
-    h = 96 + len(outcomes) * 40 + 24
-    out = _svg_open(p, w, h, meta.get("title", "matrix heat"))
     lang = meta.get("lang", "en")
-    cell_w = 460 / max(1, len(years))
     cell_h = 32
     x0, y0 = 150, 78
+    n_years = max(1, len(years))
+    # Columns must fit the space between the row labels and the right margin.
+    # A fixed 460px budget overflowed the 540px canvas from four years up,
+    # which clipped the final column out of the rendered figure.
+    min_col = 56
+    right_margin = 20
+    w = max(540, x0 + n_years * min_col + right_margin)
+    cell_w = (w - x0 - right_margin) / n_years
+    h = 96 + len(outcomes) * 40 + 24
+    out = _svg_open(p, w, h, meta.get("title", "matrix heat"))
     maxv = max((v for row in cells for v in row), default=1) or 1
     for j, y in enumerate(years):
         x = x0 + (j + 0.5) * cell_w
@@ -773,4 +1082,6 @@ def render_figure(fig_type: str, bundle: dict, theme: str, meta: dict,
     entry = REGISTRY.get(fig_type)
     if entry is None:
         raise ValueError(f"unregistered lieflat chart type: {fig_type!r}")
-    return entry["renderer"](bundle, theme, meta or {}, audit)
+    svg = entry["renderer"](bundle, theme, meta or {}, audit)
+    check_geometry(svg, fig_type)
+    return svg

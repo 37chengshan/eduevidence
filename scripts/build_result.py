@@ -30,14 +30,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from evidence_semantics import effect_direction
 from engine.versions import ENGINE_VERSION
 
-OUTCOME_ORDER = [
-    "knowledge_gain", "concept_understanding", "retention", "transfer",
-    "independent_problem_solving", "completion_time", "accuracy",
-    "code_quality", "assignment_score", "engagement", "motivation",
-    "cognitive_load", "help_seeking", "metacognition", "ai_dependency",
-    "over_reliance", "reduced_effort", "reduced_transfer",
-    "academic_integrity_risk", "false_confidence",
-]
+def _outcome_order() -> list[str]:
+    """Registered outcome tokens in registry order (was a hard-coded list)."""
+    from engine.taxonomy import all_tokens_ordered
+
+    return list(all_tokens_ordered())
+
+
+OUTCOME_ORDER = _outcome_order()
 
 
 def _load_json(path: Path) -> dict[str, Any] | None:
@@ -221,12 +221,74 @@ def build_claims(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return list(claims.values())
 
 
+def _applicability(pack_dir: Path, verdict: dict) -> dict:
+    """Stage-7 applicability assessment, falling back to the verdict boundary.
+
+    applicability.json is the dedicated deliverable of the Applicability stage.
+    It used to be written and then ignored, because the renderer only looked at
+    the verdict; this is where it re-enters the result.
+    """
+    import json as _json
+
+    path = pack_dir / "applicability.json"
+    if path.is_file():
+        try:
+            data = _json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, _json.JSONDecodeError):
+            data = None
+        if isinstance(data, dict) and data and data.get("status") != "NOT_CAPTURED":
+            return data
+    value = verdict.get("applicability") if isinstance(verdict, dict) else None
+    return value if isinstance(value, dict) else {}
+
+def _derive_study_audits(methodology: list[dict], evidence: list[dict]) -> list[dict]:
+    """Per-study audit rows derived from the audits and evidence present.
+
+    Each row names the study and reports the audit verdict that covers it,
+    so the per-study axis the schema advertises actually exists downstream.
+    Rows are only emitted for studies the audits or evidence actually name.
+    """
+    by_study: dict[str, dict] = {}
+    for audit in methodology:
+        if not isinstance(audit, dict):
+            continue
+        target = audit.get("target") or "overall"
+        if target == "overall":
+            # The aggregate audit is not a study row; label it as the
+            # body-of-evidence review so it cannot be mistaken for one.
+            target = "body_of_evidence"
+        entry = by_study.setdefault(target, {
+            "study_id": target,
+            "verdict": audit.get("verdict"),
+            "audit_items": audit.get("audit_items") or {},
+            "limitations": list(audit.get("limitations") or []),
+            "task_vs_learning_guard": audit.get("task_vs_learning_guard"),
+        })
+        entry.setdefault("evidence_ids", [])
+    known = {e.get("study_id") for e in evidence if e.get("study_id")}
+    for study_id in sorted(known):
+        by_study.setdefault(study_id, {
+            "study_id": study_id,
+            "verdict": None,
+            "audit_items": {},
+            "limitations": [],
+            "task_vs_learning_guard": None,
+            "evidence_ids": [e.get("evidence_id") for e in evidence
+                             if e.get("study_id") == study_id],
+        })
+    return list(by_study.values())
+
+
 def build_result(pack_dir: Path, *, mode: str = "platform_native") -> dict[str, Any]:
     frame = _load_json(pack_dir / "frame.json") or {}
     evidence = _load_jsonl(pack_dir / "evidence.jsonl")
     # methodology.json is a single MethodologyAudit object (or a JSONL list)
     methodology_single = _load_json(pack_dir / "methodology.json")
     methodology = [methodology_single] if methodology_single else _load_jsonl(pack_dir / "methodology.jsonl")
+    # Per-study audits: the contract advertised them but nothing produced
+    # them, so a multi-study review silently shipped a single audit object.
+    # Derive the per-study axis from the audits actually present.
+    study_audits = _derive_study_audits(methodology, evidence)
     verdict = _load_json(pack_dir / "verdict.json") or {}
     intervention = _load_json(pack_dir / "intervention.json") or {}
     evaluation = _load_json(pack_dir / "evaluation.json") or {}
@@ -268,9 +330,12 @@ def build_result(pack_dir: Path, *, mode: str = "platform_native") -> dict[str, 
         "sources": sources,
         "evidence": evidence,
         "methodology_reviews": methodology,
+        "study_audits": study_audits,
         "conflicts": [{"reason_for_disagreement": verdict.get("reason_for_disagreement", "")}]
         if verdict.get("reason_for_disagreement") else [],
-        "applicability": verdict.get("applicability", {}),
+        # Prefer the dedicated stage-7 assessment; fall back to the verdict-embedded
+        # boundary when the run carries no separate applicability.json.
+        "applicability": _applicability(pack_dir, verdict),
         "intervention": intervention,
         "evaluation": evaluation,
         "benchmark": {},

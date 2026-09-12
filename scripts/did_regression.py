@@ -102,12 +102,22 @@ def run_did_analysis(csv_path: str) -> Dict[str, Any]:
         cl = col.strip().lower()
         if cl in ("cluster_id", "class_id", "school_id", "group_id") or cl.endswith("_cluster"):
             cluster_columns.append(col)
+        # Order matters. An outcome column is often named "post_test_score",
+        # which also contains "post": matching the period rule first stole the
+        # outcome column and the run failed with ERR_MISSING_COLUMNS. Outcome
+        # and treatment are the more specific patterns, so they are tested
+        # before the period keyword.
         if "treat" in cl or cl in ("group", "condition", "is_treatment"):
             field_map["treat"] = col
-        elif "post" in cl or "after" in cl or "period" in cl or "time" in cl or "pre_post" in cl:
+        elif cl in ("post", "posttest", "pre_post", "period", "time_period"):
             field_map["post"] = col
-        elif "score" in cl or "outcome" in cl or "grade" in cl or "result" in cl or "performance" in cl or cl == "y":
+        elif ("score" in cl or "outcome" in cl or "grade" in cl or "result" in cl
+              or "performance" in cl or cl == "y"):
             field_map["outcome"] = col
+        elif "post" in cl or "after" in cl or "period" in cl or "time" in cl:
+            # Generic period/phase column, only after the specific patterns
+            # above have had their chance.
+            field_map.setdefault("post", col)
 
     if "treat" not in field_map or "post" not in field_map or "outcome" not in field_map:
         return {

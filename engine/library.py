@@ -8,6 +8,8 @@ changes an existing Project's conclusions — only an explicit import/sync
 advances the Project graph.
 """
 
+from __future__ import annotations
+
 import hashlib
 import json
 import os
@@ -197,8 +199,10 @@ class ResearchLibrary:
             outcomes.append({
                 "outcome_id": oid,
                 "name": f.get("measure", oid),
-                "outcome_type": (f.get("extensions") or {}).get(
-                    "outcome_type", "learning"),
+                # No silent default: an unlabelled finding must not be filed as a
+                # learning outcome; that is how task-performance evidence used
+                # to reach the ADOPT gate on the V2 path.
+                "outcome_type": (f.get("extensions") or {}).get("outcome_type", ""),
                 "extensions": {
                     "auto_created_from_library_import": True,
                     "library_revision": lib_rev,

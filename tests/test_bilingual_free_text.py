@@ -89,7 +89,12 @@ def test_en_body_uses_english_data_fields(tmp_path):
     zh = __import__("json").loads((DEMO / "result.zh.json").read_text(encoding="utf-8"))
     assert result["decision"]["target_population"][:60] in en
     assert result["decision"]["reason_for_disagreement"][:60] in en
-    assert result["research_frame"]["learner"]["prior_knowledge"][:40] in en
+    # A storage enum must reach the reader as prose, not as its raw token:
+    # 'first_programming_course_no_prior_text_based_programming' is the
+    # internal form and belongs in the provenance tooltip only.
+    raw_enum = result["research_frame"]["learner"]["prior_knowledge"]
+    assert raw_enum not in en, "raw storage enum leaked into the EN body"
+    assert "First programming course" in en, "learner prior knowledge is not rendered"
     assert zh["decision"]["target_population"][:40] not in en
     assert zh["decision"]["reason_for_disagreement"][:40] not in en
     for zh_word in ("可以主张", "目标人群", "证据裁决", "置信度", "先看结论"):

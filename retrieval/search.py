@@ -11,12 +11,10 @@ Supports both:
    - DuckDuckGo (Zero-auth general web search fallback)
 
 2. User-Configured Search Channels (Key-Based):
+   - Sciverse (SCIVERSE_API_TOKEN) — citation-grade academic retrieval with
+     doc_id/chunk offset provenance (/meta-search + /agentic-search)
    - Tavily (TAVILY_API_KEY)
    - Brave Search (BRAVE_API_KEY)
-   - SerpAPI (SERPAPI_API_KEY)
-   - Serper (SERPER_API_KEY)
-   - Exa (EXA_API_KEY)
-   - Bocha (BOCHA_API_KEY)
 
 Pure stdlib HTTP client with robust error handling, SSL verification,
 timeout safeguards, and intelligent multi-source deduplication.
@@ -52,6 +50,16 @@ class SearchHit:
     authors: List[str] = field(default_factory=list)
     is_academic: bool = False
     score: float = 1.0
+    #: Sciverse locators (None for every other provider). ``doc_id`` addresses
+    #: the full-text artifact for /content; ``chunk_id``/``offset`` locate the
+    #: retrieved passage (Unicode code points) inside it. They are discovery
+    #: locators, never evidence (RULE 2).
+    doc_id: Optional[str] = None
+    chunk_id: Optional[str] = None
+    offset: Optional[int] = None
+    #: Sciverse metadata identifier (always present); required by
+    #: /meta-paper-relations to page the citation chain.
+    unique_id: Optional[str] = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -389,6 +397,15 @@ class MultiSearchRouter:
     """Orchestrates zero-config and configured search channels with deduplication."""
 
     def __init__(self):
+        self.academic_key_providers = []
+        try:  # optional channel: activating it must never break the router
+            from retrieval.sciverse import SciverseProvider
+
+            provider = SciverseProvider()
+            if provider.is_available():
+                self.academic_key_providers.append(provider)
+        except Exception:  # pragma: no cover - import/环境异常时静默降级
+            log.debug("sciverse provider unavailable at router init", exc_info=True)
         self.zero_config_academic = [
             OpenAlexProvider(),
             SemanticScholarProvider(),
@@ -406,6 +423,9 @@ class MultiSearchRouter:
 
     def get_provider_status(self) -> List[dict]:
         status = []
+        for p in self.academic_key_providers:
+            status.append({"provider": p.name, "type": "academic_key",
+                           "status": "active", "requires_key": True})
         for p in self.zero_config_academic:
             status.append({"provider": p.name, "type": "academic_zero_config", "status": "active", "requires_key": False})
         for p in self.zero_config_web:
@@ -423,6 +443,7 @@ class MultiSearchRouter:
     def search(self, query: str, limit: int = 15, academic_only: bool = False) -> List[SearchHit]:
         all_hits: List[SearchHit] = []
         seen_urls = set()
+        seen_locators: set[str] = set()
 
         # 1. Try configured high-priority commercial providers if active
         if not academic_only:
@@ -437,7 +458,26 @@ class MultiSearchRouter:
                     except Exception:
                         pass
 
-        # 2. Run Zero-Config Academic Providers
+        # 2. Run key-based academic providers (Sciverse: citation-grade
+        #    retrieval with doc_id/offset provenance) before zero-config ones.
+        for kp in self.academic_key_providers:
+            try:
+                hits = kp.search(query, limit=limit)
+                for h in hits:
+                    locator = getattr(h, "doc_id", None)
+                    if locator and locator in seen_locators:
+                        continue
+                    if h.url and h.url in seen_urls:
+                        continue
+                    if h.url:
+                        seen_urls.add(h.url)
+                    if locator:
+                        seen_locators.add(locator)
+                    all_hits.append(h)
+            except Exception:
+                pass
+
+        # 3. Run Zero-Config Academic Providers
         for ap in self.zero_config_academic:
             try:
                 hits = ap.search(query, limit=limit)
@@ -448,7 +488,7 @@ class MultiSearchRouter:
             except Exception:
                 pass
 
-        # 3. Run Zero-Config Web/Dynamic Providers if not academic_only
+        # 4. Run Zero-Config Web/Dynamic Providers if not academic_only
         if not academic_only:
             for wp in self.zero_config_web:
                 try:
@@ -460,7 +500,7 @@ class MultiSearchRouter:
                 except Exception:
                     pass
 
-        # 4. Fallback to verified offline domain corpus if external search returned 0 hits
+        # 5. Fallback to verified offline domain corpus if external search returned 0 hits
         if not all_hits:
             try:
                 from retrieval.corpus_store import DomainCorpusStore

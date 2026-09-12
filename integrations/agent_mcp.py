@@ -87,7 +87,7 @@ AGENT_MCP_APPROVAL_REQUIRED = "AGENT_MCP_APPROVAL_REQUIRED"
 # skeptic requires a *different model family* than the primary analysis;
 # that can never be satisfied by spawning the same model in another session.
 ROLE_REQUIREMENTS: dict[str, dict[str, Any]] = {
-    "education-planner": {
+    "research-planner": {
         "reasoning": "high", "speed": None, "cost": None,
         "structured_output": None, "context": None, "tool_use": None,
         "multimodal": None,
@@ -134,7 +134,7 @@ ROLE_REQUIREMENTS: dict[str, dict[str, Any]] = {
 # Human-readable one-line task per role (for the user-facing recommendation
 # table). Display metadata only — not a routing decision.
 ROLE_TASKS: dict[str, str] = {
-    "education-planner": "Framing：把教学问题转成 EducationResearchFrame",
+    "research-planner": "Framing：把教学问题转成 EducationResearchFrame",
     "evidence-retriever": "检索支持与反方证据，去重初筛",
     "evidence-analyst": "证据结构化抽取为 Evidence Objects",
     "skeptic": "独立反证：9 项检查，找 null/negative/contradictory 证据",

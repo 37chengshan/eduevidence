@@ -44,6 +44,28 @@
 | F5 | marketplace/MCP 打包 + SCP 重上架 | ⏸ 外部依赖 | SKILL.md 结构已符合 skills 规范；SCP 链接核实与重新上架需用户账号操作 |
 | F6 | Deep Research 对比页 | ✅ 已完成 | `web/comparison.html`（引用逐条可验证 demo + 伪造 DOI 对照），挂入 landing 导航 |
 
+## v6.1.0 「内容与流程迭代」（2026-09-12）
+
+| ID | 项目 | 状态 | 备注 |
+|----|------|:---:|------|
+| SC1 | Sciverse 检索通道（核心四工具） | ✅ 已完成 | `retrieval/sciverse.py`：meta-search / agentic-search / content / paper-relations；定型错误态、码点定位、凭据不外泄；无 token 静默失活 |
+| SC2 | RULE 2 机器化（chunk ≠ 证据） | ✅ 已完成 | `fetch_sciverse_content()` 产出 FetchResult 同形记录；chunk 定位写 `chunks.jsonl` 并标 `discovery_only_requires_content_fetch` |
+| SC3 | 检索审计携带定位 | ✅ 已完成 | `source-screening.csv` 增 `doc_id`/`chunk_id`/`offset` 列；无 DOI/URL 记录标 `needs_manual_location`，禁止伪造定位 |
+| SC4 | 真实连通冒烟 | ✅ 已完成 | meta-search / agentic-search / content 三端点实测通过（检索到真实 PNAS 原文片段）；契约存档 `docs/sciverse-api.md` |
+| C1 | 三个工作流运行手册 | ✅ 已完成 | 10–13 行 → 86/116/93 行：步骤表、门、失败回退、人工交接、续跑语义、验收清单 |
+| C2 | 12 份 stage brief 统一模板 | ✅ 已完成 | 3–16 行 → 37–45 行；`applicability`/`projection` 由 3 行补全 |
+| C3 | 12 个子技能 recipe 深化 | ✅ 已完成 | 16–31 行 → 37–85 行；frontmatter 增 `capability` 映射引擎能力 ID |
+| C4 | 8 份角色提示词校准 | ✅ 已完成 | 去 `default_cli`/`default_model` 改 `role_id`/`capabilities`/`output_contracts`/`recommended_reasoning`；增独立性与失败模式章节 |
+| C5 | 独立性分级语义 | ✅ 已完成 | skeptic=`different-model-family`（跨模型家族），method-reviewer=`role-separation`（角色分离） |
+| A1 | 协议五方对齐门 | ✅ 已完成 | `scripts/check_protocol_alignment.py` + `tests/test_protocol_alignment.py`（12 项，含 7 个漂移探针）+ CI 显式步骤 |
+| A2 | 合规与协作内容 | ✅ 已完成 | `references/retrieval-compliance.md`（robots/限速/paywall/署名/凭据）、`CONTRIBUTING.md` |
+| A3 | 修复历史漂移 | ✅ 已完成 | `search.py` 虚报 4 个 provider、`scp-manifest` 停在 4.0.0、2 处陈旧测试计数——均由对齐门抓出并修正 |
+| D1 | 架构导读（Markdown） | ✅ 已完成 | `docs/architecture.md` 220 → 345 行：新增真实运行轨迹、角色地图、产物状态地图、执行与审批闭环 |
+| D2 | 架构导读（HTML 单页） | ✅ 已完成 | `web/architecture.html`：单文件、系统字体、内联 SVG、零外链；README×2 与打包白名单已接线 |
+| D3 | 提交包重建 | ✅ 已完成 | 358 文件 / 11.9 MB；SKILL.md parity OK；新增 CONTRIBUTING / architecture.html / sciverse-api.md 纳入白名单 |
+
+全量测试 910 通过；四门全绿（版本 / 指标 / skill_lint / 协议对齐）+ ruff。
+
 ## 持续机制
 
 | 项目 | 状态 | 备注 |

@@ -146,7 +146,7 @@ Retriever 永远等于 OMP
 当前仓库有：
 
 ```text
-education-planner
+research-planner
 evidence-retriever
 evidence-analyst
 skeptic

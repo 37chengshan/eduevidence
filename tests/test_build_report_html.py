@@ -220,7 +220,10 @@ def test_lieflat_gallery_cards_present(tmp_path, monkeypatch):
     assert 'class="lieflat-title"' in zh
     assert 'class="lieflat-sub"' in zh
     assert 'class="lieflat-src"' in zh
-    assert 'class="lieflat-suppressed"' in zh
+    # The 'why this chart is missing' block is conditional: with the data-driven
+    # fallback nothing is suppressed, so the block is correctly absent. Its
+    # rendering path is covered by test_lieflat_composition instead.
+    assert 'class="lieflat-gallery-container"' in zh
 
 
 def test_lieflat_motion_css_single_definition(tmp_path, monkeypatch):

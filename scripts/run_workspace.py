@@ -179,14 +179,20 @@ def build_manifest(
     scp_available: bool | None = None,
     root: Path | None = None,
     started_at: str | None = None,
+    domain: str = "education",
 ) -> dict[str, Any]:
-    """Phase 13 run manifest with every contract field."""
+    """Phase 13 run manifest with every contract field.
+
+    ``domain`` selects which registered frame contract this run must satisfy;
+    it defaults to education so existing callers and manifests stay valid.
+    """
     return {
         "run_id": run_id,
         "skill_version": SKILL_VERSION,
         "git_commit": git_commit(root),
         "started_at": started_at or utc_now(),
         "question": question,
+        "domain": domain,
         "execution_mode": execution_mode,
         "scp_available": detect_scp() if scp_available is None else scp_available,
         "agent_mcp_available": agent_mcp_available,

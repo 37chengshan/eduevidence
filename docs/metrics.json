@@ -1,12 +1,13 @@
 {
-  "engine_version": "6.0.0",
-  "test_functions": 878,
-  "test_files": 99,
-  "schema_count": 47,
-  "reference_doc_count": 19,
+  "engine_version": "6.2.0",
+  "test_functions": 919,
+  "test_files": 102,
+  "schema_count": 49,
+  "reference_doc_count": 21,
   "gold_annotation_count": 30,
   "example_packs": [
     "ai-coding-assistant-evidence",
+    "spaced-retrieval-practice",
     "workplace-ai-assistant"
   ]
 }

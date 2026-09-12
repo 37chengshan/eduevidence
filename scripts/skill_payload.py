@@ -13,6 +13,7 @@ TREES = (
 FILES = (
     "SKILL.md", "eduevidence_cli.py", "install.sh", "pyproject.toml", "setup.py",
     "LICENSE", "CHANGELOG.md", "README.md", "README.zh-CN.md", "web/index.html",
+    "CONTRIBUTING.md", "web/architecture.html",
     "benchmarks/evidence-library.json", "benchmarks/partitions.json",
     "benchmarks/adversarial/cases.jsonl",
 )
@@ -21,6 +22,7 @@ DOCS = (
     "reproducibility.md", "release-contract.md", "autoresearch-evolution-plan.md",
     "orchestration-role-model.md", "autoresearch-implementation-status.md",
     "research-studio-guide.zh-CN.md", "demo-workplace-ai.md",
+    "sciverse-api.md",
     "release-closeout/README.md", "release-closeout/issues.md",
     "release-closeout/frontend-acceptance.md", "release-closeout/verification.md",
 )

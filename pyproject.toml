@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eduevidence"
-version = "6.0.0"
+version = "6.2.0"
 description = "Evidence research and decision skill with education and organizational policy domains."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "jsonschema>=4.0"]
 
 [project.scripts]
 eduevidence = "eduevidence_cli:main"
@@ -27,7 +27,8 @@ eduevidence = "eduevidence_cli:main"
 testpaths = ["tests", "scripts"]
 python_files = ["test_*.py"]
 addopts = "-q"
-filterwarnings = ["ignore::pytest.PytestReturnNotNoneWarning:scripts.*"]
+# scripts/* tests must assert; returning a dict is reported, not filtered.
+filterwarnings = []
 
 [tool.setuptools]
 py-modules = ["eduevidence_cli"]

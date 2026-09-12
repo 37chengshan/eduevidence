@@ -160,7 +160,11 @@ def tribunal_svg(verdict: dict, lang: str = "zh") -> str:
     none_text = labs["none"]
     can = verdict.get("supported_claims") or verdict.get("what_can_be_claimed") or [none_text]
     cannot = verdict.get("contradicted_claims") or verdict.get("what_cannot_be_claimed") or [none_text]
-    action = verdict.get("recommended_action", "insufficient_evidence").upper()
+    # The badge is a reader-facing label, so it goes through the same curated
+    # action table as the rest of the report instead of shouting the storage
+    # token. `.upper()` used to print "PILOT" on the Chinese infographic.
+    action_raw = verdict.get("recommended_action", "insufficient_evidence")
+    action = str(label(lang, "action", action_raw) or action_raw)
 
     def col(x: int, title: str, items: list[str], color: str) -> str:
         ids = _evidence_ids(items)

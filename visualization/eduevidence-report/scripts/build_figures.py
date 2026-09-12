@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any
 
 from adapter_contract import load_result, write_adapter_output
-from zh_labels import zh_outcome
+from zh_labels import label
 from build_charts import effect_outcomes
 
 OKABE_ITO = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"]
@@ -82,7 +82,26 @@ def _linear_ticks(maxv: int) -> list[int]:
     return ticks
 
 
+def _caption_width(caption: str, font_size: int = 11) -> int:
+    """Conservative width of an italic caption line at the SVG font stack.
+
+    The caption is a single unwrapped line, so a long title used to run past
+    the fixed 720px canvas and get clipped. CJK glyphs are a full em wide;
+    latin is bounded by the same cap-height factor used elsewhere in this
+    module.
+    """
+    cjk = sum(1 for ch in caption if "\u4e00" <= ch <= "\u9fff")
+    latin = len(caption) - cjk
+    # 0.75em is the measured upper bound for the latin part of the stack
+    # (Helvetica/Arial italic); ~2 full-width latin words at the start of the
+    # caption also shift the whole line right by the x=20 origin.
+    return int(cjk * font_size + latin * font_size * 0.78) + 60
+
+
 def _figure_svg(title: str, caption: str, body: str, w: int = 720, h: int = 300) -> str:
+    # Grow (never shrink) the canvas so the unwrapped caption fits instead of
+    # being cut off at the right edge; the body keeps its designed layout.
+    w = max(w, _caption_width(caption))
     return (f'<svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" role="img" '
             f'aria-label="{_esc(caption)}">'
             f'<rect width="{w}" height="{h}" fill="#FFFFFF"/>'
@@ -337,8 +356,11 @@ def render_figures(figure_data: dict, theme: str = "okabe_ito", lang: str = "zh"
     # 绝不把 relation_to_claim 的 support/contradict 当作 outcome 好坏；计数轴整数刻度。)
     outcomes = figure_data.get("outcomes", [])
     if outcomes:
-        names = [zh_outcome(o["outcome_type"]) if lang == "zh"
-                 else o["outcome_type"] for o in outcomes]
+        # Both locales render a curated label. The English axis used to print
+        # the storage token ("knowledge_gain") because only zh went through
+        # OUTCOME_ZH; the English report then showed raw enum values as its
+        # headline comparison chart's axis.
+        names = [label(lang, "outcome", o["outcome_type"]) for o in outcomes]
         series = [{"name": s["name"],
                    "data": [o.get(s["data"], 0) for o in outcomes]}
                   for s in DIR_SERIES[lang]]

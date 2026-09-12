@@ -8,6 +8,16 @@ only two intercepted command domains:
     eduevidence evolve ...
 """
 import sys
+
+MIN_PYTHON = (3, 10)
+
+if sys.version_info < MIN_PYTHON:
+    import platform
+    sys.stderr.write(
+        f"EduEvidence requires Python {MIN_PYTHON[0]}.{MIN_PYTHON[1]} or newer; "
+        f"this interpreter is {platform.python_version()}.\n"
+        "Install a supported Python and re-run, or set PYTHON to one.\n")
+    raise SystemExit(2)
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent

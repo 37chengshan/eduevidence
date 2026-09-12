@@ -45,11 +45,16 @@ def test_gate_has_exactly_eleven_items():
     assert {spec["id"] for spec in GATE_ITEMS} == EXPECTED_ITEM_IDS
 
 
-def test_gate_passes_for_valid_demo_workspace(demo_ws):
+def test_gate_passes_but_caps_confidence_for_demo_workspace(demo_ws):
+    """The gate passes, yet High is withheld while a declared outcome has no evidence."""
     report = evaluate_workspace(demo_ws, require_final=True)
     assert report["passed"] is True
-    assert report["high_confidence_allowed"] is True
-    assert report["max_confidence"] == "High"
+    # The flagship pack declares ai_dependency / reduced_transfer outcomes without
+    # evidence for them, so the gate blocks High and caps at Moderate - which is
+    # exactly what the pack's own verdict states. Asserting High here would be
+    # asserting the very permissiveness the gate exists to prevent.
+    assert report["high_confidence_allowed"] is False
+    assert report["max_confidence"] == "Moderate"
     assert report["critical_failures"] == []
     for item in report["items"].values():
         assert item["status"] in ("pass", "warn"), item

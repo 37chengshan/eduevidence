@@ -6,13 +6,15 @@ import pytest
 
 from engine.graph_store import GraphStore
 from engine.pilot import (
-    OUTCOME_TAXONOMY, import_outcomes, link_analysis, redecide, register_pilot,
+    import_outcomes, link_analysis, outcome_taxonomy_tokens, redecide,
+    register_pilot,
 )
 from engine.project import ProjectWorkspace
 from engine.tribunal import adjudicate, save_decision_snapshot
 
 ROOT = Path(__file__).resolve().parent.parent
-TAXONOMY_SAMPLE = sorted(OUTCOME_TAXONOMY)[:4]
+#: The taxonomy is registry-backed now; the fixture project is education.
+TAXONOMY_SAMPLE = sorted(outcome_taxonomy_tokens("education"))[:4]
 
 
 @pytest.fixture
@@ -84,7 +86,7 @@ def test_register_pilot_requires_real_decision(project):
 
 
 def test_register_pilot_blocks_unknown_outcomes_and_pii(project, decision):
-    with pytest.raises(ValueError, match="outside Outcome Taxonomy"):
+    with pytest.raises(ValueError, match="outside the education Outcome Taxonomy"):
         register_pilot(project, decision_snapshot_id=decision["decision_snapshot_id"],
                        title="t", start_date="2026-09-01T00:00:00+00:00",
                        end_date="2026-12-01T00:00:00+00:00", conditions=["c"],

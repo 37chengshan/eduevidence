@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/skeptic.schema.json",
+  "title": "SkepticFindings",
+  "description": "Counter-evidence record produced by the Challenge stage (skill/task-briefs/challenge.md, skill/agents/skeptic.md). The nine checks are mandatory: an empty or partial record used to pass the Pre-Verdict Gate, which made the counter-evidence gate cosmetic.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "search_performed",
+    "skeptic_findings",
+    "contradictory_evidence_found"
+  ],
+  "properties": {
+    "search_performed": {
+      "type": "boolean",
+      "const": true
+    },
+    "method": {
+      "type": "string"
+    },
+    "skeptic_findings": {
+      "type": "array",
+      "minItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "check",
+          "status",
+          "detail"
+        ],
+        "properties": {
+          "check": {
+            "type": "string",
+            "enum": [
+              "1_null_result",
+              "2_negative_result",
+              "3_contradictory_evidence",
+              "4_alternative_explanation",
+              "5_measurement_mismatch",
+              "6_sampling_bias",
+              "7_novelty_effect",
+              "8_ai_dependency",
+              "9_scope_overreach"
+            ],
+            "description": "The fixed check this finding reports on."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "found",
+              "not_found"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 8,
+            "description": "What was looked for and what was found; an empty note is not a check."
+          },
+          "related_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "contradictory_evidence_found": {
+      "type": "boolean"
+    },
+    "no_contradictory_evidence_statement": {
+      "type": "string"
+    },
+    "threats_to_validity": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

@@ -207,9 +207,16 @@ def label(lang: str, kind: str, value: str) -> str:
         return value
     if value in table:
         return table[value]
-    lowered = value.lower()
+    lowered = str(value).lower()
     if lowered in table:
         return table[lowered]
+    # Unregistered enum: still render as prose rather than leaking the storage
+    # form ("no_ai_coding_assistant_control") into the report or a chart label.
+    if isinstance(value, str) and "_" in value:
+        generic = GENERIC_ENUM_ZH if lang == "zh" else GENERIC_ENUM_EN
+        if lowered in generic:
+            return generic[lowered]
+        return humanize_identifier(value, lang)
     return value
 
 
@@ -243,3 +250,75 @@ def zh_mode(value: str) -> str:
 
 def zh_action(value: str) -> str:
     return ACTION_ZH.get(value, value)
+
+# ---------------------------------------------------------------------------
+# Generic display hygiene
+# ---------------------------------------------------------------------------
+#: Labels shared by every renderer, so an unregistered enum never reaches the
+#: reader as a storage identifier ("first_programming_course") — it is shown as
+#: prose ("First programming course"). Curated entries win over this table.
+GENERIC_ENUM_ZH = {
+    "unknown": "未知",
+    "unknown_not_reported": "未报告",
+    "not_reported": "未报告",
+    "not_applicable": "不适用",
+    "other": "其他",
+    "general": "总体",
+}
+
+GENERIC_ENUM_EN = {
+    "unknown": "Unknown",
+    "unknown_not_reported": "Not reported",
+    "not_reported": "Not reported",
+    "not_applicable": "Not applicable",
+    "other": "Other",
+    "general": "General",
+}
+
+
+#: Lower-case tokens that must be rendered as acronyms rather than title case.
+_ACRONYMS = {
+    "ai": "AI", "rct": "RCT", "did": "DID", "llm": "LLM", "llms": "LLMs",
+    "cs1": "CS1", "cs2": "CS2", "nlp": "NLP", "irb": "IRB", "k12": "K-12",
+    "gdpr": "GDPR", "ferpa": "FERPA", "wwc": "WWC", "grade": "GRADE",
+    "prisma": "PRISMA", "ta": "TA", "url": "URL", "api": "API", "html": "HTML",
+    "css": "CSS", "js": "JS", "sql": "SQL", "pdf": "PDF", "id": "ID",
+}
+
+
+def humanize_identifier(value: str, lang: str = "en") -> str:
+    """Render an unregistered enum value as readable prose.
+
+    A curated label (see OUTCOME_ZH / STUDY_ZH / GENERIC_ENUM_*) always wins.
+    Everything else is de-underscored and capitalised so a report never shows
+    its storage format; zh keeps the original token when it is already CJK.
+    """
+    if value is None:
+        return ""
+    text = str(value).strip()
+    if not text:
+        return ""
+    curated = GENERIC_ENUM_ZH if lang == "zh" else GENERIC_ENUM_EN
+    if text in curated:
+        return curated[text]
+    lowered = text.lower()
+    if lowered in curated:
+        return curated[lowered]
+    if any("一" <= ch <= "鿿" for ch in text):
+        return text  # already prose in Chinese
+    words = [w for w in text.replace("-", " ").replace("_", " ").split() if w]
+    if not words:
+        return text
+    out = []
+    for word in words:
+        lowered_word = word.lower()
+        if lowered_word in _ACRONYMS:
+            out.append(_ACRONYMS[lowered_word])
+        elif word.isupper() and len(word) <= 6:
+            out.append(word)
+        elif word[:1].isdigit():
+            out.append(word)
+        else:
+            out.append(word[:1].upper() + word[1:])
+    return " ".join(out)
+

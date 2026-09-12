@@ -40,6 +40,16 @@ import json
 import sys
 from pathlib import Path
 
+# This module is also documented as a standalone command (SKILL.md), so it
+# has to find the repository root on its own path; the orchestrator sets
+# sys.path for it, which hid the missing import from that caller.
+import sys as _sys
+from pathlib import Path as _Path
+_ROOT = _Path(__file__).resolve().parent.parent
+if str(_ROOT) not in _sys.path:
+    _sys.path.insert(0, str(_ROOT))
+
+
 from evidence_score import (CONFIDENCE_POLICY_VERSION,
                             decision_consistency_score, directness_score,
                             independent_samples, independent_studies)

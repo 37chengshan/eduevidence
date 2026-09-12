@@ -75,8 +75,8 @@ class RoleSpec:
 
 
 ROLE_REGISTRY: dict[str, RoleSpec] = {
-    "education-planner": RoleSpec(
-        "education-planner",
+    "research-planner": RoleSpec(
+        "research-planner",
         "Own framing completeness, scope, comparison and outcome definition.",
         ("frame",),
         ("research-planning",),
@@ -409,7 +409,7 @@ class ExecutionPlanner:
 
     def _serial_tasks(self, run_id, base_revision) -> tuple[TaskSpec, ...]:
         return (
-            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
+            self._base("frame", "frame", "research-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
             self._base("retrieve", "retrieve", "evidence-retriever", "Acquire bounded evidence.", "direct+counter", run_id=run_id, base_revision=base_revision),
             self._base("extract", "extract", "evidence-analyst", "Extract structured findings.", "all-eligible", run_id=run_id, base_revision=base_revision),
             self._base("challenge", "challenge", "skeptic", "Challenge the provisional interpretation.", "counter-evidence", run_id=run_id, base_revision=base_revision),
@@ -419,7 +419,7 @@ class ExecutionPlanner:
 
     def _medium_tasks(self, run_id, base_revision) -> tuple[TaskSpec, ...]:
         return (
-            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
+            self._base("frame", "frame", "research-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
             self._base("retrieve-direct", "retrieve", "evidence-retriever", "Retrieve direct decision-relevant evidence.", "direct-causal", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
             self._base("retrieve-counter", "retrieve", "evidence-retriever", "Retrieve null, negative and contradictory evidence.", "counter-risk", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
             self._base("extract", "extract", "evidence-analyst", "Merge validated sources and extract findings.", "all-eligible", run_id=run_id, base_revision=base_revision),
@@ -430,7 +430,7 @@ class ExecutionPlanner:
 
     def _deep_tasks(self, run_id, base_revision) -> tuple[TaskSpec, ...]:
         return (
-            self._base("frame", "frame", "education-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
+            self._base("frame", "frame", "research-planner", "Structure the research question.", "frame", run_id=run_id, base_revision=base_revision),
             self._base("retrieve-direct", "retrieve", "evidence-retriever", "Retrieve direct causal evidence.", "direct-causal", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
             self._base("retrieve-transfer", "retrieve", "evidence-retriever", "Retrieve retention and independent-transfer evidence.", "transfer-retention", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),
             self._base("retrieve-counter", "retrieve", "evidence-retriever", "Retrieve null, negative, risk and contradiction evidence.", "counter-risk", run_id=run_id, base_revision=base_revision, delegated=True, outputs=("SourceCandidates",)),

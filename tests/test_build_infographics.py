@@ -65,7 +65,12 @@ def test_tribunal_svg_short_text_and_evidence_ids_only():
         assert eid in zh_svg
     supported_count = len(en_data["decision"]["supported_claims"])
     assert f"({supported_count})" in en_svg
-    assert "PILOT" in en_svg
+    # The badge is a reader-facing label in both locales. It used to be the
+    # upper-cased storage token, which printed "PILOT" even on the Chinese
+    # infographic; now each locale renders its own curated action label.
+    assert "Pilot" in en_svg
+    assert "PILOT" not in zh_svg
+    assert "试点验证" in zh_svg
     assert "Can claim" in en_svg
     assert "可以主张" in zh_svg
 

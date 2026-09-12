@@ -203,13 +203,19 @@
     // 探测一个能应答 /api/projects 的 Studio 基址（同源优先，其次 8765-8774 默认端口段），
     // 保证「进入控制台」落到的永远是带数据的控制台，而不是静态服务器上的空壳 /index.html。
     // 在 GitHub Pages 静态托管下，直接使用同源的 /studio/ 子路径。
+    // Static-safe default: the Studio always lives under `studio/`, both on
+    // GitHub Pages (`/studio/`) and under the Python server. The old default
+    // was `/index.html`, which on the published site IS this landing page, so
+    // "进入控制台" bounced the reader straight back to the page they clicked
+    // from whenever the probe had not answered yet.
     let studioBase = window.location.origin;
-    let studioPath = "/index.html";
+    let studioPath = pagesBase() + "studio/";
+    let studioProbe = null;
     if (isStaticHost()) {
       studioBase = window.location.origin;
-      studioPath = pagesBase() + "studio.html";
+      studioPath = pagesBase() + "studio/";
     } else {
-      (async () => {
+      studioProbe = (async () => {
         const candidates = [window.location.origin];
         for (let i = 0; i < 10; i++) {
           candidates.push("http://" + (window.location.hostname || "127.0.0.1") + ":" + (8765 + i));
@@ -219,6 +225,7 @@
             const r = await fetch(base + "/api/projects", { method: "GET", cache: "no-store" });
             if (r.ok && (r.headers.get("content-type") || "").includes("json")) {
               studioBase = base;
+              studioPath = "/studio/";
               break;
             }
           } catch (e) {
@@ -257,13 +264,16 @@
     launchBtns.forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-        let target;
-        if (typeof studioPath !== "undefined" && studioPath !== "/index.html" && (window.location.hostname.includes("github.io") || window.location.hostname.includes("gitee.io"))) {
-          target = studioBase + studioPath;
-        } else {
-          target = (studioBase || window.location.origin) + "/index.html";
-        }
-        triggerTransition(target, e);
+        // Wait (briefly) for the probe so a fast click still lands on the live
+        // console instead of racing it and navigating to the fallback.
+        const settle = studioProbe
+          ? Promise.race([studioProbe, new Promise(r => setTimeout(r, 400))])
+          : Promise.resolve();
+        settle.then(() => {
+          const base = (studioBase || window.location.origin).replace(/\/$/, "");
+          const path = studioPath.startsWith("/") ? studioPath : "/" + studioPath;
+          triggerTransition(base + path, e);
+        });
       });
     });
   }

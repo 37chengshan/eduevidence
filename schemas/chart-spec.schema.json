@@ -2,14 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/37chengshan/eduevidence/schemas/chart-spec.schema.json",
   "title": "ChartSpec",
-  "description": "Chart spec produced by visualization build_charts.py. integrity is a per-check map with PASS/FAIL/NOT_CHECKED strings (P0-2 rewrite to match the real producer).",
+  "description": "One chart record inside a ReportSpec. Producer: visualization/eduevidence-report/scripts/build_report.py::build_report_spec. Kept in sync with the producer by scripts/check_protocol_alignment.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "chart_id",
     "purpose",
     "engine",
-    "chart_type"
+    "data_ref"
   ],
   "properties": {
     "chart_id": {
@@ -28,7 +28,7 @@
     },
     "chart_type": {
       "type": "string",
-      "minLength": 1
+      "description": "Optional chart family label. The Lieflat gallery carries its own type on result.visual_layout; this field is only used by callers that build chart specs by hand."
     },
     "semantic_basis": {
       "type": "string"
@@ -83,6 +83,13 @@
           ]
         }
       }
+    },
+    "data_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Pointer to the data the chart reads, or null when the chart is rendered inline from result.json by the report builder."
     }
   }
 }

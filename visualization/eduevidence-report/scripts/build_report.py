@@ -96,24 +96,165 @@ METHODOLOGY_LABELS_ZH = {
 
 FRAME_ENUM_ZH = {
     "teaching_decision": "教学决策",
+    "evidence_review": "证据评审",
+    "pilot_design": "试点设计",
+    "evaluation_design": "评价设计",
     "undergraduate_year_1": "大学一年级",
+    "undergraduate_year_2": "大学二年级",
+    "undergraduate_year_3": "大学三年级",
+    "undergraduate_year_4": "大学四年级",
+    "postgraduate": "研究生",
+    "high_school": "高中",
+    "middle_school": "初中",
+    "primary_school": "小学",
+    "workplace_adult": "在职成人",
     "computer_science": "计算机科学与技术",
+    "information_systems": "信息管理",
+    "software_engineering": "软件工程",
+    "data_science": "数据科学",
+    "mathematics": "数学",
+    "medicine": "医学",
+    "humanities": "人文",
+    "social_sciences": "社会科学",
+    "business": "商科",
     "C_programming": "C 语言程序设计",
+    "introductory_programming": "程序设计入门",
+    "data_structures": "数据结构",
+    "algorithms": "算法",
+    "database_systems": "数据库系统",
+    "machine_learning": "机器学习",
+    "academic_writing": "学术写作",
+    "tesol": "英语教学",
     "compulsory_core_course": "必修核心课程",
+    "elective_course": "选修课程",
+    "lecture_lab": "讲授 + 实验课",
+    "seminar": "研讨课",
+    "online_course": "在线课程",
+    "blended_learning": "混合式教学",
+    "professional_training": "职业培训",
+    "enterprise_customer_support": "企业客户支持",
+    "software_development": "软件开发",
+    "knowledge_work": "知识型工作",
     "primary": "主要结果",
     "secondary": "次要结果",
     "risk": "风险结果",
+    "adopt": "采纳",
+    "modify": "修改",
+    "terminate": "终止",
+    "maintain": "维持",
+    "evaluate_impact": "评估影响",
+    "rct": "随机对照试验",
+    "quasi_experimental": "准实验",
+    "observational": "观察性研究",
+    "meta_analysis": "元分析",
+    "systematic_review": "系统综述",
+    "qualitative": "质性研究",
+    "mixed_methods": "混合方法",
+    "survey": "调查研究",
+    "case_study": "案例研究",
+    "literature_review": "文献综述",
+    "online": "线上",
+    "offline": "线下",
+    "hybrid": "混合",
+    "under_design_pending_evidence_review": "设计中（待证据评审）",
+    "human_supervised_customer_support_assistant": "人工监督的客服助手",
+    "approved_knowledge_base_and_agent_review": "已批准知识库 + 坐席复核",
+    "institutional_reform": "机构改革",
+    "enterprise_customer_support_staff": "企业客服人员",
+    "autonomous_agents_and_high_stakes_specialist_advice": "自主代理与高风险专业建议",
+    "lecture_with_lab_exercises": "讲授 + 实验练习",
+    "generative_ai_coding_assistant": "生成式 AI 编程助手",
+    "first_programming_course_no_prior_text_based_programming": "首次程序设计课程，无文本编程基础",
+    "mixed_ability_large_class_60_students": "混合能力大班（60 人）",
+    "weekly_lab_sessions": "每周实验课",
+    "one_semester": "一学期",
+    "16_weeks_one_semester": "16 周（一学期）",
+    "60_students": "60 名学生",
+    "TA_supported_two_TAs": "助教支持（2 名助教）",
+    "daily": "每日",
+    "weekly": "每周",
+    "monthly": "每月",
 }
 
 FRAME_ENUM_EN = {
     "teaching_decision": "Teaching decision",
+    "evidence_review": "Evidence review",
+    "pilot_design": "Pilot design",
+    "evaluation_design": "Evaluation design",
     "undergraduate_year_1": "First-year undergraduate",
+    "undergraduate_year_2": "Second-year undergraduate",
+    "undergraduate_year_3": "Third-year undergraduate",
+    "undergraduate_year_4": "Fourth-year undergraduate",
+    "postgraduate": "Postgraduate",
+    "high_school": "High school",
+    "middle_school": "Middle school",
+    "primary_school": "Primary school",
+    "workplace_adult": "Working adults",
     "computer_science": "Computer science",
+    "information_systems": "Information systems",
+    "software_engineering": "Software engineering",
+    "data_science": "Data science",
+    "mathematics": "Mathematics",
+    "medicine": "Medicine",
+    "humanities": "Humanities",
+    "social_sciences": "Social sciences",
+    "business": "Business",
     "C_programming": "C programming",
+    "introductory_programming": "Introductory programming",
+    "data_structures": "Data structures",
+    "algorithms": "Algorithms",
+    "database_systems": "Database systems",
+    "machine_learning": "Machine learning",
+    "academic_writing": "Academic writing",
+    "tesol": "TESOL",
     "compulsory_core_course": "Compulsory core course",
+    "elective_course": "Elective course",
+    "lecture_lab": "Lecture + lab",
+    "seminar": "Seminar",
+    "online_course": "Online course",
+    "blended_learning": "Blended learning",
+    "professional_training": "Professional training",
+    "enterprise_customer_support": "Enterprise customer support",
+    "software_development": "Software development",
+    "knowledge_work": "Knowledge work",
     "primary": "Primary outcomes",
     "secondary": "Secondary outcomes",
     "risk": "Risk outcomes",
+    "adopt": "Adopt",
+    "modify": "Modify",
+    "terminate": "Terminate",
+    "maintain": "Maintain",
+    "evaluate_impact": "Evaluate impact",
+    "rct": "Randomised controlled trial",
+    "quasi_experimental": "Quasi-experimental",
+    "observational": "Observational",
+    "meta_analysis": "Meta-analysis",
+    "systematic_review": "Systematic review",
+    "qualitative": "Qualitative",
+    "mixed_methods": "Mixed methods",
+    "survey": "Survey",
+    "case_study": "Case study",
+    "literature_review": "Literature review",
+    "online": "Online",
+    "offline": "Offline",
+    "hybrid": "Hybrid",
+    "under_design_pending_evidence_review": "Under design (pending evidence review)",
+    "approved_knowledge_base_and_agent_review": "Approved knowledge base + agent review",
+    "institutional_reform": "Institutional reform",
+    "enterprise_customer_support_staff": "Customer-support staff",
+    "autonomous_agents_and_high_stakes_specialist_advice": "Autonomous agents and high-stakes specialist advice",
+    "lecture_with_lab_exercises": "Lecture with lab exercises",
+    "generative_ai_coding_assistant": "Generative AI coding assistant",
+    "first_programming_course_no_prior_text_based_programming": "First programming course, no prior text-based programming",
+    "mixed_ability_large_class_60_students": "Mixed-ability large class (60 students)",
+    "weekly_lab_sessions": "Weekly lab sessions",
+    "one_semester": "One semester",
+    "16_weeks_one_semester": "16 weeks (one semester)",
+    "60_students": "60 students",
+    "TA_supported_two_TAs": "TA supported (2 TAs)",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
 }
 
 DIR_LABEL = {"support": "支持", "contradict": "反驳", "neutral": "中性"}
@@ -640,38 +781,134 @@ def visualization_decisions(result: dict, charts: dict) -> dict[str, dict[str, A
 # 0b. Lieflat gallery composition — visual_layout contract (§三)
 # ---------------------------------------------------------------------------
 
-# Deterministic safe combination when visual_layout is missing or all entries
-# are invalid. Rendered through the same extractors as any AI-written layout.
-FALLBACK_LIEFLAT_LAYOUT = (
-    {"chart_id": "lieflat-forest-plot.svg", "type": "forest_plot", "catalog_ref": "FOREST-PLOT (publication figure)",
-     "title_zh": "证据效应量森林图", "title_en": "Effect-size forest plot",
-     "subtitle_zh": "Hedges' g 与 95% 置信区间 · 一行一篇研究 · 数据不足时本图自动抑制",
-     "subtitle_en": "Hedges' g with 95% CI · one row per study · suppressed when data is insufficient",
-     "caption_zh": "仅当证据集携带数值效应量时绘制；无 g/CI 数据时不画假图。",
-     "caption_en": "Drawn only when numeric effect sizes exist in the evidence set.",
-     "source": "meta.forest", "params": {}},
-    {"chart_id": "lieflat-dot-cascade.svg", "type": "dot_cascade", "catalog_ref": "L2 Dot Cascade",
-     "title_zh": "证据效应量梯队级联", "title_en": "Ranked effect-size cascade",
-     "subtitle_zh": "按效应量由高到低排序 · 圆点高度 = Hedges' g · 顶部数字 = g 值",
-     "subtitle_en": "Sorted by effect size · dot height = Hedges' g · top number = g",
-     "caption_zh": "仅当存在逐研究数值效应量时绘制。",
-     "caption_en": "Drawn only when per-study numeric effect sizes exist.",
-     "source": "evidence.ranked_effects", "params": {}},
-    {"chart_id": "lieflat-bubble-almanac.svg", "type": "bubble_almanac", "catalog_ref": "L9 Bubble Almanac",
-     "title_zh": "发表年份 × 结果维度文献年历", "title_en": "Year × dimension evidence almanac",
-     "subtitle_zh": "气泡面积 ∝ 该格研究数（sqrt 换算） · 实心圆 = 有显著结果",
-     "subtitle_en": "Bubble area ∝ study count (sqrt) · solid core = significant results",
-     "caption_zh": "仅当证据集携带发表年份与结果维度时绘制。",
-     "caption_en": "Drawn only when years and outcome dimensions exist.",
-     "source": "evidence.year_x_dimension", "params": {}},
-    {"chart_id": "lieflat-tick-rows.svg", "type": "tick_rows", "catalog_ref": "F5 Tick Rows",
-     "title_zh": "各结果类型效应方向分布", "title_en": "Effect direction by outcome",
-     "subtitle_zh": "每 1 个圆点 = 1 条证据 · 绿 = 正向 · 灰 = 零效应 · 橙 = 负向 · 右端数字 = 净效应",
-     "subtitle_en": "One dot = one evidence item · green = positive · grey = null · orange = negative · right number = net",
-     "caption_zh": "基于 effect_direction 计数，全部数值来自 result.json。",
-     "caption_en": "Based on effect_direction counts; all numbers come from result.json.",
-     "source": "outcomes.direction_counts", "params": {}},
+# Deterministic fallback when visual_layout is missing or all entries are
+# invalid. The composition is DATA-DRIVEN: instead of a fixed quartet that
+# silently suppresses most charts on an evidence set without numeric effect
+# sizes, candidates are probed against the extractors and only the shapes the
+# data actually supports are kept. Numbers still come exclusively from
+# scripts/charts_data.py, so this remains an honest gallery.
+FALLBACK_CANDIDATES = (
+    ("forest_plot", ("证据效应量森林图", "Effect-size forest plot",
+                    "Hedges' g 与 95% 置信区间 · 一行一篇研究",
+                    "Hedges' g with 95% CI · one row per study",
+                    "仅当证据集携带数值效应量时绘制；无 g/CI 数据时不画假图。",
+                    "Drawn only when numeric effect sizes exist in the evidence set.")),
+    ("dot_cascade", ("证据效应量梯队级联", "Ranked effect-size cascade",
+                     "按效应量由高到低排序 · 圆点高度 = Hedges' g",
+                     "Sorted by effect size · dot height = Hedges' g",
+                     "仅当存在逐研究数值效应量时绘制。",
+                     "Drawn only when per-study numeric effect sizes exist.")),
+    ("bubble_almanac", ("发表年份 × 结果维度文献年历", "Year × dimension evidence almanac",
+                        "气泡面积 ∝ 该格研究数 · 实心圆 = 有显著结果",
+                        "Bubble area ∝ study count · solid core = significant results",
+                        "仅当证据集携带发表年份与结果维度时绘制。",
+                        "Drawn only when years and outcome dimensions exist.")),
+    ("matrix_heat", ("年份 × 结果维度证据密度", "Year × outcome evidence density",
+                     "每格数字 = 该年份该结果维度的证据条数",
+                     "Each cell counts evidence items for that year and outcome",
+                     "当证据跨多个年份与结果维度时，展示研究密度的分布。",
+                     "Shows where the evidence sits across years and outcomes.")),
+    ("tick_rows", ("各结果类型效应方向分布", "Effect direction by outcome",
+                   "每 1 个圆点 = 1 条证据 · 绿 = 正向 · 灰 = 零效应 · 橙 = 负向",
+                   "One dot = one evidence item · green = positive · grey = null · orange = negative",
+                   "基于 effect_direction 计数，全部数值来自 result.json。",
+                   "Based on effect_direction counts; all numbers come from result.json.")),
+    ("paired_rungs", ("各结果类型的正负证据对照", "Positive vs negative evidence by outcome",
+                      "左右两列分别汇总正向与负向证据条数",
+                      "Two columns summarise positive and negative evidence counts",
+                      "当同一结果同时存在正向与负向证据时，分列呈现避免相互抵消。",
+                      "Splits positive and negative evidence so they never cancel out.")),
+    ("brand_spectrum", ("各结果类型的净效应倾向", "Net effect direction by outcome",
+                        "位置 =（正向 − 负向）÷ 方向计数 · 中点为中性",
+                        "Position = (positive - negative) / directional count · centre is neutral",
+                        "双极展示各结果构念整体偏向支持还是反对。",
+                        "Bipolar view of whether each outcome leans supportive or against.")),
+    ("hundred_field", ("研究设计构成", "Study-design composition",
+                       "每格 = 1 篇研究 · 显示证据来自哪些研究设计",
+                       "One cell = one study · shows which designs produced the evidence",
+                       "当证据包含多种研究设计时，构成图比表格更快暴露设计偏斜。",
+                       "Reveals design skew faster than a table when several designs are present.")),
+    ("tick_donut", ("方法学评级构成", "Methodology rating composition",
+                    "每 tick ≈ 1% 构成 · 按 WWC 评级汇总",
+                    "One tick ~ 1% share · aggregated by WWC rating",
+                    "仅当证据集记录 WWC 评级时绘制。",
+                    "Drawn only when WWC ratings are recorded.")),
+    ("tick_gauge", ("决策置信度", "Decision confidence",
+                    "0–100% 单值仪表 · 由确定性置信度公式给出",
+                    "Single 0-100% gauge from the deterministic confidence formula",
+                    "置信度值来自 result.json 的决策字段，不由模型自评。",
+                    "The value comes from the result's decision field, never self-rated.")),
+    ("ballot_tally", ("方法学检查项计票", "Methodology checklist tally",
+                      "每 tick = 1 条审计结论 · 按检查项统计通过与否",
+                      "One tick = one audit verdict · grouped by checklist item",
+                      "让读者一眼看出方法学短板集中在哪些检查项。",
+                      "Shows which checklist items concentrate the weaknesses.")),
+    ("launch_fan", ("干预阶段与活动权重", "Intervention phases and activity weight",
+                    "每段 = 一个试点阶段 · 宽度 = 活动条数",
+                    "Each segment is one pilot phase · width = number of activities",
+                    "展示试点在时间上的铺开方式。",
+                    "Shows how the pilot is spread across its phases.")),
+    ("barcode_lollipop", ("试点阶段周次分布", "Pilot phase week spans",
+                          "每根 = 一个阶段 · 高度 = 阶段序号",
+                          "One bar per phase · height = phase index",
+                          "仅当阶段定义包含可解析的周次区间时绘制。",
+                          "Drawn only when phases carry parseable week ranges.")),
+    ("dotty_matrix", ("阶段 × 活动矩阵", "Phase × activity matrix",
+                      "每点 = 1 项活动 · 行 = 阶段",
+                      "One dot = one activity · rows are phases",
+                      "当阶段内含多项活动时，矩阵比列表更易比较。",
+                      "Compares activity load across phases better than a list.")),
+    ("jitter_strip", ("分组效应量分布", "Grouped effect-size distribution",
+                      "每点 = 一篇研究 · 按结果维度分组",
+                      "One point = one study · grouped by outcome dimension",
+                      "仅当多个结果维度各有 3 篇以上带效应量的研究时绘制。",
+                      "Drawn only when several dimensions each carry 3+ numeric effects.")),
+    ("parallel_coordinates", ("跨维度研究画像", "Studies across dimensions",
+                              "同一批研究在效应量 / 样本量 / 质量 / 年份上的走势",
+                              "The same studies traced across effect size / N / quality / year",
+                              "仅当至少 3 篇研究同时具备四项数值时绘制。",
+                              "Drawn only when at least 3 studies carry all four values.")),
 )
+
+
+def _fallback_layout_for(result: dict, lang: str) -> list[dict]:
+    """Probe the registry and keep only the chart shapes this result supports.
+
+    ``visual_layout`` is the AI's job; when it is absent this keeps the gallery
+    useful without inventing anything: every candidate runs through its own
+    extractor, and a candidate whose data is missing is simply not offered.
+    One chart per data source avoids repeating the same shape twice.
+    """
+    from lieflat_engine import REGISTRY
+
+    chosen: list[dict] = []
+    used_sources: set[str] = set()
+    for fig_type, copy in FALLBACK_CANDIDATES:
+        reg = REGISTRY.get(fig_type)
+        if reg is None or reg["source"] in used_sources:
+            continue
+        try:
+            bundle, _reason = reg["extractor"](result, {}, lang)
+        except Exception:
+            bundle = None
+        if bundle is None:
+            continue
+        used_sources.add(reg["source"])
+        title_zh, title_en, sub_zh, sub_en, cap_zh, cap_en = copy
+        chosen.append({
+            "chart_id": "lieflat-" + fig_type.replace("_", "-") + ".svg",
+            "type": fig_type,
+            "catalog_ref": reg["catalog_ref"],
+            "source": reg["source"],
+            "params": {},
+            "title_zh": title_zh, "title_en": title_en,
+            "subtitle_zh": sub_zh, "subtitle_en": sub_en,
+            "caption_zh": cap_zh, "caption_en": cap_en,
+        })
+        if len(chosen) >= 6:
+            break
+    return chosen
+
 
 LIEFLAT_PARAM_TYPES = {"int": int, "list": list}
 
@@ -794,9 +1031,18 @@ def resolve_visual_layout(result: dict) -> dict[str, Any]:
     if entries:
         return {"entries": entries, "fallback": False, "warnings": warnings, "rejected": rejected}
 
-    warnings.append("visual_layout missing or fully invalid — using deterministic safe "
-                    "combination (forest_plot + dot_cascade + bubble_almanac + tick_rows)")
-    fallback_entries = [dict(e) for e in FALLBACK_LIEFLAT_LAYOUT]
+    # Data-driven fallback: probe every candidate shape and keep the ones this
+    # result can honestly support, instead of a fixed quartet that suppresses
+    # most charts when numeric effect sizes are absent.
+    lang_hint = "zh" if result.get("meta", {}).get("lang") == "zh" else "en"
+    fallback_entries = _fallback_layout_for(result, lang_hint)
+    if fallback_entries:
+        warnings.append(
+            "visual_layout missing or fully invalid — data-driven fallback selected "
+            + ", ".join(e["type"] for e in fallback_entries))
+    else:
+        warnings.append("visual_layout missing or fully invalid — no chart shape had "
+                        "sufficient data; gallery suppressed rather than drawn empty")
     return {"entries": fallback_entries, "fallback": True, "warnings": warnings, "rejected": rejected}
 
 
@@ -948,6 +1194,9 @@ TEXT_LEAF_KEYS = {
     "population", "intervention", "comparison", "outcome_measure", "effect", "method",
     "ai_usage_policy", "target_learners", "ai_usage_rule", "outcome_check",
     "research_question", "treatment", "baseline", "post_test", "retention_test",
+    # Evaluation milestone fields name a measurement point in the reader
+    # language; they are prose, not structural identifiers.
+    "immediate_post", "retention", "transfer",
     "transfer_test", "success_threshold", "analysis_plan",
     "suitable_for", "not_suitable_for", "search_provider",
     "learner_match", "subject_match", "tool_match", "scope",
@@ -963,6 +1212,10 @@ PROSE_LIST_KEYS = {
     "stop_conditions", "strengths", "limitations", "confounders", "required_conditions",
     "process_metrics", "learning_metrics", "risk_metrics", "suggestions", "risk_control",
     "evidence_alignment",
+    # Evaluation prose: criteria are sentences, and the milestone fields
+    # name a measurement point in the reader language.
+    "success_criteria", "stop_criteria", "immediate_post", "retention",
+    "transfer", "baseline",
 }
 
 
@@ -1091,7 +1344,33 @@ _ZH_RESIDUE_RE = [
     (re.compile(r"\bCONCERN\b|\bPASS\b|\bFAIL\b"), "unmapped English audit code in zh narrative"),
 ]
 
+#: Raw storage identifiers inside a sentence. A single-token value may be an
+#: enum rendered through FRAME_ENUM_*, but an underscore inside a multi-word
+#: string or inside a zh sentence is a copy defect the reader would see.
+_RAW_IDENTIFIER_RE = re.compile(r"[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]+")
+
+
+def _scan_raw_identifiers(problems: list[str], path: str, text: str) -> None:
+    """Flag snake_case storage identifiers that leaked into visible prose."""
+    if not text or not isinstance(text, str):
+        return
+    cleaned = text.strip()
+    has_cjk = bool(_HAS_CJK.search(cleaned))
+    is_sentence = len(cleaned.split()) > 1
+    if not (has_cjk or is_sentence):
+        return
+    for match in _RAW_IDENTIFIER_RE.finditer(cleaned):
+        token = match.group(0)
+        if token in FRAME_ENUM_ZH or token in FRAME_ENUM_EN:
+            continue
+        problems.append(path + ": raw identifier " + repr(token) + " leaked into prose")
+        return
+
+
 STRICT_NARRATIVE_PATHS = [
+    # Reader-facing decision prose written by the adjudicator.
+    "decision.strongest_support", "decision.key_uncertainty",
+    "decision.main_risk", "decision.next_action",
     "decision.decision_rationale", "decision.rationale", "decision.strongest_support",
     "decision.key_uncertainty", "decision.main_risk", "decision.next_action",
     "decision.next_steps", "decision.what_can_be_claimed", "decision.what_cannot_be_claimed",
@@ -1106,6 +1385,21 @@ _SKIP_HINTS = ("id", "url", "doi", "author", "venue", "year", "status", "score",
                "threshold", "key", "lang", "weight", "error",
                # 枚举/标签类键（显示层经 zh_labels 映射，不属叙述）
                "verdict", "target", "decision")
+
+
+COPY_LIMITS_ZH = {
+    "decision.strongest_support": 60,
+    "decision.key_uncertainty": 70,
+    "decision.main_risk": 60,
+    "decision.next_action": 80,
+    "decision.decision_rationale": 160,
+    "decision.rationale": 160,
+}
+
+
+#: Structural tokens that look like prose to a language check but are parsed
+#: They stay identical across languages by contract.
+NON_NARRATIVE_KEYS = ("weeks", "pilot_duration")
 
 
 def _scan_narrative(problems, path, en_text, zh_text, strict=False, kind=""):
@@ -1130,6 +1424,10 @@ def _scan_narrative(problems, path, en_text, zh_text, strict=False, kind=""):
             problems.append(path + ": 含" + label)
     if strict and kind in ("rationale", "reason") and len(zh_text) < 40:
         problems.append(path + ": 决策理由过短（<40 字）")
+    ceiling = COPY_LIMITS_ZH.get(path)
+    if ceiling and len(zh_text) > ceiling:
+        problems.append(
+            f"{path}: 叙述超出 {ceiling} 字上限（{len(zh_text)} 字）")
 
 
 def check_language_parallel(result_en: dict, result_zh: dict) -> list[str]:
@@ -1154,6 +1452,9 @@ def check_language_parallel(result_en: dict, result_zh: dict) -> list[str]:
         _walk_strings(result_zh.get(root), "", zh_nodes, _SKIP_HINTS)
         by_path_en = {p: t for p, t in en_nodes}
         for p, z in zh_nodes:
+            leaf = p.rsplit(".", 1)[-1]
+            if leaf in NON_NARRATIVE_KEYS:
+                continue
             _scan_narrative(problems, root + p, by_path_en.get(p, ""), z, strict=False)
     for key in ("claims", "evidence"):
         en_items = result_en.get(key) or []
@@ -1163,6 +1464,37 @@ def check_language_parallel(result_en: dict, result_zh: dict) -> list[str]:
             z_text = z_item.get("claim") if isinstance(z_item, dict) else None
             if z_text:
                 _scan_narrative(problems, key + "[" + str(i) + "].claim", e_text, z_text, strict=False)
+    # Frame prose: field values may be enums (rendered via FRAME_ENUM_*), but a
+    # storage identifier must never reach the reader inside a sentence. Both
+    # language versions are checked because the leak is an authoring defect.
+    # Weeks and pilot duration are structural tokens (W1, W2-W13, one_semester):
+
+    for label, root in (("research_frame", result_en), ("research_frame.zh", result_zh)):
+        nodes: list = []
+        _walk_strings(root.get("research_frame"), "", nodes, ())
+        for node_path, text_value in nodes:
+            _scan_raw_identifiers(problems, label + node_path, text_value)
+    # Structural parallel: ids, source/study/sample keys, sample sizes and the
+    # direction fields must match item by item. Free text may differ between
+    # languages; these may not, or the zh report describes a different study.
+    structural_fields = ("evidence_id", "source_id", "study_id", "sample_id",
+                         "sample_size", "outcome_type", "effect_direction",
+                         "relation_to_claim")
+    en_ev = result_en.get("evidence")
+    zh_ev = result_zh.get("evidence")
+    if isinstance(en_ev, list) and isinstance(zh_ev, list):
+        if len(en_ev) != len(zh_ev):
+            problems.append(
+                "evidence: en and zh rows differ in count "
+                + f"({len(en_ev)} vs {len(zh_ev)})")
+        for i, (a, b) in enumerate(zip(en_ev, zh_ev)):
+            if not (isinstance(a, dict) and isinstance(b, dict)):
+                continue
+            for field_name in structural_fields:
+                if a.get(field_name) != b.get(field_name):
+                    problems.append(
+                        f"evidence[{i}].{field_name}: en={a.get(field_name)!r} "
+                        f"!= zh={b.get(field_name)!r} (structural fields must agree)")
     return problems
 
 
@@ -1358,7 +1690,15 @@ def diverging_bar_svg(option: dict, width: int = 720, height: int = 300,
     series = option.get("series", [])
     if not cats:
         return ""
-    left, right = 150, 40
+    # Reserve enough gutter for the longest y-axis label. A fixed 150px gutter
+    # pushed a long outcome name off the left edge (x0 = -42), so the reader
+    # saw a clipped label instead of the outcome it names.
+    def _label_w(text: str) -> float:
+        cjk = sum(1 for ch in str(text) if "\u4e00" <= ch <= "\u9fff")
+        return cjk * 11 + (len(str(text)) - cjk) * 6.6
+
+    left = max(150, int(max((_label_w(c) for c in cats), default=0)) + 20)
+    right = 40
     top, bottom = 46, 34
     main_h = int((height - top - bottom) * 0.62)
     neutral_h = height - top - bottom - main_h - 14
@@ -1548,22 +1888,20 @@ def first_screen(result: dict, lang: str, ui: dict) -> str:
     evidence = result.get("evidence", [])
     ranked = sorted(outcomes, key=lambda o: _outcome_support_score(evidence, o), reverse=True)
     best_type = next((o.get("outcome_type") for o in ranked if o.get("positive_count", 0) > 0), None)
-    supported_claims = decision.get("supported_claims") or []
-    can_claim = decision.get("what_can_be_claimed") or []
-    uncertain_claims = decision.get("uncertain_claims") or []
-    contradicted_claims = decision.get("contradicted_claims") or []
     action = decision.get("recommended_action", "insufficient_evidence")
     cls = {"adopt": "adopt", "pilot": "pilot", "reject": "reject"}.get(action, "")
 
-    missing = "当前结果未提供此项信息。" if lang == "zh" else "Not provided in this research result."
-    strongest = (decision.get("strongest_support") or (can_claim[0] if can_claim else None)
-                 or (supported_claims[0] if supported_claims else None) or missing)
-    uncertainty = (decision.get("key_uncertainty")
-                   or (uncertain_claims[0] if uncertain_claims else None)
-                   or (contradicted_claims[0] if contradicted_claims else None)
-                   or decision.get("reason_for_disagreement") or missing)
-    risk = decision.get("main_risk") or decision.get("risk_effect") or missing
-    next_action = decision.get("next_action") or decision.get("next_steps") or missing
+    # These four are written by the adjudicator (schemas/verdict.schema.json).
+    # The renderer must not synthesise them from claim fragments: assembling a
+    # sentence out of list items is what made the first screen read as patched
+    # together rather than written. A missing field is reported as missing,
+    # which is also what the copy gate looks for.
+    missing = ("该字段未产出（应由裁决角色撰写）。" if lang == "zh"
+               else "Not produced by the adjudicator.")
+    strongest = decision.get("strongest_support") or missing
+    uncertainty = decision.get("key_uncertainty") or missing
+    risk = decision.get("main_risk") or missing
+    next_action = decision.get("next_action") or missing
 
     rationale = decision.get("decision_rationale") or decision.get("rationale") or ""
     rationale_html = expandable_text(rationale, ui["expand_details"], 380, "hero-rationale")
@@ -1722,6 +2060,30 @@ def effect_label(lang: str, value: Any) -> str:
             "neutral": "Null effect"}.get(effect, effect)
 
 
+def _quality_dims_text(lang: str, dims: Any) -> str:
+    """Render quality dimensions as readable pairs (D1 Study design = 2)."""
+    if not isinstance(dims, dict) or not dims:
+        return ""
+    DIM_LABELS_ZH = {
+        "D1_study_design": "D1 研究设计", "D2_sample_quality": "D2 样本质量",
+        "D3_measurement_validity": "D3 测量效度", "D4_temporal_strength": "D4 时间强度",
+        "D5_directness": "D5 直接性",
+    }
+    DIM_LABELS_EN = {
+        "D1_study_design": "D1 Study design", "D2_sample_quality": "D2 Sample quality",
+        "D3_measurement_validity": "D3 Measurement validity",
+        "D4_temporal_strength": "D4 Temporal strength", "D5_directness": "D5 Directness",
+    }
+    table = DIM_LABELS_ZH if lang == "zh" else DIM_LABELS_EN
+    sep = " · " if lang == "zh" else " · "
+    joiner = "=" if lang == "zh" else " = "
+    parts = []
+    for key, value in dims.items():
+        name = table.get(key) or _humanize_identifier(str(key), lang)
+        parts.append(f"{name}{joiner}{value}")
+    return sep.join(parts)
+
+
 def render_evidence_detail(ev: dict, source: dict, lang: str, ui: dict) -> str:
     """Render complete traceable evidence detail without inventing missing fields."""
     labels = ({
@@ -1758,14 +2120,20 @@ def render_evidence_detail(ev: dict, source: dict, lang: str, ui: dict) -> str:
         ("study_id", ev.get("study_id")), ("sample_id", ev.get("sample_id")),
         ("title", ev.get("title")), ("source_title", source_title), ("year", source_year),
         ("study_type", label(lang, "study", ev.get("study_type") or "")),
-        ("education_level", ev.get("education_level")), ("population", ev.get("population")),
-        ("sample_size", ev.get("sample_size")), ("intervention", ev.get("intervention")),
-        ("comparison", ev.get("comparison")), ("outcome_measure", ev.get("outcome_measure")),
+        ("education_level", _frame_value_label(lang, ev.get("education_level"))),
+        ("population", _frame_value_label(lang, ev.get("population"))),
+        ("sample_size", ev.get("sample_size")),
+        ("intervention", _frame_value_label(lang, ev.get("intervention"))),
+        ("comparison", _frame_value_label(lang, ev.get("comparison"))),
+        ("outcome_measure", _frame_value_label(lang, ev.get("outcome_measure"))),
         ("effect", ev.get("effect")), ("effect_direction", effect_label(lang, ev.get("effect_direction"))),
         ("relation_to_claim", label(lang, "dir", ev.get("relation_to_claim") or ev.get("direction") or "neutral")),
-        ("duration", ev.get("duration")), ("method", ev.get("method")),
+        ("duration", _frame_value_label(lang, ev.get("duration"))),
+        ("method", _frame_value_label(lang, ev.get("method"))),
         ("strengths", ev.get("strengths")), ("limitations", ev.get("limitations")),
-        ("confounders", ev.get("confounders")), ("quality_dimensions", ev.get("quality_dimensions")),
+        ("confounders", [_frame_value_label(lang, c) for c in (ev.get("confounders") or [])]
+                        if isinstance(ev.get("confounders"), list) else _frame_value_label(lang, ev.get("confounders"))),
+        ("quality_dimensions", _quality_dims_text(lang, ev.get("quality_dimensions"))),
         ("quality_score", ev.get("quality_score")), ("evidence_level", ev.get("evidence_level")),
         ("directness", ev.get("directness")), ("applicability", ev.get("applicability")),
         ("confidence", ev.get("confidence")), ("status", label(lang, "status", ev.get("status") or "")),
@@ -2086,6 +2454,25 @@ def render_applicability(result: dict, lang: str, ui: dict) -> str:
     return "\n".join(out) or f"<p>{esc(ui['no_data'])}</p>"
 
 
+def _weeks_label(value: str, lang: str) -> str:
+    """Render a week-range token for the reader, keeping data identical.
+
+    The bilingual contract requires the stored value to match across
+    languages, so the Chinese form is produced here rather than stored.
+    """
+    text = str(value or "")
+    if lang != "zh" or not text:
+        return text
+    import re as _re
+    m = _re.fullmatch(r"W(\d+)(?:-W?(\d+))?", text)
+    if not m:
+        return text
+    start, end = m.group(1), m.group(2)
+    if end:
+        return f"第 {start}-{end} 周"
+    return f"第 {start} 周"
+
+
 def render_intervention(result: dict, svg: str, lang: str, ui: dict) -> str:
     intervention = result.get("intervention", {})
     if not intervention:
@@ -2303,8 +2690,31 @@ def render_full_chapter(chapter_id: str, title: str, content: str, lead: str = "
 
 
 def frame_enum_label(lang: str, value: Any) -> str:
+    """Label a frame enum value for display.
+
+    Registered values use the curated label. Anything else must still read as
+    prose: a raw snake_case identifier in the report is a copy defect, so the
+    fallback humanises it instead of leaking the storage form to the reader.
+    """
     text = str(value or "")
-    return (FRAME_ENUM_ZH if lang == "zh" else FRAME_ENUM_EN).get(text, text)
+    if not text:
+        return ""
+    table = FRAME_ENUM_ZH if lang == "zh" else FRAME_ENUM_EN
+    if text in table:
+        return table[text]
+    return _humanize_identifier(text, lang)
+
+
+def _humanize_identifier(value: str, lang: str = "en") -> str:
+    """Turn a snake_case / kebab-case token into a readable phrase.
+
+    Delegates to zh_labels.humanize_identifier so the report body and the
+    charts share one display rule (curated label first, acronym-aware prose
+    second) instead of leaking storage identifiers to the reader.
+    """
+    from zh_labels import humanize_identifier
+
+    return humanize_identifier(value, lang)
 
 
 def labeled_pairs(lang: str, data: dict, labels_zh: dict[str, str], labels_en: dict[str, str]) -> str:
@@ -2313,9 +2723,27 @@ def labeled_pairs(lang: str, data: dict, labels_zh: dict[str, str], labels_en: d
     for key, value in data.items():
         if value in (None, "", [], {}):
             continue
-        rendered = frame_enum_label(lang, value) if isinstance(value, str) else str(value)
+        rendered = _frame_value_label(lang, value) if isinstance(value, str) else str(value)
         parts.append(f"{labels.get(key, key)}：{rendered}" if lang == "zh" else f"{labels.get(key, key)}: {rendered}")
     return "；".join(parts) if lang == "zh" else "; ".join(parts)
+
+
+def _frame_value_label(lang: str, value: Any) -> str:
+    """Render a frame value for display.
+
+    Free prose passes through; a bare storage identifier is humanised so the
+    comparison/success cards never show snake_case. Multi-word prose that
+    merely contains an underscore is returned unchanged.
+    """
+    if value in (None, "", [], {}):
+        return ""
+    text_value = str(value)
+    table = FRAME_ENUM_ZH if lang == "zh" else FRAME_ENUM_EN
+    if text_value in table:
+        return table[text_value]
+    if " " in text_value.strip() or _HAS_CJK.search(text_value):
+        return text_value
+    return _humanize_identifier(text_value, lang)
 
 
 def render_research_scope(result: dict, lang: str, ui: dict) -> str:
@@ -2338,8 +2766,12 @@ def render_research_scope(result: dict, lang: str, ui: dict) -> str:
         {"subject":"课程", "course_type":"课程类型", "duration":"课程周期"},
         {"subject":"Subject", "course_type":"Course type", "duration":"Duration"})
     intervention_text = labeled_pairs(lang, intervention,
-        {"ai_tool":"AI 工具", "allowed_usage":"允许使用", "frequency":"使用频率", "duration":"干预周期"},
-        {"ai_tool":"AI tool", "allowed_usage":"Allowed usage", "frequency":"Frequency", "duration":"Duration"})
+        {"teaching_method": "干预方式", "ai_tool": "AI 工具", "allowed_usage": "允许使用",
+         "frequency": "使用频率", "duration": "干预周期", "policy_name": "政策名称",
+         "policy_type": "政策类型", "jurisdiction": "适用辖区", "mechanism": "作用机制"},
+        {"teaching_method": "Method", "ai_tool": "AI tool", "allowed_usage": "Allowed usage",
+         "frequency": "Frequency", "duration": "Duration", "policy_name": "Policy",
+         "policy_type": "Policy type", "jurisdiction": "Jurisdiction", "mechanism": "Mechanism"})
     outcome_map = frame.get("outcomes", {}) or {}
     outcome_parts = []
     for group, values in outcome_map.items():
@@ -2352,19 +2784,29 @@ def render_research_scope(result: dict, lang: str, ui: dict) -> str:
     for key, value in scope.items():
         if value in (None, "", [], {}):
             continue
-        if key == "study_types" and isinstance(value, list):
-            rendered = "、".join(label(lang, "study", str(v)) for v in value) if lang == "zh" else ", ".join(label(lang, "study", str(v)) for v in value)
+        if isinstance(value, list):
+            # Any list-valued scope field renders as a joined list. Only
+            # study_types used to be unpacked, so a list-valued evidence_types
+            # fell through to str() and printed its Python repr
+            # ("['quasi Experimental', 'rct']") straight into the card.
+            kind = "study" if key == "study_types" else ""
+            parts = [label(lang, kind, str(v)) if kind else _frame_value_label(lang, v)
+                     for v in value]
+            rendered = ("、".join(parts) if lang == "zh" else ", ".join(parts))
         else:
             rendered = frame_enum_label(lang, value)
-        field_label = (scope_labels_zh if lang == "zh" else scope_labels_en).get(key, key)
+        field_label = (scope_labels_zh if lang == "zh" else scope_labels_en).get(
+            key, _humanize_identifier(key, lang))
         scope_parts.append(f"{field_label}：{rendered}" if lang == "zh" else f"{field_label}: {rendered}")
     scope_text = "；".join(scope_parts) if lang == "zh" else "; ".join(scope_parts)
     cards = [
         (labels["question"], frame.get("question") or result.get("meta", {}).get("question")),
         (labels["learner"], learner_text), (labels["course"], course_text),
-        (labels["intervention"], intervention_text), (labels["comparison"], frame.get("comparison")),
+        (labels["intervention"], intervention_text),
+        (labels["comparison"], _frame_value_label(lang, frame.get("comparison"))),
         (labels["outcomes"], "；".join(outcome_parts) if lang == "zh" else "; ".join(outcome_parts)),
-        (labels["scope"], scope_text), (labels["success"], frame.get("success_condition")),
+        (labels["scope"], scope_text),
+        (labels["success"], _frame_value_label(lang, frame.get("success_condition"))),
     ]
     return '<div class="scope-grid">' + "".join(
         f'<article class="scope-card"><h3>{esc(title)}</h3>{expandable_text(text, ui["expand_details"], 260, "scope-text")}</article>'
@@ -2373,8 +2815,8 @@ def render_research_scope(result: dict, lang: str, ui: dict) -> str:
 
 def render_retrieval_context(result: dict, lang: str, ui: dict) -> str:
     frame = result.get("research_frame", {}) or {}
-    inclusion = frame.get("inclusion_criteria") or []
-    exclusion = frame.get("exclusion_criteria") or []
+    inclusion = [_frame_value_label(lang, v) for v in (frame.get("inclusion_criteria") or [])]
+    exclusion = [_frame_value_label(lang, v) for v in (frame.get("exclusion_criteria") or [])]
     provenance = result.get("provenance", {}) or {}
     sources = result.get("sources", []) or []
     source_ids = " ".join(f'<code>{esc(s.get("source_id"))}</code>' for s in sources)
@@ -2845,7 +3287,12 @@ def render_lieflat_gallery_brief(result: dict, figures: dict, layout: dict,
         title = entry.get("title_zh" if zh else "title_en") or ""
         subtitle = entry.get("subtitle_zh" if zh else "subtitle_en") or ""
         caption = entry.get("caption_zh" if zh else "caption_en") or ""
-        source_line = f"{entry.get('catalog_ref', '')} · {entry.get('source', '')}".strip(" ·")
+        # The caption names the catalogue figure and, in prose, what it was
+        # drawn from. The raw bundle path ("evidence.year_x_outcome_counts") is
+        # an internal pointer and must not reach the reader, so it goes through
+        # the same humaniser as every other enum in the report.
+        source_ref = _humanize_identifier(str(entry.get('source', '')), lang)
+        source_line = f"{entry.get('catalog_ref', '')} · {source_ref}".strip(" ·")
         fig_type = entry.get("type", "")
         cards.append(
             f'<figure class="lieflat-card" data-lieflat data-visual="lieflat-{esc(fig_type)}" '

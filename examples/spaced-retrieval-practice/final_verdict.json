@@ -1,0 +1,69 @@
+{
+  "decision_question": "是否应该用间隔重复与检索练习替代传统集中式复习？",
+  "target_population": "大学程序设计入门课程的一年级学生",
+  "target_context": "16 周讲授 + 实验课，大班教学，有助教支持，线下",
+  "supported_claims": [
+    "间隔检索练习在延迟保持上稳定优于集中复习（多项随机对照与元分析一致）。",
+    "隐式检索与显式检索的收益相当，实施形式可以灵活。",
+    "增加检索路径数量可提升迁移表现，价值不限于记忆本身。"
+  ],
+  "uncertain_claims": [
+    "程序设计课程内的直接现场证据少于心理学实验室证据 [无直接证据]。",
+    "收益幅度受材料难度与反馈设计调节，最佳间隔尚未确定。"
+  ],
+  "contradicted_claims": [],
+  "reason_for_disagreement": "实验室证据与课程现场证据的生态效度差异，而非方向冲突。",
+  "methodology_summary": "纳入研究以随机对照与元分析为主，多数设有延迟后测；现场研究数量有限。",
+  "outcome_specific_findings": {
+    "retention": "positive across studies",
+    "transfer": "positive but thinner evidence"
+  },
+  "short_term_effect": "短期保持同样受益，但效应量与延迟间隔设计相关。",
+  "long_term_effect": "长期保持是证据最一致的受益结果。",
+  "transfer_effect": "迁移有正向证据，但研究数量少于保持。",
+  "risk_effect": "未发现显著风险；需注意练习设计不当可能增加认知负荷。",
+  "applicability": {
+    "suitable_for": "有固定课时的入门编程课程，教师能稳定安排每周短练习",
+    "not_suitable_for": "没有固定复习环节的课程，或无法保证延迟测评的场景",
+    "required_conditions": [
+      "每周固定短时检索练习",
+      "统一的延迟后测口径"
+    ]
+  },
+  "confidence": "Moderate",
+  "confidence_breakdown": {
+    "score": 0.893,
+    "evidence_quality": 0.755,
+    "consistency": 1.0,
+    "directness": 0.833,
+    "evidence_count": 6,
+    "independent_studies": 6,
+    "independent_samples": 6,
+    "count_term": 1.0,
+    "conflict_penalty": 0.0,
+    "unsupported_penalty": 0.0
+  },
+  "recommended_action": "pilot",
+  "decision_rationale": "间隔检索练习在延迟保持上有一致的正向证据，且实施成本低、风险小，但直接来自程序设计课程的现场证据有限。因此建议先在有界范围内试点，用统一的延迟后测验证后再考虑推广。",
+  "strongest_support": "间隔检索练习在延迟保持上稳定优于集中复习，多项随机对照与元分析结论一致。",
+  "key_uncertainty": "程序设计课程内的直接现场证据少于心理学实验室证据，最佳间隔设计尚未确定。",
+  "main_risk": "练习设计不当可能增加认知负荷，且收益幅度受材料难度与反馈方式调节。",
+  "next_action": "在入门编程课内先做一学期有界试点：每周固定短检索练习，并以统一延迟后测作为验收。",
+  "missing_evidence": [
+    "程序设计课程内的随机对照现场研究",
+    "不同间隔安排的直接比较"
+  ],
+  "what_can_be_claimed": [
+    "在延迟保持上，间隔检索练习优于集中复习",
+    "实施形式可以从隐式到显式灵活选择"
+  ],
+  "what_cannot_be_claimed": [
+    "具体到某门程序设计课程一定产生同等幅度收益",
+    "存在唯一最优的间隔安排"
+  ],
+  "exceeds_evidence_boundary": [],
+  "confidence_score": null,
+  "confidence_policy_version": "2026-08-12.v3",
+  "independent_studies": 6,
+  "independent_samples": 6
+}

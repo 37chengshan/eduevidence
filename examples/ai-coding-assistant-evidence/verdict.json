@@ -99,5 +99,9 @@
     "count_term": 1.0,
     "conflict_penalty": 0.0,
     "unsupported_penalty": 0.0
-  }
+  },
+  "strongest_support": "AI coding assistants reliably speed up practice work: completion rate 1.15x and time 0.57x in a randomised trial of 69 novices.",
+  "key_uncertainty": "No university-level RCT measures learning directly, and the one large trial that did - unguarded GPT-4 - saw independent exam scores fall 17%.",
+  "main_risk": "Unguarded access can raise practice performance while lowering independent exam performance, and learners may not notice the gap.",
+  "next_action": "Run a phased CS1 pilot with hints-not-answers guardrails, weekly lab use, and a no-AI transfer exam that can stop the pilot."
 }

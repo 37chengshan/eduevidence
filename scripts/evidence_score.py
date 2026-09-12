@@ -36,8 +36,11 @@ from evidence_semantics import claim_relation, decision_relation
 DIMENSIONS = ["D1_study_design", "D2_sample_quality", "D3_measurement_validity",
               "D4_temporal_strength", "D5_directness"]
 
-#: Version of the deterministic confidence policy (bump on any formula change).
-CONFIDENCE_POLICY_VERSION = "2026-08-12.v2"
+#: Version of the deterministic confidence policy. Imported from the engine so
+#: there is one authority: evidence_score previously hard-coded ".v2" while
+#: engine/versions.py declared ".v3", so verdicts recorded a policy version the
+#: engine did not recognise and nothing compared the two.
+from engine.versions import CONFIDENCE_POLICY_VERSION  # noqa: F401  (re-export)
 
 
 def quality_score(dimensions: dict[str, int]) -> float:

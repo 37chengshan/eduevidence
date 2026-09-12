@@ -1,0 +1,58 @@
+{
+  "question": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+  "decision_target": "teaching_decision",
+  "learner": {
+    "education_level": "undergraduate_year_1",
+    "major": "computer_science",
+    "prior_knowledge": "introductory_programming_no_prior_experience",
+    "special_characteristics": "large_lecture_with_weekly_labs"
+  },
+  "course": {
+    "subject": "introductory_programming",
+    "course_type": "lecture_lab",
+    "duration": "16_weeks_one_semester"
+  },
+  "intervention": {
+    "teaching_method": "spaced_retrieval_practice",
+    "ai_tool": "",
+    "allowed_usage": "",
+    "frequency": "weekly_short_quizzes",
+    "duration": "one_semester"
+  },
+  "comparison": "concentrated_review_before_exams (business as usual)",
+  "outcomes": {
+    "primary": [
+      "retention",
+      "transfer"
+    ],
+    "secondary": [
+      "knowledge_gain",
+      "independent_problem_solving"
+    ],
+    "risk": [
+      "reduced_effort"
+    ]
+  },
+  "context": {
+    "teacher_support": "TA_supported",
+    "class_size": "large",
+    "online_or_offline": "offline"
+  },
+  "scope": {
+    "time_range": "2000-2026",
+    "geography": "global",
+    "study_types": [
+      "rct",
+      "quasi_experimental"
+    ]
+  },
+  "inclusion_criteria": [
+    "studies measuring delayed retention or transfer",
+    "programming or STEM novices"
+  ],
+  "exclusion_criteria": [
+    "no delayed measurement",
+    "purely correlational"
+  ],
+  "success_condition": "delayed retention improves or holds while transfer does not decline"
+}

@@ -21,10 +21,32 @@ from engine.graph_store import GraphStore
 from engine.ids import new_local_id
 from engine.synthesis import ClaimSynthesis
 
-_RETENTION_TYPES = {"retention", "long_term", "learning_retention"}
-_TRANSFER_TYPES = {"transfer", "transfer_learning", "far_transfer"}
-_TASK_PERFORMANCE = {"task_performance", "assignment_score", "task_completion"}
-_LEARNING = {"learning"}
+#: Gap kind -> the outcome categories that count as covering it. Categories are
+#: read from the domain registry, so a policy run classifies its outcomes with
+#: the policy buckets (effectiveness / cost / equity / feasibility / risk)
+#: instead of being measured against education vocabulary.
+GAP_KIND_CATEGORIES: dict[str, tuple[str, ...]] = {
+    "learning": ("learning",),
+    "retention": ("learning",),
+    "transfer": ("learning",),
+    "task_performance": ("task_performance",),
+    "process": ("process",),
+    "risk": ("risk",),
+    "effectiveness": ("effectiveness",),
+    "cost": ("cost",),
+    "equity": ("equity",),
+    "feasibility": ("feasibility",),
+}
+
+#: Legacy aliases accepted when a frame names its requested outcomes with older
+#: vocabulary; they resolve to a gap kind above.
+GAP_KIND_ALIASES: dict[str, str] = {
+    "long_term": "retention", "learning_retention": "retention",
+    "transfer_learning": "transfer", "far_transfer": "transfer",
+    "assignment_score": "task_performance", "task_completion": "task_performance",
+    "policy_effectiveness": "effectiveness", "cost_effectiveness": "cost",
+    "implementation_risk": "risk",
+}
 
 
 def _autoresearch_key(
@@ -97,26 +119,24 @@ def derive_gaps(*, store: GraphStore,
             req_type = str(req.get("outcome_type", "")).lower()
         else:
             req_name, req_type = str(req).lower(), ""
-        if req_type in _RETENTION_TYPES or req_name in _RETENTION_TYPES:
-            return "retention", req.get("name", "") if isinstance(req, dict) else str(req)
-        if req_type in _TRANSFER_TYPES or req_name in _TRANSFER_TYPES:
-            return "transfer", req.get("name", "") if isinstance(req, dict) else str(req)
-        if req_type in _TASK_PERFORMANCE or req_name in _TASK_PERFORMANCE:
-            return "task_performance", req.get("name", "") if isinstance(req, dict) else str(req)
-        if req_type in _LEARNING or req_name in _LEARNING:
-            return "learning", req.get("name", "") if isinstance(req, dict) else str(req)
-        return "other", req.get("name", "") if isinstance(req, dict) else str(req)
+        label = req.get("name", "") if isinstance(req, dict) else str(req)
+        kind = GAP_KIND_ALIASES.get(req_type) or GAP_KIND_ALIASES.get(req_name)
+        if kind is None:
+            kind = req_type if req_type in GAP_KIND_CATEGORIES else req_name
+        if kind in GAP_KIND_CATEGORIES:
+            return kind, label
+        return "other", label
 
     def covered_for_kind(kind: str) -> bool:
-        if kind == "retention":
-            return bool(covered_types & _RETENTION_TYPES)
-        if kind == "transfer":
-            return bool(covered_types & _TRANSFER_TYPES)
-        if kind == "task_performance":
-            return bool(covered_types & _TASK_PERFORMANCE)
-        if kind == "learning":
-            return bool(covered_types & _LEARNING)
-        return False
+        """True when the graph already carries an outcome for this gap kind.
+
+        ``covered_types`` holds the category buckets stored on outcomes, which
+        is why this compares categories rather than V1 tokens.
+        """
+        expected = GAP_KIND_CATEGORIES.get(kind)
+        if not expected:
+            return False
+        return bool(covered_types & set(expected))
 
     seen: set[tuple[str, str]] = set()
     for req in requested:

@@ -1,4 +1,4 @@
-# EduEvidence 6.0 — 比赛提交目录 / Submission folder
+# EduEvidence 6.2 — 比赛提交目录 / Submission folder
 
 本目录可直接交给支持 Skill 的平台。主入口为根目录 `SKILL.md`；保留整个目录结构，不要只上传这一个文件。
 

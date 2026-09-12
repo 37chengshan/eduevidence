@@ -7,9 +7,18 @@ only an explicit import/sync advances the Project graph.
 
 import json
 
+import pytest
+
 from engine.library import ResearchLibrary
 from engine.project import ProjectWorkspace
 from engine.run import start_run
+from engine.taxonomy import categories as taxonomy_categories
+
+#: Outcome category bucket declared by every library finding fixture.
+#: domains/education/outcome_taxonomy.json is the authority (engine/taxonomy.py
+#: reads it) and the outcomes table stores the BUCKET, so a bare token such as
+#: knowledge_gain would not be schema-legal for an auto-created outcome.
+EDU_LEARNING = "learning"
 
 
 def _src(sid="SRC-lib1", locator="https://doi.org/10.0000/lib1", **over):
@@ -32,12 +41,22 @@ def _study(sid="STU-lib1"):
     }
 
 
-def _finding(fid="FND-lib1", **over):
+def _finding(fid="FND-lib1", outcome_type=EDU_LEARNING, **over):
+    """A library finding; the outcome declaration is explicit by default.
+
+    The library import is fail-closed: a finding that does not declare
+    extensions.outcome_type is refused instead of being filed as a learning
+    outcome, so the fixture states the domain registry's bucket.
+    Pass outcome_type=None to omit the declaration (only the rejection test
+    does so).
+    """
     rec = {
         "finding_id": fid, "study_id": "STU-lib1", "finding_type": "quantitative_effect",
         "outcome_id": "OUT-lib1", "measure": "post score", "timepoint": "immediate",
         "effect_direction": "positive", "effect_estimate": None,
-        "raw_result_text": "positive", "source_locator": "p3", "extensions": {},
+        "raw_result_text": "positive", "source_locator": "p3",
+        "extensions": ({} if outcome_type is None
+                       else {"outcome_type": outcome_type}),
     }
     rec.update(over)
     return rec
@@ -122,6 +141,10 @@ def test_import_snapshot_into_project(tmp_path):
     assert len(store.read_table("studies")) == 1
     assert len(store.read_table("findings")) == 1
     assert len(store.read_table("audits")) == 1
+    # the auto-created outcome carries the declared education bucket, and that
+    # bucket is the one the domain registry declares
+    assert EDU_LEARNING in taxonomy_categories("education")
+    assert store.read_table("outcomes")[0]["outcome_type"] == EDU_LEARNING
     # imported facts carry origin metadata binding them to library rev 1
     src = store.read_table("sources")[0]
     assert src["extensions"]["origin"]["library_revision"] == 1
@@ -175,6 +198,38 @@ def test_import_unknown_source_raises(tmp_path):
     except ValueError as exc:
         assert "SRC-missing" in str(exc)
     assert ws.current_revision() == 0
+
+
+def test_import_rejects_finding_without_outcome_type(tmp_path):
+    """A finding that declares no outcome_type must not be imported at all.
+
+    The import is deliberately fail-closed: it must NOT file an unlabelled
+    finding as a learning outcome (that is what let task-performance evidence
+    reach the ADOPT gate). The rejection is atomic — no project revision
+    appears and the library revision itself is untouched.
+    """
+    lib = ResearchLibrary.open(tmp_path)
+    lib.add_verified_bundle(sources=[_src()], studies=[_study()],
+                            findings=[_finding(outcome_type=None)],
+                            audits=[_audit()])
+    ws = _project(tmp_path)
+    with pytest.raises(ValueError) as excinfo:
+        lib.import_snapshot(project=ws, source_ids=["SRC-lib1"],
+                            run_id=_run(ws)["run_id"])
+    # the failure names the offending outcome and is raised by schema
+    # validation, not by a silent default
+    message = str(excinfo.value)
+    assert "OUT-lib1" in message
+    assert "outcome_type" in message
+    assert "not in enum" in message
+    # no revision landed in the Project, and the library is unchanged
+    assert ws.current_revision() == 0
+    from engine.graph_store import GraphStore
+    store = GraphStore.create(ws)
+    assert store.active_revision() == 0
+    assert store.read_table("findings") == []
+    assert store.read_table("outcomes") == []
+    assert lib.active_revision() == 1
 
 
 def test_library_never_writes_project_files(tmp_path):

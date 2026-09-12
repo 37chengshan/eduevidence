@@ -227,6 +227,26 @@ def set_subscription_status(project: ProjectWorkspace, subscription_id: str,
     return subscription
 
 
+def _validated_outcome_type(value, domain: str) -> str:
+    """Outcome token from a refresh payload, validated against the registry.
+
+    A missing or unknown token raises: the living path used to default to
+    a learning outcome, which silently promoted task-performance evidence.
+    """
+    from engine.taxonomy import category_of, tokens as taxonomy_tokens
+
+    token = str(value or "").strip()
+    if not token:
+        raise ValueError(
+            "living evidence record must declare outcome_type; the engine "
+            "will not guess a category")
+    if token not in taxonomy_tokens(domain):
+        raise ValueError(
+            f"outcome_type {token!r} is not registered for domain {domain!r}")
+    category_of(domain, token)  # fail closed on a malformed taxonomy
+    return token
+
+
 def refresh(project: ProjectWorkspace, subscription_id: str, *,
             new_evidence: list[dict] | None = None,
             retriever: Callable[[dict], list[dict]] | None = None) -> dict:
@@ -299,8 +319,10 @@ def refresh(project: ProjectWorkspace, subscription_id: str, *,
 
     # ---- normalize + validate fresh evidence ---------------------------
     next_revision = store.active_revision() + 1
+    domain = str((project.manifest() or {}).get("domain") or "education")
     mutation, new_hashes, finding_ids, summary_parts = _build_mutation(
-        project, store, subscription, fresh_packets, claims, next_revision)
+        project, store, subscription, fresh_packets, claims, next_revision,
+        domain=domain)
 
     revision = store.commit(
         run_id=new_run_id(),
@@ -370,7 +392,7 @@ def _existing_drift_ids(project: ProjectWorkspace) -> set[str]:
 
 
 def _build_mutation(project, store, subscription, fresh_packets, claims,
-                    next_revision) -> tuple[GraphMutation, set[str], set[str], list[str]]:
+                    next_revision, domain: str = "education") -> tuple[GraphMutation, set[str], set[str], list[str]]:
     """Normalize + validate each fresh record and assemble one GraphMutation."""
     existing = {t: {row[_ID_KEY[t]] for row in store.read_table(t)}
                 for t in _GRAPH_TABLES}
@@ -418,6 +440,8 @@ def _build_mutation(project, store, subscription, fresh_packets, claims,
             source_upserted = True
             upserts["sources"].append(src)
 
+        # Outcome tokens are validated against the project domain registry
+        # rather than defaulted; see _validated_outcome_type().
         # --- outcome (optional; reused when the id already exists) -------
         outcome_upserted = False
         outcome = None
@@ -439,7 +463,7 @@ def _build_mutation(project, store, subscription, fresh_packets, claims,
             outcome = {
                 "outcome_id": out_id,
                 "name": outcome_pkt.get("name") or out_id[len("OUT-"):],
-                "outcome_type": outcome_pkt.get("outcome_type", "learning"),
+                "outcome_type": _validated_outcome_type(outcome_pkt.get("outcome_type"), domain),
                 "extensions": outcome_pkt.get("extensions") or {},
             }
             existing["outcomes"].add(out_id)
@@ -503,7 +527,13 @@ def _build_mutation(project, store, subscription, fresh_packets, claims,
                 f"{label}: relation_to_claim must be one of "
                 f"{sorted(_RELATION_TO_IMPLICATION)}, got {relation!r}")
         link.setdefault("decision_implication", _RELATION_TO_IMPLICATION[relation])
-        link.setdefault("directness", 2)
+        # directness decides whether this link can carry an ADOPT claim.
+        # Defaulting it to 2 (direct) would let an unclassified refresh
+        # assert direct evidence it never established, so it is required.
+        if "directness" not in link:
+            raise ValueError(
+                f"{label}: directness is required for a living-evidence link "
+                "(2 = direct evidence for the claim; supply it explicitly)")
         link.setdefault("applicability", {"scope_match": "direct"})
         link.setdefault("reasoning_note",
                         f"living evidence refresh: {subscription['subscription_id']}")

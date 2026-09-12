@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/applicability.schema.json",
+  "title": "ApplicabilityAssessment",
+  "description": "Stage-7 deliverable: who the evidence applies to, in which contexts, for which outcomes, and where it stops. Either an assessment or an explicit NOT_CAPTURED record is required - silence used to render as an empty report section with no gate failing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "ASSESSED",
+        "NOT_CAPTURED"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "who": {
+      "type": "string"
+    },
+    "suitable_for": {
+      "type": "string"
+    },
+    "not_suitable_for": {
+      "type": "string"
+    },
+    "which_course": {
+      "type": "string"
+    },
+    "which_outcome": {
+      "type": "string"
+    },
+    "conditions": {
+      "type": [
+        "string",
+        "array"
+      ]
+    },
+    "target_population": {
+      "type": "string"
+    },
+    "target_context": {
+      "type": "string"
+    },
+    "boundary": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "excluded_populations": {
+      "type": [
+        "string",
+        "array"
+      ]
+    },
+    "uncertainty": {
+      "type": [
+        "string",
+        "array"
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "required_conditions": {
+      "type": [
+        "string",
+        "array"
+      ],
+      "description": "Conditions that must hold for the evidence to apply."
+    },
+    "evidence_boundary": {
+      "type": "string"
+    },
+    "transfer_boundaries": {
+      "type": [
+        "string",
+        "array"
+      ]
+    },
+    "outcome_limits": {
+      "type": [
+        "string",
+        "array"
+      ]
+    }
+  }
+}

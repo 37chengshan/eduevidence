@@ -22,6 +22,7 @@ from engine.datasets import analysis_blocked_by_privacy, derive_csv_profile, ing
 from engine.graph_store import GraphMutation, GraphStore
 from engine.ids import new_local_id, new_run_id
 from engine.project import ProjectWorkspace
+from engine.taxonomy import category_of, tokens as taxonomy_tokens
 from engine.synthesis import synthesize_project
 from engine.tribunal import adjudicate, decision_diff, save_decision_snapshot
 from engine.versions import (
@@ -30,15 +31,21 @@ from engine.versions import (
     SOURCE_VALIDATION_POLICY_VERSION,
 )
 
-#: Outcome Taxonomy tokens that pilots may measure (mirrors outcome-taxonomy.md).
-OUTCOME_TAXONOMY = {
-    "knowledge_gain", "concept_understanding", "retention", "transfer",
-    "independent_problem_solving", "completion_time", "accuracy",
-    "code_quality", "assignment_score", "engagement", "motivation",
-    "cognitive_load", "help_seeking", "metacognition", "ai_dependency",
-    "over_reliance", "reduced_effort", "reduced_transfer",
-    "academic_integrity_risk", "false_confidence",
-}
+def outcome_taxonomy_tokens(domain: str = "education") -> set[str]:
+    """Outcome tokens a pilot may measure, read from the domain registry.
+
+    This was a module-level set of the 20 education tokens, so a policy pilot
+    could not register at all. The domain registry (via engine/taxonomy.py) is
+    now the single authority.
+    """
+    return set(taxonomy_tokens(domain))
+
+
+def project_domain(project: ProjectWorkspace) -> str:
+    """The domain a project registers; defaults to education when absent."""
+    manifest = project.manifest()
+    return str(manifest.get("domain") or "education")
+
 
 PILOT_STATUSES = ("registered", "data_imported", "analyzed", "adjudicated")
 
@@ -48,22 +55,6 @@ PII_COLUMN_HINTS = ("name", "student", "学号", "姓名", "email", "mail",
 
 _DECISION_IMPLICATION = {"support": "support_adoption",
                          "contradict": "oppose_adoption", "neutral": "neutral"}
-
-#: Outcome Taxonomy token -> graph outcome category enum (schemas/v2/outcome).
-_OUTCOME_CATEGORY = {
-    "knowledge_gain": "learning", "concept_understanding": "learning",
-    "retention": "learning", "transfer": "learning",
-    "independent_problem_solving": "learning",
-    "completion_time": "task_performance", "accuracy": "task_performance",
-    "code_quality": "task_performance", "assignment_score": "task_performance",
-    "engagement": "process", "motivation": "process",
-    "cognitive_load": "process", "help_seeking": "process",
-    "metacognition": "process",
-    "ai_dependency": "risk", "over_reliance": "risk",
-    "reduced_effort": "risk", "reduced_transfer": "risk",
-    "academic_integrity_risk": "risk", "false_confidence": "risk",
-}
-
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -111,10 +102,13 @@ def register_pilot(project: ProjectWorkspace, *,
         raise ValueError(
             f"decision snapshot {decision_snapshot_id} not found in this project; "
             "a pilot must bind to a real adjudication")
-    unknown = [o for o in outcome_columns if o not in OUTCOME_TAXONOMY]
+    domain = project_domain(project)
+    known_tokens = outcome_taxonomy_tokens(domain)
+    unknown = [o for o in outcome_columns if o not in known_tokens]
     if unknown:
         raise ValueError(
-            f"outcome_columns outside Outcome Taxonomy: {sorted(unknown)}")
+            f"outcome_columns outside the {domain} Outcome Taxonomy: "
+            f"{sorted(unknown)}")
     if not conditions or sample_size < 1:
         raise ValueError("conditions must be non-empty and sample_size >= 1")
     if anon_policy.get("no_pii_columns") is not True:
@@ -208,7 +202,13 @@ def link_analysis(project: ProjectWorkspace, pilot_id: str, *,
     return pilot
 
 
-def _ensure_outcome(store: GraphStore, outcome_id: str) -> dict:
+def _ensure_outcome(store: GraphStore, outcome_id: str, domain: str) -> dict:
+    """Create the pilot outcome row, classified by the DOMAIN registry.
+
+    ``category_of`` raises for an unregistered token; the caller has already
+    validated the token against ``outcome_taxonomy_tokens(domain)``, so an
+    error here means the two disagreed and must not be silently absorbed.
+    """
     existing = store.get("outcomes", outcome_id)
     if existing:
         return existing
@@ -216,7 +216,7 @@ def _ensure_outcome(store: GraphStore, outcome_id: str) -> dict:
     return {
         "outcome_id": outcome_id,
         "name": token,
-        "outcome_type": _OUTCOME_CATEGORY.get(token, "learning"),
+        "outcome_type": category_of(domain, token),
         "extensions": {"pilot_outcome": True},
     }
 
@@ -237,9 +237,11 @@ def redecide(project: ProjectWorkspace, pilot_id: str, *,
         raise ValueError(f"invalid effect_direction {effect_direction!r}")
     if relation_to_claim not in ("support", "contradict", "neutral"):
         raise ValueError(f"invalid relation_to_claim {relation_to_claim!r}")
-    if outcome_token not in OUTCOME_TAXONOMY:
+    domain = project_domain(project)
+    if outcome_token not in outcome_taxonomy_tokens(domain):
         raise ValueError(
-            f"outcome_token {outcome_token!r} outside Outcome Taxonomy")
+            f"outcome_token {outcome_token!r} outside the {domain} "
+            "Outcome Taxonomy")
     outcome_id = f"OUT-{outcome_token}"
     pilot = _load_pilot(project, pilot_id)
     if pilot["status"] not in ("analyzed", "data_imported"):
@@ -282,7 +284,7 @@ def redecide(project: ProjectWorkspace, pilot_id: str, *,
         "identity_status": "resolved",
         "extensions": {"pilot_id": pilot_id},
     }
-    outcome = _ensure_outcome(store, outcome_id)
+    outcome = _ensure_outcome(store, outcome_id, domain)
     estimate = None
     if effect_estimate is not None:
         estimate = {

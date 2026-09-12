@@ -31,11 +31,18 @@ jobs:
         run: python scripts/check_version_consistency.py
       - name: Metrics gate
         run: python scripts/generate_metrics.py --check
+      - name: Skill structure lint
+        run: python scripts/skill_lint.py
+      - name: Versioned schema validation (v3 / v4 / vNext)
+        run: python scripts/check_versioned_schemas.py
+      - name: Protocol alignment gate
+        run: python scripts/check_protocol_alignment.py
       - name: Ruff (E9/F63/F7/F82)
         run: ruff check --select E9,F63,F7,F82 .
       - name: Run tests with coverage
         run: |
           python -m pytest --cov=engine --cov=retrieval \
+            --cov=visualization --cov-report=term-missing:skip-covered \
             --cov-report=term-missing:skip-covered --cov-report=xml --tb=short
       - name: Wheel install smoke
         run: |
@@ -108,6 +115,13 @@ jobs:
         run: bash packaging/make_upload.sh
       - name: SKILL.md parity
         run: diff -u SKILL.md dist/eduevidence-submission/SKILL.md
+      - name: Package parity with the source tree
+        run: |
+          set -euo pipefail
+          # Every packaged file must be byte-identical to its source, and
+          # every allowlisted source file must be present. A package that
+          # silently lags the repository is a delivery defect, not a detail.
+          python scripts/check_package_parity.py
       - name: Zero-leak scan
         run: |
           set -euo pipefail

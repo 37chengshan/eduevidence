@@ -15,7 +15,7 @@ from engine.orchestration import (
 
 def test_role_registry_is_scientific_responsibility_not_runtime_mapping():
     assert set(ROLE_REGISTRY) == {
-        "education-planner",
+        "research-planner",
         "evidence-retriever",
         "evidence-analyst",
         "skeptic",

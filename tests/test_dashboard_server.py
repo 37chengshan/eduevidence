@@ -62,10 +62,14 @@ def test_studio_entry_and_api(server):
     status, body = _get(server, "/api/projects")
     assert status == 200
     data = json.loads(body)
+    # Explicit enumeration: every canonical example (examples/<id>/result.json)
+    # must appear exactly once, and nothing else may be listed.
     assert {p["id"] for p in data["projects"]} == {
         "ai-coding-assistant-evidence", "workplace-ai-assistant",
+        "spaced-retrieval-practice",
     }
-    assert data["stats"]["total_projects"] == 2
+    assert data["stats"]["total_projects"] == 3
+    assert len(data["projects"]) == 3
     assert _get(server, "/api/labels")[0] == 200
     assert _get(server, "/api/research/projects")[0] == 200
 

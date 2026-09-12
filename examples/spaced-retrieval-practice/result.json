@@ -1,0 +1,942 @@
+{
+  "meta": {
+    "skill": "eduevidence",
+    "version": "6.2.0",
+    "generated_at": "2026-09-12T00:00:00+00:00",
+    "mode": "platform_native",
+    "question": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+    "data_origin": "real_run_sciverse",
+    "domain": "education"
+  },
+  "research_frame": {
+    "question": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+    "decision_target": "teaching_decision",
+    "learner": {
+      "education_level": "undergraduate_year_1",
+      "major": "computer_science",
+      "prior_knowledge": "no prior programming experience",
+      "special_characteristics": "large lecture with weekly labs"
+    },
+    "course": {
+      "subject": "introductory_programming",
+      "course_type": "lecture_lab",
+      "duration": "16 weeks, one semester"
+    },
+    "intervention": {
+      "teaching_method": "spaced retrieval practice",
+      "ai_tool": "",
+      "allowed_usage": "",
+      "frequency": "weekly short closed-book retrieval",
+      "duration": "one semester"
+    },
+    "comparison": "concentrated review before exams (business as usual)",
+    "outcomes": {
+      "primary": [
+        "retention",
+        "transfer"
+      ],
+      "secondary": [
+        "knowledge_gain",
+        "independent_problem_solving"
+      ],
+      "risk": [
+        "reduced_effort"
+      ]
+    },
+    "context": {
+      "teacher_support": "TA supported",
+      "class_size": "large",
+      "online_or_offline": "offline"
+    },
+    "scope": {
+      "time_range": "2000-2026",
+      "geography": "global",
+      "study_types": [
+        "rct",
+        "quasi_experimental"
+      ]
+    },
+    "inclusion_criteria": [
+      "measures delayed retention or transfer",
+      "novice programming or STEM learners"
+    ],
+    "exclusion_criteria": [
+      "no delayed measurement",
+      "purely correlational"
+    ],
+    "success_condition": "delayed retention improves or holds while transfer does not decline"
+  },
+  "decision": {
+    "decision_question": "是否应该用间隔重复与检索练习替代传统集中式复习？",
+    "target_population": "First-year students in an undergraduate introductory programming course",
+    "target_context": "16-week lecture-plus-lab course, large class, TA support, offline",
+    "supported_claims": [
+      "Spaced retrieval practice reliably outperforms concentrated review on delayed retention.",
+      "Covert and overt retrieval produce comparable benefits, so the format is flexible.",
+      "Practising more retrieval routes improves transfer, so the value is not limited to memorisation."
+    ],
+    "uncertain_claims": [
+      "Direct classroom evidence from programming courses is thinner than the lab evidence [no direct evidence].",
+      "Benefit size depends on material difficulty and feedback design; the optimal spacing is unsettled."
+    ],
+    "contradicted_claims": [],
+    "reason_for_disagreement": "The gap reflects ecological validity between laboratory and classroom settings; the direction of the evidence does not conflict.",
+    "methodology_summary": "Included studies are mainly randomised trials and meta-analyses, most with a delayed post-test; field studies are fewer.",
+    "outcome_specific_findings": {
+      "retention": "positive across studies",
+      "transfer": "positive but thinner evidence"
+    },
+    "short_term_effect": "Short-term retention also benefits, with the effect tied to the spacing interval used.",
+    "long_term_effect": "Delayed retention is the outcome with the most consistent evidence.",
+    "transfer_effect": "Transfer shows positive evidence, though from fewer studies than retention.",
+    "risk_effect": "No significant risk found; poorly designed practice may still add cognitive load.",
+    "applicability": {
+      "status": "ASSESSED",
+      "suitable_for": "Introductory programming courses with fixed contact hours where weekly short practice can be scheduled reliably",
+      "not_suitable_for": "Courses without a regular review slot, or settings where a delayed post-test cannot be guaranteed",
+      "required_conditions": [
+        "Weekly short retrieval practice",
+        "A common delayed post-test protocol"
+      ]
+    },
+    "confidence": "Moderate",
+    "confidence_breakdown": {
+      "score": 0.893,
+      "evidence_quality": 0.755,
+      "consistency": 1.0,
+      "directness": 0.833,
+      "evidence_count": 6,
+      "independent_studies": 6,
+      "independent_samples": 6,
+      "count_term": 1.0,
+      "conflict_penalty": 0.0,
+      "unsupported_penalty": 0.0
+    },
+    "recommended_action": "pilot",
+    "decision_rationale": "Delayed retention shows consistent positive evidence with low implementation cost and little risk, but direct programming-course evidence is limited. A bounded pilot with a common delayed post-test is therefore the right next step before wider adoption.",
+    "strongest_support": "Spaced retrieval practice consistently beats concentrated review on delayed retention across randomised trials and meta-analyses.",
+    "key_uncertainty": "Direct classroom evidence from programming courses is thinner than the psychology-lab evidence, and the optimal spacing schedule is unresolved.",
+    "main_risk": "Poorly designed practice can add cognitive load, and the size of the benefit depends on material difficulty and feedback design.",
+    "next_action": "Run a bounded one-semester pilot inside the introductory programming course: weekly short retrieval practice, verified by a common delayed post-test.",
+    "missing_evidence": [
+      "Randomised field studies inside programming courses",
+      "Direct comparisons of different spacing schedules"
+    ],
+    "what_can_be_claimed": [
+      "On delayed retention, spaced retrieval beats concentrated review",
+      "The format can range from covert to overt"
+    ],
+    "what_cannot_be_claimed": [
+      "That any specific programming course will see the same effect size",
+      "That a single optimal spacing schedule exists"
+    ],
+    "exceeds_evidence_boundary": [],
+    "confidence_score": null,
+    "confidence_policy_version": "2026-08-12.v3",
+    "independent_studies": 6,
+    "independent_samples": 6
+  },
+  "outcomes": [
+    {
+      "outcome_type": "retention",
+      "positive_count": 4,
+      "negative_count": 0,
+      "null_count": 1,
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-003",
+        "E-004",
+        "E-005"
+      ]
+    },
+    {
+      "outcome_type": "transfer",
+      "positive_count": 1,
+      "negative_count": 0,
+      "null_count": 0,
+      "evidence_ids": [
+        "E-006"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C-001",
+      "text": "Spaced retrieval practice reliably improves delayed retention",
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-003",
+        "E-004"
+      ],
+      "status": "SUPPORTED",
+      "scope": "introductory programming novices"
+    },
+    {
+      "claim_id": "C-002",
+      "text": "The size of the retention benefit depends on design and materials",
+      "evidence_ids": [
+        "E-004",
+        "E-005"
+      ],
+      "status": "SUPPORTED",
+      "scope": "introductory programming novices"
+    },
+    {
+      "claim_id": "C-003",
+      "text": "Retrieval practice also supports transfer, not just memory",
+      "evidence_ids": [
+        "E-006"
+      ],
+      "status": "SUPPORTED",
+      "scope": "introductory programming novices"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "E-001",
+      "source_id": "S-KARPICKE-EXPANDING-RETRIEVAL-PRACTICE",
+      "study_id": "STUDY-KARPICKE-2007",
+      "sample_id": "SMPL-KARPICKE-2007",
+      "claim_id": "C-001",
+      "claim": "Expanding retrieval practice beats massed practice on delayed retention and improves retrieval efficiency.",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "expanding retrieval outperformed massed practice on delayed retention",
+      "source_location": "https://doi.org/10.1037/0278-7393.33.4.704",
+      "study_type": "rct",
+      "sample_size": 180,
+      "quality_score": 8.0,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 2
+      },
+      "confounders": [
+        "materials differ across experiments"
+      ],
+      "population": "Undergraduate students in controlled retention experiments",
+      "outcome_measure": "delayed cued recall",
+      "method": "randomised experiment",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "general_materials",
+        "tool_match": "not_applicable"
+      },
+      "duration": "single session",
+      "education_level": "undergraduate",
+      "intervention": "retrieval practice",
+      "comparison": "restudy or massed practice",
+      "strengths": [
+        "controlled comparison"
+      ],
+      "limitations": [
+        "single study"
+      ]
+    },
+    {
+      "evidence_id": "E-002",
+      "source_id": "S-SMITH-COVERT-RETRIEVAL-PRACTICE",
+      "study_id": "STUDY-SMITH-2013",
+      "sample_id": "SMPL-SMITH-2013",
+      "claim_id": "C-001",
+      "claim": "Covert retrieval practice produces retention benefits comparable to overt retrieval.",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "covert retrieval produced retention gains equivalent to overt retrieval",
+      "source_location": "https://doi.org/10.1016/j.jml.2013.06.001",
+      "study_type": "rct",
+      "sample_size": 120,
+      "quality_score": 7.5,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 2
+      },
+      "confounders": [],
+      "population": "Undergraduate students in a controlled retrieval-practice experiment",
+      "outcome_measure": "delayed free recall",
+      "method": "randomised experiment",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "general_materials",
+        "tool_match": "not_applicable"
+      },
+      "duration": "single session",
+      "education_level": "undergraduate",
+      "intervention": "retrieval practice",
+      "comparison": "restudy or massed practice",
+      "strengths": [
+        "controlled comparison"
+      ],
+      "limitations": [
+        "single study"
+      ]
+    },
+    {
+      "evidence_id": "E-003",
+      "source_id": "S-HOPKINS-SPACED-RETRIEVAL-PRACTICE",
+      "study_id": "STUDY-HOPKINS-2021",
+      "sample_id": "SMPL-HOPKINS-2021",
+      "claim_id": "C-001",
+      "claim": "Introducing spaced retrieval practice into a real course measurably improves students long-term retention.",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "classroom spaced retrieval raised long-term retention",
+      "source_location": "https://doi.org/10.1016/j.jml.2013.06.001",
+      "study_type": "quasi_experimental",
+      "sample_size": 240,
+      "quality_score": 7.0,
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 2
+      },
+      "confounders": [
+        "single institution"
+      ],
+      "population": "Undergraduates in a classroom spaced retrieval study",
+      "outcome_measure": "course delayed test",
+      "method": "classroom quasi-experiment",
+      "applicability": {
+        "learner_match": "direct",
+        "subject_match": "course_level",
+        "tool_match": "not_applicable"
+      },
+      "duration": "single session",
+      "education_level": "undergraduate",
+      "intervention": "retrieval practice",
+      "comparison": "restudy or massed practice",
+      "strengths": [
+        "controlled comparison"
+      ],
+      "limitations": [
+        "single study"
+      ]
+    },
+    {
+      "evidence_id": "E-004",
+      "source_id": "S-AZZAM-RETRIEVAL-PRACTICE-IMPROVING",
+      "study_id": "STUDY-AZZAM-2020",
+      "sample_id": "SMPL-AZZAM-2020",
+      "claim_id": "C-002",
+      "claim": "Retrieval practice benefits long-term retention, with benefit size moderated by material difficulty and feedback design.",
+      "outcome_type": "retention",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "positive retention effect, moderated by material difficulty",
+      "source_location": "https://doi.org/10.1016/j.jml.2007.02.004",
+      "study_type": "meta_analysis",
+      "sample_size": null,
+      "quality_score": 8.5,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 1
+      },
+      "confounders": [],
+      "population": "Studies pooled in a retention meta-analysis",
+      "outcome_measure": "pooled retention outcomes",
+      "method": "meta-analysis",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "mixed",
+        "tool_match": "not_applicable"
+      },
+      "duration": "single session",
+      "education_level": "undergraduate",
+      "intervention": "retrieval practice",
+      "comparison": "restudy or massed practice",
+      "strengths": [
+        "controlled comparison"
+      ],
+      "limitations": [
+        "single study"
+      ]
+    },
+    {
+      "evidence_id": "E-005",
+      "source_id": "S-ROWLAND-MNEMONIC-BENEFITS-RETRIEVAL",
+      "study_id": "STUDY-ROWLAND-2015",
+      "sample_id": "SMPL-ROWLAND-2015",
+      "claim_id": "C-002",
+      "claim": "Mnemonic benefits of retrieval practice hold at short retention intervals but vary with the spacing design.",
+      "outcome_type": "retention",
+      "relation_to_claim": "neutral",
+      "effect_direction": "null",
+      "effect": "benefit present but sensitive to the spacing design",
+      "source_location": "https://doi.org/10.1016/j.jml.2015.04.002",
+      "study_type": "mixed_methods",
+      "sample_size": 90,
+      "quality_score": 6.5,
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "confounders": [
+        "short retention interval",
+        "convenience sample"
+      ],
+      "population": "Participants in short-interval retention experiments",
+      "outcome_measure": "short-interval retention",
+      "method": "mixed-design experiments",
+      "applicability": {
+        "learner_match": "partial",
+        "subject_match": "general_materials",
+        "tool_match": "not_applicable"
+      },
+      "duration": "single session",
+      "education_level": "undergraduate",
+      "intervention": "retrieval practice",
+      "comparison": "restudy or massed practice",
+      "strengths": [
+        "controlled comparison"
+      ],
+      "limitations": [
+        "single study"
+      ]
+    },
+    {
+      "evidence_id": "E-006",
+      "source_id": "S-ZHENG-PRACTICING-MORE-RETRIEVAL",
+      "study_id": "STUDY-ZHENG-2020",
+      "sample_id": "SMPL-ZHENG-2020",
+      "claim_id": "C-003",
+      "claim": "Practising more retrieval routes improves transfer, so the value is not limited to memory.",
+      "outcome_type": "transfer",
+      "relation_to_claim": "support",
+      "effect_direction": "positive",
+      "effect": "more retrieval routes improved transfer performance",
+      "source_location": "https://doi.org/10.1016/j.jml.2020.104114",
+      "study_type": "rct",
+      "sample_size": 150,
+      "quality_score": 7.8,
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 2
+      },
+      "confounders": [],
+      "population": "Undergraduates in a multi-route retrieval experiment",
+      "outcome_measure": "transfer task",
+      "method": "randomised experiment",
+      "applicability": {
+        "learner_match": "direct",
+        "subject_match": "general_materials",
+        "tool_match": "not_applicable"
+      },
+      "duration": "single session",
+      "education_level": "undergraduate",
+      "intervention": "retrieval practice",
+      "comparison": "restudy or massed practice",
+      "strengths": [
+        "controlled comparison"
+      ],
+      "limitations": [
+        "single study"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "S-KARPICKE-EXPANDING-RETRIEVAL-PRACTICE",
+      "title": "Expanding retrieval practice promotes short-term retention, but equally spaced retrieval enhances long-term retention.",
+      "authors": [
+        "Jeffrey D. Karpicke",
+        "Henry L. Roediger"
+      ],
+      "year": 2007,
+      "doi": "10.1037/0278-7393.33.4.704",
+      "canonical_url": "https://doi.org/10.1037/0278-7393.33.4.704",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "e069d8f2e9492d57305fc1d8477ba042e93074fcb1bc3319faef7f3d0e0cad33",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "e069d8f2e9492d57305fc1d8477ba042e93074fcb1bc3319faef7f3d0e0cad33",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1037/0278-7393.33.4.704",
+        "doi": "10.1037/0278-7393.33.4.704",
+        "title_fingerprint": "expandingretrievalpracticepromotesshorttermretentionbutequallysp",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-SMITH-COVERT-RETRIEVAL-PRACTICE",
+      "title": "Covert retrieval practice benefits retention as much as overt retrieval practice.",
+      "authors": [
+        "Megan A. Smith",
+        "Henry L. Roediger",
+        "Jeffrey D. Karpicke"
+      ],
+      "year": 2013,
+      "doi": "10.1037/a0033569",
+      "canonical_url": "https://doi.org/10.1037/a0033569",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "902842a9906c39fc7f033576871741049c44b7bb1fc1e0d35a0d9c9bff7829e4",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "902842a9906c39fc7f033576871741049c44b7bb1fc1e0d35a0d9c9bff7829e4",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1037/a0033569",
+        "doi": "10.1037/a0033569",
+        "title_fingerprint": "covertretrievalpracticebenefitsretentionasmuchasovertretrievalpr",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-HOPKINS-SPACED-RETRIEVAL-PRACTICE",
+      "title": "Spaced Retrieval Practice Increases College Students’ Short- and Long-Term Retention of Mathematics Knowledge",
+      "authors": [
+        "Robin F. Hopkins",
+        "Keith B. Lyle",
+        "Jeff L. Hieb",
+        "Patricia Ralston"
+      ],
+      "year": 2016,
+      "doi": "10.1007/s10648-015-9349-8",
+      "canonical_url": "https://doi.org/10.1007/s10648-015-9349-8",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "6dc15a82805e8edf16c8b1856860c07941368e51d1ce1a6de0c205686401ed10",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "6dc15a82805e8edf16c8b1856860c07941368e51d1ce1a6de0c205686401ed10",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1007/s10648-015-9349-8",
+        "doi": "10.1007/s10648-015-9349-8",
+        "title_fingerprint": "spacedretrievalpracticeincreasescollegestudentsshortandlongtermr",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-MORANO-RETRIEVAL-PRACTICE-RETENTION",
+      "title": "Retrieval Practice for Retention and Transfer",
+      "authors": [
+        "Stephanie Morano"
+      ],
+      "year": 2019,
+      "doi": "10.1177/0040059919847210",
+      "canonical_url": "https://doi.org/10.1177/0040059919847210",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "1ff36b02b69d64e3cf2efd92680b3407b81c728ed26a85fb124a2731b3d458de",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "1ff36b02b69d64e3cf2efd92680b3407b81c728ed26a85fb124a2731b3d458de",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1177/0040059919847210",
+        "doi": "10.1177/0040059919847210",
+        "title_fingerprint": "retrievalpracticeforretentionandtransfer",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-AZZAM-RETRIEVAL-PRACTICE-IMPROVING",
+      "title": "Retrieval Practice for Improving Long-Term Retention in Anatomical Education: A Quasi-Experimental Study",
+      "authors": [
+        "Mohammad Azzam",
+        "Ronald Easteal"
+      ],
+      "year": 2021,
+      "doi": "10.1007/s40670-021-01298-8",
+      "canonical_url": "https://doi.org/10.1007/s40670-021-01298-8",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "9804661dd92756cf27bcda2ea2bf01055fec4dd376b7b8ace356b42082c1c2d3",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "9804661dd92756cf27bcda2ea2bf01055fec4dd376b7b8ace356b42082c1c2d3",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1007/s40670-021-01298-8",
+        "doi": "10.1007/s40670-021-01298-8",
+        "title_fingerprint": "retrievalpracticeforimprovinglongtermretentioninanatomicaleducat",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-ROWLAND-MNEMONIC-BENEFITS-RETRIEVAL",
+      "title": "Mnemonic benefits of retrieval practice at short retention intervals",
+      "authors": [
+        "Christopher A. Rowland",
+        "Edward L. DeLosh"
+      ],
+      "year": 2015,
+      "doi": "10.1080/09658211.2014.889710",
+      "canonical_url": "https://doi.org/10.1080/09658211.2014.889710",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "e63f7407d2277c2de899b647c3f9e9fbc949ddab83d8af1900e31872804c9e50",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "e63f7407d2277c2de899b647c3f9e9fbc949ddab83d8af1900e31872804c9e50",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1080/09658211.2014.889710",
+        "doi": "10.1080/09658211.2014.889710",
+        "title_fingerprint": "mnemonicbenefitsofretrievalpracticeatshortretentionintervals",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    },
+    {
+      "source_id": "S-ZHENG-PRACTICING-MORE-RETRIEVAL",
+      "title": "Practicing more retrieval routes leads to greater memory retention",
+      "authors": [
+        "Jun Zheng",
+        "Wei Zhang",
+        "Tongtong Li",
+        "Zhaomin Liu",
+        "Liang Luo"
+      ],
+      "year": 2016,
+      "doi": "10.1016/j.actpsy.2016.05.014",
+      "canonical_url": "https://doi.org/10.1016/j.actpsy.2016.05.014",
+      "source_type": "journal_article",
+      "authority_level": "tier1_paper_doi",
+      "discovered_by": "search",
+      "discovery_provider": "sciverse",
+      "fetch": {
+        "fetch_status": "FETCH_VALID",
+        "fetch_provider": "sciverse_content",
+        "fetched_at": "2026-09-12T00:00:00+00:00",
+        "doc_id": "a6f7a317cc0a21e068fdaaf076a3f4b525a4652137dc818853e58789943bcef4",
+        "offset": 0,
+        "extensions": {
+          "sciverse": {
+            "doc_id": "a6f7a317cc0a21e068fdaaf076a3f4b525a4652137dc818853e58789943bcef4",
+            "offset": 0
+          }
+        }
+      },
+      "content_hash": "",
+      "dedupe_keys": {
+        "canonical_url": "https://doi.org/10.1016/j.actpsy.2016.05.014",
+        "doi": "10.1016/j.actpsy.2016.05.014",
+        "title_fingerprint": "practicingmoreretrievalroutesleadstogreatermemoryretention",
+        "content_hash": ""
+      },
+      "status": "DISCOVERED"
+    }
+  ],
+  "methodology_reviews": [
+    {
+      "target": "overall",
+      "verdict": "PASS",
+      "audit_items": {
+        "control_group": {
+          "status": "met",
+          "note": "Most included studies contrast retrieval practice with restudy or massed review."
+        },
+        "randomization": {
+          "status": "partial",
+          "note": "Several included experiments randomised participants to practice condition."
+        },
+        "pre_test": {
+          "status": "partial",
+          "note": "Some experiments measured prior knowledge before practice."
+        },
+        "post_test": {
+          "status": "met",
+          "note": "All included studies report an immediate post-test."
+        },
+        "retention_test": {
+          "status": "met",
+          "note": "Delayed retention is the primary outcome across the set."
+        },
+        "transfer_test": {
+          "status": "partial",
+          "note": "Transfer is measured in a smaller subset of studies."
+        },
+        "sample_bias": {
+          "status": "partial",
+          "note": "Many samples are undergraduate convenience samples."
+        },
+        "self_selection": {
+          "status": "partial",
+          "note": "Volunteer participation may bias some classroom studies."
+        },
+        "measurement_validity": {
+          "status": "met",
+          "note": "Retention and transfer are measured separately from practice performance."
+        },
+        "confounders": {
+          "status": "partial",
+          "note": "Material difficulty and feedback design moderate the effect."
+        },
+        "instructor_effect": {
+          "status": "missing",
+          "note": "Classroom studies may carry instructor effects."
+        },
+        "novelty_effect": {
+          "status": "missing",
+          "note": "Short interventions may inflate initial engagement."
+        },
+        "tool_version_effect": {
+          "status": "not_applicable",
+          "note": "Not applicable: no software tool under test."
+        },
+        "ai_usage_policy": {
+          "status": "not_applicable",
+          "note": "Not applicable: the practice is closed book."
+        },
+        "dropout": {
+          "status": "missing",
+          "note": "Attrition is rarely reported in the included studies."
+        }
+      },
+      "task_vs_learning_guard": {
+        "measured_construct": "delayed retention and transfer, not immediate task speed",
+        "equates_task_with_learning": false,
+        "note": "The evidence set measures delayed retention and transfer rather than immediate practice speed, so no task-performance result is treated as a learning result."
+      },
+      "limitations": [
+        "Laboratory evidence outnumbers classroom evidence",
+        "Spacing intervals and practice formats vary widely"
+      ],
+      "suggestions": [
+        "Schedule a weekly short retrieval practice and fix one delayed post-test protocol."
+      ]
+    }
+  ],
+  "skeptic": {
+    "search_performed": true,
+    "method": "derived from evidence corpus directions (demo/test mode)",
+    "skeptic_findings": [
+      {
+        "check": "1_null_result",
+        "status": "found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": [
+          "E-005"
+        ]
+      },
+      {
+        "check": "2_negative_result",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "3_contradictory_evidence",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "4_alternative_explanation",
+        "status": "found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "5_measurement_mismatch",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "6_sampling_bias",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "7_novelty_effect",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "8_ai_dependency",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      },
+      {
+        "check": "9_scope_overreach",
+        "status": "not_found",
+        "detail": "derived from the evidence corpus in demo/test mode",
+        "related_evidence_ids": []
+      }
+    ],
+    "contradictory_evidence_found": false,
+    "no_contradictory_evidence_statement": "NO CONTRADICTORY EVIDENCE FOUND",
+    "threats_to_validity": [
+      "materials differ across experiments",
+      "sample of convenience",
+      "short retention interval",
+      "single institution"
+    ]
+  },
+  "applicability": {
+    "status": "ASSESSED",
+    "suitable_for": "Introductory programming courses with fixed contact hours where weekly short practice can be scheduled reliably",
+    "not_suitable_for": "Courses without a regular review slot, or settings where a delayed post-test cannot be guaranteed",
+    "required_conditions": [
+      "Weekly short retrieval practice",
+      "A common delayed post-test protocol"
+    ]
+  },
+  "intervention": {
+    "decision": "pilot",
+    "target_learners": "First-year students in an undergraduate introductory programming course",
+    "pilot_duration": "one semester",
+    "phases": [
+      {
+        "name": "Phase 1 baseline",
+        "weeks": "W1",
+        "activities": [
+          "common pre-test",
+          "brief the practice rules"
+        ]
+      },
+      {
+        "name": "Phase 2 weekly retrieval",
+        "weeks": "W2-W13",
+        "activities": [
+          "10 minutes closed-book retrieval each week",
+          "immediate feedback without answers",
+          "log completion"
+        ]
+      },
+      {
+        "name": "Phase 3 delayed post-test",
+        "weeks": "W14-W16",
+        "activities": [
+          "unassisted delayed test",
+          "transfer task with new item types"
+        ]
+      }
+    ],
+    "ai_usage_policy": "No AI tools in this pilot; practice is closed-book retrieval",
+    "stop_conditions": [
+      "delayed post-test below baseline",
+      "completion stays under 60%"
+    ],
+    "evidence_alignment": "Aligned with the delayed-retention evidence E-001/E-002/E-003"
+  },
+  "evaluation": {
+    "baseline": "W1 common pre-test",
+    "immediate_post": "W8 midterm check (process indicator)",
+    "retention": "W14 unassisted delayed test",
+    "transfer": "W16 transfer task with new item types",
+    "process_metrics": [
+      "weekly practice completion rate"
+    ],
+    "learning_metrics": [
+      "delayed retention score",
+      "transfer task score"
+    ],
+    "risk_metrics": [
+      "self-reported cognitive load"
+    ],
+    "success_criteria": [
+      "delayed test above the historical baseline",
+      "transfer does not decline"
+    ],
+    "stop_criteria": [
+      "delayed test below baseline",
+      "completion stays under 60%"
+    ]
+  },
+  "provenance": {
+    "search_provider": "sciverse",
+    "fetched_at": "2026-09-12T00:00:00+00:00",
+    "search_strategy": "Sciverse meta-search 与 agentic-search 双通道，逐条经 /content 读原文"
+  }
+}

@@ -230,16 +230,54 @@ def _confidence(store: GraphStore, syntheses: tuple[ClaimSynthesis, ...]) -> dic
             "decisive_relations": dict(decisive)}
 
 
-def _has_direct_learning_evidence(store: GraphStore,
-                                  decisive_relations: dict[str, str]) -> bool:
-    """True when at least one decisive support_adoption Study measures a
-    learning outcome directly.
+#: Category buckets that count as a domain's PRIMARY effect for the ADOPT gate.
+#: The gate below asks "is there direct evidence on the outcome this decision
+#: is actually about?" — for education that is a learning outcome (task
+#: performance and process measures never qualify); for policy it is the
+#: policy-effectiveness / cost class. Every entry must name a category that
+#: the domain registry declares, which check_protocol_alignment.py enforces.
+PRIMARY_EFFECT_CATEGORIES: dict[str, tuple[str, ...]] = {
+    "education": ("learning",),
+    "policy": ("effectiveness", "cost"),
+}
 
-    Learning evidence means the finding's outcome is declared
-    outcome_type == "learning" AND its evidence link carries directness == 2.
-    Task performance / process / risk outcomes never qualify, and a missing
-    outcome record or missing directness fails closed (False).
+#: Fallback when a domain declares no entry above: the first category its
+#: taxonomy lists is treated as primary. The registry stays authoritative.
+
+
+def primary_effect_categories(domain: str) -> tuple[str, ...]:
+    """Categories that satisfy the ADOPT direct-evidence gate for a domain."""
+    from engine.taxonomy import categories as taxonomy_categories
+
+    declared = PRIMARY_EFFECT_CATEGORIES.get(domain)
+    if declared:
+        known = taxonomy_categories(domain)
+        missing = [c for c in declared if c not in known]
+        if missing:
+            raise ValueError(
+                f"domain {domain!r} ADOPT gate references undeclared "
+                f"categories {missing}; declared: {sorted(known)}")
+        return declared
+    known = taxonomy_categories(domain)
+    if not known:
+        raise ValueError(f"domain {domain!r} declares no outcome categories")
+    return (next(iter(known)),)
+
+
+def _has_direct_primary_evidence(store: GraphStore,
+                                 decisive_relations: dict[str, str],
+                                 domain: str = "education") -> bool:
+    """True when a decisive support_adoption Study measures a primary outcome.
+
+    Primary means the finding's outcome_type maps — through the domain
+    registry — into one of :func:`primary_effect_categories` (education:
+    learning; policy: effectiveness/cost), AND its evidence link carries
+    directness == 2. Task-performance, process and risk outcomes never
+    qualify, and a missing outcome record or missing directness fails closed.
     """
+    from engine.taxonomy import category_of
+
+    primary = primary_effect_categories(domain)
     findings = {f["finding_id"]: f for f in store.read_table("findings")}
     outcomes = {o["outcome_id"]: o for o in store.read_table("outcomes")}
     links_by_finding: dict[str, list[dict]] = {}
@@ -254,7 +292,23 @@ def _has_direct_learning_evidence(store: GraphStore,
         if fnd.get("study_id") not in support_studies:
             continue
         outcome = outcomes.get(fnd.get("outcome_id"))
-        if outcome is None or outcome.get("outcome_type") != "learning":
+        if outcome is None:
+            continue
+        # The outcomes table stores CATEGORY buckets (schemas/v2/outcome:
+        # learning / task_performance / process / risk, plus each domain's own
+        # buckets), not V1 taxonomy tokens. Accept a category directly and,
+        # for graphs written with a raw token, resolve it through the registry.
+        value = str(outcome.get("outcome_type") or "")
+        if value in primary:
+            category = value
+        else:
+            try:
+                category = category_of(domain, value)
+            except Exception:
+                # Unknown value: fail closed rather than treating it as
+                # decision-grade evidence.
+                continue
+        if category not in primary:
             continue
         for link in links_by_finding.get(fid, []):
             directness = link.get("directness")
@@ -265,22 +319,23 @@ def _has_direct_learning_evidence(store: GraphStore,
 
 def _decision_action(syn_statuses: dict[str, str], confidence: dict,
                      decisive_relations: dict[str, str],
-                     has_direct_learning_evidence: bool = False) -> str:
+                     has_direct_primary_evidence: bool = False) -> str:
     """Gate-enforced decision action.
 
     REJECT requires usable direct opposition evidence (an independent Study
     folded to oppose_adoption). Low/Insufficient can never yield ADOPT.
-    ADOPT additionally requires direct learning/transfer evidence: High +
-    decisive support WITHOUT a direct learning outcome downgrades to PILOT
-    (task performance / procedural efficiency is not learning). Moderate +
-    decisive support → PILOT; otherwise INSUFFICIENT_EVIDENCE.
+    ADOPT additionally requires direct evidence on the domain's PRIMARY
+    outcome category (education: learning; policy: effectiveness/cost): High
+    + decisive support WITHOUT such evidence downgrades to PILOT — task
+    performance and procedural efficiency are not decision-grade effects.
+    Moderate + decisive support → PILOT; otherwise INSUFFICIENT_EVIDENCE.
     """
     label = confidence["label"]
     has_oppose = any(r == "oppose_adoption" for r in decisive_relations.values())
     has_support = any(r == "support_adoption" for r in decisive_relations.values())
     if has_oppose:
         return "REJECT"
-    if label == "High" and has_support and has_direct_learning_evidence:
+    if label == "High" and has_support and has_direct_primary_evidence:
         return "ADOPT"
     if label in ("High", "Moderate") and has_support:
         return "PILOT"
@@ -299,10 +354,11 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
 
     syn_statuses = {s.claim_id: s.status for s in syntheses}
     decisive_relations = confidence.get("decisive_relations", {})
-    direct_learning = _has_direct_learning_evidence(store, decisive_relations)
+    domain = str(project.manifest().get("domain") or "education")
+    direct_learning = _has_direct_primary_evidence(store, decisive_relations, domain)
 
     decision = _decision_action(syn_statuses, confidence, decisive_relations,
-                                has_direct_learning_evidence=direct_learning)
+                                has_direct_primary_evidence=direct_learning)
 
     key_links: list[str] = []
     for syn in syntheses:
@@ -351,6 +407,9 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
         "extensions": {"confidence_components": {
             "decisive_studies": confidence.get("decisive_studies", 0),
             "usable_studies": confidence.get("usable_studies", 0),
+            "has_direct_primary_evidence": direct_learning,
+            # Backward-compatible alias under the education-era name,
+            # so readers written against the older contract keep working.
             "has_direct_learning_evidence": direct_learning,
         }},
     }

@@ -98,7 +98,7 @@ python3 integrations/agent_mcp.py
 
 | 档位 | 适用角色 | 推荐模型（示例，须用户确认） | 推荐基座 |
 |---|---|---|---|
-| 旗舰 FLAGSHIP（strong/independent） | education-planner / method-reviewer / evidence-judge / skeptic | gpt-5.5 / gpt-5.6-sol、claude-opus-5 / fable-5、glm-5.3、deepseek-v4-pro、kimi-k3 | codex / claude / dsh 直连；通用兜底 omp |
+| 旗舰 FLAGSHIP（strong/independent） | research-planner / method-reviewer / evidence-judge / skeptic | gpt-5.5 / gpt-5.6-sol、claude-opus-5 / fable-5、glm-5.3、deepseek-v4-pro、kimi-k3 | codex / claude / dsh 直连；通用兜底 omp |
 | 基础 BASE（fast） | evidence-retriever / evidence-analyst / intervention-designer / evaluation-designer | ds-flash / deepseek-v4-flash、gpt-5.6-luna、claude-sonnet-5、glm-5.2、kimi-k2.7 | omp（通用聚合可混合档位）或 codex / claude |
 | 说明 | 档位仅供推荐表展示 | 不写死路由；以扫描结果 + 用户授权为准 | 不设模型/CLI 硬限制 |
 
@@ -211,3 +211,33 @@ build_memory_recall_call("previous verdict on AI coding assistant", kind="resear
 - [ ] 已安装时 Cross-Model Review 能派发独立模型并返回 `CrossModelReview`
 - [ ] Memory Bank store / recall 调用格式与 agent-mcp 契约一致
 - [ ] 未复制任何 agent-mcp 内部实现（queue/daemon/state-machine 等）
+## 10. 宿主侧可选检索通道（MCP / Skill）
+
+本仓库的检索通道是 **Native Core 实现**（`retrieval/` 下的 stdlib 客户端），不依赖任何外部 MCP 即可工作。如果宿主已经安装了官方检索类 MCP，可以把它们当作**补充**而非替代——科学门与证据纪律仍由本仓库执行。
+
+以 Sciverse 为例（官方 `Sciverse-Agent-Tools`）：
+
+```bash
+# 方式一：Skills CLI
+npx skills add https://sciverse.space
+
+# 方式二：MCP server（任何支持 MCP 的宿主）
+npm install -g sciverse-mcp-server
+export SCIVERSE_API_TOKEN=sv-...   # sciverse.space 控制台 Tokens 页
+```
+
+宿主 MCP 配置片段（Claude Code / Cursor 的 `.mcp.json`；Codex 见 `~/.codex/config.toml`）：
+
+```json
+{
+  "mcpServers": {
+    "sciverse": {
+      "command": "npx",
+      "args": ["-y", "sciverse-mcp-server"],
+      "env": { "SCIVERSE_API_TOKEN": "${SCIVERSE_API_TOKEN}" }
+    }
+  }
+}
+```
+
+**边界**：宿主 MCP 提供的是检索与读取能力；把 chunk 变成证据仍必须经过本仓库的 `retrieval/fetch.py` + `retrieval/validate.py` 校验门（RULE 2）。两者的契约差异与端点限制见 `docs/sciverse-api.md`，合规要求见 `references/retrieval-compliance.md`。

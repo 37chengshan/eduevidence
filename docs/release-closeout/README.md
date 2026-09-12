@@ -1,4 +1,4 @@
-# EduEvidence 6.0 发布收尾
+# EduEvidence 6.1 发布收尾
 
 本目录记录本地确定性验证与实际前端验收，不代表真实模型研究已通过。完整提交目录为 `dist/eduevidence-submission/`，根目录即 `SKILL.md`；交付目录而非压缩包。
 

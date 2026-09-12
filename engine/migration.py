@@ -75,6 +75,23 @@ def _map_decision_implication(ev: dict) -> str:
     return _CLAIM_TO_IMPLICATION[_map_relation(ev.get("relation_to_claim") or ev.get("direction"))]
 
 
+def _v1_effect_estimate(ev: dict) -> dict | None:
+    """Effect magnitude from a V1 record, or None when it recorded none.
+
+    V1 kept numbers either on a top-level effect_size field or inside
+    extensions.raw_result; both are real sources, and absence stays None.
+    """
+    value = ev.get("effect_size")
+    if isinstance(value, dict) and value.get("value") is not None:
+        return dict(value)
+    if isinstance(value, (int, float)):
+        return {"value": float(value), "source": "v1_effect_size"}
+    raw = (ev.get("extensions") or {}).get("raw_result")
+    if isinstance(raw, dict) and raw.get("value") is not None:
+        return dict(raw)
+    return None
+
+
 def migrate_v1_pack(pack_dir: Path, *, home: Path,
                     title: str | None = None) -> MigrationResult:
     """Import a V1 pack directory into a new V2 Project graph.
@@ -273,7 +290,10 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
             "measure": ev.get("outcome_type") or "outcome",
             "timepoint": None,
             "effect_direction": _map_effect_direction(ev.get("effect_direction")),
-            "effect_estimate": None,
+            # Carry the magnitude across the hop instead of dropping it:
+            # a migrated pack used to report 100% not_extractable, which
+            # reads as "no evidence" rather than "not migrated".
+            "effect_estimate": _v1_effect_estimate(ev),
             "raw_result_text": ev.get("claim") or "unavailable",
             "source_locator": ev.get("source_location") or "unavailable",
             "extensions": {"v1_legacy": True},

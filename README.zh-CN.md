@@ -18,9 +18,11 @@ EduEvidence 面向研究者与实践决策者，将教育、组织政策和 AI �
 - 🧪 基于真实研究（示例包含 CHI 2023 / PNAS 2025 / ACL 2025 / Springer 2024 的实证证据），不做无来源断言。
 - 🚦 最终输出不是"允许/禁止"的二元结论，而是 **ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE** 四态决策 + 可落地的干预与评价方案。
 
-![实际研究概览：企业客服 AI 证据案例](assets/readme/studio-overview.png)
+![Research Studio 操作实录：总览 → 报告阅读室 → 五种报告形态](assets/readme/studio-tour.gif)
 
-*本地 Studio 实际截图。案例为人工整理文献，未附研究执行历史。*
+*本地 Studio 真实录屏（非示意）：总览 → 报告阅读室 → 五种报告形态。下方为介绍页滚动实录：*
+
+![介绍页实录：首屏 → 九步协议 → 五套报告体系](assets/readme/landing-tour.gif)
 
 ---
 
@@ -327,9 +329,23 @@ result.json + result.zh.json
 
 > Open the example directly: `examples/ai-coding-assistant-evidence/EduEvidence_Report.html`
 
+### 可选检索通道（key-based）
+
+零配置检索（OpenAlex / Semantic Scholar / CrossRef / AIHot / AgentSearch）开箱可用。配置以下 key 后通道自动启用，未配置时静默失活、不影响科学门：
+
+```bash
+export SCIVERSE_API_TOKEN=sv-...   # 引用级学术检索 + 全文定位（meta-search / agentic-search / content / paper-relations）
+export TAVILY_API_KEY=...          # 通用网页检索
+export BRAVE_API_KEY=...           # 通用网页检索
+```
+
+Sciverse 通道把 `/agentic-search` 的 chunk 当作**定位子**：必须经 `/content` 读原文并通过校验门后，才允许进入证据抽取（RULE 2 的机器化执行）。契约见 `docs/sciverse-api.md`，合规见 `references/retrieval-compliance.md`。
+
 ## Architecture
 
 仓库是一个完整的 **Skill 包**：`SKILL.md` 是入口，其余目录按"Skill 运行必需 → 质量保障 → 演示"分层。详见 [`docs/architecture.md`](docs/architecture.md)：
+
+同一套架构的图解单页（九步协议 / 角色与独立性 / 产物状态地图 / 执行与审批闭环）见 [`web/architecture.html`](web/architecture.html)。
 
 ```text
 EduEvidence/  （= 一个 Skill 包）
@@ -339,7 +355,7 @@ EduEvidence/  （= 一个 Skill 包）
 ├─ Skill 本体（运行必需）
 │  ├─ skill/agents/          8 个角色协议（Planner / Retriever / Analyst / Skeptic /
 │  │                         Method Reviewer / Judge / Intervention Designer / Evaluation Designer）
-│  ├─ references/            11 个教育方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计…）
+│  ├─ references/            方法论文档（证据质量 / 反证协议 / 裁决规则 / 干预设计 / 检索合规 / 文案规范…；数量见 docs/metrics.json）
 │  ├─ schemas/               33 个 JSON Schema 数据契约（13 顶层 + 17 v2 + 3 v3，每步输出的校验门）
 │  ├─ scripts/               17 个确定性逻辑脚本（评分 / 矩阵 / 审计 / 置信度 / Orchestrator / 启动探测）
 │  ├─ retrieval/             检索与抓取层（fetch / validate / dedupe / failures）
@@ -347,7 +363,7 @@ EduEvidence/  （= 一个 Skill 包）
 │  └─ visualization/         结果呈现层（ECharts / 信息图 / 学术图 / 双语 HTML Composer）
 │
 ├─ 质量保障
-│  ├─ tests/                 pytest 测试矩阵（752 个测试函数，73 个文件，见 docs/metrics.json）
+│  ├─ tests/                 pytest 测试矩阵（测试函数与文件数见源码仓库的 docs/metrics.json）
 │  └─ benchmarks/            30 题 + 30 份金标注 + B0–B4 评测框架
 │
 └─ 演示与分发

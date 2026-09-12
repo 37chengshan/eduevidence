@@ -8,15 +8,26 @@
 
 ## EduEvidence Research Engine — Evidence Research & Decision Skill
 
-> **From Research Questions to Evidence-Based Decisions.**
+> **From Research Questions to Evidence-Based Decisions.** · Current release **6.2.0**
 
 EduEvidence is delivered as an **AI Agent Skill**; inside the Skill operates
 the **EduEvidence Research Engine** — a persistent, auditable engine that
-turns research questions into evidence-grounded decisions across education and organizational policy.
+turns a decision question into an evidence-grounded answer. It is **multi-domain**:
+the domain registry (`domains/manifest.json`) ships **education** and **policy**
+today, each declaring its own frame schema, outcome taxonomy and methodology
+checklist, so one nine-stage protocol serves education and applied social science
+work without forking the engine.
 
 - **Three public workflows** — **Evidence Review**, **Decision & Pilot**, and
   **Evaluate & Update**. A full research cycle connects existing evidence,
   grounded knowledge gaps, a study design, new data and a revised decision.
+- **Multi-domain by contract** — `education` and `policy` are registered domains;
+  a run validates against its own domain's frame schema and outcome taxonomy
+  (`engine/taxonomy.py` is the single authority; unknown tokens fail closed).
+- **Retrieval that stays traceable** — zero-config channels (OpenAlex / Semantic
+  Scholar / CrossRef / AIHot / AgentSearch / DuckDuckGo) plus key-based channels:
+  **Sciverse** (citation-grade academic retrieval with full-text locators),
+  Tavily and Brave. A lookup snippet is a locator, never evidence.
 - **Project Workspace + Evidence Graph** — long-lived Projects with versioned,
   immutable graph revisions; `result.json`/HTML/Markdown are projections, not
   fact stores.
@@ -32,13 +43,31 @@ turns research questions into evidence-grounded decisions across education and o
   server/app; Native Core runs on Python stdlib only and never requires
   Agent MCP or a daemon.
 
-![Actual Research Studio overview: workplace AI evidence](assets/readme/studio-overview.png)
+![Research Studio walkthrough: overview, report library, and the five report identities](assets/readme/studio-tour.gif)
 
-*Actual local Studio screenshot. This case is manually curated literature, with no attached research execution history.*
+*Recorded from the actual local Studio — no mockups: overview → report library → five report identities. Below, the introduction page walkthrough:*
+
+![Introduction page walkthrough: hero, nine-step protocol, five report systems](assets/readme/landing-tour.gif)
 
 ---
 
-## Quick Install
+## Quick Start
+
+**Fastest path — read a finished report (no install):**
+
+```bash
+open examples/ai-coding-assistant-evidence/EduEvidence_Report.html
+open examples/spaced-retrieval-practice/EduEvidence_Report.html   # real Sciverse run
+```
+
+**Look at the console (Python 3.10+, Node not required):**
+
+```bash
+python3 scripts/dashboard_server.py --host 127.0.0.1 --port 8765
+# browser: http://127.0.0.1:8765/studio/   (read-only research console)
+```
+
+**Install it:**
 
 **npm (recommended for Skill install)**
 
@@ -135,7 +164,7 @@ runnable + sample report renderable).
 
 ## What Problem We Solve
 
-A typical AI answers an education question like this:
+A typical AI answers a decision question like this:
 
 ```text
 Question → Search a few sources → Summarize opinions → Give advice
@@ -144,15 +173,15 @@ Question → Search a few sources → Summarize opinions → Give advice
 EduEvidence does this instead:
 
 ```text
-Education question
-  → Education Research Framing (learner / intervention / comparison / outcomes / context)
+Decision question (education or applied social science)
+  → Domain Research Framing (learner or decision object / intervention / comparison / outcomes / context)
   → Literature & evidence retrieval (supporting evidence + independent counter-evidence)
   → Claim-Level Evidence Extraction
   → Skeptic challenge protocol + Method Reviewer audit
   → Evidence Tribunal
   → Applicability Analysis
   → Decision: ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE
-  → Teaching Intervention (minimum viable pilot)
+  → Intervention (minimum viable pilot)
   → Evaluation Plan
 ```
 
@@ -161,43 +190,44 @@ It answers six questions:
 1. What does the current evidence actually support?
 2. What can the current evidence not support?
 3. Why do different studies reach different results?
-4. Which students, which courses, under which conditions does it apply to?
-5. If an institution adopts it, how to roll it out with low risk?
+4. Which population, in which setting, under which conditions does it apply to?
+5. If an institution adopts it, how should it be rolled out with low risk?
 6. How to verify whether it actually works after implementation?
 
-## 30-second Demo
+## 30-second tour
 
-> Main demo: **Should first-year C programming students be allowed to use generative AI coding assistants?**
+> Flagship question: **Should first-year C programming students be allowed to use generative AI coding assistants?**
 
 | Time | Stage |
 |---|---|
-| 0–20s | Ask the education question |
-| 20–45s | Education Research Frame |
+| 0–20s | Ask the decision question |
+| 20–45s | Research Frame (domain-specific schema) |
 | 45–75s | Evidence Retrieval |
 | 75–110s | Evidence Matrix |
 | 110–135s | Methodology + Skeptic |
 | 135–155s | Evidence Tribunal |
-| 155–170s | Teaching Intervention + Evaluation |
+| 155–170s | Intervention + Evaluation |
 | 170–180s | Benchmark |
 
 Full example pack: [`examples/ai-coding-assistant-evidence/`](examples/ai-coding-assistant-evidence/).
 
-## Why Education Evidence Is Hard
+## Why Evidence Decisions Are Hard
 
-Education evidence has natural pitfalls. EduEvidence's core contribution is standardizing the countermeasures:
+Evidence across education and applied social science shares the same natural pitfalls. EduEvidence's core contribution is standardizing the countermeasures:
 
 - **Outcome Separation**: `faster task completion ≠ actually learning to program`; `short-term score gains ≠ long-term retention`; `completing tasks with AI ≠ transferring skills without AI`.
 - **Counter-Evidence Search**: it does not just verify the user's initial assumption — it independently searches for null / negative / contradictory evidence, AI dependency, novelty effects, self-selection bias, and more.
 - **Evidence Tribunal**: instead of listing pros and cons, it judges which studies are more credible, whether conflicts come from samples / measurement / course / tool / design, and what can be concluded so far.
-- **Evidence-to-Action Bridge**: it does not stop at "research shows…" — it connects to applicability, the teaching decision, pilot intervention, and evaluation design.
+- **Evidence-to-Action Bridge**: it does not stop at "research shows…" — it connects to applicability, the decision, pilot intervention, and evaluation design.
 
 ## How EduEvidence Works
 
 ```text
 ┌─────────────────────────────────────┐
 │            EduEvidence              │
-│  education knowledge + decision +   │
-│  intervention + evaluation          │
+│  domain contracts (education /       │
+│  policy) + decision + intervention   │
+│  + evaluation                        │
 └────────────────┬────────────────────┘
                  │
 ┌────────────────▼────────────────────┐
@@ -215,22 +245,24 @@ Education evidence has natural pitfalls. EduEvidence's core contribution is stan
 The 9-step workflow:
 
 ```text
-1. Frame          Build the EducationResearchFrame
+1. Frame          Build the domain frame (education frame / policy frame)
 2. Retrieve       Retrieve literature & evidence (support + independent counter-evidence)
 3. Extract        Extract claim-level evidence (bound to outcomes)
 4. Challenge      Skeptic protocol (fixed 9 checks)
 5. Audit          Method Reviewer audit (15-item checklist)
 6. Adjudicate     Evidence Tribunal (Evidence Matrix + Verdict)
 7. Applicability  Applicability analysis
-8. Intervene      Teaching Intervention design (minimum viable pilot)
+8. Intervene      Intervention design (minimum viable pilot)
 9. Evaluate       Evaluation Plan design
 ```
 
-Every step is validated against JSON Schemas (`schemas/`), deterministic logic lives in `scripts/`, and the education methodology is documented independently in `references/`.
+Every step is validated against JSON Schemas (`schemas/`), deterministic logic lives in `scripts/`, and the methodology is documented independently in `references/` (21 documents: evidence quality, skeptic protocol, tribunal policy, WWC/GRADE standards, social-science pitfalls, retrieval protocol, report copy style …; counts in `docs/metrics.json`).
 
 ## Outcome Separation
 
-EduEvidence enforces 20 outcome types (`references/outcome-taxonomy.md`):
+Outcome tokens are domain-owned. The education taxonomy declares **20 tokens** in four categories (`domains/education/outcome_taxonomy.json`); the policy domain declares its own categories and tokens (`domains/policy/outcome_taxonomy.json`). `engine/taxonomy.py` is the only reader: an unknown token or unregistered domain **fails closed** instead of being silently classified as a learning outcome.
+
+The education set (`references/outcome-taxonomy.md`):
 
 ```text
 Learning:    Knowledge Gain / Concept Understanding / Retention / Transfer / Independent Problem Solving
@@ -239,11 +271,11 @@ Process:     Engagement / Motivation / Cognitive Load / Help-Seeking / Metacogni
 Risk:        AI Dependency / Over-reliance / Reduced Effort / Reduced Transfer / Academic Integrity Risk / False Confidence
 ```
 
-The demo's highlight: in Kazemitabaar et al. (CHI 2023), the AI code assistant raised task completion by 1.15× and correctness by 1.8×, but the one-week retention test showed no significant difference — **task performance ≠ learning**.
+The flagship demo's highlight: in Kazemitabaar et al. (CHI 2023), the AI code assistant raised task completion by 1.15× and correctness by 1.8×, but the one-week retention test showed no significant difference — **task performance ≠ learning**.
 
 ## Evidence Tribunal
 
-`references/tribunal-policy.md` defines the adjudication rules: input = Frame + Evidence Matrix + Skeptic Findings + Method Reviews; output = EducationVerdict (`schemas/verdict.schema.json`), including:
+`references/tribunal-policy.md` defines the adjudication rules: input = Frame + Evidence Matrix + Skeptic Findings + Method Reviews; output = the domain Verdict (`schemas/verdict.schema.json`), including:
 
 - supported / uncertain / contradicted claims
 - conflict-source analysis (sample / measurement / course / tool / design)
@@ -254,10 +286,10 @@ The demo's highlight: in Kazemitabaar et al. (CHI 2023), the AI code assistant r
 
 ## From Evidence to Action
 
-Evidence must connect to the real classroom (`references/applicability-policy.md`, `intervention-design.md`, `evaluation-design.md`):
+Evidence must connect to the real setting — a classroom, a support team, a policy roll-out (`references/applicability-policy.md`, `intervention-design.md`, `evaluation-design.md`):
 
-- **Applicability**: For whom? For which course? For which outcome? Under what conditions? With what AI usage policy?
-- **Intervention**: always a "minimum viable pilot", never direct full deployment; includes AI usage rules, teacher/student roles, reflection requirements, and stop conditions.
+- **Applicability**: For whom? In which setting? For which outcome? Under what conditions? With what AI usage policy?
+- **Intervention**: always a "minimum viable pilot", never direct full deployment; includes AI usage rules, staff/user roles, reflection requirements, and stop conditions.
 - **Evaluation**: every PILOT/ADOPT recommendation must come with an evaluation plan; distinguishes baseline / post-test / retention / transfer, and task-performance vs learning metrics.
 
 ## Benchmark
@@ -291,14 +323,16 @@ Key metrics: Citation Support Precision / Unsupported Claim Rate / Contradiction
 
 A second public example, `examples/workplace-ai-assistant/`, evaluates AI assistance in enterprise customer support using the policy domain: 4 findings from 3 studies, with direct and indirect evidence distinguished. Its proposed supervised pilot has not been executed.
 
-Both public examples are **manually curated literature demonstrations** (`manual_curated`). A generated report does not establish that an agent completed the nine-stage research workflow. The coding case contains 12 findings from 8 sources; the workplace case contains 4 findings from 3 sources. See [the workplace evidence notes](docs/demo-workplace-ai.md) for source versions and limitations.
+The third public example, `examples/spaced-retrieval-practice/`, asks whether spaced repetition and retrieval practice should replace massed review in an introductory programming course. It is the first pack whose sources were located through the **Sciverse** channel (`discovery_provider=sciverse`, `fetch_provider=sciverse_content`) and whose `meta.data_origin` is `real_run_sciverse`: 6 findings from 7 tier-1 DOI sources, decision **PILOT**.
 
-Four older teaching demos have moved to `tests/fixtures/legacy-examples/` for compatibility tests. They are excluded from public catalogs and distribution; their unverified or synthetic findings must not be cited as research evidence. The old `ai-coding-assistant` path remains a compatibility alias.
+Each pack ships `result.json` + `result.zh.json` (bilingual parallel data), a packaged-`EduEvidence_Report.html` root report, and `reports-5themes/` with the five standalone theme HTML files.
+
+All three public examples are literature demonstrations, and their `data_origin` says exactly what produced them. The coding and workplace cases are **manually curated** (`manual_curated`); the spaced-retrieval case is a recorded **Sciverse-backed run** (`real_run_sciverse`). A rendered report never establishes that an agent completed the whole nine-stage research workflow. See [the workplace evidence notes](docs/demo-workplace-ai.md) for source versions and limitations, and [`docs/reproducibility.md`](docs/reproducibility.md) for how `data_origin` is declared.
 
 ### Start your own research in ~30 minutes
 
 ```bash
-python3 scripts/quickstart.py "你的教育研究问题"          # creates runs/<id> + NEXT_STEPS.md
+python3 scripts/quickstart.py "你的研究问题"             # creates runs/<id> + NEXT_STEPS.md
 # hand the LLM stages to your AI agent per NEXT_STEPS.md, then finish with:
 python3 scripts/orchestrator.py adjudicate --project runs/<id>
 bash scripts/bake_pack.sh <pack_dir>                     # 5-theme bilingual report
@@ -321,10 +355,10 @@ After research completes, `result.json` is rendered into three visualization out
 
 ```text
 result.json + result.zh.json (Chinese parallel data)
-  ├─ build_charts.py        → chart_specs.json (ECharts option data; no ECharts runtime bundled)
-  ├─ build_infographics.py  → infographics.json (hand-authored SVGs)
-  ├─ build_figures.py       → figures/ (publication figures: figure_data.json + SVG/PNG/PDF)
-  └─ build_report.py        → EduEvidence_Report.html (single-file bilingual report + report_spec.json)
+  ├─ visualization/eduevidence-report/scripts/build_charts.py        → chart_specs.json (ECharts option data; no ECharts runtime bundled)
+  ├─ visualization/eduevidence-report/scripts/build_infographics.py  → infographics.json (hand-authored SVGs)
+  ├─ visualization/eduevidence-report/scripts/build_figures.py       → figures/ (publication figures: figure_data.json + SVG/PNG/PDF)
+  └─ visualization/eduevidence-report/scripts/build_report.py        → EduEvidence_Report.html (single-file bilingual report + report_spec.json)
 ```
 
 **EduEvidence_Report.html (main deliverable)**:
@@ -344,9 +378,24 @@ See [Research Studio workflow and delivery guide](docs/research-studio-guide.zh-
 
 > Open the example directly: `examples/ai-coding-assistant-evidence/EduEvidence_Report.html`
 
+
+### Optional key-based retrieval channels
+
+Zero-config retrieval (OpenAlex / Semantic Scholar / CrossRef / AIHot / AgentSearch) works out of the box. These channels activate once a key is present and stay silently inactive otherwise — the scientific gates never depend on them:
+
+```bash
+export SCIVERSE_API_TOKEN=sv-...   # citation-grade academic retrieval + full-text location
+export TAVILY_API_KEY=...          # general web search
+export BRAVE_API_KEY=...           # general web search
+```
+
+The Sciverse channel treats an `/agentic-search` chunk as a **locator**: it must be expanded through `/content` and pass the validation gate before it may enter evidence extraction (RULE 2, machine-enforced). Contract: `docs/sciverse-api.md`; compliance: `references/retrieval-compliance.md`.
+
 ## Architecture
 
 The repository is a complete **Skill package**: `SKILL.md` is the entry point; everything else is layered as *skill core → quality assurance → demos*. See [`docs/architecture.md`](docs/architecture.md):
+
+Read the illustrated single-file walkthrough of the same architecture (nine-step protocol, roles and independence, artifact/state map, execution and approval loop) at [`web/architecture.html`](web/architecture.html).
 
 ```text
 EduEvidence/  (= one Skill package)
@@ -448,7 +497,9 @@ python3 scripts/evidence_score.py examples/ai-coding-assistant-evidence/evidence
 python3 scripts/evidence_matrix.py examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 4. Run the Citation Audit (claim-evidence traceability)
-python3 scripts/claim_audit.py --claims claims.jsonl --evidence evidence.jsonl
+python3 scripts/claim_audit.py \
+  --claims examples/ai-coding-assistant-evidence/claims.jsonl \
+  --evidence examples/ai-coding-assistant-evidence/evidence.jsonl
 
 # 5. Render the Research & Decision Pack (Markdown)
 python3 scripts/render_report.py \
@@ -466,6 +517,8 @@ python3 visualization/eduevidence-report/scripts/build_report.py \
     --out examples/ai-coding-assistant-evidence/EduEvidence_Report.html
 
 # 7. Validate the benchmark question set
+# Source checkout only: benchmarks/questions.jsonl is not part of the
+# shipped Skill package (see packaging/upload-layout.md).
 python3 scripts/benchmark.py --questions benchmarks/questions.jsonl
 
 # 8. Run the tests

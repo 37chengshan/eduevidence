@@ -194,7 +194,7 @@ def build_math_project():
         "execution": {
             "complexity": "L",
             "mode": "agent_mcp_enhanced",
-            "agents": ["education-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
+            "agents": ["research-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
         },
         "research_frame": {
             "question": question_en,
@@ -266,7 +266,7 @@ def build_math_project():
         "execution": {
             "complexity": "L",
             "mode": "agent_mcp_enhanced",
-            "agents": ["education-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
+            "agents": ["research-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
         },
         "research_frame": {
             "question": question_zh,
@@ -512,7 +512,7 @@ def build_writing_project():
         "execution": {
             "complexity": "L",
             "mode": "agent_mcp_enhanced",
-            "agents": ["education-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
+            "agents": ["research-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
         },
         "research_frame": {
             "question": question_en,
@@ -584,7 +584,7 @@ def build_writing_project():
         "execution": {
             "complexity": "L",
             "mode": "agent_mcp_enhanced",
-            "agents": ["education-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
+            "agents": ["research-planner", "evidence-retriever", "evidence-analyst", "skeptic", "method-reviewer", "evidence-judge", "intervention-designer", "evaluation-designer"]
         },
         "research_frame": {
             "question": question_zh,

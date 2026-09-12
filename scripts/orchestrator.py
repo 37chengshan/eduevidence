@@ -67,13 +67,17 @@ DEPTHS = ("S", "M", "L")
 
 #: Stage -> primary artifact + schema gate + whether it is locally executable.
 STAGE_SPEC: dict[str, dict[str, Any]] = {
-    "frame":     {"artifact": "frame.json",       "schema": "education-frame.schema.json", "jsonl": False, "local": False},
+    # The frame contract belongs to the run's domain; the placeholder is
+    # resolved by frame_schema_for() below (education-frame.schema.json
+    # for education, domains/policy/frame.schema.json for policy, and so
+    # on for any domain registered under domains/).
+    "frame":     {"artifact": "frame.json",       "schema": "@domain_frame", "jsonl": False, "local": False},
     "retrieve":  {"artifact": "sources.jsonl",    "schema": "source.schema.json",          "jsonl": True,  "local": False},
     "extract":   {"artifact": "evidence.jsonl",   "schema": "evidence.schema.json",        "jsonl": True,  "local": False},
-    "challenge": {"artifact": "skeptic.json",     "schema": None,                          "jsonl": False, "local": False},
+    "challenge": {"artifact": "skeptic.json",     "schema": "skeptic.schema.json",       "jsonl": False, "local": False},
     "audit":     {"artifact": "methodology.json", "schema": "methodology.schema.json",     "jsonl": False, "local": False},
     "adjudicate": {"artifact": "final_verdict.json", "schema": "verdict.schema.json",      "jsonl": False, "local": True},
-    "applicability": {"artifact": "applicability.json", "schema": None, "jsonl": False, "local": False},
+    "applicability": {"artifact": "applicability.json", "schema": "applicability.schema.json", "jsonl": False, "local": False},
     "intervene": {"artifact": "intervention.json", "schema": "intervention.schema.json",   "jsonl": False, "local": False},
     "evaluate":  {"artifact": "evaluation.json",  "schema": "evaluation.schema.json",      "jsonl": False, "local": False},
     "projection": {"artifact": "result.json",      "schema": "report-result.schema.json",   "jsonl": False, "local": True},
@@ -187,11 +191,15 @@ def init_run(
     approve_agent_mcp: bool = False,
     scp_available: bool | None = None,
     approval_record: dict | None = None,
+    domain: str = "education",
 ) -> RunWorkspace:
     """Create the run workspace + manifest + planning artifacts (Phase 11-13)."""
     depth = DEPTH_ALIASES.get(depth, depth)
     if depth not in DEPTHS:
         raise ValueError(f"unknown depth {depth!r}; use quick/standard/deep or S/M/L")
+    # Validate the domain up front: every later stage gate reads it from the
+    # manifest, so an unknown id must fail here rather than mid-run.
+    domain_frame_schema(domain)
 
     try:
         from integrations.agent_mcp import detect_agent_mcp
@@ -214,6 +222,7 @@ def init_run(
         agent_mcp_available=agent_available,
         agent_mcp_approved=approve_agent_mcp,
         root=ROOT,
+        domain=domain,
     )
     ws.save_manifest(manifest)
 
@@ -264,7 +273,7 @@ def init_run(
         "run_id": run_id,
         "execution_mode": agent_mode,
         "routing": {
-            "education-planner": "strong/reasoning",
+            "research-planner": "strong/reasoning",
             "evidence-retriever": "fast/low-cost",
             "evidence-analyst": "strong/structured",
             "skeptic": "independent/reasoning",
@@ -319,11 +328,45 @@ def _load_artifact(ws: RunWorkspace, artifact: str) -> list[dict[str, Any]]:
     return [data] if data else []
 
 
+
+#: Placeholder replaced by the run's registered frame schema.
+DOMAIN_FRAME_SENTINEL = "@domain_frame"
+
+
+def domain_frame_schema(domain: str) -> str:
+    """Registered frame schema for a domain, relative to the repository root.
+
+    Raises ValueError for an unknown domain so a typo fails loudly instead of
+    silently validating against the education contract.
+    """
+    try:
+        from engine.evidencecore import load_domain
+
+        entry = load_domain(domain)
+    except KeyError as exc:
+        raise ValueError(str(exc)) from exc
+    return str(entry["frame_schema"])  # type: ignore[return-value]
+
+
+def frame_schema_for(ws: "RunWorkspace") -> str:
+    """The frame schema this run must satisfy (from its manifest domain)."""
+    domain = str(ws.load_manifest().get("domain") or "education")
+    return domain_frame_schema(domain)
+
+
 def schema_gate(ws: RunWorkspace, stage: str) -> dict[str, Any]:
     """Validate a stage's primary artifact against its schema. Never raises."""
     spec = STAGE_SPEC[stage]
     artifact = spec["artifact"]
     schema_name = spec["schema"]
+    if schema_name == DOMAIN_FRAME_SENTINEL:
+        # The frame contract is per-domain; resolve it from the run manifest.
+        try:
+            schema_name = frame_schema_for(ws)
+        except ValueError as exc:
+            return {"passed": False, "stage": stage, "artifact": artifact,
+                    "schema": DOMAIN_FRAME_SENTINEL,
+                    "issues": [f"unknown run domain: {exc}"]}
     if schema_name is None:  # lightweight parseability contract
         data = load_json(ws.path / artifact)
         ok = bool(data) and isinstance(data, dict)
@@ -333,13 +376,19 @@ def schema_gate(ws: RunWorkspace, stage: str) -> dict[str, Any]:
     from validate_schema import SchemaError, Validator
 
     schemas_dir = ROOT / "schemas"
-    if not (schemas_dir / schema_name).is_file():
-        share_dir = Path(sys.prefix) / "share" / "eduevidence" / "schemas"
-        if (share_dir / schema_name).is_file():
-            schemas_dir = share_dir
+    schema_path = schemas_dir / schema_name
+    if not schema_path.is_file():
+        # A domain may own its frame schema outside schemas/ (policy does).
+        candidate = ROOT / schema_name
+        if candidate.is_file():
+            schema_path = candidate
+        else:
+            share_candidates = (Path(sys.prefix) / "share" / "eduevidence" / schema_name,
+                                Path(sys.prefix) / "share" / "eduevidence" / "schemas" / schema_name)
+            schema_path = next((c for c in share_candidates if c.is_file()), schema_path)
 
     try:
-        schema = json.loads((schemas_dir / schema_name).read_text(encoding="utf-8"))
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
     except OSError:
         return {"passed": False, "stage": stage, "artifact": artifact,
                 "schema": schema_name, "issues": [f"schema file {schema_name} not found"]}
@@ -398,22 +447,52 @@ def derive_sources_from_evidence(evidence: list[dict[str, Any]]) -> list[dict[st
     return list(seen.values())
 
 
+#: The nine checks the skeptic contract requires (skill/task-briefs/challenge.md).
+SKEPTIC_CHECKS = (
+    "1_null_result", "2_negative_result", "3_contradictory_evidence",
+    "4_alternative_explanation", "5_measurement_mismatch", "6_sampling_bias",
+    "7_novelty_effect", "8_ai_dependency", "9_scope_overreach",
+)
+
+
 def derive_skeptic_from_evidence(evidence: list[dict[str, Any]]) -> dict[str, Any]:
     """Deterministic skeptic summary derived from evidence directions (demo/test mode).
 
     Records what the corpus itself contains (contradictions / null results /
-    confounders); it never invents counter-evidence.
+    confounders); it never invents counter-evidence. Field names follow the
+    challenge brief and the skeptic role prompt so the Pre-Verdict Gate reads
+    the same keys this writes.
     """
-    contradictions = [e.get("evidence_id") for e in evidence if e.get("direction") == "contradict"]
-    null_results = [e.get("evidence_id") for e in evidence if e.get("direction") == "neutral"]
+    contradictions = [e.get("evidence_id") for e in evidence
+                      if (e.get("relation_to_claim") or e.get("direction")) == "contradict"]
+    null_results = [e.get("evidence_id") for e in evidence
+                    if e.get("effect_direction") == "null"]
     confounders = sorted({c for e in evidence for c in (e.get("confounders", []) or [])})
+
+    status_for = {
+        "1_null_result": "found" if null_results else "not_found",
+        "2_negative_result": "found" if any(
+            e.get("effect_direction") == "negative" for e in evidence) else "not_found",
+        "3_contradictory_evidence": "found" if contradictions else "not_found",
+        "4_alternative_explanation": "found" if confounders else "not_found",
+    }
+    findings = []
+    for check in SKEPTIC_CHECKS:
+        findings.append({
+            "check": check,
+            "status": status_for.get(check, "not_found"),
+            "detail": "derived from the evidence corpus in demo/test mode",
+            "related_evidence_ids": (contradictions if "contradict" in check
+                                     else null_results if "null" in check else []),
+        })
     return {
         "search_performed": True,
         "method": "derived from evidence corpus directions (demo/test mode)",
-        "contradictions": contradictions,
-        "null_results": null_results,
-        "confounders": confounders,
-        "no_contradictory_evidence_found": not contradictions,
+        "skeptic_findings": findings,
+        "contradictory_evidence_found": bool(contradictions),
+        "no_contradictory_evidence_statement": (
+            "" if contradictions else "NO CONTRADICTORY EVIDENCE FOUND"),
+        "threats_to_validity": confounders,
     }
 
 
@@ -422,7 +501,13 @@ def _cap_verdict(gate: dict[str, Any], raw_verdict: dict[str, Any],
     """Build final_verdict.json: deterministic confidence + gate enforcement."""
     final = copy.deepcopy(raw_verdict)
     final["raw_model_confidence"] = raw_verdict.get("confidence")
-    final["raw_model_confidence_breakdown"] = raw_verdict.get("confidence_breakdown")
+    # The schema types this as an object; a model verdict without the field
+    # produced None here, which made the written file schema-invalid and the
+    # gate fail on data the pipeline had just produced.
+    final["raw_model_confidence_breakdown"] = (
+        raw_verdict.get("confidence_breakdown")
+        if isinstance(raw_verdict.get("confidence_breakdown"), dict)
+        else {})
     final["confidence"] = computed["confidence"]
     final["confidence_score"] = computed["confidence_breakdown"].get("score")
     final["confidence_policy_version"] = computed["confidence_policy_version"]
@@ -530,7 +615,8 @@ def _assemble_result(ws: RunWorkspace, manifest: dict[str, Any]) -> dict[str, An
         "methodology_reviews": methodology_list,
         "conflicts": [{"reason_for_disagreement": verdict.get("reason_for_disagreement", "")}]
         if verdict.get("reason_for_disagreement") else [],
-        "applicability": verdict.get("applicability", {}),
+        "applicability": (load_json(ws.path / "applicability.json")
+                          or verdict.get("applicability", {})),
         "intervention": intervention,
         "evaluation": evaluation,
         "benchmark": {},
@@ -696,10 +782,16 @@ def _seed_from_demo(ws: RunWorkspace, stage: str, demo_pack: Path) -> dict[str, 
             value = verdict.get("applicability") if isinstance(verdict, dict) else None
             # A demo can only carry the decision's existing applicability
             # boundary; absence remains explicit rather than inferred.
-            payload = value if isinstance(value, dict) and value else {
-                "status": "NOT_CAPTURED",
-                "reason": "demo pack does not provide an applicability assessment",
-            }
+            # The derived boundary is tagged ASSESSED so it satisfies the
+            # applicability contract instead of being an unlabelled dict.
+            if isinstance(value, dict) and value:
+                payload = {"status": "ASSESSED"}
+                payload.update(value)
+            else:
+                payload = {
+                    "status": "NOT_CAPTURED",
+                    "reason": "demo pack does not provide an applicability assessment",
+                }
             (ws.path / "applicability.json").write_text(
                 json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return {"seeded": True, "detail": "applicability.json seeded from decision boundary (demo)"}
@@ -889,7 +981,8 @@ def _cmd_run(args: argparse.Namespace) -> int:
     if approve:
         approval_record = load_global_approval()
     ws = init_run(Path(args.runs_dir), args.question, depth=args.depth, run_id=args.run_id,
-                  approve_agent_mcp=approve, approval_record=approval_record)
+                  approve_agent_mcp=approve, approval_record=approval_record,
+                  domain=getattr(args, "domain", "education"))
     print(f"workspace created: {ws.path}")
     print(f"manifest: {json.dumps(ws.load_manifest(), ensure_ascii=False, indent=2)}")
     if args.dry_run:
@@ -1358,7 +1451,10 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_run = sub.add_parser("run", help="create a run workspace and advance stages")
-    p_run.add_argument("--question", required=True, help="education question to research")
+    p_run.add_argument("--question", required=True, help="research question to investigate")
+    p_run.add_argument("--domain", default="education", metavar="ID",
+                       help="registered research domain (default: education; "
+                            "see `domain list`)")
     p_run.add_argument("--depth", default="M", choices=["quick", "standard", "deep", "S", "M", "L"],
                        help="complexity depth (default: standard/M)")
     p_run.add_argument("--run-id", default=None, help="explicit run id (default: timestamp)")

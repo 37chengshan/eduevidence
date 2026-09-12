@@ -7,7 +7,7 @@ reads ONLY the run workspace — no model call, no network.
 
 Checklist:
 
-  1.  research_frame_valid       frame.json validates against education-frame.schema.json
+  1.  research_frame_valid       frame.json validates against the run domain frame schema
   2.  sources_valid              sources.jsonl non-empty and schema-valid
   3.  evidence_schema_valid      evidence.jsonl non-empty and schema-valid
   4.  source_dedupe              no duplicate sources remain (dedupe applied)
@@ -66,29 +66,52 @@ GATE_VERSION = "2026-08-13.v1"
 CONFIDENCE_RANK = {"Insufficient": 0, "Low": 1, "Moderate": 2, "High": 3}
 
 #: Advisory taxonomy for verdict outcome keys (shared with claim_audit).
-SUPPORTED_OUTCOMES = {
-    "knowledge_gain", "concept_understanding", "retention", "transfer",
-    "independent_problem_solving", "completion_time", "accuracy",
-    "code_quality", "assignment_score", "engagement", "motivation",
-    "cognitive_load", "help_seeking", "metacognition", "ai_dependency",
-    "over_reliance", "reduced_effort", "reduced_transfer",
-    "academic_integrity_risk", "false_confidence",
-}
+def _supported_outcomes() -> set[str]:
+    """Every registered outcome token, read from the domain registry.
+
+    This was a hand-copied 20-token education list in three separate files;
+    it silently rejected policy tokens such as policy_effectiveness. The
+    registry (domains/<id>/outcome_taxonomy.json) is the single authority.
+    """
+    from engine.taxonomy import all_tokens_ordered
+
+    return set(all_tokens_ordered())
+
+
+SUPPORTED_OUTCOMES = _supported_outcomes()
 
 _CLAIM_ID_RE = re.compile(r"\b[A-Z]{1,3}-\d{2,4}\b")
 
 _SCHEMA_CACHE: dict[str, dict[str, Any]] = {}
 
 
+def _schema_path(name: str) -> Path:
+    """Resolve a schema name to a file.
+
+    Accepts a bare name in schemas/ as well as a repository-relative path,
+    because a domain may own its frame contract outside schemas/ (policy does:
+    domains/policy/frame.schema.json).
+    """
+    candidate = ROOT / "schemas" / name
+    if candidate.is_file():
+        return candidate
+    owned = ROOT / name
+    if owned.is_file():
+        return owned
+    return candidate  # missing: the caller reports it
+
+
 def _schema(name: str) -> dict[str, Any]:
-    if name not in _SCHEMA_CACHE:
-        _SCHEMA_CACHE[name] = json.loads((ROOT / "schemas" / name).read_text(encoding="utf-8"))
-    return _SCHEMA_CACHE[name]
+    path = _schema_path(name)
+    key = str(path)
+    if key not in _SCHEMA_CACHE:
+        _SCHEMA_CACHE[key] = json.loads(path.read_text(encoding="utf-8"))
+    return _SCHEMA_CACHE[key]
 
 
 def _validate_records(records: list[dict[str, Any]], schema_name: str, path: str) -> list[str]:
     schema = _schema(schema_name)
-    validator = Validator(schema, base_dir=(ROOT / "schemas"))
+    validator = Validator(schema, base_dir=_schema_path(schema_name).parent)
     errors = []
     for idx, record in enumerate(records):
         try:
@@ -133,11 +156,28 @@ def _item_res(status: str, detail: str, *, blocks_high: bool | None = None) -> d
     return res
 
 
+def workspace_domain(ws: Path) -> str:
+    """The domain this run registered; defaults to education when absent."""
+    manifest = _load_ws_json(ws, "run_manifest.json")
+    return str(manifest.get("domain") or "education")
+
+
+def frame_schema_name(domain: str) -> str:
+    """Registered frame schema for a domain (repository-relative path)."""
+    from engine.evidencecore import load_domain
+
+    return str(load_domain(domain)["frame_schema"])
+
+
 def check_research_frame(ws: Path) -> dict[str, str]:
     frame = _load_ws_json(ws, "frame.json")
     if not frame:
         return _item_res("fail", "frame.json missing or empty (research question not framed)")
-    errors = _validate_records([frame], "education-frame.schema.json", "frame")
+    try:
+        schema_name = frame_schema_name(workspace_domain(ws))
+    except KeyError as exc:
+        return _item_res("fail", f"run declares an unknown domain: {exc}")
+    errors = _validate_records([frame], schema_name, "frame")
     if errors:
         return _item_res("fail", f"frame.json schema invalid: {errors[0]}")
     return _item_res("pass", f"frame.json valid (question={frame.get('question', '')[:80]})")
@@ -182,11 +222,41 @@ def check_counter_evidence(ws: Path) -> dict[str, str]:
         return _item_res("fail", "skeptic.json missing or empty (counter-evidence search not performed)")
     if skeptic.get("search_performed") is not True:
         return _item_res("fail", "skeptic.json lacks search_performed=true")
-    contradictions = skeptic.get("contradictions", []) or []
-    null_results = skeptic.get("null_results", []) or []
-    detail = f"search_performed=true; contradictions={len(contradictions)}, null_results={len(null_results)}"
-    if skeptic.get("no_contradictory_evidence_found"):
-        detail += "; no contradictory evidence found"
+
+    # The nine fixed checks are the contract (skill/task-briefs/challenge.md).
+    # A two-key shell used to pass this gate, which made the counter-evidence
+    # check cosmetic on every deterministic path.
+    required_checks = (
+        "1_null_result", "2_negative_result", "3_contradictory_evidence",
+        "4_alternative_explanation", "5_measurement_mismatch", "6_sampling_bias",
+        "7_novelty_effect", "8_ai_dependency", "9_scope_overreach",
+    )
+    findings = skeptic.get("skeptic_findings")
+    if not isinstance(findings, list) or not findings:
+        return _item_res(
+            "fail", "skeptic.json lacks skeptic_findings[] (nine fixed checks not run)")
+    present = {str(f.get("check")) for f in findings if isinstance(f, dict)}
+    missing = [c for c in required_checks if c not in present]
+    if missing:
+        return _item_res("fail", f"skeptic findings incomplete; missing {missing}")
+    for item in findings:
+        if not isinstance(item, dict) or item.get("status") not in ("found", "not_found"):
+            return _item_res(
+                "fail", f"skeptic finding {item.get('check')!r} lacks a found/not_found status")
+
+    found = bool(skeptic.get("contradictory_evidence_found"))
+    statement = skeptic.get("no_contradictory_evidence_statement")
+    if not found and not statement:
+        # Absence of counter-evidence must be asserted, not left implicit.
+        return _item_res(
+            "fail", "no contradictory evidence found but no statement recorded")
+    if found and statement:
+        return _item_res(
+            "fail", "contradictory_evidence_found=true together with a no-evidence statement")
+
+    found_checks = sum(1 for f in findings if f.get("status") == "found")
+    detail = (f"search_performed=true; 9/9 checks run; findings={found_checks}; "
+              f"contradictory_evidence_found={found}")
     return _item_res("pass", detail)
 
 
@@ -375,9 +445,9 @@ GATE_ITEMS: list[dict[str, Any]] = [
     {"id": "claim_evidence_audit", "title": "Claim-Evidence Audit", "critical": True,
      "blocks_high": False, "check": check_claim_evidence},
     {"id": "outcome_mapping", "title": "Outcome mapping", "critical": False,
-     "blocks_high": False, "check": check_outcome_mapping},
+     "blocks_high": True, "check": check_outcome_mapping},
     {"id": "scope_calibration", "title": "Scope calibration", "critical": False,
-     "blocks_high": False, "check": check_scope_calibration},
+     "blocks_high": True, "check": check_scope_calibration},
     {"id": "independent_study_count", "title": "Independent study-sample count", "critical": True,
      "blocks_high": True, "check": check_study_count},
     {"id": "deterministic_confidence", "title": "Deterministic confidence", "critical": True,
