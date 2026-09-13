@@ -19,27 +19,70 @@
       },
       "has_graph": false,
       "node_count": 0,
-      "html_report_path": "reports/ai-coding-assistant-evidence/EduEvidence_Report.html",
+      "html_report_path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_claude.html",
       "report_variants": [
         {
           "theme": "academic",
-          "path": "reports/ai-coding-assistant-evidence/EduEvidence_Report_academic.html"
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_academic.html"
         },
         {
           "theme": "claude",
-          "path": "reports/ai-coding-assistant-evidence/EduEvidence_Report_claude.html"
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_claude.html"
         },
         {
           "theme": "datalab-dark",
-          "path": "reports/ai-coding-assistant-evidence/EduEvidence_Report_datalab-dark.html"
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_datalab-dark.html"
         },
         {
           "theme": "datalab",
-          "path": "reports/ai-coding-assistant-evidence/EduEvidence_Report_datalab.html"
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_datalab.html"
         },
         {
           "theme": "presentation",
-          "path": "reports/ai-coding-assistant-evidence/EduEvidence_Report_presentation.html"
+          "path": "/Users/cc/edu/examples/ai-coding-assistant-evidence/reports-5themes/EduEvidence_Report_presentation.html"
+        }
+      ]
+    },
+    {
+      "id": "spaced-retrieval-practice",
+      "title": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+      "title_zh": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+      "domain": "education",
+      "question": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
+      "verdict": "adopt",
+      "confidence": 0.893,
+      "evidence_count": 6,
+      "forest_count": 0,
+      "effect_count": 0,
+      "mean_effect_size": null,
+      "direction_counts": {
+        "support": 5,
+        "contradict": 0,
+        "neutral": 1
+      },
+      "has_graph": false,
+      "node_count": 0,
+      "html_report_path": "/Users/cc/edu/examples/spaced-retrieval-practice/reports-5themes/EduEvidence_Report_claude.html",
+      "report_variants": [
+        {
+          "theme": "academic",
+          "path": "/Users/cc/edu/examples/spaced-retrieval-practice/reports-5themes/EduEvidence_Report_academic.html"
+        },
+        {
+          "theme": "claude",
+          "path": "/Users/cc/edu/examples/spaced-retrieval-practice/reports-5themes/EduEvidence_Report_claude.html"
+        },
+        {
+          "theme": "datalab-dark",
+          "path": "/Users/cc/edu/examples/spaced-retrieval-practice/reports-5themes/EduEvidence_Report_datalab-dark.html"
+        },
+        {
+          "theme": "datalab",
+          "path": "/Users/cc/edu/examples/spaced-retrieval-practice/reports-5themes/EduEvidence_Report_datalab.html"
+        },
+        {
+          "theme": "presentation",
+          "path": "/Users/cc/edu/examples/spaced-retrieval-practice/reports-5themes/EduEvidence_Report_presentation.html"
         }
       ]
     },
@@ -50,7 +93,7 @@
       "domain": "policy",
       "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
       "verdict": "pilot",
-      "confidence": "Low",
+      "confidence": 0.578,
       "evidence_count": 4,
       "forest_count": 0,
       "effect_count": 0,
@@ -61,36 +104,36 @@
         "neutral": 0
       },
       "has_graph": true,
-      "node_count": 11,
-      "html_report_path": "reports/workplace-ai-assistant/EduEvidence_Report.html",
+      "node_count": 15,
+      "html_report_path": "/Users/cc/edu/examples/workplace-ai-assistant/reports-5themes/EduEvidence_Report_claude.html",
       "report_variants": [
         {
           "theme": "academic",
-          "path": "reports/workplace-ai-assistant/EduEvidence_Report_academic.html"
+          "path": "/Users/cc/edu/examples/workplace-ai-assistant/reports-5themes/EduEvidence_Report_academic.html"
         },
         {
           "theme": "claude",
-          "path": "reports/workplace-ai-assistant/EduEvidence_Report_claude.html"
+          "path": "/Users/cc/edu/examples/workplace-ai-assistant/reports-5themes/EduEvidence_Report_claude.html"
         },
         {
           "theme": "datalab-dark",
-          "path": "reports/workplace-ai-assistant/EduEvidence_Report_datalab-dark.html"
+          "path": "/Users/cc/edu/examples/workplace-ai-assistant/reports-5themes/EduEvidence_Report_datalab-dark.html"
         },
         {
           "theme": "datalab",
-          "path": "reports/workplace-ai-assistant/EduEvidence_Report_datalab.html"
+          "path": "/Users/cc/edu/examples/workplace-ai-assistant/reports-5themes/EduEvidence_Report_datalab.html"
         },
         {
           "theme": "presentation",
-          "path": "reports/workplace-ai-assistant/EduEvidence_Report_presentation.html"
+          "path": "/Users/cc/edu/examples/workplace-ai-assistant/reports-5themes/EduEvidence_Report_presentation.html"
         }
       ]
     }
   ],
   "stats": {
-    "total_projects": 2,
-    "total_evidence": 16,
+    "total_projects": 3,
+    "total_evidence": 22,
     "total_effect_sizes": 0,
-    "total_nodes": 11
+    "total_nodes": 15
   }
 }

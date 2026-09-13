@@ -52,11 +52,13 @@
             分列不同 outcome，规则禁止把前者当后者（task≠learning 铁律入 gate）。</td></tr>
     <tr><td class="dim">置信度</td>
         <td>无量化置信度，或输出不可复算的"信心表述"。</td>
-        <td>确定性公式可复算：Moderate / 0.586 / policy 2026-08-12.v2，
-            分解项（质量/一致性/直接性/数量/罚分）逐项可审计。</td></tr>
+        <td>确定性公式可复算：Moderate / 0.586 / policy 2026-08-12.v3，
+            分解项（质量/一致性/直接性/数量/罚分）逐项可审计；同一策略下
+            <a href="reports/spaced-retrieval-practice/EduEvidence_Report.html">间隔重复案例</a>
+            给出 ADOPT / High / 0.893，四态出口都被实跑过。</td></tr>
     <tr><td class="dim">决策可用性</td>
         <td>给"综述"，不给"能不能上"的决定与止损条件。</td>
-        <td>裁决 = PILOT（限制性四阶段渐退试点），附 stop conditions 与 no-AI 迁移评估设计。</td></tr>
+        <td>裁决由确定性策略给出，不是人写死的：本例 PILOT（限制性四阶段渐退试点），附 stop conditions 与 no-AI 迁移评估设计；间隔重复案例为 ADOPT（可直接采用）。ADOPT 需同时满足高把握度与主要结果上的直接证据，两条路径都有公开案例。</td></tr>
     <tr><td class="dim">事后失效</td>
         <td>文献被撤稿后报告静默过期。</td>
         <td><code>scripts/retraction_watch.py</code> 持续监控已引 DOI，撤稿即出 diff 报告；

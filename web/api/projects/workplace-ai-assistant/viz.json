@@ -3,18 +3,18 @@
   "title": "Should an enterprise customer-support team introduce a generative AI ass",
   "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
   "verdict": "pilot",
-  "confidence": "Low",
+  "confidence": 0.578,
   "forest": [],
   "effect_sizes": [],
   "outcome_mapping": [
     {
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "support": 2,
       "contradict": 0,
       "neutral": 0
     },
     {
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "support": 2,
       "contradict": 0,
       "neutral": 0
@@ -101,5 +101,474 @@
       "Insufficient": "不足"
     }
   },
-  "graph": null
+  "graph": {
+    "categories": [
+      {
+        "name": "Literature Paper (文献)"
+      },
+      {
+        "name": "Evidence Node (实证发现)"
+      },
+      {
+        "name": "Claim (研究主张)"
+      },
+      {
+        "name": "Outcome (测量指标)"
+      },
+      {
+        "name": "Methodological Risk (学术陷阱)"
+      },
+      {
+        "name": "Research Gap (学术缺口)"
+      },
+      {
+        "name": "Decision (裁决快照)"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "S-001",
+        "name": "Erik Brynjolfsson (2025)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Generative AI at Work",
+        "authors": [
+          "Erik Brynjolfsson",
+          "Danielle Li",
+          "Lindsey Raymond"
+        ],
+        "year": 2025,
+        "venue": "Academic Publication",
+        "doi": "10.1093/qje/qjae044",
+        "tier": 1,
+        "quote": ""
+      },
+      {
+        "id": "S-002",
+        "name": "Shakked Noy (2023)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Experimental evidence on the productivity effects of generative artificial intelligence",
+        "authors": [
+          "Shakked Noy",
+          "Whitney Zhang"
+        ],
+        "year": 2023,
+        "venue": "Academic Publication",
+        "doi": "10.1126/science.adh2586",
+        "tier": 1,
+        "quote": ""
+      },
+      {
+        "id": "S-003",
+        "name": "Fabrizio Dell’Acqua (2026)",
+        "category": 0,
+        "category_name": "PaperNode (文献)",
+        "symbolSize": 28,
+        "value": "Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of Artificial Intelligence on Knowledge Worker Productivity and Quality",
+        "authors": [
+          "Fabrizio Dell’Acqua",
+          "Edward McFowland III",
+          "Ethan Mollick",
+          "Hila Lifshitz-Assaf",
+          "Katherine C. Kellogg",
+          "Saran Rajendran",
+          "Lisa Krayer",
+          "François Candelon",
+          "Karim R. Lakhani"
+        ],
+        "year": 2026,
+        "venue": "Academic Publication",
+        "doi": "10.1287/orsc.2025.21838",
+        "tier": 1,
+        "quote": ""
+      },
+      {
+        "id": "E-001",
+        "name": "E-001: Chat handling time; separate throughput summary: about 15% more issues resolved per hour. (g=+0.00)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 18,
+        "dimension": "Policy",
+        "direction": "SUPPORTS",
+        "effect_size": 0.0,
+        "ci_lower": null,
+        "ci_upper": null,
+        "sample_size": 5172,
+        "wwc_rating": "Not applicable: organizational policy",
+        "quote": ""
+      },
+      {
+        "id": "E-002",
+        "name": "E-002: Self-reported task time: approximately 40% lower; assessed writing quality approximately 18% higher is a separate measure. (g=+0.00)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 18,
+        "dimension": "Policy",
+        "direction": "SUPPORTS",
+        "effect_size": 0.0,
+        "ci_lower": null,
+        "ci_upper": null,
+        "sample_size": 453,
+        "wwc_rating": "Not applicable: organizational policy",
+        "quote": ""
+      },
+      {
+        "id": "E-003",
+        "name": "E-003: Correct business recommendation: about 19 percentage points lower across AI arms; Table 7 has 373 participants, not 758. (g=+0.00)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 18,
+        "dimension": "Policy",
+        "direction": "SUPPORTS",
+        "effect_size": 0.0,
+        "ci_lower": null,
+        "ci_upper": null,
+        "sample_size": 373,
+        "wwc_rating": "Not applicable: organizational policy",
+        "quote": ""
+      },
+      {
+        "id": "E-004",
+        "name": "E-004: Small quality declines among the most experienced and highest-skilled support staff. (g=+0.00)",
+        "category": 1,
+        "category_name": "EvidenceNode (实证效应量)",
+        "symbolSize": 18,
+        "dimension": "Policy",
+        "direction": "SUPPORTS",
+        "effect_size": 0.0,
+        "ci_lower": null,
+        "ci_upper": null,
+        "sample_size": null,
+        "wwc_rating": "Not applicable: organizational policy",
+        "quote": ""
+      },
+      {
+        "id": "policy_effectiveness",
+        "name": "📊 policy_effectiveness",
+        "category": 3,
+        "category_name": "OutcomeNode (测量指标)",
+        "symbolSize": 30,
+        "dimension": "Policy",
+        "value": ""
+      },
+      {
+        "id": "implementation_risk",
+        "name": "📊 implementation_risk",
+        "category": 3,
+        "category_name": "OutcomeNode (测量指标)",
+        "symbolSize": 30,
+        "dimension": "Policy",
+        "value": ""
+      },
+      {
+        "id": "C-001",
+        "name": "C-001: AI assistance can shorte...",
+        "category": 2,
+        "category_name": "ClaimNode (科学主张)",
+        "symbolSize": 34,
+        "status": "SUPPORTED",
+        "pooled_g": null,
+        "value": "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
+        "quote": ""
+      },
+      {
+        "id": "C-002",
+        "name": "C-002: ChatGPT reduced time on ...",
+        "category": 2,
+        "category_name": "ClaimNode (科学主张)",
+        "symbolSize": 34,
+        "status": "SUPPORTED",
+        "pooled_g": null,
+        "value": "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
+        "quote": ""
+      },
+      {
+        "id": "C-003",
+        "name": "C-003: AI can reduce correctnes...",
+        "category": 2,
+        "category_name": "ClaimNode (科学主张)",
+        "symbolSize": 34,
+        "status": "SUPPORTED",
+        "pooled_g": null,
+        "value": "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
+        "quote": ""
+      },
+      {
+        "id": "C-004",
+        "name": "C-004: Experienced, high-skill ...",
+        "category": 2,
+        "category_name": "ClaimNode (科学主张)",
+        "symbolSize": 34,
+        "status": "SUPPORTED",
+        "pooled_g": null,
+        "value": "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits.",
+        "quote": ""
+      },
+      {
+        "id": "G-001",
+        "name": "🔬 Local applicability and safety",
+        "category": 5,
+        "category_name": "GapNode (研究缺口)",
+        "symbolSize": 32,
+        "value": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set [no direct evidence].",
+        "quote": "Preregister an intention-to-treat comparison with team-clustered uncertainty and subgroup estimates. Set sample size and noninferiority margins from local baseline variance and operational priorities before enrollment."
+      },
+      {
+        "id": "D-001",
+        "name": "⚖️ PILOT",
+        "category": 6,
+        "category_name": "DecisionNode (裁决快照)",
+        "symbolSize": 50,
+        "verdict": "PILOT",
+        "confidence": null,
+        "value": "A supervised pilot is warranted because one direct field study supports efficiency gains but also reveals heterogeneous quality effects. Indirect experiments identify task boundaries, while local safety and net value remain unknown.",
+        "quote": ""
+      }
+    ],
+    "links": [
+      {
+        "source": "E-001",
+        "target": "S-001",
+        "label": {
+          "show": true,
+          "formatter": "EXTRACTED_FROM"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-001",
+        "target": "C-001",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-001",
+        "target": "policy_effectiveness",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-001",
+        "target": "G-001",
+        "label": {
+          "show": true,
+          "formatter": "IDENTIFIES_GAP"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "C-001",
+        "target": "D-001",
+        "label": {
+          "show": true,
+          "formatter": "GROUNDS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-002",
+        "target": "S-002",
+        "label": {
+          "show": true,
+          "formatter": "EXTRACTED_FROM"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-002",
+        "target": "C-002",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-002",
+        "target": "policy_effectiveness",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-002",
+        "target": "G-001",
+        "label": {
+          "show": true,
+          "formatter": "IDENTIFIES_GAP"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "C-002",
+        "target": "D-001",
+        "label": {
+          "show": true,
+          "formatter": "GROUNDS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-003",
+        "target": "S-003",
+        "label": {
+          "show": true,
+          "formatter": "EXTRACTED_FROM"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-003",
+        "target": "C-003",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-003",
+        "target": "implementation_risk",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-003",
+        "target": "G-001",
+        "label": {
+          "show": true,
+          "formatter": "IDENTIFIES_GAP"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "C-003",
+        "target": "D-001",
+        "label": {
+          "show": true,
+          "formatter": "GROUNDS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-004",
+        "target": "S-001",
+        "label": {
+          "show": true,
+          "formatter": "EXTRACTED_FROM"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-004",
+        "target": "C-004",
+        "label": {
+          "show": true,
+          "formatter": "SUPPORTS"
+        },
+        "lineStyle": {
+          "color": "#2ea043",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-004",
+        "target": "implementation_risk",
+        "label": {
+          "show": true,
+          "formatter": "MEASURES"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "E-004",
+        "target": "G-001",
+        "label": {
+          "show": true,
+          "formatter": "IDENTIFIES_GAP"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      },
+      {
+        "source": "C-004",
+        "target": "D-001",
+        "label": {
+          "show": true,
+          "formatter": "GROUNDS_DECISION"
+        },
+        "lineStyle": {
+          "color": "#58a6ff",
+          "width": 2.0
+        }
+      }
+    ]
+  }
 }
