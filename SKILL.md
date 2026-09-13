@@ -303,6 +303,14 @@ The example demonstrates:
 - Empirical evidence re-injection followed by decision revision.
 Do not generalize the flagship verdict to unrelated populations, courses, tools, or policy contexts.
 
+The four-state output is reachable on both ends, and each public case records which end it reached:
+
+- `examples/ai-coding-assistant-evidence/` - `PILOT` / Moderate / 0.586. Primary evidence stops at task performance, so the decision is bounded.
+- `examples/spaced-retrieval-practice/` - `ADOPT` / High / 0.893. Retention and transfer, the primary outcomes, carry direct evidence at directness 2.
+- `examples/workplace-ai-assistant/` - `PILOT` / Moderate / 0.578, using the policy domain contract.
+
+A verdict never awards itself an action: the Pre-Verdict Gate re-derives primary-outcome directness from the evidence corpus and caps an unsupported `ADOPT` to `PILOT`. Never present a case as ADOPT without that derivation passing.
+
 ---
 
 ## 16. Keep Presentation as a Projection Layer

@@ -171,4 +171,4 @@ GitHub Pages 同样只导出仓库内公开示例；本地 `EDUEVIDENCE_HOME`、
 
 ## 九、本次交付核验
 
-见 `docs/release-closeout/README.md`。本次交付完整目录，不是压缩包。两个公开案例为人工文献整理；真实模型九阶段研究及企业试点不属于本次已验证结果。
+见 `docs/release-closeout/README.md`。本次交付完整目录，不是压缩包。三个公开案例中，编程学习与企业客服为人工文献整理，间隔重复案例为真实 Sciverse 检索运行记录；真实模型九阶段全流程及企业试点仍不属于本次已验证结果。

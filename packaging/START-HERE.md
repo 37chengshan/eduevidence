@@ -16,9 +16,9 @@ python3 scripts/dashboard_server.py --host 127.0.0.1 --port 8765
 
 浏览器打开 / Open: **http://127.0.0.1:8765/studio/**
 
-两个公开案例位于 `examples/`：编程学习与企业客服。各自 `reports-5themes/` 内的 HTML 也可直接离线打开。
+三个公开案例位于 `examples/`：编程学习（PILOT）、间隔重复（**ADOPT / High**，四态出口可达的实证）与企业客服（PILOT）。各自 `reports-5themes/` 内的 HTML 也可直接离线打开。
 
-The two public examples cover programming learning and workplace customer support. Each includes five standalone HTML reports under `reports-5themes/` for offline reading.
+The three public examples cover programming learning (PILOT), spaced retrieval practice (**ADOPT / High**, the worked example that the ADOPT path is reachable) and workplace customer support (PILOT). Each includes five standalone HTML reports under `reports-5themes/` for offline reading.
 
 ## 核验 / Verification
 
