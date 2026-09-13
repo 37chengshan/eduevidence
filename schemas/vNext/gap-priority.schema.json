@@ -1,1 +1,54 @@
-{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["gap_id","dvi_band","cost_band","decision_material","drivers","next_research_mode","score"],"properties":{"gap_id":{"type":"string"},"dvi_band":{"enum":["HIGH","MEDIUM","LOW"]},"cost_band":{"enum":["HIGH","MEDIUM","LOW"]},"decision_material":{"type":"boolean"},"drivers":{"type":"array","items":{"type":"string"}},"next_research_mode":{"enum":["secondary_evidence_search","defer","empirical_evidence_needed"]},"score":{"type":"integer"}},"additionalProperties":false}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GapPriority",
+  "description": "Ranking of one knowledge gap for research attention (engine/autoresearch/gap_priority.py). Combines decision sensitivity, current uncertainty, directness deficit, applicability, availability and risk minus cost into a score, and names the next research mode. Produced by controllers.select_gap(), not by an LLM.",
+  "type": "object",
+  "required": [
+    "gap_id",
+    "dvi_band",
+    "cost_band",
+    "decision_material",
+    "drivers",
+    "next_research_mode",
+    "score"
+  ],
+  "properties": {
+    "gap_id": {
+      "type": "string"
+    },
+    "dvi_band": {
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ]
+    },
+    "cost_band": {
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ]
+    },
+    "decision_material": {
+      "type": "boolean"
+    },
+    "drivers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_research_mode": {
+      "enum": [
+        "secondary_evidence_search",
+        "defer",
+        "empirical_evidence_needed"
+      ]
+    },
+    "score": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": false
+}

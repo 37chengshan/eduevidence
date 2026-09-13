@@ -1,1 +1,34 @@
-{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["session_id","status","max_experiments","promotion","experiments"],"properties":{"session_id":{"type":"string"},"status":{"enum":["initialized","running","plateau","budget_exhausted","completed","blocked"]},"max_experiments":{"type":"integer","minimum":1,"maximum":50},"max_cost_usd":{"type":"number","minimum":0},"max_wall_minutes":{"type":"integer","minimum":1},"promotion":{"const":"branch_only"},"experiments":{"type":"array","items":{"type":"string"}},"best_experiment_id":{"type":["string","null"]},"protected_integrity":{"type":"boolean"}},"additionalProperties":false}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/37chengshan/eduevidence/schemas/vNext/autoevolve-session.schema.json",
+  "title": "AutoevolveSessionReport",
+  "description": "Daily self-evolution session report (engine/autoevolve/runner.py -> state_root/daily-report.json). Records one bounded branch-only session: how many experiments ran, their promotion statuses, the stopping reason, cost and wall time, and whether runner-owned isolation was verified. Automatic KEEP requires verified OS isolation; evaluator self-attestation is ignored.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_tag", "branch", "experiments", "statuses", "cost", "wall_minutes",
+    "plateau", "stop_reason", "promotion", "holdout_isolation_verified", "mutation_view"
+  ],
+  "properties": {
+    "run_tag": {"type": "string", "minLength": 1, "description": "Session tag; also the SkillExperiment.session_id of every experiment in this session."},
+    "branch": {"type": "string", "minLength": 1, "description": "Branch the session ran on. Promotion is branch-only."},
+    "experiments": {"type": "integer", "minimum": 0, "description": "Number of experiments attempted."},
+    "statuses": {"type": "array", "items": {"enum": ["created", "KEEP", "REJECT", "RETEST", "HUMAN_REVIEW", "CRASH", "INVALID"]}, "description": "Per-experiment promotion verdict, in attempt order."},
+    "best_experiment_id": {"type": ["string", "null"]},
+    "best_candidate_commit": {"type": ["string", "null"]},
+    "cost": {"type": "number", "minimum": 0, "description": "Cumulative session cost in USD, as reported by the agent and evaluator."},
+    "wall_minutes": {"type": "number", "minimum": 0},
+    "plateau": {"type": "boolean"},
+    "stop_reason": {"type": "string", "minLength": 1, "description": "Why the loop stopped (for example budget_exhausted, plateau, completed)."},
+    "promotion": {"const": "branch_only", "description": "Daily mode never promotes directly; KEEP only marks a candidate branch."},
+    "branch_push_requested": {"type": "boolean"},
+    "branch_pushed": {"type": "boolean"},
+    "mutation_view": {"type": "string", "minLength": 1, "description": "Isolation actually used for the mutation view."},
+    "holdout_isolation_verified": {"type": "boolean", "description": "Runner-owned OS isolation verification. Automatic KEEP requires true."},
+    "isolation_provider": {"type": "string"},
+    "isolation_reason": {"type": "string"},
+    "eval_suite_hash": {"type": "string", "description": "Trusted evaluation suite hash captured before the session; a mid-session change invalidates the experiment."},
+    "security_note": {"type": "string"},
+    "candidate_artifacts": {"type": "string", "description": "Where candidate artifacts live; local session state is never auto-pushed."}
+  }
+}

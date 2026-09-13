@@ -1,1 +1,90 @@
-{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["experiment_id","session_id","parent_skill_revision","hypothesis","mutation_scope","status"],"properties":{"experiment_id":{"type":"string"},"session_id":{"type":"string"},"parent_skill_revision":{"type":"string"},"hypothesis":{"type":"string","minLength":1},"mutation_scope":{"type":"array","items":{"type":"string"},"minItems":1},"changed_files":{"type":"array","items":{"type":"string"}},"candidate_commit":{"type":["string","null"]},"baseline_eval_id":{"type":["string","null"]},"candidate_eval_id":{"type":["string","null"]},"protected_hash_before":{"type":["string","null"]},"protected_hash_after":{"type":["string","null"]},"status":{"enum":["created","KEEP","REJECT","RETEST","HUMAN_REVIEW","CRASH","INVALID"]},"promotion_reason":{"type":"string"},"complexity_delta":{"type":"number"}},"additionalProperties":false}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SkillExperiment",
+  "description": "One bounded self-evolution experiment (engine/autoevolve/core.py). Pairs a hypothesis and mutation scope with the baseline and candidate evaluation ids and the protected-tree hashes before and after, then records the promotion verdict. Automatic KEEP requires runner-owned isolation and an intact protected tree.",
+  "type": "object",
+  "required": [
+    "experiment_id",
+    "session_id",
+    "parent_skill_revision",
+    "hypothesis",
+    "mutation_scope",
+    "status"
+  ],
+  "properties": {
+    "experiment_id": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "parent_skill_revision": {
+      "type": "string"
+    },
+    "hypothesis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mutation_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidate_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "baseline_eval_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "candidate_eval_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "protected_hash_before": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "protected_hash_after": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "created",
+        "KEEP",
+        "REJECT",
+        "RETEST",
+        "HUMAN_REVIEW",
+        "CRASH",
+        "INVALID"
+      ]
+    },
+    "promotion_reason": {
+      "type": "string"
+    },
+    "complexity_delta": {
+      "type": "number"
+    }
+  },
+  "additionalProperties": false
+}

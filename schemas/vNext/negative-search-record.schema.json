@@ -1,1 +1,68 @@
-{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["negative_search_id","research_iteration_id","gap_id","queries","providers","candidate_count","fetched_count","eligible_count","conclusion"],"properties":{"negative_search_id":{"type":"string"},"research_iteration_id":{"type":"string"},"gap_id":{"type":"string"},"queries":{"type":"array","items":{"type":"string"}},"providers":{"type":"array","items":{"type":"string"}},"candidate_count":{"type":"integer","minimum":0},"fetched_count":{"type":"integer","minimum":0},"eligible_count":{"const":0},"exclusion_reasons":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},"scope":{"type":"object"},"searched_at":{"type":"string"},"conclusion":{"const":"no_eligible_evidence_found_within_search_scope"}},"additionalProperties":false}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NegativeSearchRecord",
+  "description": "A search that legitimately returned nothing usable (engine/autoresearch/contracts.py NegativeSearchRecord). Zero-result searches are recorded rather than discarded: without them, absence of evidence is indistinguishable from failure to look, and retrieval saturation cannot be judged. Written by ResearchMemory.append_negative_search().",
+  "type": "object",
+  "required": [
+    "negative_search_id",
+    "research_iteration_id",
+    "gap_id",
+    "queries",
+    "providers",
+    "candidate_count",
+    "fetched_count",
+    "eligible_count",
+    "conclusion"
+  ],
+  "properties": {
+    "negative_search_id": {
+      "type": "string"
+    },
+    "research_iteration_id": {
+      "type": "string"
+    },
+    "gap_id": {
+      "type": "string"
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fetched_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "eligible_count": {
+      "const": 0
+    },
+    "exclusion_reasons": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "scope": {
+      "type": "object"
+    },
+    "searched_at": {
+      "type": "string"
+    },
+    "conclusion": {
+      "const": "no_eligible_evidence_found_within_search_scope"
+    }
+  },
+  "additionalProperties": false
+}

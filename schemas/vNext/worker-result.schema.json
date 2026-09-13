@@ -1,1 +1,60 @@
-{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["task_id","status","staging_artifacts","validated","validation_issues","metrics","summary"],"properties":{"task_id":{"type":"string","minLength":1},"status":{"enum":["completed","failed","blocked"]},"staging_artifacts":{"type":"array","items":{"type":"object","required":["artifact_type"],"properties":{"artifact_type":{"type":"string","minLength":1}},"additionalProperties":true}},"validated":{"type":"boolean"},"validation_issues":{"type":"array","items":{"type":"string"}},"metrics":{"type":"object"},"summary":{"type":"string"}},"additionalProperties":false}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WorkerResult",
+  "description": "The lead process's verdict on one worker's submission (engine/worker_result.py). validate_worker_output() reconstructs this from untrusted worker output: any worker-supplied validated flag is ignored, canonical-state artifacts are rejected, and only results that pass here may enter a Judge context.",
+  "type": "object",
+  "required": [
+    "task_id",
+    "status",
+    "staging_artifacts",
+    "validated",
+    "validation_issues",
+    "metrics",
+    "summary"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed",
+        "blocked"
+      ]
+    },
+    "staging_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifact_type"
+        ],
+        "properties": {
+          "artifact_type": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "validated": {
+      "type": "boolean"
+    },
+    "validation_issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "summary": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

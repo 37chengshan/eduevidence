@@ -1,1 +1,50 @@
-{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["complexity","tasks","max_parallel_workers","parallel_groups","plan_id"],"properties":{"complexity":{"enum":["S","M","L"]},"tasks":{"type":"array","items":{"$ref":"task-spec.schema.json"}},"max_parallel_workers":{"type":"integer","minimum":0,"maximum":6},"parallel_groups":{"type":"array","items":{"type":"array","minItems":1,"items":{"type":"string"}}},"plan_id":{"type":["string","null"]}},"additionalProperties":false}
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecutionPlan",
+  "description": "The plan for one research run (engine/orchestration.py ExecutionPlanner.plan). Complexity level, the ordered TaskSpecs, the maximum parallel workers and the parallel groups; S delegates zero tasks, M and L are capped by policy. scripts/check_autoresearch_invariants.py enforces those caps.",
+  "type": "object",
+  "required": [
+    "complexity",
+    "tasks",
+    "max_parallel_workers",
+    "parallel_groups",
+    "plan_id"
+  ],
+  "properties": {
+    "complexity": {
+      "enum": [
+        "S",
+        "M",
+        "L"
+      ]
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "task-spec.schema.json"
+      }
+    },
+    "max_parallel_workers": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6
+    },
+    "parallel_groups": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "plan_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
