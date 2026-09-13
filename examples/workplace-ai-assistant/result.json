@@ -53,26 +53,52 @@
     "target_population": "Enterprise customer-support staff, stratified by tenure and baseline skill.",
     "target_context": "Human-supervised support using an approved knowledge base.",
     "recommended_action": "pilot",
-    "confidence": "Low",
-    "confidence_score": null,
+    "confidence": "Moderate",
+    "confidence_score": 0.578,
+    "confidence_policy_version": "2026-08-12.v3",
+    "raw_model_confidence": "Moderate",
+    "raw_model_confidence_breakdown": {
+      "score": 0.578,
+      "evidence_quality": 0.8,
+      "consistency": 0.0,
+      "directness": 0.75,
+      "evidence_count": 4,
+      "independent_studies": 3,
+      "independent_samples": 3,
+      "count_term": 0.75,
+      "conflict_penalty": 0.0,
+      "unsupported_penalty": 0.0,
+      "note": "Adjudicator-stated confidence before the deterministic override."
+    },
     "independent_studies": 3,
     "independent_samples": 3,
     "supported_claims": [
-      "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
-      "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
-      "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
-      "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits."
+      "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome. — E-001",
+      "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support. — E-002",
+      "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support. — E-003",
+      "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits. — E-004"
     ],
     "uncertain_claims": [
-      "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+      "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set [no direct evidence]."
     ],
     "decision_rationale": "A supervised pilot is warranted because one direct field study supports efficiency gains but also reveals heterogeneous quality effects. Indirect experiments identify task boundaries, while local safety and net value remain unknown.",
+    "strongest_support": "Supervised AI assistance improves handling speed and answer consistency in customer-support work, with quality maintained.",
+    "key_uncertainty": "Evidence comes from adjacent writing and advisory settings rather than the support floor, so transfer to live customer conversations is unproven.",
+    "main_risk": "Unsupervised or knowledge-base-free use can produce confident wrong answers to customers, and over-reliance erodes agent skill over time.",
+    "next_action": "Run a supervised pilot on approved knowledge bases with human review on every reply, and track escalation and correction rates.",
     "methodology_summary": "One staggered-rollout quasi-experiment and two randomized experiments. Only the support study is direct; no pooled standardized effect or model benchmark was computed.",
+    "what_can_be_claimed": [
+      "Under human supervision on an approved knowledge base, AI assistance can shorten handling time while quality is monitored.",
+      "Benefits are not uniform across staff: the most experienced agents need their own quality monitoring."
+    ],
     "what_cannot_be_claimed": [
       "Universal gains, autonomous deployment safety, privacy protection, reduced staffing requirements or educational learning gains."
     ],
+    "exceeds_evidence_boundary": [
+      "Claiming universal gains or that autonomous deployment is safe exceeds the boundary: no included study measures privacy incidents, local net cost or subgroup service quality."
+    ],
     "missing_evidence": [
-      "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+      "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set [no direct evidence]."
     ],
     "applicability": {
       "required_conditions": [
@@ -85,7 +111,7 @@
     "extensions": {
       "data_origin": "manual_curated",
       "benchmark_eligible": false,
-      "note": "Conservative manual judgment about broad deployment; not a deterministic confidence-policy run or a probability.",
+      "note": "Confidence and the decision bound come from the deterministic policy in engine/decision_policy.py, enforced by the Pre-Verdict Gate; this record is a curated evidence selection, not a systematic review or a model run.",
       "knowledge_gaps": [
         {
           "gap_id": "G-001",
@@ -95,14 +121,10 @@
             "E-003",
             "E-004"
           ],
-          "summary": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set."
+          "summary": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set [no direct evidence]."
         }
       ]
-    },
-    "strongest_support": "Supervised AI assistance improves handling speed and answer consistency in customer-support work, with quality maintained.",
-    "key_uncertainty": "Evidence comes from adjacent writing and advisory settings rather than the support floor, so transfer to live customer conversations is unproven.",
-    "main_risk": "Unsupervised or knowledge-base-free use can produce confident wrong answers to customers, and over-reliance erodes agent skill over time.",
-    "next_action": "Run a supervised pilot on approved knowledge bases with human review on every reply, and track escalation and correction rates."
+    }
   },
   "sources": [
     {
@@ -216,7 +238,7 @@
       "study_type": "quasi_experimental",
       "population": "Customer-support agents",
       "sample_size": 5172,
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "outcome_measure": "Chat handling time; separate throughput summary: about 15% more issues resolved per hour.",
       "claim": "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
       "direction": "support",
@@ -228,9 +250,18 @@
         "One firm, one tool and a staggered nonrandom rollout; causal interpretation depends on identification assumptions."
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 2
+      },
+      "quality_score": 9.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "policy_effectiveness",
+        "teaching_neutral_outcome_token": "completion_time",
         "directness": "direct",
         "raw_result": {
           "metric": "issues_resolved_per_hour_relative_change",
@@ -258,7 +289,7 @@
       "study_type": "rct",
       "population": "College-educated working professionals",
       "sample_size": 453,
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "outcome_measure": "Self-reported task time: approximately 40% lower; assessed writing quality approximately 18% higher is a separate measure.",
       "claim": "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
       "direction": "support",
@@ -270,9 +301,18 @@
         "Indirect evidence, not directly generalizable: brief incentivized writing tasks did not demand precise factual accuracy or customer-specific context."
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 1,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 7.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "policy_effectiveness",
+        "teaching_neutral_outcome_token": "completion_time",
         "directness": "indirect",
         "raw_result": {
           "metric": "task_time_relative_change",
@@ -299,7 +339,7 @@
       "study_type": "rct",
       "population": "BCG consultants in the outside-frontier experiment",
       "sample_size": 373,
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "outcome_measure": "Correct business recommendation: about 19 percentage points lower across AI arms; Table 7 has 373 participants, not 758.",
       "claim": "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
       "direction": "support",
@@ -311,9 +351,18 @@
         "Indirect evidence, not directly generalizable: consultants solving an experimental business case, not live customer tickets."
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "implementation_risk",
+        "teaching_neutral_outcome_token": "accuracy",
         "directness": "indirect",
         "raw_result": {
           "metric": "correctness_absolute_change",
@@ -340,7 +389,7 @@
       "study_type": "quasi_experimental",
       "population": "Experienced and high-skill customer-support agents",
       "sample_size": null,
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "outcome_measure": "Small quality declines among the most experienced and highest-skilled support staff.",
       "claim": "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits.",
       "direction": "support",
@@ -352,9 +401,18 @@
         "Same study as E-001; subgroup sample size was not extracted. This is not an independent replication."
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 2
+      },
+      "quality_score": 8.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "implementation_risk",
+        "teaching_neutral_outcome_token": "accuracy",
         "directness": "direct",
         "raw_result": {
           "metric": "experienced_staff_quality",
@@ -375,7 +433,7 @@
     {
       "claim_id": "C-001",
       "claim": "AI assistance can shorten customer chat handling in a bounded support setting; throughput is a separate outcome.",
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "evidence_ids": [
         "E-001"
       ],
@@ -385,7 +443,7 @@
     {
       "claim_id": "C-002",
       "claim": "ChatGPT reduced time on short professional writing tasks; this is indirect evidence for customer support.",
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "evidence_ids": [
         "E-002"
       ],
@@ -395,7 +453,7 @@
     {
       "claim_id": "C-003",
       "claim": "AI can reduce correctness on tasks outside its capability frontier; consulting evidence is indirect for support.",
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "evidence_ids": [
         "E-003"
       ],
@@ -405,7 +463,7 @@
     {
       "claim_id": "C-004",
       "claim": "Experienced, high-skill support staff need separate quality monitoring rather than assumed uniform benefits.",
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "evidence_ids": [
         "E-004"
       ],
@@ -415,7 +473,7 @@
   ],
   "outcomes": [
     {
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "positive_count": 2,
       "negative_count": 0,
       "null_count": 0,
@@ -425,7 +483,7 @@
       ]
     },
     {
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "positive_count": 0,
       "negative_count": 2,
       "null_count": 0,

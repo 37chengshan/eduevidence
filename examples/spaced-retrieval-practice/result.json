@@ -99,7 +99,7 @@
         "A common delayed post-test protocol"
       ]
     },
-    "confidence": "Moderate",
+    "confidence": "High",
     "confidence_breakdown": {
       "score": 0.893,
       "evidence_quality": 0.755,
@@ -112,12 +112,12 @@
       "conflict_penalty": 0.0,
       "unsupported_penalty": 0.0
     },
-    "recommended_action": "pilot",
-    "decision_rationale": "Delayed retention shows consistent positive evidence with low implementation cost and little risk, but direct programming-course evidence is limited. A bounded pilot with a common delayed post-test is therefore the right next step before wider adoption.",
+    "recommended_action": "adopt",
+    "decision_rationale": "Delayed retention and transfer — the two primary outcomes — carry direct and consistent evidence (randomised trials and meta-analyses at directness 2), with low implementation cost and little risk, so course-level adoption is supported. The optimal spacing schedule and the thin classroom evidence from programming courses remain recorded uncertainties to monitor after adoption rather than reasons to withhold it.",
     "strongest_support": "Spaced retrieval practice consistently beats concentrated review on delayed retention across randomised trials and meta-analyses.",
     "key_uncertainty": "Direct classroom evidence from programming courses is thinner than the psychology-lab evidence, and the optimal spacing schedule is unresolved.",
     "main_risk": "Poorly designed practice can add cognitive load, and the size of the benefit depends on material difficulty and feedback design.",
-    "next_action": "Run a bounded one-semester pilot inside the introductory programming course: weekly short retrieval practice, verified by a common delayed post-test.",
+    "next_action": "Adopt weekly short closed-book retrieval practice inside the introductory programming course, verified by a common delayed post-test; fall back to pilot status for review if delayed retention drops below baseline or practice completion stays under 60%.",
     "missing_evidence": [
       "Randomised field studies inside programming courses",
       "Direct comparisons of different spacing schedules"
@@ -131,7 +131,7 @@
       "That a single optimal spacing schedule exists"
     ],
     "exceeds_evidence_boundary": [],
-    "confidence_score": null,
+    "confidence_score": 0.893,
     "confidence_policy_version": "2026-08-12.v3",
     "independent_studies": 6,
     "independent_samples": 6

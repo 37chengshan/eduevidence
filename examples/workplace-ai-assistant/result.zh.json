@@ -53,26 +53,52 @@
     "target_population": "企业客服人员，按资历和基线技能分层。",
     "target_context": "使用经审核知识库、由人工监督的客服流程。",
     "recommended_action": "pilot",
-    "confidence": "Low",
-    "confidence_score": null,
+    "confidence": "Moderate",
+    "confidence_score": 0.578,
+    "confidence_policy_version": "2026-08-12.v3",
+    "raw_model_confidence": "Moderate",
+    "raw_model_confidence_breakdown": {
+      "score": 0.578,
+      "evidence_quality": 0.8,
+      "consistency": 0.0,
+      "directness": 0.75,
+      "evidence_count": 4,
+      "independent_studies": 3,
+      "independent_samples": 3,
+      "count_term": 0.75,
+      "conflict_penalty": 0.0,
+      "unsupported_penalty": 0.0,
+      "note": "Adjudicator-stated confidence before the deterministic override."
+    },
     "independent_studies": 3,
     "independent_samples": 3,
     "supported_claims": [
-      "在有边界的客服场景中，AI 辅助可缩短会话处理时间；吞吐量是另一项指标。",
-      "ChatGPT 缩短了短篇职业写作任务用时；对客服而言属于间接证据。",
-      "在超出能力边界的任务中 AI 可能降低正确率；咨询实验对客服属于间接证据。",
-      "须单独监测资深高技能客服的质量，不能假定所有岗位群体均受益。"
+      "在有边界的客服场景中，AI 辅助可缩短会话处理时间；吞吐量是另一项指标。 — E-001",
+      "ChatGPT 缩短了短篇职业写作任务用时；对客服而言属于间接证据。 — E-002",
+      "在超出能力边界的任务中 AI 可能降低正确率；咨询实验对客服属于间接证据。 — E-003",
+      "须单独监测资深高技能客服的质量，不能假定所有岗位群体均受益。 — E-004"
     ],
     "uncertain_claims": [
-      "这组选编证据尚未确立本企业净成本、隐私事件率、亚组服务质量及持续表现。"
+      "这组选编证据尚未确立本企业净成本、隐私事件率、亚组服务质量及持续表现 [无直接证据]。"
     ],
     "decision_rationale": "建议有监督试点：一项直接现场研究支持效率收益，但同时显示质量效应因人而异。间接实验提示任务边界，而本地安全性与净价值仍未知。",
+    "strongest_support": "在人工监督前提下使用 AI 助手，可提升客服处理速度与答复一致性，且质量未见下降。",
+    "key_uncertainty": "现有证据来自写作与咨询等相邻场景，而非客服一线，因此迁移到真实客户对话尚未被证实。",
+    "main_risk": "脱离知识库或缺少人工复核时，可能自信地给出错误答复；长期过度依赖还会削弱坐席自身能力。",
+    "next_action": "在已批准知识库上开展人工监督试点，每条回复均经坐席复核，并跟踪升级率与纠错率。",
     "methodology_summary": "一项分批上线准实验和两项随机实验。只有客服研究属于直接证据；未计算合并标准化效应或模型 benchmark。",
+    "what_can_be_claimed": [
+      "在经审核知识库且有人工监督的条件下，AI 辅助可缩短处理时间，同时持续监测质量。",
+      "收益在员工之间并不一致：资历最深的客服需要单独的质量监测。"
+    ],
     "what_cannot_be_claimed": [
       "普遍收益、自动部署安全、隐私保护、减员必要性或教学学习效果。"
     ],
+    "exceeds_evidence_boundary": [
+      "声称普遍收益或自动部署安全超出证据边界：没有纳入研究测量隐私事件、本地净成本或亚组服务质量。"
+    ],
     "missing_evidence": [
-      "这组选编证据尚未确立本企业净成本、隐私事件率、亚组服务质量及持续表现。"
+      "这组选编证据尚未确立本企业净成本、隐私事件率、亚组服务质量及持续表现 [无直接证据]。"
     ],
     "applicability": {
       "required_conditions": [
@@ -85,7 +111,7 @@
     "extensions": {
       "data_origin": "manual_curated",
       "benchmark_eligible": false,
-      "note": "针对全面部署的保守人工判断；不是确定性置信度策略运行结果，也不是概率。",
+      "note": "置信度与决策边界来自 engine/decision_policy.py 的确定性策略，并由 Pre-Verdict Gate 强制；本记录为人工选编证据，不是系统综述或模型运行结果。",
       "knowledge_gaps": [
         {
           "gap_id": "G-001",
@@ -95,14 +121,10 @@
             "E-003",
             "E-004"
           ],
-          "summary": "这组选编证据尚未确立本企业净成本、隐私事件率、亚组服务质量及持续表现。"
+          "summary": "这组选编证据尚未确立本企业净成本、隐私事件率、亚组服务质量及持续表现 [无直接证据]。"
         }
       ]
-    },
-    "strongest_support": "在人工监督前提下使用 AI 助手，可提升客服处理速度与答复一致性，且质量未见下降。",
-    "key_uncertainty": "现有证据来自写作与咨询等相邻场景，而非客服一线，因此迁移到真实客户对话尚未被证实。",
-    "main_risk": "脱离知识库或缺少人工复核时，可能自信地给出错误答复；长期过度依赖还会削弱坐席自身能力。",
-    "next_action": "在已批准知识库上开展人工监督试点，每条回复均经坐席复核，并跟踪升级率与纠错率。"
+    }
   },
   "sources": [
     {
@@ -216,7 +238,7 @@
       "study_type": "quasi_experimental",
       "population": "客服人员",
       "sample_size": 5172,
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "outcome_measure": "会话处理时间；另列吞吐量摘要：每小时解决问题数约增加 15%。",
       "claim": "在有边界的客服场景中，AI 辅助可缩短会话处理时间；吞吐量是另一项指标。",
       "direction": "support",
@@ -228,9 +250,18 @@
         "单一企业、单一工具、非随机分批上线；因果解释依赖识别假设。"
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 2
+      },
+      "quality_score": 9.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "policy_effectiveness",
+        "teaching_neutral_outcome_token": "completion_time",
         "directness": "direct",
         "raw_result": {
           "metric": "issues_resolved_per_hour_relative_change",
@@ -258,7 +289,7 @@
       "study_type": "rct",
       "population": "受过大学教育的职场人士",
       "sample_size": 453,
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "outcome_measure": "自报任务用时约减少 40%；评定写作质量约提高 18% 是另一项指标。",
       "claim": "ChatGPT 缩短了短篇职业写作任务用时；对客服而言属于间接证据。",
       "direction": "support",
@@ -270,9 +301,18 @@
         "间接证据，不可直接推广：短时激励写作任务不要求精确事实或客户特定情境。"
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 1,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 7.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "policy_effectiveness",
+        "teaching_neutral_outcome_token": "completion_time",
         "directness": "indirect",
         "raw_result": {
           "metric": "task_time_relative_change",
@@ -299,7 +339,7 @@
       "study_type": "rct",
       "population": "参与超出能力边界实验的 BCG 顾问",
       "sample_size": 373,
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "outcome_measure": "商业建议正确率：合并 AI 组约低 19 个百分点；表 7 为 373 人，不是 758 人。",
       "claim": "在超出能力边界的任务中 AI 可能降低正确率；咨询实验对客服属于间接证据。",
       "direction": "support",
@@ -311,9 +351,18 @@
         "间接证据，不可直接推广：咨询顾问处理实验商业案例，并非真实客服工单。"
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 2,
+        "D2_sample_quality": 2,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 1,
+        "D5_directness": 1
+      },
+      "quality_score": 8.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "implementation_risk",
+        "teaching_neutral_outcome_token": "accuracy",
         "directness": "indirect",
         "raw_result": {
           "metric": "correctness_absolute_change",
@@ -340,7 +389,7 @@
       "study_type": "quasi_experimental",
       "population": "资深高技能客服人员",
       "sample_size": null,
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "outcome_measure": "资历最深、技能最高的客服群体出现小幅质量下降。",
       "claim": "须单独监测资深高技能客服的质量，不能假定所有岗位群体均受益。",
       "direction": "support",
@@ -352,9 +401,18 @@
         "与 E-001 属于同一研究；未提取该亚组样本量，不是独立重复验证。"
       ],
       "status": "SUPPORTED",
+      "quality_dimensions": {
+        "D1_study_design": 1,
+        "D2_sample_quality": 1,
+        "D3_measurement_validity": 2,
+        "D4_temporal_strength": 2,
+        "D5_directness": 2
+      },
+      "quality_score": 8.0,
       "extensions": {
         "domain": "policy",
         "policy_outcome": "implementation_risk",
+        "teaching_neutral_outcome_token": "accuracy",
         "directness": "direct",
         "raw_result": {
           "metric": "experienced_staff_quality",
@@ -375,7 +433,7 @@
     {
       "claim_id": "C-001",
       "claim": "在有边界的客服场景中，AI 辅助可缩短会话处理时间；吞吐量是另一项指标。",
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "evidence_ids": [
         "E-001"
       ],
@@ -385,7 +443,7 @@
     {
       "claim_id": "C-002",
       "claim": "ChatGPT 缩短了短篇职业写作任务用时；对客服而言属于间接证据。",
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "evidence_ids": [
         "E-002"
       ],
@@ -395,7 +453,7 @@
     {
       "claim_id": "C-003",
       "claim": "在超出能力边界的任务中 AI 可能降低正确率；咨询实验对客服属于间接证据。",
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "evidence_ids": [
         "E-003"
       ],
@@ -405,7 +463,7 @@
     {
       "claim_id": "C-004",
       "claim": "须单独监测资深高技能客服的质量，不能假定所有岗位群体均受益。",
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "evidence_ids": [
         "E-004"
       ],
@@ -415,7 +473,7 @@
   ],
   "outcomes": [
     {
-      "outcome_type": "completion_time",
+      "outcome_type": "policy_effectiveness",
       "positive_count": 2,
       "negative_count": 0,
       "null_count": 0,
@@ -425,7 +483,7 @@
       ]
     },
     {
-      "outcome_type": "accuracy",
+      "outcome_type": "implementation_risk",
       "positive_count": 0,
       "negative_count": 2,
       "null_count": 0,

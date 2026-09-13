@@ -1,0 +1,101 @@
+{
+  "gate_version": "2026-08-13.v1",
+  "checked_at": "2026-09-13T03:17:13.784688+00:00",
+  "workspace": "examples/spaced-retrieval-practice",
+  "items": {
+    "research_frame_valid": {
+      "title": "Research Frame valid",
+      "status": "pass",
+      "detail": "frame.json valid (question=在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？)",
+      "critical": true,
+      "blocks_high": true
+    },
+    "sources_valid": {
+      "title": "Sources valid",
+      "status": "pass",
+      "detail": "7 source record(s) schema-valid",
+      "critical": true,
+      "blocks_high": true
+    },
+    "evidence_schema_valid": {
+      "title": "Evidence Schema valid",
+      "status": "pass",
+      "detail": "6 evidence record(s) schema-valid",
+      "critical": true,
+      "blocks_high": true
+    },
+    "source_dedupe": {
+      "title": "Source dedupe",
+      "status": "pass",
+      "detail": "7 unique source(s), no duplicates",
+      "critical": true,
+      "blocks_high": true
+    },
+    "counter_evidence_search": {
+      "title": "Counter-evidence search",
+      "status": "pass",
+      "detail": "search_performed=true; 9/9 checks run; findings=2; contradictory_evidence_found=False",
+      "critical": true,
+      "blocks_high": true
+    },
+    "methodology_audit": {
+      "title": "Methodology audit",
+      "status": "pass",
+      "detail": "methodology verdict=PASS; task/learning separated",
+      "critical": true,
+      "blocks_high": true
+    },
+    "claim_evidence_audit": {
+      "title": "Claim-Evidence Audit",
+      "status": "pass",
+      "detail": "all verdict claims bind to existing evidence with consistent categories",
+      "critical": true,
+      "blocks_high": false
+    },
+    "outcome_mapping": {
+      "title": "Outcome mapping",
+      "status": "warn",
+      "detail": "outcome keys known; frame-declared outcomes without evidence: independent_problem_solving, knowledge_gain, reduced_effort",
+      "critical": false,
+      "blocks_high": false
+    },
+    "scope_calibration": {
+      "title": "Scope calibration",
+      "status": "pass",
+      "detail": "claims bounded: can=2, cannot=2, exceeds_boundary=0",
+      "critical": false,
+      "blocks_high": true
+    },
+    "independent_study_count": {
+      "title": "Independent study-sample count",
+      "status": "pass",
+      "detail": "independent studies=6, samples=6",
+      "critical": true,
+      "blocks_high": true
+    },
+    "deterministic_confidence": {
+      "title": "Deterministic confidence",
+      "status": "pass",
+      "detail": "deterministic confidence=High (score=0.893, policy=2026-08-12.v3)",
+      "critical": true,
+      "blocks_high": true
+    },
+    "decision_action_consistency": {
+      "title": "Decision action consistency",
+      "status": "pass",
+      "detail": "ADOPT is supported: High confidence with direct primary-outcome evidence",
+      "critical": true,
+      "blocks_high": false
+    }
+  },
+  "passed": true,
+  "critical_failures": [],
+  "high_confidence_allowed": true,
+  "max_confidence": "High",
+  "enforcement": {
+    "rule": "confidence capped at {max}; High confidence requires a fully passing gate and >= 2 independent studies",
+    "max_confidence": "High",
+    "requires_action_change": false,
+    "action_override": null
+  }
+}

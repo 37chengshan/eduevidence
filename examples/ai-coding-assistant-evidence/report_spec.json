@@ -109,29 +109,40 @@
         "source": "evidence.year_x_dimension"
       },
       {
+        "chart_id": "lieflat-matrix-heat.svg",
+        "type": "matrix_heat",
+        "catalog_ref": "L16 Matrix Heat",
+        "source": "evidence.year_x_outcome_counts"
+      },
+      {
         "chart_id": "lieflat-tick-rows.svg",
         "type": "tick_rows",
         "catalog_ref": "F5 Tick Rows",
         "source": "outcomes.direction_counts"
-      }
-    ],
-    "suppressed": [
-      {
-        "chart_id": "lieflat-forest-plot.svg",
-        "type": "forest_plot",
-        "catalog_ref": "FOREST-PLOT (publication figure)",
-        "reason": "fewer than 3 studies with numeric effect size (got 0)"
       },
       {
-        "chart_id": "lieflat-dot-cascade.svg",
-        "type": "dot_cascade",
-        "catalog_ref": "L2 Dot Cascade",
-        "reason": "fewer than 3 studies with numeric effect size (got 0)"
+        "chart_id": "lieflat-paired-rungs.svg",
+        "type": "paired_rungs",
+        "catalog_ref": "F6 Paired Rungs",
+        "source": "outcomes.paired_counts"
+      },
+      {
+        "chart_id": "lieflat-brand-spectrum.svg",
+        "type": "brand_spectrum",
+        "catalog_ref": "L7 Brand Spectrum",
+        "source": "outcomes.bipolar_axes"
+      },
+      {
+        "chart_id": "lieflat-hundred-field.svg",
+        "type": "hundred_field",
+        "catalog_ref": "L14 Hundred Field",
+        "source": "evidence.study_type_composition"
       }
     ],
+    "suppressed": [],
     "rejected": [],
     "warnings": [
-      "visual_layout missing or fully invalid — using deterministic safe combination (forest_plot + dot_cascade + bubble_almanac + tick_rows)"
+      "visual_layout missing or fully invalid — data-driven fallback selected bubble_almanac, matrix_heat, tick_rows, paired_rungs, brand_spectrum, hundred_field"
     ]
   },
   "charts": [

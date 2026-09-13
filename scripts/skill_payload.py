@@ -27,7 +27,8 @@ DOCS = (
     "release-closeout/frontend-acceptance.md", "release-closeout/verification.md",
 )
 EXAMPLES = (
-    "ai-coding-assistant-evidence", "workplace-ai-assistant",
+    "ai-coding-assistant-evidence", "spaced-retrieval-practice",
+    "workplace-ai-assistant",
 )
 EXAMPLE_FILES = (
     "result.json", "result.zh.json", "evidence_graph.json", "report_spec.json",

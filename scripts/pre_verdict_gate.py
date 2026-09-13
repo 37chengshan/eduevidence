@@ -58,7 +58,7 @@ for _p in (str(ROOT), str(ROOT / "scripts")):
 
 from validate_schema import SchemaError, Validator  # noqa: E402
 from evidence_score import independent_samples, independent_studies  # noqa: E402
-from evidence_semantics import claim_relation  # noqa: E402
+from evidence_semantics import claim_relation, decision_relation  # noqa: E402
 from run_workspace import utc_now  # noqa: E402
 
 GATE_VERSION = "2026-08-13.v1"
@@ -157,9 +157,24 @@ def _item_res(status: str, detail: str, *, blocks_high: bool | None = None) -> d
 
 
 def workspace_domain(ws: Path) -> str:
-    """The domain this run registered; defaults to education when absent."""
+    """The domain this run/pack registered; defaults to education when absent.
+
+    A run workspace records it in run_manifest.json, but an example pack has
+    no manifest: reading only that file made a policy pack validate against the
+    education frame schema and fail item 1. Fall back to the same declared
+    places the read model uses, in the same order.
+    """
     manifest = _load_ws_json(ws, "run_manifest.json")
-    return str(manifest.get("domain") or "education")
+    if manifest.get("domain"):
+        return str(manifest["domain"])
+    frame = _load_ws_json(ws, "frame.json")
+    declared = (frame.get("extensions") or {}).get("domain")
+    if declared:
+        return str(declared)
+    result_meta = (_load_ws_json(ws, "result.json").get("meta") or {})
+    if result_meta.get("domain"):
+        return str(result_meta["domain"])
+    return "education"
 
 
 def frame_schema_name(domain: str) -> str:
@@ -340,6 +355,96 @@ def check_claim_evidence(ws: Path) -> dict[str, str]:
     return _item_res("pass", "all verdict claims bind to existing evidence with consistent categories")
 
 
+def _primary_evidence_summary(ws: Path) -> dict[str, Any]:
+    """Re-derive ADOPT eligibility from the pack's own evidence records.
+
+    The gate audits an artifact another party wrote, so it cannot trust the
+    verdict about itself: primary-result directness is read back from the
+    corpus (frame primary outcomes + per-record D5 Directness), using the same
+    domain registry and directness threshold the tribunal imports.
+    """
+    from engine.decision_policy import (
+        ADOPT_DIRECTNESS,
+        outcome_category,
+        primary_effect_categories,
+    )
+
+    domain = workspace_domain(ws)
+    try:
+        primary = primary_effect_categories(domain)
+    except (KeyError, ValueError) as exc:
+        return {"domain": domain, "primary": (), "direct": False, "error": str(exc)}
+
+    frame = _load_ws_json(ws, "frame.json")
+    declared_primary = [
+        str(token) for token in ((frame.get("outcomes") or {}).get("primary") or [])
+    ]
+    evidence = _load_ws_jsonl(ws, "evidence.jsonl")
+    direct_hits: list[str] = []
+    for ev in evidence:
+        token = str(ev.get("outcome_type") or "")
+        category = outcome_category(domain, token, primary)
+        if category is None or category not in primary:
+            continue
+        dims = ev.get("quality_dimensions") or {}
+        d5 = dims.get("D5_directness")
+        if isinstance(d5, bool) or not isinstance(d5, int):
+            continue
+        if d5 >= ADOPT_DIRECTNESS:
+            direct_hits.append(str(ev.get("evidence_id") or "?"))
+    return {
+        "domain": domain,
+        "primary": primary,
+        "declared_primary": declared_primary,
+        "direct": bool(direct_hits),
+        "direct_evidence_ids": direct_hits,
+    }
+
+
+def check_decision_action(ws: Path) -> dict[str, str]:
+    """The stated action must be the action the evidence supports.
+
+    A verdict cannot hand itself ADOPT: the gate requires High confidence, a
+    supporting decisive relation, and primary-outcome evidence at directness 2.
+    Anything less is capped to pilot - the conservative bound - because the
+    underlying evidence may still justify a bounded trial.
+    """
+    verdict = _verdict_for_audit(ws)
+    if not verdict:
+        return _item_res("warn", "no verdict artifact yet; action not audited")
+    action = str(verdict.get("recommended_action") or "").lower()
+    if action != "adopt":
+        label = action or "unset"
+        return _item_res("pass", "action=" + label + " is within the conservative bound")
+
+    from engine.decision_policy import ADOPT_REQUIRED_LABEL, decision_action
+
+    evidence = _load_ws_jsonl(ws, "evidence.jsonl")
+    relations = [decision_relation(ev) for ev in evidence]
+    decisive = {str(index): rel for index, rel in enumerate(relations)
+                if rel in ("support_adoption", "oppose_adoption")}
+    label = str(verdict.get("confidence") or "")
+    summary = _primary_evidence_summary(ws)
+    expected = decision_action(
+        confidence_label=label,
+        decisive_relations=decisive,
+        has_direct_primary_evidence=bool(summary.get("direct")),
+    )
+    if expected == "ADOPT":
+        detail = "ADOPT is supported: " + label + " confidence with direct primary-outcome evidence"
+        return _item_res("pass", detail)
+    reasons: list[str] = []
+    if label != ADOPT_REQUIRED_LABEL:
+        reasons.append("confidence=" + (label or "unset") + " (needs " + ADOPT_REQUIRED_LABEL + ")")
+    if "support_adoption" not in relations:
+        reasons.append("no decisive supporting evidence")
+    if not summary.get("direct"):
+        reasons.append("no primary-outcome evidence at directness 2")
+    detail = ("recommended_action=adopt is not supported (" + "; ".join(reasons)
+              + "); the evidence bounds this decision to pilot")
+    return _item_res("fail", detail)
+
+
 def check_outcome_mapping(ws: Path) -> dict[str, str]:
     verdict = _verdict_for_audit(ws)
     frame = _load_ws_json(ws, "frame.json")
@@ -352,18 +457,35 @@ def check_outcome_mapping(ws: Path) -> dict[str, str]:
         issues.append(f"unknown outcome key(s) in verdict: {', '.join(sorted(unknown))}")
 
     evidence_outcomes = {e.get("outcome_type") for e in _load_ws_jsonl(ws, "evidence.jsonl")}
+    frame_outcomes = frame.get("outcomes", {}) or {}
     declared = set()
     for group in ("primary", "secondary", "risk"):
-        declared.update((frame.get("outcomes", {}) or {}).get(group, []) or [])
+        declared.update(frame_outcomes.get(group, []) or [])
     if declared:
         missing = sorted(d for d in declared if d and d not in evidence_outcomes)
         if missing:
-            notes.append(f"frame-declared outcomes without evidence: {', '.join(missing)}")
+            # Missing evidence is not a zero effect, and a secondary or risk
+            # outcome the frame named but the corpus never measured does not
+            # contaminate the decision. Only a PRIMARY outcome with no
+            # evidence at all means the decision rests on the wrong construct,
+            # so only that case blocks High confidence.
+            primary_missing = sorted(
+                d for d in (frame_outcomes.get("primary", []) or [])
+                if d and d not in evidence_outcomes)
+            note = f"frame-declared outcomes without evidence: {', '.join(missing)}"
+            if primary_missing:
+                return _item_res(
+                    "warn",
+                    note + f"; primary outcomes unmeasured: {', '.join(primary_missing)}",
+                    blocks_high=True)
+            notes.append(note)
+        else:
+            notes.append("all frame-declared outcomes are covered by evidence")
 
     if issues:
         return _item_res("fail", "; ".join(issues))
-    if notes:
-        return _item_res("warn", "outcome keys known; " + notes[0])
+    if notes and "without evidence" in notes[0]:
+        return _item_res("warn", "outcome keys known; " + notes[0], blocks_high=False)
     if not declared:
         return _item_res("warn", "outcome keys known; frame declares no outcomes to map")
     return _item_res("pass", f"outcome mapping complete ({len(evidence_outcomes)} outcome type(s) covered)")
@@ -452,6 +574,8 @@ GATE_ITEMS: list[dict[str, Any]] = [
      "blocks_high": True, "check": check_study_count},
     {"id": "deterministic_confidence", "title": "Deterministic confidence", "critical": True,
      "blocks_high": True, "check": None},
+    {"id": "decision_action_consistency", "title": "Decision action consistency",
+     "critical": True, "blocks_high": False, "check": check_decision_action},
 ]
 
 
@@ -507,6 +631,7 @@ def apply_enforcement(verdict: dict[str, Any], gate: dict[str, Any]) -> dict[str
 
     - gate failed            -> confidence at most Low; adopt downgraded to pilot
     - gate passed but High blocked -> confidence at most Moderate
+    - stated adopt the evidence does not support -> downgraded to pilot
     Always records the enforcement inside verdict.extensions.gate_enforcement.
     """
     import copy
@@ -517,6 +642,9 @@ def apply_enforcement(verdict: dict[str, Any], gate: dict[str, Any]) -> dict[str
     if CONFIDENCE_RANK.get(current, 0) > CONFIDENCE_RANK.get(cap, 0):
         out["confidence"] = cap
     if not gate.get("passed", False) and out.get("recommended_action") == "adopt":
+        out["recommended_action"] = "pilot"
+    action_item = (gate.get("items") or {}).get("decision_action_consistency") or {}
+    if action_item.get("status") == "fail" and out.get("recommended_action") == "adopt":
         out["recommended_action"] = "pilot"
     extensions = out.setdefault("extensions", {})
     if not isinstance(extensions, dict):

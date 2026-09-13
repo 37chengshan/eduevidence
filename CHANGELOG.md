@@ -2,6 +2,44 @@
 
 所有显著变更均记录于此。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)；版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased]
+
+> Fix: the four-state decision could not reach ADOPT through the V1 path, and all three
+> public cases read PILOT regardless of their evidence.
+
+### The ADOPT path is reachable, and provable
+- New `engine/decision_policy.py` is the single authority for the ADOPT gate (primary
+  outcome categories per domain, directness threshold, confidence band). `engine/tribunal.py`
+  and `scripts/pre_verdict_gate.py` both import it, so the V2 adjudicator and the V1 gate can
+  no longer drift apart.
+- `engine/migration.py` no longer hard-codes `directness: 1` on every migrated link. Directness
+  and `applicability.scope_match` are derived from the source record's D5 Directness, with an
+  explicit downgrade recorded when D5 is absent. A migrated pack used to be structurally
+  incapable of ADOPT; `spaced-retrieval-practice` now adjudicates to **ADOPT / High (0.893)**.
+- The Pre-Verdict Gate gained item 12, `decision_action_consistency`: a pack cannot award
+  itself ADOPT. The gate re-derives primary-outcome directness from the evidence corpus and
+  caps an unsupported adopt to pilot. The gate is now 12 items.
+- `outcome_mapping` blocks High only when a PRIMARY outcome has no evidence; an unmeasured
+  secondary or risk outcome is a scope note, since missing evidence is not a zero effect.
+- The gate resolves a pack's domain from `run_manifest.json`, then `frame.extensions.domain`,
+  then `result.meta.domain`, instead of assuming education. Policy packs no longer fail their
+  own frame check.
+
+### Public cases corrected and re-adjudicated
+- `spaced-retrieval-practice`: claims bound to evidence ids, deterministic confidence and the
+  action bound applied, narratives re-written for adoption. Verdict **ADOPT / High / 0.893**.
+- `ai-coding-assistant-evidence`: challenge stage written (`skeptic.json`, nine checks grounded
+  in the corpus), `final_verdict.json` added, policy version refreshed to `2026-08-12.v3`.
+  Verdict unchanged at **PILOT / Moderate / 0.586** — the evidence still stops at task performance.
+- `workplace-ai-assistant`: per-record quality dimensions added, the pack now declares the
+  policy domain's own outcome tokens (`policy_effectiveness` / `implementation_risk`) with the
+  teaching-neutral tokens kept in `extensions`, challenge record written, scope calibration
+  fields and claim bindings added. Verdict **PILOT / Moderate / 0.578**.
+- `schemas/v2/{study,finding,methodology-audit}.schema.json` accept the `ST-` study-id prefix so
+  curated packs migrate without being renamed.
+- All three packs pass the Pre-Verdict Gate (`passed=true`) and record a `gate_report.json`;
+  reports, five themes, Studio snapshot, Pages export and the submission package were rebuilt.
+  The submission package now ships all three examples, including the ADOPT case.
 
 ## [6.2.0] — 2026-09-12
 

@@ -38,6 +38,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from engine.contracts import validate_record
+from engine.decision_policy import (
+    ADOPT_DIRECTNESS,
+    decision_action as _policy_decision_action,
+    outcome_category,
+    primary_effect_categories,
+)
 from engine.graph_store import GraphStore
 from engine.ids import new_local_id
 from engine.project import ProjectWorkspace
@@ -230,40 +236,6 @@ def _confidence(store: GraphStore, syntheses: tuple[ClaimSynthesis, ...]) -> dic
             "decisive_relations": dict(decisive)}
 
 
-#: Category buckets that count as a domain's PRIMARY effect for the ADOPT gate.
-#: The gate below asks "is there direct evidence on the outcome this decision
-#: is actually about?" — for education that is a learning outcome (task
-#: performance and process measures never qualify); for policy it is the
-#: policy-effectiveness / cost class. Every entry must name a category that
-#: the domain registry declares, which check_protocol_alignment.py enforces.
-PRIMARY_EFFECT_CATEGORIES: dict[str, tuple[str, ...]] = {
-    "education": ("learning",),
-    "policy": ("effectiveness", "cost"),
-}
-
-#: Fallback when a domain declares no entry above: the first category its
-#: taxonomy lists is treated as primary. The registry stays authoritative.
-
-
-def primary_effect_categories(domain: str) -> tuple[str, ...]:
-    """Categories that satisfy the ADOPT direct-evidence gate for a domain."""
-    from engine.taxonomy import categories as taxonomy_categories
-
-    declared = PRIMARY_EFFECT_CATEGORIES.get(domain)
-    if declared:
-        known = taxonomy_categories(domain)
-        missing = [c for c in declared if c not in known]
-        if missing:
-            raise ValueError(
-                f"domain {domain!r} ADOPT gate references undeclared "
-                f"categories {missing}; declared: {sorted(known)}")
-        return declared
-    known = taxonomy_categories(domain)
-    if not known:
-        raise ValueError(f"domain {domain!r} declares no outcome categories")
-    return (next(iter(known)),)
-
-
 def _has_direct_primary_evidence(store: GraphStore,
                                  decisive_relations: dict[str, str],
                                  domain: str = "education") -> bool:
@@ -275,8 +247,6 @@ def _has_direct_primary_evidence(store: GraphStore,
     directness == 2. Task-performance, process and risk outcomes never
     qualify, and a missing outcome record or missing directness fails closed.
     """
-    from engine.taxonomy import category_of
-
     primary = primary_effect_categories(domain)
     findings = {f["finding_id"]: f for f in store.read_table("findings")}
     outcomes = {o["outcome_id"]: o for o in store.read_table("outcomes")}
@@ -294,25 +264,18 @@ def _has_direct_primary_evidence(store: GraphStore,
         outcome = outcomes.get(fnd.get("outcome_id"))
         if outcome is None:
             continue
-        # The outcomes table stores CATEGORY buckets (schemas/v2/outcome:
-        # learning / task_performance / process / risk, plus each domain's own
-        # buckets), not V1 taxonomy tokens. Accept a category directly and,
-        # for graphs written with a raw token, resolve it through the registry.
         value = str(outcome.get("outcome_type") or "")
-        if value in primary:
-            category = value
-        else:
-            try:
-                category = category_of(domain, value)
-            except Exception:
-                # Unknown value: fail closed rather than treating it as
-                # decision-grade evidence.
-                continue
+        category = outcome_category(domain, value, primary)
+        # Unknown value: fail closed rather than treating it as
+        # decision-grade evidence.
+        if category is None:
+            continue
         if category not in primary:
             continue
         for link in links_by_finding.get(fid, []):
             directness = link.get("directness")
-            if isinstance(directness, (int, float)) and int(directness) == 2:
+            if (isinstance(directness, (int, float))
+                    and int(directness) == ADOPT_DIRECTNESS):
                 return True
     return False
 
@@ -320,26 +283,16 @@ def _has_direct_primary_evidence(store: GraphStore,
 def _decision_action(syn_statuses: dict[str, str], confidence: dict,
                      decisive_relations: dict[str, str],
                      has_direct_primary_evidence: bool = False) -> str:
-    """Gate-enforced decision action.
+    """Gate-enforced decision action; rule lives in engine.decision_policy.
 
-    REJECT requires usable direct opposition evidence (an independent Study
-    folded to oppose_adoption). Low/Insufficient can never yield ADOPT.
-    ADOPT additionally requires direct evidence on the domain's PRIMARY
-    outcome category (education: learning; policy: effectiveness/cost): High
-    + decisive support WITHOUT such evidence downgrades to PILOT — task
-    performance and procedural efficiency are not decision-grade effects.
-    Moderate + decisive support → PILOT; otherwise INSUFFICIENT_EVIDENCE.
+    The V1 Pre-Verdict Gate enforces the same rule, so the thresholds are
+    imported rather than restated here.
     """
-    label = confidence["label"]
-    has_oppose = any(r == "oppose_adoption" for r in decisive_relations.values())
-    has_support = any(r == "support_adoption" for r in decisive_relations.values())
-    if has_oppose:
-        return "REJECT"
-    if label == "High" and has_support and has_direct_primary_evidence:
-        return "ADOPT"
-    if label in ("High", "Moderate") and has_support:
-        return "PILOT"
-    return "INSUFFICIENT_EVIDENCE"
+    return _policy_decision_action(
+        confidence_label=confidence["label"],
+        decisive_relations=decisive_relations,
+        has_direct_primary_evidence=has_direct_primary_evidence,
+    )
 
 
 

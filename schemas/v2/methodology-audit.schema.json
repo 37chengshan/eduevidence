@@ -13,7 +13,11 @@
   ],
   "properties": {
     "audit_id": { "type": "string", "pattern": "^AUD-" },
-    "study_id": { "type": "string", "pattern": "^(STU-|STUDY-)" },
+    "study_id": {
+      "type": "string",
+      "pattern": "^(ST-|STU-|STUDY-)",
+      "description": "Audited Study. ST- preserves the placeholder prefix used by some legacy/curated packs; migration never renames ids."
+    },
     "policy_version": { "type": "string", "minLength": 1 },
     "design_quality": { "type": "integer", "minimum": 0, "maximum": 2 },
     "sample_quality": { "type": "integer", "minimum": 0, "maximum": 2 },

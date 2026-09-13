@@ -10,7 +10,11 @@
     "independence_key", "identity_status", "extensions"
   ],
   "properties": {
-    "study_id": { "type": "string", "pattern": "^(STU-|STUDY-)" },
+    "study_id": {
+      "type": "string",
+      "pattern": "^(ST-|STU-|STUDY-)",
+      "description": "Study identity. ST- is the placeholder prefix some legacy/curated packs used before STU-/STUDY-; migration preserves original ids rather than renaming them."
+    },
     "source_ids": {
       "type": "array",
       "items": { "type": "string", "pattern": "^(SRC-|S-)" },

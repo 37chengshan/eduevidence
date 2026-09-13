@@ -1,7 +1,7 @@
 {
   "generated_by": "build_report.py",
   "source": "result.json + result.zh.json",
-  "question": "Should an enterprise customer-support team introduce a generative AI assistant?",
+  "question": "在大学的程序设计入门课程中，是否应该用间隔重复与检索练习替代传统的集中式复习？这对学生的长期知识保持是否有效？",
   "theme_selected": "claude",
   "theme_display": "Claude Research [Light]",
   "theme_available": [
@@ -88,7 +88,7 @@
     },
     "outcome_evidence_balance": {
       "render": false,
-      "reason": "suppressed: sparse effect counts (total=4, active=2, nonzero_cells=2, max_cell=2)"
+      "reason": "suppressed: sparse effect counts (total=6, active=2, nonzero_cells=3, max_cell=4)"
     },
     "claim_trace": {
       "render": true,
@@ -102,18 +102,6 @@
   "lieflat_gallery": {
     "layout_source": "deterministic_fallback",
     "selected": [
-      {
-        "chart_id": "lieflat-bubble-almanac.svg",
-        "type": "bubble_almanac",
-        "catalog_ref": "L9 Bubble Almanac",
-        "source": "evidence.year_x_dimension"
-      },
-      {
-        "chart_id": "lieflat-matrix-heat.svg",
-        "type": "matrix_heat",
-        "catalog_ref": "L16 Matrix Heat",
-        "source": "evidence.year_x_outcome_counts"
-      },
       {
         "chart_id": "lieflat-hundred-field.svg",
         "type": "hundred_field",
@@ -136,7 +124,7 @@
     "suppressed": [],
     "rejected": [],
     "warnings": [
-      "visual_layout missing or fully invalid — data-driven fallback selected bubble_almanac, matrix_heat, hundred_field, tick_gauge, ballot_tally"
+      "visual_layout missing or fully invalid — data-driven fallback selected hundred_field, tick_gauge, ballot_tally"
     ]
   },
   "charts": [
@@ -205,8 +193,8 @@
     "status": "PASS",
     "contract_valid": "PASS",
     "claims_bound": "PASS",
-    "evidence_bound": 4,
-    "sources_resolved": 3,
+    "evidence_bound": 6,
+    "sources_resolved": 7,
     "numbers_match_result": "PASS",
     "bilingual_structure_match": "PASS",
     "language_match": "PASS",

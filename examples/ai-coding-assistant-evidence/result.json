@@ -1,7 +1,7 @@
 {
   "meta": {
     "skill": "eduevidence",
-    "version": "5.2.0",
+    "version": "6.2.0",
     "generated_at": "2026-08-24T04:39:14.576951+00:00",
     "mode": "platform_native",
     "question": "我们准备在大学一年级 C 语言课程中允许学生使用生成式 AI 编程助手。它到底会不会提高学习效果？应该怎样引入？",
@@ -168,20 +168,20 @@
       "Claiming 'AI works for everyone' exceeds the boundary: population and subject mismatch."
     ],
     "confidence_score": 0.586,
-    "confidence_policy_version": "2026-08-12.v2",
+    "confidence_policy_version": "2026-08-12.v3",
     "independent_studies": 8,
     "independent_samples": 8,
     "raw_model_confidence": "Moderate",
     "raw_model_confidence_breakdown": {
-      "score": 0.5,
-      "evidence_quality": 0.7,
-      "consistency": 0.6,
-      "directness": 0.4,
+      "score": 0.586,
+      "evidence_quality": 0.758,
+      "consistency": 0.667,
+      "directness": 0.458,
       "evidence_count": 12,
       "independent_studies": 8,
       "independent_samples": 8,
       "count_term": 1.0,
-      "conflict_penalty": 0.0,
+      "conflict_penalty": 0.15,
       "unsupported_penalty": 0.0
     },
     "strongest_support": "AI coding assistants reliably speed up practice work: completion rate 1.15x and time 0.57x in a randomised trial of 69 novices.",

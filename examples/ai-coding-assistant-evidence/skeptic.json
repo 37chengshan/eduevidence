@@ -1,0 +1,72 @@
+{
+  "search_performed": true,
+  "method": "Counter-evidence challenge over the eight registry-verified sources in this pack: null and negative results, contradictory findings, alternative explanations, measurement mismatch, sampling bias, novelty effect, AI dependency and scope overreach. Every finding below cites records already in evidence.jsonl; nothing was invented for the challenge.",
+  "skeptic_findings": [
+    {
+      "check": "1_null_result",
+      "status": "found",
+      "detail": "Three null results are recorded. E-002 found no decrease on manual code-modification tasks, E-003 found no significant retention difference at one week (the retention window is short and the sample small), and E-005 found the guardrailed tutor removed the negative effect without producing a positive learning gain.",
+      "related_evidence_ids": ["E-002", "E-003", "E-005"]
+    },
+    {
+      "check": "2_negative_result",
+      "status": "found",
+      "detail": "E-004 reports a 17% lower independent-exam score for students with unguarded GPT-4 access despite higher practice performance, and E-012 records comprehension and debugging difficulties with low ownership of AI-generated solutions in a small single-session study.",
+      "related_evidence_ids": ["E-004", "E-012"]
+    },
+    {
+      "check": "3_contradictory_evidence",
+      "status": "found",
+      "detail": "E-004 directly contradicts the claim that AI access reliably improves learning: practice performance rose while independent performance fell. This is the single most decision-relevant piece of counter-evidence in the pack and is the reason the verdict is bounded rather than unconditional.",
+      "related_evidence_ids": ["E-004"]
+    },
+    {
+      "check": "4_alternative_explanation",
+      "status": "found",
+      "detail": "Task familiarity, prior programming competency, prompt-engineering effort, and tool-design differences (unguarded chat versus guardrailed tutor) are all recorded as confounders that could explain the observed differences without any effect on learning.",
+      "related_evidence_ids": ["E-001", "E-005", "E-006"]
+    },
+    {
+      "check": "5_measurement_mismatch",
+      "status": "found",
+      "detail": "E-006 and E-010 measure the tool rather than the learner: practice accuracy and CS1 exam-style pass rates show what the model can do, not what students learn. E-008 measures professional developers, and E-011 measures short-term explanation ratings rather than learning gains.",
+      "related_evidence_ids": ["E-006", "E-008", "E-010", "E-011"]
+    },
+    {
+      "check": "6_sampling_bias",
+      "status": "found",
+      "detail": "The randomised evidence comes from populations that are not the target: ages 10-17 novices (E-001/E-002/E-003), high-school mathematics students in one country (E-004/E-005/E-006), professional developers (E-008), and a small n=24 usability study (E-012). No university programming-course sample exists in this corpus.",
+      "related_evidence_ids": ["E-001", "E-004", "E-008", "E-012"]
+    },
+    {
+      "check": "7_novelty_effect",
+      "status": "found",
+      "detail": "The studies measured first exposure to these tools. A novelty effect cannot be separated from a durable effect in any of the included designs, and the professional-developer trial (E-008) is a single-task ecology.",
+      "related_evidence_ids": ["E-001", "E-008"]
+    },
+    {
+      "check": "8_ai_dependency",
+      "status": "found",
+      "detail": "E-004 documents unguarded access being used as a crutch with worse independent performance, and E-012 documents low ownership and debugging difficulty on AI-generated code. Dependency is a recorded mechanism, not a hypothetical risk.",
+      "related_evidence_ids": ["E-004", "E-012"]
+    },
+    {
+      "check": "9_scope_overreach",
+      "status": "found",
+      "detail": "Claiming that AI coding assistants improve university programming learning exceeds this corpus: there is no university-level randomised trial with a no-AI transfer test, the retention evidence spans one week, and benchmark or explanation-quality results do not substitute for classroom learning outcomes.",
+      "related_evidence_ids": ["E-003", "E-010", "E-011"]
+    }
+  ],
+  "contradictory_evidence_found": true,
+  "threats_to_validity": [
+    "no university programming-course sample in the reviewed set",
+    "one-week retention window is far shorter than a semester",
+    "task performance and independent performance diverge, so task measures cannot stand in for learning",
+    "unguarded and guardrailed tool designs are not interchangeable conditions",
+    "the professional-developer trial is a preprint and a single-task ecology"
+  ],
+  "extensions": {
+    "data_origin": "manual_curated",
+    "note": "Challenge stage written from the pack corpus; no new sources were retrieved for this record."
+  }
+}

@@ -1,4 +1,4 @@
-"""Tests for scripts/pre_verdict_gate.py — 11-item Pre-Verdict Gate (Phase 15).
+"""Tests for scripts/pre_verdict_gate.py — 12-item Pre-Verdict Gate (Phase 15).
 
 A valid demo workspace is built by the orchestrator's demo seeding path
 (init_run + advance with the ai-coding-assistant example pack), so these tests
@@ -21,6 +21,7 @@ EXPECTED_ITEM_IDS = {
     "source_dedupe", "counter_evidence_search", "methodology_audit",
     "claim_evidence_audit", "outcome_mapping", "scope_calibration",
     "independent_study_count", "deterministic_confidence",
+    "decision_action_consistency",
 }
 
 
@@ -40,24 +41,46 @@ def demo_ws(tmp_path):
     return build_demo_workspace(tmp_path)
 
 
-def test_gate_has_exactly_eleven_items():
-    assert len(GATE_ITEMS) == 11
+def test_gate_has_exactly_twelve_items():
+    assert len(GATE_ITEMS) == 12
     assert {spec["id"] for spec in GATE_ITEMS} == EXPECTED_ITEM_IDS
 
 
-def test_gate_passes_but_caps_confidence_for_demo_workspace(demo_ws):
-    """The gate passes, yet High is withheld while a declared outcome has no evidence."""
+def test_gate_passes_and_unmeasured_secondary_outcomes_do_not_cap(demo_ws):
+    """The gate passes; unmeasured secondary/risk outcomes no longer cap confidence.
+
+    Missing evidence for a PRIMARY outcome means the decision rests on the wrong
+    construct and still blocks High (see the test below). An outcome the frame
+    listed only under risk/secondary was simply never measured, which is a scope
+    note rather than a reason to distrust the decision.
+    """
     report = evaluate_workspace(demo_ws, require_final=True)
     assert report["passed"] is True
-    # The flagship pack declares ai_dependency / reduced_transfer outcomes without
-    # evidence for them, so the gate blocks High and caps at Moderate - which is
-    # exactly what the pack's own verdict states. Asserting High here would be
-    # asserting the very permissiveness the gate exists to prevent.
-    assert report["high_confidence_allowed"] is False
-    assert report["max_confidence"] == "Moderate"
+    # Both primary outcomes of this pack (independent_problem_solving,
+    # code_quality) are measured, so High stays available; the pack itself
+    # elects Moderate through its deterministic confidence score.
+    assert report["high_confidence_allowed"] is True
+    assert report["max_confidence"] == "High"
     assert report["critical_failures"] == []
     for item in report["items"].values():
         assert item["status"] in ("pass", "warn"), item
+
+
+def test_primary_outcome_without_evidence_still_caps(demo_ws):
+    """An unmeasured PRIMARY outcome keeps blocking High: the decision would rest
+    on the wrong construct. This is the half of the old behaviour worth keeping."""
+    import json as _json
+    frame_path = demo_ws / "frame.json"
+    frame = _json.loads(frame_path.read_text(encoding="utf-8"))
+    frame.setdefault("outcomes", {})["primary"] = ["independent_problem_solving",
+                                                   "reduced_transfer"]
+    frame_path.write_text(_json.dumps(frame, ensure_ascii=False, indent=2), encoding="utf-8")
+    report = evaluate_workspace(demo_ws, require_final=True)
+    item = report["items"]["outcome_mapping"]
+    assert item["status"] == "warn"
+    assert item["blocks_high"] is True
+    assert "reduced_transfer" in item["detail"]
+    assert report["high_confidence_allowed"] is False
 
 
 def test_gate_fails_without_counter_evidence_search(demo_ws):

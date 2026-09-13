@@ -1,0 +1,72 @@
+{
+  "search_performed": true,
+  "method": "Counter-evidence challenge over the three registry-verified sources in this pack: null and negative results, contradictory findings, alternative explanations, measurement mismatch, sampling bias, novelty effect, AI dependency and scope overreach. Every finding cites records already in evidence.jsonl; nothing was invented for the challenge. The AI-dependency check is marked not_found because this corpus contains no study of deskilling or reliance in customer-support work.",
+  "skeptic_findings": [
+    {
+      "check": "1_null_result",
+      "status": "found",
+      "detail": "No null result is recorded in this corpus, and that absence is itself declared: E-001 reports faster handling and E-002/E-003 report direction changes, so no included study measured a null effect on the support outcome. The pack states that local net cost and sustained performance were never measured.",
+      "related_evidence_ids": ["E-001", "E-002", "E-003"]
+    },
+    {
+      "check": "2_negative_result",
+      "status": "found",
+      "detail": "E-003 finds correctness about 19 percentage points lower on tasks outside the AI capability frontier, and E-004 records small quality declines among the most experienced, highest-skilled support staff. Both are negative results bound to the decision, not incidental notes.",
+      "related_evidence_ids": ["E-003", "E-004"]
+    },
+    {
+      "check": "3_contradictory_evidence",
+      "status": "found",
+      "detail": "E-001 and E-004 come from the same cohort but point in opposite directions for different subgroups: handling speed improves overall while the most experienced staff show a small quality decline. The verdict therefore cannot claim uniform benefit.",
+      "related_evidence_ids": ["E-001", "E-004"]
+    },
+    {
+      "check": "4_alternative_explanation",
+      "status": "found",
+      "detail": "E-001 is a staggered non-random rollout, so the efficiency gain is subject to selection and timing confounders rather than clean random assignment. E-002 and E-003 used brief incentivized tasks and an experimental business case, so task familiarity and context differences are alternative explanations for the observed direction.",
+      "related_evidence_ids": ["E-001", "E-002", "E-003"]
+    },
+    {
+      "check": "5_measurement_mismatch",
+      "status": "found",
+      "detail": "The corpus measures handling time, throughput and short-task correctness, not verified resolution quality, privacy incidents, net cost or sustained performance. E-002 measured writing tasks and E-003 measured consultants, so neither measures the outcome the support decision is actually about.",
+      "related_evidence_ids": ["E-002", "E-003"]
+    },
+    {
+      "check": "6_sampling_bias",
+      "status": "found",
+      "detail": "The only direct evidence is one firm, one tool and one support product cohort (E-001/E-004); E-003 is a single consulting population. Purposive selection from three studies cannot represent the population of enterprise support teams, and the pack records this as a stated limitation rather than a systematic search.",
+      "related_evidence_ids": ["E-001", "E-003", "E-004"]
+    },
+    {
+      "check": "7_novelty_effect",
+      "status": "found",
+      "detail": "E-001 observes the rollout period itself, so a novelty or productivity-signalling effect cannot be separated from a durable change; neither the writing nor the consulting experiment covers a comparable multi-month horizon in the support setting.",
+      "related_evidence_ids": ["E-001"]
+    },
+    {
+      "check": "8_ai_dependency",
+      "status": "not_found",
+      "detail": "No study in this corpus measures deskilling or over-reliance in customer-support work. The pack records it as an unmeasured risk in the intervention guardrails, and the absence of evidence here is not evidence of absence.",
+      "related_evidence_ids": []
+    },
+    {
+      "check": "9_scope_overreach",
+      "status": "found",
+      "detail": "Claiming universal gains, autonomous deployment safety, privacy protection or reduced staffing exceeds this corpus: no included study measures privacy incidents, local net cost or subgroup service quality, and only the support study is direct.",
+      "related_evidence_ids": ["E-001", "E-002", "E-003", "E-004"]
+    }
+  ],
+  "contradictory_evidence_found": true,
+  "threats_to_validity": [
+    "one firm, one tool, staggered non-random rollout",
+    "only one of three studies is direct for the support setting",
+    "the writing and consulting studies are indirect and use short incentivized tasks",
+    "privacy, net cost and sustained performance were never measured",
+    "purposive selection of three studies cannot exclude other direct evidence"
+  ],
+  "extensions": {
+    "data_origin": "manual_curated",
+    "note": "Challenge stage written from the pack corpus; no new sources were retrieved for this record."
+  }
+}

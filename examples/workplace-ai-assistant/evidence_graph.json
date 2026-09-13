@@ -73,7 +73,7 @@
       "outcome_metric": "Chat handling time; separate throughput summary: about 15% more issues resolved per hour.",
       "outcome_dimension": "Policy",
       "claim_id": "C-001",
-      "outcome_id": "completion_time",
+      "outcome_id": "policy_effectiveness",
       "effect_size": {
         "metric": "not_standardized",
         "value": null,
@@ -97,7 +97,7 @@
       "outcome_metric": "Self-reported task time: approximately 40% lower; assessed writing quality approximately 18% higher is a separate measure.",
       "outcome_dimension": "Policy",
       "claim_id": "C-002",
-      "outcome_id": "completion_time",
+      "outcome_id": "policy_effectiveness",
       "effect_size": {
         "metric": "not_standardized",
         "value": null,
@@ -121,7 +121,7 @@
       "outcome_metric": "Correct business recommendation: about 19 percentage points lower across AI arms; Table 7 has 373 participants, not 758.",
       "outcome_dimension": "Policy",
       "claim_id": "C-003",
-      "outcome_id": "accuracy",
+      "outcome_id": "implementation_risk",
       "effect_size": {
         "metric": "not_standardized",
         "value": null,
@@ -145,7 +145,7 @@
       "outcome_metric": "Small quality declines among the most experienced and highest-skilled support staff.",
       "outcome_dimension": "Policy",
       "claim_id": "C-004",
-      "outcome_id": "accuracy",
+      "outcome_id": "implementation_risk",
       "effect_size": {
         "metric": "not_standardized",
         "value": null,
@@ -165,16 +165,16 @@
     }
   },
   "outcomes": {
-    "completion_time": {
-      "outcome_id": "completion_time",
-      "name": "completion_time",
+    "policy_effectiveness": {
+      "outcome_id": "policy_effectiveness",
+      "name": "policy_effectiveness",
       "dimension": "Policy",
       "category": "Policy",
       "description": ""
     },
-    "accuracy": {
-      "outcome_id": "accuracy",
-      "name": "accuracy",
+    "implementation_risk": {
+      "outcome_id": "implementation_risk",
+      "name": "implementation_risk",
       "dimension": "Policy",
       "category": "Policy",
       "description": ""
@@ -235,7 +235,7 @@
     "G-001": {
       "gap_id": "G-001",
       "gap_type": "Local applicability and safety",
-      "description": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set.",
+      "description": "Local net cost, privacy incident rates, subgroup service quality and sustained performance are not established by this selected evidence set [no direct evidence].",
       "target_outcome": "",
       "existing_evidence_summary": "E-001 through E-004",
       "recommended_trial_design": "Preregister an intention-to-treat comparison with team-clustered uncertainty and subgroup estimates. Set sample size and noninferiority margins from local baseline variance and operational priorities before enrollment."
@@ -316,7 +316,7 @@
     },
     {
       "source_id": "E-001",
-      "target_id": "completion_time",
+      "target_id": "policy_effectiveness",
       "relation": "MEASURES",
       "weight": 1.0,
       "metadata": {}
@@ -351,7 +351,7 @@
     },
     {
       "source_id": "E-002",
-      "target_id": "completion_time",
+      "target_id": "policy_effectiveness",
       "relation": "MEASURES",
       "weight": 1.0,
       "metadata": {}
@@ -386,7 +386,7 @@
     },
     {
       "source_id": "E-003",
-      "target_id": "accuracy",
+      "target_id": "implementation_risk",
       "relation": "MEASURES",
       "weight": 1.0,
       "metadata": {}
@@ -421,7 +421,7 @@
     },
     {
       "source_id": "E-004",
-      "target_id": "accuracy",
+      "target_id": "implementation_risk",
       "relation": "MEASURES",
       "weight": 1.0,
       "metadata": {}

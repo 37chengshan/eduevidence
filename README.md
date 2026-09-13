@@ -323,7 +323,7 @@ Key metrics: Citation Support Precision / Unsupported Claim Rate / Contradiction
 
 A second public example, `examples/workplace-ai-assistant/`, evaluates AI assistance in enterprise customer support using the policy domain: 4 findings from 3 studies, with direct and indirect evidence distinguished. Its proposed supervised pilot has not been executed.
 
-The third public example, `examples/spaced-retrieval-practice/`, asks whether spaced repetition and retrieval practice should replace massed review in an introductory programming course. It is the first pack whose sources were located through the **Sciverse** channel (`discovery_provider=sciverse`, `fetch_provider=sciverse_content`) and whose `meta.data_origin` is `real_run_sciverse`: 6 findings from 7 tier-1 DOI sources, decision **PILOT**.
+The third public example, `examples/spaced-retrieval-practice/`, asks whether spaced repetition and retrieval practice should replace massed review in an introductory programming course. It is the first pack whose sources were located through the **Sciverse** channel (`discovery_provider=sciverse`, `fetch_provider=sciverse_content`) and whose `meta.data_origin` is `real_run_sciverse`: 6 findings from 7 tier-1 DOI sources, decision **ADOPT** (High confidence). It is the worked example that the ADOPT path is reachable: retention and transfer - the two primary outcomes - carry direct, consistent evidence at directness 2, while the coding and workplace cases stay bounded at PILOT because their primary learning evidence is missing.
 
 Each pack ships `result.json` + `result.zh.json` (bilingual parallel data), a packaged-`EduEvidence_Report.html` root report, and `reports-5themes/` with the five standalone theme HTML files.
 

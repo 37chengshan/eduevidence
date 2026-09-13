@@ -30,6 +30,15 @@ from engine.versions import (
 
 OUTCOME_TYPES = ("learning", "task_performance", "process", "risk")
 
+#: V1 D5 Directness (0/1/2) -> V2 link directness + applicability scope_match.
+#: Directness decides whether a link can carry an ADOPT claim, so a flat
+#: hard-coded value silently capped every migrated pack at PILOT.
+_D5_TO_DIRECTNESS = {
+    2: (2, "direct"),
+    1: (1, "partial"),
+    0: (1, "mismatch"),
+}
+
 _CLAIM_TO_IMPLICATION = {
     "support": "support_adoption",
     "contradict": "oppose_adoption",
@@ -80,16 +89,64 @@ def _v1_effect_estimate(ev: dict) -> dict | None:
 
     V1 kept numbers either on a top-level effect_size field or inside
     extensions.raw_result; both are real sources, and absence stays None.
+    The V2 contract is narrow (metric + raw_text required, no extra keys), so
+    a V1 magnitude is normalized instead of copied verbatim: ci_lower/ci_upper
+    become ci_low/ci_high and keys the V2 contract does not declare are kept in
+    the raw_text so nothing recorded is silently lost.
     """
     value = ev.get("effect_size")
     if isinstance(value, dict) and value.get("value") is not None:
-        return dict(value)
+        return _normalize_effect_estimate(value)
     if isinstance(value, (int, float)):
         return {"value": float(value), "source": "v1_effect_size"}
     raw = (ev.get("extensions") or {}).get("raw_result")
     if isinstance(raw, dict) and raw.get("value") is not None:
-        return dict(raw)
+        return _normalize_effect_estimate(raw)
     return None
+
+
+def _normalize_effect_estimate(raw: dict) -> dict:
+    """Project a V1 magnitude onto the V2 effect_estimate contract."""
+    known = ("metric", "value", "unit", "ci_low", "ci_high", "p_value")
+    out: dict = {}
+    for key in known:
+        if key in raw and raw[key] is not None:
+            out[key] = raw[key]
+    for legacy, canonical in (("ci_lower", "ci_low"), ("ci_upper", "ci_high")):
+        if canonical not in out and raw.get(legacy) is not None:
+            out[canonical] = raw[legacy]
+    out.setdefault("metric", str(raw.get("source") or "v1_effect_size"))
+    extra = {k: v for k, v in raw.items()
+             if k not in known and k not in ("ci_lower", "ci_upper")
+             and v is not None}
+    text = raw.get("raw_text")
+    if not text:
+        text = json.dumps(extra, ensure_ascii=False, sort_keys=True) if extra else ""
+    out["raw_text"] = str(text)
+    return out
+
+
+def _v1_directness(ev: dict) -> tuple[int, str, bool]:
+    """Carry V1 D5 Directness across as (link directness, scope_match, recorded).
+
+    D5 is a 0/1/2 axis in the V1 evidence contract and the V2 ADOPT gate reads
+    the link's directness, so the mapping has to be explicit:
+
+        2 -> directness 2 / scope_match "direct"
+        1 -> directness 1 / scope_match "partial"
+        0 -> directness 1 / scope_match "mismatch"  (0 can never gate an ADOPT)
+
+    A missing or non-integer D5 is not silently promoted: it migrates as
+    directness 1 / scope_match "partial" and the caller records a downgrade.
+    """
+    dims = ev.get("quality_dimensions")
+    raw = dims.get("D5_directness") if isinstance(dims, dict) else None
+    if isinstance(raw, bool) or not isinstance(raw, int):
+        return 1, "partial", False
+    mapped = _D5_TO_DIRECTNESS.get(raw)
+    if mapped is None:
+        return 1, "partial", False
+    return mapped[0], mapped[1], True
 
 
 def migrate_v1_pack(pack_dir: Path, *, home: Path,
@@ -301,6 +358,14 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
         claim_id = claim_by_evidence.get(ev["evidence_id"], f"CLM-{ev['evidence_id']}")
         link_id = f"LNK-{ev['evidence_id']}"
 
+        directness, scope_match, d5_recorded = _v1_directness(ev)
+        if not d5_recorded:
+            report["downgrades"].append({
+                "evidence_id": ev["evidence_id"],
+                "from": "V1 quality_dimensions.D5_directness (absent or unreadable)",
+                "to": f"directness={directness}, scope_match={scope_match!r}",
+            })
+
         links.append({
 
             "evidence_link_id": link_id,
@@ -309,8 +374,8 @@ def migrate_v1_pack(pack_dir: Path, *, home: Path,
             "relation_to_claim": _map_relation(
                 ev.get("relation_to_claim") or ev.get("direction")),
             "decision_implication": _map_decision_implication(ev),
-            "directness": 1,
-            "applicability": {"scope_match": "direct"},
+            "directness": directness,
+            "applicability": {"scope_match": scope_match},
             "reasoning_note": "migrated from V1 Evidence Object",
             "created_in_revision": 1,
             "extensions": {"v1_legacy": True},

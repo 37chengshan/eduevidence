@@ -99,7 +99,7 @@
         "统一的延迟后测口径"
       ]
     },
-    "confidence": "Moderate",
+    "confidence": "High",
     "confidence_breakdown": {
       "score": 0.893,
       "evidence_quality": 0.755,
@@ -112,12 +112,12 @@
       "conflict_penalty": 0.0,
       "unsupported_penalty": 0.0
     },
-    "recommended_action": "pilot",
-    "decision_rationale": "间隔检索练习在延迟保持上有一致的正向证据，且实施成本低、风险小，但直接来自程序设计课程的现场证据有限。因此建议先在有界范围内试点，用统一的延迟后测验证后再考虑推广。",
+    "recommended_action": "adopt",
+    "decision_rationale": "延迟保持与迁移这两个主要结果上都有直接且一致的证据（多项随机对照与元分析，直接性记为 2），实施成本低、风险可控，因此支持在课程内采用。最佳间隔安排与程序设计课程现场证据的厚度仍是记录在案的不确定性，纳入采用后的持续监测，而不是阻止采用的理由。",
     "strongest_support": "间隔检索练习在延迟保持上稳定优于集中复习，多项随机对照与元分析结论一致。",
     "key_uncertainty": "程序设计课程内的直接现场证据少于心理学实验室证据，最佳间隔设计尚未确定。",
     "main_risk": "练习设计不当可能增加认知负荷，且收益幅度受材料难度与反馈方式调节。",
-    "next_action": "在入门编程课内先做一学期有界试点：每周固定短检索练习，并以统一延迟后测作为验收。",
+    "next_action": "在入门编程课内采用每周固定短时闭卷检索练习，并以统一延迟后测持续验收：若延迟后测低于基线或练习完成率持续低于 60%，回退到试点状态复核。",
     "missing_evidence": [
       "程序设计课程内的随机对照现场研究",
       "不同间隔安排的直接比较"
@@ -131,7 +131,7 @@
       "存在唯一最优的间隔安排"
     ],
     "exceeds_evidence_boundary": [],
-    "confidence_score": null,
+    "confidence_score": 0.893,
     "confidence_policy_version": "2026-08-12.v3",
     "independent_studies": 6,
     "independent_samples": 6

@@ -286,9 +286,11 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 - **干预**：4 阶段试点（Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check）。
 - **评价**：无 AI 基线/后测/期末考试保持/无 AI 迁移任务 + AI 依赖风险指标。
 
-另一公开案例 `examples/workplace-ai-assistant/` 使用组织政策领域，讨论企业客服是否引入 AI 助手：3 项研究、4 条发现，区分直接客服证据与间接写作/咨询证据，建议有监督试点。详见 [来源核验与边界](docs/demo-workplace-ai.md)。
+另一公开案例 `examples/workplace-ai-assistant/` 使用组织政策领域，讨论企业客服是否引入 AI 助手：3 项研究、4 条发现，区分直接客服证据与间接写作/咨询证据，判定 **PILOT**（Moderate）。详见 [来源核验与边界](docs/demo-workplace-ai.md)。
 
-两个公开案例均为人工整理文献（`manual_curated`），报告生成不等于九阶段模型研究已运行，也不代表试点已经执行。四个旧教学示例迁入 `tests/fixtures/legacy-examples/`，仅供软件兼容测试，排除于公共目录和分发包；未核验或合成数据不能引用为研究证据。旧 `ai-coding-assistant` 路径保留兼容别名。
+第三个公开案例 `examples/spaced-retrieval-practice/`（来源经 Sciverse 通道逐条读回原文）讨论间隔重复与检索练习能否替代集中式复习：6 条证据、7 篇 tier-1 DOI 来源，判定 **ADOPT**（High，引擎复算 0.893）。它是“ADOPT 出口真实可达”的实证：延迟保持与迁移两个主要结果上都有 directness=2 的直接且一致证据；另两例因为主要学习结果上缺直接证据而停在 PILOT。
+
+三个公开案例的数据来源各自如实标注：编程与企业客服两例为人工整理文献（`manual_curated`），间隔重复一例为真实 Sciverse 检索运行记录（`real_run_sciverse`），报告生成不等于九阶段模型研究已运行，也不代表试点已经执行。四个旧教学示例迁入 `tests/fixtures/legacy-examples/`，仅供软件兼容测试，排除于公共目录和分发包；未核验或合成数据不能引用为研究证据。旧 `ai-coding-assistant` 路径保留兼容别名。
 
 ## Studio 实际界面
 
