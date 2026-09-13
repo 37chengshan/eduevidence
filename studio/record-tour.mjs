@@ -14,9 +14,10 @@
  *     鼠标用 page.mouse 真实移动/点击，光标可见。
  *   - 帧捕获优先用 Page.startScreencast（跟随合成器帧）；若 1.2s 内没有帧回来，
  *     自动降级为 Page.captureScreenshot 定时轮询（两条路径都写入同一帧序列）。
- *   - 合成时按“最近的历史帧”补齐静态停顿（无新帧的停顿 = 复制上一帧），
- *     再用硬链接把每个输出帧落成一个文件名，交给 ffmpeg -framerate 精确出片。
- *   - 超出体积上限会自动降级调色板/抖动重试。
+ *   - 时间维去重：用 ffmpeg tblend 一次性算出全序列相邻帧差，差值低于阈值的“准静止帧”
+ *     合并成上一帧输出（页面静止时字幕/噪点不会白吃体积）；剩余帧按最近历史帧补齐时间轴。
+ *   - 体积自适应：按 (上限/实测)^0.5 估算目标宽度再重编，逐轮收敛到 ≤3MB，不浪费整轮编码。
+ *   - 介绍页录屏期间会暂停页面自身的背景视频与循环 CSS 动画（仅冻结呈现，不改页面文件）。
  *   - 结束时关闭浏览器、停掉自己拉起的服务端口、删除临时帧目录（--keep-frames 可保留）。
  */
 import { chromium } from "playwright";
@@ -73,6 +74,10 @@ const SCENES = {
     // 介绍页是大面积渐变 + 视频底 + 细密文字，轻度空域降噪能显著降低 GIF 体积
     prefilter: "hqdn3d=3:2:4:3,",
     maxWidth: 1200,
+    // 页面里 5 段背景视频一直在播 + pulse/bounce 两个循环动画，
+    // 静止画面也会每帧重绘（约 16KB/帧）。录屏时先冻结视频与循环动画，
+    // 让“停住阅读”的段落真的停下来——页面本身、文案、图表都不做任何修改。
+    freezeMotion: true,
   },
 };
 
@@ -441,11 +446,11 @@ async function recordStudio({ page, rec, opts }) {
   tour.mark("打开五主题报告");
   await tour.revealTo(".reader iframe", 1100);
   tour.mark("报告阅读");
-  await tour.reading(1400, { drift: 80 });
+  await tour.reading(900, { drift: 60 });
 
   tour.mark("主题切换");
-  await tour.cursorTo(".theme-gallery .theme-card >> nth=4", 800, { settle: 160 });
-  await tour.click(".theme-gallery .theme-card >> nth=4", 400, { settle: 600 });
+  await tour.cursorTo(".theme-gallery .theme-card >> nth=4", 700, { settle: 140 });
+  await tour.click(".theme-gallery .theme-card >> nth=4", 380, { settle: 500 });
 }
 
 async function recordLanding({ page, rec, opts }) {
@@ -453,7 +458,25 @@ async function recordLanding({ page, rec, opts }) {
   log("[landing] 打开 " + LANDING_URL(opts.landingPort));
   await page.goto(LANDING_URL(opts.landingPort), { waitUntil: "load" });
   await page.evaluate(() => document.fonts.ready);
-  await sleep(1500);
+  await sleep(1600);
+  if (SCENES.landing.freezeMotion) {
+    // 录屏时把背景视频停在当前帧、循环动画暂停：页面内容不变，只是不再“自己动”
+    await page.addStyleTag({
+      content:
+        "*,*::before,*::after{animation-play-state:paused !important;}" +
+        "video{animation-play-state:paused !important;}",
+    });
+    await page.evaluate(() => {
+      document.querySelectorAll("video").forEach((v) => {
+        try {
+          v.pause();
+        } catch {
+          /* ignore */
+        }
+      });
+    });
+    await sleep(300);
+  }
 
   await rec.start();
   await sleep(300);
@@ -490,24 +513,24 @@ async function recordLanding({ page, rec, opts }) {
   );
 
   tour.mark("hero");
-  await tour.cursorTo("#hero-btn-studio", 850, { settle: 150 });
-  await tour.sleep(200);
+  await tour.cursorTo("#hero-btn-studio", 750, { settle: 130 });
+  await tour.sleep(180);
 
   tour.mark("9步协议");
   const stackTop = geom.stack.top;
   // hero 的滚动联动缩放是整支 GIF 最贵的一段（整屏重绘约 40KB/帧），
   // 所以只借 hero 的滑出做“过场”，把停留时间留给最便宜、信息量最高的 stack 1~3 层卡片
-  await tour.scrollWindowTo(Math.round(heroMax * 0.07), 1400);
-  await sleep(150);
-  await tour.scrollWindowTo(stackTop + Math.round(stackScrollable * 0.34), 2500);
+  await tour.scrollWindowTo(Math.round(heroMax * 0.07), 1300);
+  await sleep(120);
+  await tour.scrollWindowTo(stackTop + Math.round(stackScrollable * 0.34), 2300);
   await tour.sleep(700);
 
   tour.mark("5套报告体系");
-  await tour.scrollWindowTo(geom.accordion.top - 56, 1500);
-  await tour.sleep(260);
+  await tour.scrollWindowTo(geom.accordion.top - 56, 1400);
+  await tour.sleep(240);
 
-  await tour.cursorTo(".accordion-panel >> nth=0", 300, { settle: 460 });
-  await tour.cursorTo(".accordion-panel >> nth=4", 300, { settle: 520 });
+  await tour.cursorTo(".accordion-panel >> nth=0", 280, { settle: 420 });
+  await tour.cursorTo(".accordion-panel >> nth=4", 280, { settle: 480 });
 }
 
 /* ------------------------------------------------------------------ 合成 & 编码 */

@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "EduEvidence 引擎架构",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "eduevidence-architecture.html",
+    "views": [
+      {
+        "id": "main-path",
+        "label": "主链路",
+        "focus": [
+          "question",
+          "framing",
+          "retrieval",
+          "evidence",
+          "tribunal",
+          "decision"
+        ]
+      },
+      {
+        "id": "write-back",
+        "label": "证据回写",
+        "focus": [
+          "decision",
+          "loader",
+          "graph",
+          "library",
+          "evidence"
+        ]
+      },
+      {
+        "id": "delivery",
+        "label": "对外交付",
+        "focus": [
+          "evidence",
+          "builder",
+          "reports",
+          "studio"
+        ]
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "question",
+      "type": "external",
+      "label": "研究问题",
+      "sublabel": "教育与社科决策",
+      "pos": [
+        30,
+        340
+      ],
+      "size": [
+        130,
+        62
+      ]
+    },
+    {
+      "id": "framing",
+      "type": "backend",
+      "label": "框架与规划",
+      "sublabel": "Research Frame",
+      "pos": [
+        230,
+        340
+      ],
+      "size": [
+        140,
+        62
+      ]
+    },
+    {
+      "id": "retrieval",
+      "type": "cloud",
+      "label": "检索路由",
+      "sublabel": "MultiSearchRouter",
+      "pos": [
+        440,
+        340
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "evidence",
+      "type": "backend",
+      "label": "证据图谱",
+      "sublabel": "Evidence Graph",
+      "pos": [
+        665,
+        340
+      ],
+      "size": [
+        150,
+        62
+      ],
+      "tag": "append-only"
+    },
+    {
+      "id": "tribunal",
+      "type": "backend",
+      "label": "裁决",
+      "sublabel": "Tribunal + Gate",
+      "pos": [
+        890,
+        340
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "decision",
+      "type": "backend",
+      "label": "决策与试点",
+      "sublabel": "四态判定",
+      "pos": [
+        1115,
+        340
+      ],
+      "size": [
+        160,
+        62
+      ]
+    },
+    {
+      "id": "sciverse",
+      "type": "external",
+      "label": "Sciverse",
+      "sublabel": "可信学术通道",
+      "pos": [
+        440,
+        620
+      ],
+      "size": [
+        150,
+        62
+      ],
+      "tag": "需 token"
+    },
+    {
+      "id": "library",
+      "type": "database",
+      "label": "共享研究库",
+      "sublabel": "Research Library",
+      "pos": [
+        665,
+        620
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "loader",
+      "type": "backend",
+      "label": "数据接入",
+      "sublabel": "田野数据 / DID",
+      "pos": [
+        890,
+        620
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "graph",
+      "type": "database",
+      "label": "GraphStore",
+      "sublabel": "不可变版本",
+      "pos": [
+        1115,
+        620
+      ],
+      "size": [
+        150,
+        62
+      ],
+      "tag": "rev-N"
+    },
+    {
+      "id": "builder",
+      "type": "backend",
+      "label": "报告构建",
+      "sublabel": "build_report",
+      "pos": [
+        665,
+        60
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "reports",
+      "type": "external",
+      "label": "五主题报告",
+      "sublabel": "单文件 HTML",
+      "pos": [
+        890,
+        60
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "studio",
+      "type": "frontend",
+      "label": "Research Studio",
+      "sublabel": "只读控制台",
+      "pos": [
+        1115,
+        60
+      ],
+      "size": [
+        160,
+        62
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "q-framing",
+      "from": "question",
+      "to": "framing",
+      "label": "研究意图",
+      "variant": "emphasis"
+    },
+    {
+      "id": "framing-retrieval",
+      "from": "framing",
+      "to": "retrieval",
+      "label": "检索计划",
+      "variant": "emphasis"
+    },
+    {
+      "id": "retrieval-evidence",
+      "from": "retrieval",
+      "to": "evidence",
+      "label": "经校验发现",
+      "variant": "emphasis"
+    },
+    {
+      "id": "retrieval-sciverse",
+      "from": "retrieval",
+      "to": "sciverse",
+      "label": "全文定位",
+      "labelAt": [
+        515,
+        416
+      ]
+    },
+    {
+      "id": "evidence-tribunal",
+      "from": "evidence",
+      "to": "tribunal",
+      "label": "证据与审计",
+      "variant": "emphasis"
+    },
+    {
+      "id": "tribunal-decision",
+      "from": "tribunal",
+      "to": "decision",
+      "label": "四态判定",
+      "variant": "emphasis"
+    },
+    {
+      "id": "decision-loader",
+      "from": "decision",
+      "to": "loader",
+      "label": "试点与评估"
+    },
+    {
+      "id": "loader-graph",
+      "from": "loader",
+      "to": "graph",
+      "label": "版本化回写",
+      "labelAt": [
+        1080,
+        696
+      ]
+    },
+    {
+      "id": "library-evidence",
+      "from": "library",
+      "to": "evidence",
+      "label": "显式导入快照"
+    },
+    {
+      "id": "evidence-builder",
+      "from": "evidence",
+      "to": "builder",
+      "label": "产物投影"
+    },
+    {
+      "id": "builder-reports",
+      "from": "builder",
+      "to": "reports",
+      "label": "烘焙"
+    },
+    {
+      "id": "reports-studio",
+      "from": "reports",
+      "to": "studio",
+      "label": "只读展示"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "科学核心 · 九步协议",
+      "wraps": [
+        "framing",
+        "retrieval",
+        "evidence",
+        "tribunal",
+        "decision"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "交付层 · 投影",
+      "wraps": [
+        "builder",
+        "reports",
+        "studio"
+      ]
+    }
+  ]
+}
