@@ -17,7 +17,8 @@ const PKG_ROOT = path.resolve(__dirname, '..');
 const INSTALL_SH = path.join(PKG_ROOT, 'install.sh');
 
 function usage() {
-  console.log(`eduevidence ${readPkgVersion()} — Evidence-Based Education Decision Skill
+  console.log(`eduevidence ${readPkgVersion()} — Evidence-Based Decision Skill
+   for education and organizational policy (multi-domain by contract)
 
 Install (Python runtime + self-check):
   eduevidence install [--dev] [--dry-run]

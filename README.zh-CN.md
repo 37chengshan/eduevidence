@@ -11,6 +11,8 @@
 > **From Research Questions to Evidence-Based Decisions.**
 > **从研究问题，到有证据支撑的决策。**
 
+> **▶ 在线演示：** [介绍页](https://37chengshan.github.io/eduevidence/) · [Research Studio](https://37chengshan.github.io/eduevidence/studio/) · [深度调研对比页](https://37chengshan.github.io/eduevidence/comparison.html)
+
 EduEvidence 面向研究者与实践决策者，将教育、组织政策和 AI 工具采用等问题转化为**可追溯、可质疑、可验证的证据决策流程**。当前公开案例涵盖编程学习和企业客服，分别使用教育与组织政策领域契约。
 
 - **三条公开工作流**：Evidence Review（证据综述）、Decision & Pilot（决策与试点）、Evaluate & Update（评估与更新）。完整研究周期将文献证据、有依据的知识缺口、研究设计、新数据和决策修订连接起来。

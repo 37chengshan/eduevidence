@@ -1,6 +1,13 @@
-__pycache__/
-*.py[cod]
-.DS_Store
-*.DS_Store
+# Python build artefacts. Match at every depth: a bare __pycache__/ pattern
+# only matches the package root, which is how 138 .pyc files leaked into the
+# tarball even though the root cache was ignored.
 **/__pycache__/
-**/*.py[cod]
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# OS / editor
+.DS_Store
+**/.DS_Store
+*.swp
+*~

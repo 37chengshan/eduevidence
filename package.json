@@ -70,11 +70,18 @@
     "examples/workplace-ai-assistant/*.json",
     "examples/workplace-ai-assistant/*.jsonl",
     "examples/workplace-ai-assistant/reports-5themes/*.html",
+    "examples/spaced-retrieval-practice/*.json",
+    "examples/spaced-retrieval-practice/*.jsonl",
+    "examples/spaced-retrieval-practice/reports-5themes/*.html",
     "docs/demo-workplace-ai.md",
     "docs/demo.md",
     "docs/demo-storyboard.md",
     "docs/release-closeout/*.md",
-    "assets/readme/"
+    "assets/readme/",
+    "!**/__pycache__/",
+    "!**/*.pyc",
+    "!**/*.pyo",
+    "!**/.DS_Store"
   ],
   "engines": {
     "node": ">=18"

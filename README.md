@@ -10,6 +10,8 @@
 
 > **From Research Questions to Evidence-Based Decisions.** · Current release **6.2.0**
 
+> **▶ Live demo:** [Landing](https://37chengshan.github.io/eduevidence/) · [Research Studio](https://37chengshan.github.io/eduevidence/studio/) · [Deep Research comparison](https://37chengshan.github.io/eduevidence/comparison.html)
+
 EduEvidence is delivered as an **AI Agent Skill**; inside the Skill operates
 the **EduEvidence Research Engine** — a persistent, auditable engine that
 turns a decision question into an evidence-grounded answer. It is **multi-domain**:
