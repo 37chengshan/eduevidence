@@ -417,19 +417,25 @@ def check_decision_action(ws: Path) -> dict[str, str]:
         label = action or "unset"
         return _item_res("pass", "action=" + label + " is within the conservative bound")
 
-    from engine.decision_policy import ADOPT_REQUIRED_LABEL, decision_action
+    from engine.decision_policy import (
+        ADOPT_REQUIRED_LABEL,
+        decision_outcome,
+    )
 
     evidence = _load_ws_jsonl(ws, "evidence.jsonl")
     relations = [decision_relation(ev) for ev in evidence]
     decisive = {str(index): rel for index, rel in enumerate(relations)
-                if rel in ("support_adoption", "oppose_adoption")}
+                if rel in ("support_adoption", "oppose_adoption",
+                           "conditional", "conflict", "mixed")}
     label = str(verdict.get("confidence") or "")
     summary = _primary_evidence_summary(ws)
-    expected = decision_action(
+    outcome = decision_outcome(
         confidence_label=label,
         decisive_relations=decisive,
         has_direct_primary_evidence=bool(summary.get("direct")),
     )
+    expected = outcome["action"]
+    downgrade_reason = outcome.get("downgrade_reason")
     if expected == "ADOPT":
         detail = "ADOPT is supported: " + label + " confidence with direct primary-outcome evidence"
         return _item_res("pass", detail)
@@ -440,8 +446,11 @@ def check_decision_action(ws: Path) -> dict[str, str]:
         reasons.append("no decisive supporting evidence")
     if not summary.get("direct"):
         reasons.append("no primary-outcome evidence at directness 2")
+    if downgrade_reason:
+        reasons.append("downgrade_reason=" + downgrade_reason)
     detail = ("recommended_action=adopt is not supported (" + "; ".join(reasons)
-              + "); the evidence bounds this decision to pilot")
+              + "); the evidence bounds this decision to "
+              + str(expected).lower())
     return _item_res("fail", detail)
 
 
@@ -641,11 +650,15 @@ def apply_enforcement(verdict: dict[str, Any], gate: dict[str, Any]) -> dict[str
     current = out.get("confidence", "Insufficient")
     if CONFIDENCE_RANK.get(current, 0) > CONFIDENCE_RANK.get(cap, 0):
         out["confidence"] = cap
+    downgrade_reason = None
     if not gate.get("passed", False) and out.get("recommended_action") == "adopt":
         out["recommended_action"] = "pilot"
+        downgrade_reason = "gate_critical"
     action_item = (gate.get("items") or {}).get("decision_action_consistency") or {}
     if action_item.get("status") == "fail" and out.get("recommended_action") == "adopt":
         out["recommended_action"] = "pilot"
+        if downgrade_reason is None:
+            downgrade_reason = "missing_direct_primary"
     extensions = out.setdefault("extensions", {})
     if not isinstance(extensions, dict):
         extensions = {}
@@ -659,6 +672,7 @@ def apply_enforcement(verdict: dict[str, Any], gate: dict[str, Any]) -> dict[str
         "max_confidence": cap,
         "confidence_before": current,
         "action_before": verdict.get("recommended_action"),
+        "downgrade_reason": downgrade_reason,
     })
     return out
 

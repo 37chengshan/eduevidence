@@ -1,0 +1,33 @@
+{
+  "domain": "policy",
+  "purpose": "Outcome grouping + separation guard constructs (process output is not policy effect). No teaching vocabulary.",
+  "outcome_groups": {
+    "task": [
+      "cost_effectiveness",
+      "feasibility"
+    ],
+    "learning": [
+      "policy_effectiveness",
+      "equity"
+    ],
+    "risk": [
+      "implementation_risk"
+    ]
+  },
+  "separation_title": {
+    "zh": "结果分离 · 过程产出 ≠ 政策效果",
+    "en": "Outcome Separation · Process output ≠ policy effect"
+  },
+  "separation_note": {
+    "zh": "将不同结果类型分开裁决，避免把试点期产出或效率提升直接等同于真实政策效果。",
+    "en": "Outcomes are adjudicated separately so pilot throughput or efficiency gains are not silently treated as real policy effects."
+  },
+  "method_guard": {
+    "zh": "产出 vs 效果护栏",
+    "en": "Output vs effect guard"
+  },
+  "guard_principle": {
+    "zh": "过程产出提升 ≠ 政策效果实现；ADOPT 需要独立效果、持续性与公平证据。",
+    "en": "Process output is not policy effect; ADOPT requires independent effect, durability and equity evidence."
+  }
+}

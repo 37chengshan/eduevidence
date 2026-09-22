@@ -183,7 +183,7 @@ motion/motion.css + motion/motion.js（data-lieflat reveal：滚入播放、
         点击重播 + timer 清理、prefers-reduced-motion 降级、打印全开）
 ```
 
-学术图（outcome-comparison / benchmark / forest）保持主题无关的出版级渲染；Lieflat 部分只渲染 `resolve_visual_layout` 校验通过的条目。注册表、契约与推荐组合见 `visualization/eduevidence-report/references/lieflat-composition.md`，schema 见 `visualization/eduevidence-report/schemas/visual-layout.schema.json`。
+学术图（outcome-comparison / benchmark / forest）保持主题无关的出版级渲染；Lieflat 部分只渲染 `resolve_visual_layout` 校验通过的条目。注册表、契约与推荐组合见 `visualization/eduevidence-report/references/lieflat-composition.md`，schema 见 `visualization/eduevidence-report/schemas/visual-layout.schema.json`（完整路径；短路径 `references/lieflat-composition.md` 与 `/lieflat/lupi`、`docs/lieflat*` 均为已废弃死路径，禁止引用）。
 
 该协议是**可剥离的**：即使没有 Agent 框架，只要按此协议组织检索、抽取、审计与裁决，也能得到可复现的决策链。
 
@@ -276,8 +276,11 @@ edu/
 ├── integrations/           # 集成层（Agent MCP 增强 + Smart Web Fetch）
 ├── visualization/          # 呈现层（eduevidence-report：build_report / build_charts /
 │                           # build_infographics / build_figures / charts_data 提取器 /
-│                           # lieflat_engine 注册表渲染器 / motion / themes / schemas；
-│                           # lieflat-charts：图表品味法典正本）
+│                           # lieflat_engine 注册表渲染器 / motion / themes / schemas。
+│                           # 注册表文档：references/lieflat-composition.md；
+│                           # schema：schemas/visual-layout.schema.json。
+│                           # 注：历史路径 /lieflat/lupi 与 docs/lieflat* 已废弃，
+│                           # 不在 skill_payload / npm files 内；勿再引用。）
 ├── benchmarks/             # 基准评测（questions / annotations / baselines /
 │                           # evaluator / results / v2）
 ├── examples/               # 端到端示例

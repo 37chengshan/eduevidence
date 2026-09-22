@@ -1,0 +1,90 @@
+{
+  "domain": "_neutral",
+  "purpose": "Neutral UI labels — module_labels_v2.",
+  "labels": {
+    "v2_project_title": {
+      "zh": "项目与研究历史",
+      "en": "Project & Research History"
+    },
+    "v2_project_id": {
+      "zh": "项目 ID",
+      "en": "Project ID"
+    },
+    "v2_graph_revision": {
+      "zh": "证据图版本",
+      "en": "Graph revision"
+    },
+    "v2_decision_snapshot": {
+      "zh": "决策快照",
+      "en": "Decision snapshot"
+    },
+    "v2_timeline": {
+      "zh": "项目时间线",
+      "en": "Project timeline"
+    },
+    "v2_gaps_title": {
+      "zh": "知识缺口",
+      "en": "Knowledge gaps"
+    },
+    "v2_gap_type": {
+      "zh": "缺口类型",
+      "en": "Gap type"
+    },
+    "v2_gap_priority": {
+      "zh": "优先级",
+      "en": "Priority"
+    },
+    "v2_gap_reasoning": {
+      "zh": "依据",
+      "en": "Reasoning"
+    },
+    "v2_design_title": {
+      "zh": "研究设计",
+      "en": "Study design"
+    },
+    "v2_design_type": {
+      "zh": "设计类型",
+      "en": "Design type"
+    },
+    "v2_design_question": {
+      "zh": "研究问题",
+      "en": "Research question"
+    },
+    "v2_provenance_title": {
+      "zh": "数据集与分析溯源",
+      "en": "Dataset & analysis provenance"
+    },
+    "v2_diff_title": {
+      "zh": "决策变更",
+      "en": "Decision diff"
+    },
+    "v2_diff_action": {
+      "zh": "决策动作",
+      "en": "Decision action"
+    },
+    "v2_diff_confidence": {
+      "zh": "置信度",
+      "en": "Confidence"
+    },
+    "v2_diff_claims": {
+      "zh": "变更的主张",
+      "en": "Changed claims"
+    },
+    "v2_diff_gaps": {
+      "zh": "已解决/新增缺口",
+      "en": "Resolved/new gaps"
+    },
+    "v2_revision": {
+      "zh": "版本",
+      "en": "Revision"
+    },
+    "v2_decision": {
+      "zh": "决策",
+      "en": "Decision"
+    },
+    "v2_no_v2_data": {
+      "zh": "（无 V2 项目数据）",
+      "en": "(no V2 project data)"
+    }
+  }
+}

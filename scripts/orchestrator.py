@@ -60,6 +60,13 @@ from pre_verdict_gate import apply_enforcement, evaluate_workspace  # noqa: E402
 from engine.versions import ENGINE_VERSION  # noqa: E402
 from engine.log import enable_console_logging, get_log  # noqa: E402
 
+# One-shot two-round intake + prefs (scripts/intake/). Soft-import so the
+# orchestrator still starts if intake is stripped from a minimal package.
+try:
+    from intake import hooks as _intake_hooks  # noqa: E402
+except Exception:  # pragma: no cover - optional adapter
+    _intake_hooks = None
+
 log = get_log("orchestrator")
 
 DEPTH_ALIASES = {"quick": "S", "standard": "M", "deep": "L"}
@@ -546,6 +553,10 @@ def _run_adjudicate(ws: RunWorkspace, question: str,
         json.dumps(final, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     post = evaluate_workspace(ws.path, require_final=True)
+    if not post.get("passed") or post.get("critical_failures"):
+        final = apply_enforcement(final, post)
+        (ws.path / "final_verdict.json").write_text(
+            json.dumps(final, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     gate_report = {"run_id": ws.run_id, "stage": "adjudicate",
                    "pre": {"passed": pre["passed"], "max_confidence": pre["max_confidence"],
                            "critical_failures": pre["critical_failures"]},
@@ -976,13 +987,45 @@ def load_global_approval() -> dict | None:
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
-    approve = args.approve_agent_mcp or interactive_agent_mcp_setup(args.approve_agent_mcp)
-    approval_record = None
-    if approve:
-        approval_record = load_global_approval()
-    ws = init_run(Path(args.runs_dir), args.question, depth=args.depth, run_id=args.run_id,
+    """Create a run workspace. Delegates intake/open to scripts/intake/hooks.py."""
+    assume_yes = bool(getattr(args, "yes", False))
+    domain = getattr(args, "domain", "education")
+    enhancements = list(getattr(args, "enhancement", None) or []) or None
+    intake_record: dict[str, Any] | None = None
+
+    if _intake_hooks is not None:
+        ctx = _intake_hooks.prepare_run(
+            question=args.question,
+            depth=getattr(args, "depth", None),
+            enhancements=enhancements,
+            domain=domain,
+            assume_yes=assume_yes,
+        )
+        if ctx.get("error"):
+            print(f"ERROR: intake failed: {ctx['error']}", file=sys.stderr)
+            return 2
+        question, depth_arg = ctx["question"], ctx["depth"]
+        enhancements, intake_record = ctx["enhancements"], ctx["intake_record"]
+        wants_mcp = ctx["wants_mcp"]
+    else:
+        question = args.question
+        depth_arg = DEPTH_ALIASES.get(getattr(args, "depth", None) or "M",
+                                     getattr(args, "depth", None) or "M")
+        if depth_arg not in DEPTHS:
+            depth_arg = "M"
+        wants_mcp = bool(enhancements and "agent_mcp" in enhancements
+                         and "none" not in enhancements)
+
+    approve = bool(args.approve_agent_mcp)
+    if wants_mcp and not assume_yes and sys.stdin.isatty():
+        approve = approve or interactive_agent_mcp_setup(approve)
+    approval_record = load_global_approval() if approve else None
+
+    ws = init_run(Path(args.runs_dir), question, depth=depth_arg, run_id=args.run_id,
                   approve_agent_mcp=approve, approval_record=approval_record,
-                  domain=getattr(args, "domain", "education"))
+                  domain=domain)
+    if _intake_hooks is not None:
+        _intake_hooks.write_intake_artifact(ws.path, intake_record)
     print(f"workspace created: {ws.path}")
     print(f"manifest: {json.dumps(ws.load_manifest(), ensure_ascii=False, indent=2)}")
     if args.dry_run:
@@ -990,9 +1033,9 @@ def _cmd_run(args: argparse.Namespace) -> int:
         return 0
     summary = advance(ws, demo_pack=args.demo_pack)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
-    if summary["failures"]:
-        return 1
-    return 0
+    if _intake_hooks is not None:
+        _intake_hooks.after_run(ws.path, intake_record=intake_record, summary=summary)
+    return 1 if summary["failures"] else 0
 
 
 def _print_status(ws) -> None:
@@ -1397,7 +1440,8 @@ def _cmd_migrate(args) -> int:
 
 def _cmd_dashboard(args) -> int:
     from dashboard_server import run_dashboard_server
-    run_dashboard_server(host=args.host, port=args.port)
+    run_dashboard_server(host=args.host, port=args.port,
+                         open_browser=bool(getattr(args, "open", False)))
     return 0
 
 
@@ -1455,13 +1499,20 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--domain", default="education", metavar="ID",
                        help="registered research domain (default: education; "
                             "see `domain list`)")
-    p_run.add_argument("--depth", default="M", choices=["quick", "standard", "deep", "S", "M", "L"],
-                       help="complexity depth (default: standard/M)")
+    p_run.add_argument("--depth", default=None,
+                       choices=["quick", "standard", "deep", "S", "M", "L", "auto"],
+                       help="complexity depth (S/M/L/auto or quick/standard/deep; "
+                            "default: intake/prefs auto guideline)")
     p_run.add_argument("--run-id", default=None, help="explicit run id (default: timestamp)")
     p_run.add_argument("--demo-pack", default=None, type=Path,
                        help="seed external stages from an example pack (demo/test mode)")
     p_run.add_argument("--approve-agent-mcp", action="store_true",
                        help="record agent-mcp approval in the manifest")
+    p_run.add_argument("--yes", action="store_true",
+                       help="skip the two-round intake prompts; use prefs + flags unattended")
+    p_run.add_argument("--enhancement", action="append", default=None,
+                       choices=["agent_mcp", "jev", "semdecide", "none"],
+                       help="execution enhancement (repeatable; used by intake)")
     p_run.add_argument("--dry-run", action="store_true", help="initialize only, do not advance")
     p_run.add_argument("--runs-dir", default=os.environ.get("EDUEVIDENCE_RUNS_DIR", str(ROOT / "runs")),
                        help="directory holding run workspaces (default: <repo>/runs)")
@@ -1645,6 +1696,8 @@ def main(argv: list[str] | None = None) -> int:
     p_dash = sub.add_parser("dashboard", help="start local research & token dashboard")
     p_dash.add_argument("--host", default="127.0.0.1")
     p_dash.add_argument("--port", type=int, default=8765)
+    p_dash.add_argument("--open", action="store_true",
+                        help="open the Studio URL in the system browser once the server is up")
     p_dash.set_defaults(func=_cmd_dashboard)
 
     p_srch = sub.add_parser("search", help="multi-channel hybrid search")

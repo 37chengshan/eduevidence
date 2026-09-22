@@ -1,0 +1,20 @@
+{
+  "domain": "_neutral",
+  "outcome_groups": {},
+  "separation_title": {
+    "zh": "结果分离",
+    "en": "Outcome separation"
+  },
+  "separation_note": {
+    "zh": "将不同结果类型分开裁决。",
+    "en": "Outcomes are adjudicated separately."
+  },
+  "method_guard": {
+    "zh": "构念护栏",
+    "en": "Construct guard"
+  },
+  "guard_principle": {
+    "zh": "",
+    "en": ""
+  }
+}

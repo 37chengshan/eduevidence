@@ -1,0 +1,70 @@
+{
+  "domain": "education",
+  "purpose": "Domain terminology: methodology item labels + display names for internal fields.",
+  "methodology_labels": {
+    "zh": {
+      "control_group": "对照组",
+      "randomization": "随机分配",
+      "pre_test": "前测",
+      "post_test": "后测",
+      "retention_test": "保持测试",
+      "transfer_test": "迁移测试",
+      "sample_bias": "样本偏差",
+      "self_selection": "自我选择偏差",
+      "measurement_validity": "测量效度",
+      "confounders": "混杂因素",
+      "instructor_effect": "教师效应",
+      "novelty_effect": "新奇效应",
+      "tool_version_effect": "工具版本效应",
+      "ai_usage_policy": "AI 使用规则",
+      "dropout": "样本流失"
+    },
+    "en": {
+      "control_group": "Control group",
+      "randomization": "Randomization",
+      "pre_test": "Pre-test",
+      "post_test": "Post-test",
+      "retention_test": "Retention test",
+      "transfer_test": "Transfer test",
+      "sample_bias": "Sample bias",
+      "self_selection": "Self-selection bias",
+      "measurement_validity": "Measurement validity",
+      "confounders": "Confounders",
+      "instructor_effect": "Instructor effect",
+      "novelty_effect": "Novelty effect",
+      "tool_version_effect": "Tool-version effect",
+      "ai_usage_policy": "AI usage policy",
+      "dropout": "Attrition"
+    }
+  },
+  "field_labels": {
+    "zh": {
+      "target_learners": "目标学习者",
+      "target_population": "目标人群",
+      "ai_usage_policy": "AI 使用规则",
+      "ai_usage_rule": "AI 规则",
+      "task_vs_learning_guard": "任务 vs 学习护栏",
+      "learning_metrics": "学习指标",
+      "process_metrics": "过程指标",
+      "risk_metrics": "风险指标",
+      "task_performance": "任务表现",
+      "learning_gain": "学习收获",
+      "retention": "保持",
+      "transfer": "迁移"
+    },
+    "en": {
+      "target_learners": "Target learners",
+      "target_population": "Target population",
+      "ai_usage_policy": "AI usage policy",
+      "ai_usage_rule": "AI rule",
+      "task_vs_learning_guard": "Task vs learning guard",
+      "learning_metrics": "Learning metrics",
+      "process_metrics": "Process metrics",
+      "risk_metrics": "Risk metrics",
+      "task_performance": "Task performance",
+      "learning_gain": "Learning gain",
+      "retention": "Retention",
+      "transfer": "Transfer"
+    }
+  }
+}

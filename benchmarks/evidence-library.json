@@ -4942,6 +4942,282 @@
       ]
     },
     {
+      "entry_id": "lib-ai-coding-assistant-E-001",
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time"
+      ],
+      "direction": "support",
+      "study_type": "rct",
+      "claim_text": "AI coding assistants significantly increase task completion speed and completion rate during training.",
+      "effect_summary": "1.15x completion rate, 0.57x time, 1.8x correctness",
+      "confidence_markers": [
+        "evidence_level:strong",
+        "quality_score:9.0",
+        "confidence:0.7",
+        "decision_relation:support_adoption"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-002",
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
+      "direction": "neutral",
+      "study_type": "rct",
+      "claim_text": "Access to AI code generation did not decrease performance on manual code-modification tasks.",
+      "effect_summary": "no significant difference between groups",
+      "confidence_markers": [
+        "evidence_level:moderate",
+        "quality_score:7.0",
+        "confidence:0.5",
+        "decision_relation:neutral"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-003",
+      "source_id": "S-2023-kazemitabaar",
+      "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
+      "year": 2023,
+      "outcome_token": "retention",
+      "outcome_tokens": [
+        "retention"
+      ],
+      "direction": "neutral",
+      "study_type": "rct",
+      "claim_text": "One week after training, retention differences between Codex and baseline groups did not reach statistical significance.",
+      "effect_summary": "slightly better for Codex group but not significant",
+      "confidence_markers": [
+        "evidence_level:strong",
+        "quality_score:9.0",
+        "confidence:0.5",
+        "decision_relation:neutral"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-004",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
+      "direction": "contradict",
+      "study_type": "rct",
+      "claim_text": "Students with unguarded GPT-4 access performed 17% worse on the independent exam than the control group, despite higher practice performance.",
+      "effect_summary": "negative_17_percent_on_independent_exam",
+      "confidence_markers": [
+        "evidence_level:strong",
+        "quality_score:8.0",
+        "confidence:0.75",
+        "decision_relation:oppose_adoption"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-005",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "outcome_token": "independent_problem_solving",
+      "outcome_tokens": [
+        "independent_problem_solving"
+      ],
+      "direction": "support",
+      "study_type": "rct",
+      "claim_text": "Guardrail design of the AI tutor (hints instead of answers, teacher-informed prompts) largely eliminated the negative learning effect.",
+      "effect_summary": "negative effect essentially eradicated, no positive effect observed",
+      "confidence_markers": [
+        "evidence_level:strong",
+        "quality_score:8.0",
+        "confidence:0.75",
+        "decision_relation:conditional"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-006",
+      "source_id": "S-2025-bastani",
+      "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
+      "year": 2025,
+      "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
+      "direction": "support",
+      "study_type": "rct",
+      "claim_text": "Access to GPT-4 during practice improves task performance (48% for GPT Base, 127% for GPT Tutor) — but this task performance does not transfer to independent exam performance.",
+      "effect_summary": "48-127 percent improvement on practice problems",
+      "confidence_markers": [
+        "evidence_level:strong",
+        "quality_score:8.0",
+        "confidence:0.75",
+        "decision_relation:conditional"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-007",
+      "source_id": "S-2024-marzuki",
+      "title": "Impact of ChatGPT on ESL students' academic writing skills",
+      "year": 2024,
+      "outcome_token": "knowledge_gain",
+      "outcome_tokens": [
+        "knowledge_gain"
+      ],
+      "direction": "support",
+      "study_type": "mixed_methods",
+      "claim_text": "ChatGPT as a formative feedback tool produced a significant positive impact on students' academic writing skills with positive student perceptions.",
+      "effect_summary": "significant positive impact on writing skills",
+      "confidence_markers": [
+        "evidence_level:moderate",
+        "quality_score:6.0",
+        "confidence:0.55",
+        "decision_relation:support_adoption"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-008",
+      "source_id": "S-2023-peng",
+      "title": "The Impact of AI on Developer Productivity: Evidence from GitHub Copilot",
+      "year": 2023,
+      "outcome_token": "completion_time",
+      "outcome_tokens": [
+        "completion_time"
+      ],
+      "direction": "support",
+      "study_type": "rct",
+      "claim_text": "Professional developers with Copilot access completed a standardized coding task about 55% faster than the control group (RCT, n=95).",
+      "effect_summary": "~55.8% faster task completion in Copilot group",
+      "confidence_markers": [
+        "evidence_level:moderate",
+        "quality_score:8.0",
+        "confidence:0.6",
+        "decision_relation:conditional"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-009",
+      "source_id": "S-2023-yetistiren",
+      "title": "GitHub Copilot AI Pair Programmer: Asset or Liability?",
+      "year": 2023,
+      "outcome_token": "code_quality",
+      "outcome_tokens": [
+        "code_quality"
+      ],
+      "direction": "support",
+      "study_type": "observational",
+      "claim_text": "Systematic benchmark evaluation reports mixed quality results for Copilot-generated code relative to human code: correctness competitive on parts of the benchmark while security-relevant defects are documented.",
+      "effect_summary": "mixed quality profile; no single-direction summary",
+      "confidence_markers": [
+        "evidence_level:moderate",
+        "quality_score:7.0",
+        "confidence:0.55",
+        "decision_relation:conditional"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-010",
+      "source_id": "S-2022-finnie-ansley",
+      "title": "Using GitHub Copilot to Solve Introductory Programming Problems",
+      "year": 2022,
+      "outcome_token": "assignment_score",
+      "outcome_tokens": [
+        "assignment_score"
+      ],
+      "direction": "support",
+      "study_type": "observational",
+      "claim_text": "Codex produced passing-level solutions for roughly half to three-quarters of CS1 exam-style questions depending on the dataset, indicating substantial task-capability headroom available to novices.",
+      "effect_summary": "passing solutions on ~50-75% of questions across datasets",
+      "confidence_markers": [
+        "evidence_level:moderate",
+        "quality_score:7.0",
+        "confidence:0.55",
+        "decision_relation:conditional"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-011",
+      "source_id": "S-2023-explanations-compare",
+      "title": "Comparing Code Explanations Created by Students and Large Language Models",
+      "year": 2023,
+      "outcome_token": "metacognition",
+      "outcome_tokens": [
+        "metacognition"
+      ],
+      "direction": "support",
+      "study_type": "observational",
+      "claim_text": "Controlled comparisons find LLM-generated code explanations comparable to (in places better than) student-authored explanations, suggesting viability as explanatory scaffold material rather than as a replacement for student explanation practice.",
+      "effect_summary": "comparable-or-better rated quality vs student explanations",
+      "confidence_markers": [
+        "evidence_level:moderate",
+        "quality_score:7.0",
+        "confidence:0.55",
+        "decision_relation:conditional"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
+      "entry_id": "lib-ai-coding-assistant-E-012",
+      "source_id": "S-2022-vaithilingam",
+      "title": "Expectation vs. Experience: Evaluating the Usability of Code Generation Tools",
+      "year": 2022,
+      "outcome_token": "over_reliance",
+      "outcome_tokens": [
+        "over_reliance"
+      ],
+      "direction": "support",
+      "study_type": "qualitative",
+      "claim_text": "Despite faster first-task completion, participants struggled to understand and debug AI-generated solutions and reported low ownership of the final program - documenting metacognitive and dependence risks that pure speed metrics miss.",
+      "effect_summary": "documented comprehension/ownership difficulties despite speed gain",
+      "confidence_markers": [
+        "evidence_level:moderate",
+        "quality_score:7.0",
+        "confidence:0.55",
+        "decision_relation:conditional"
+      ],
+      "domains": [
+        "ai-coding-assistant"
+      ]
+    },
+    {
       "entry_id": "lib-ai-tutor-E-001",
       "source_id": "S-2025-bastani",
       "title": "Generative AI without guardrails can harm learning: Evidence from high school mathematics",
@@ -5264,5 +5540,5 @@
       ]
     }
   ],
-  "coverage_note": "内置证据库：由 30 份金标准标注（benchmarks/annotations/gold-Q01..Q30 的 key_claims/key_supporting_sources/known_contradictions/correct_outcome_types）+ 3 个示例工作流 evidence.jsonl（ai-coding-assistant / ai-tutor / ai-writing-assistant）抽取生成；按 (source_id, outcome_token, claim_text) 去重合并。direction 语义为采纳方向：support=支持采纳（初步裁决=>pilot），contradict=反对采纳（=>reject），neutral=中性；金标准条目按 expected_decision_range 粗粒度映射方向（纯 reject 问题反向映射），conflict 与混合方向问题的单条断言方向可能不精确。仅用于离线初步裁决（preliminary，保守），从不直接给出 adopt。"
+  "coverage_note": "内置证据库：由 30 份金标准标注（benchmarks/annotations/gold-Q01..Q30 的 key_claims/key_supporting_sources/known_contradictions/correct_outcome_types）+ 3 个示例工作流 evidence.jsonl（ai-coding-assistant / ai-tutor / ai-writing-assistant）抽取生成；按 (source_id, outcome_token, claim_text) 去重合并。direction 语义为采纳方向：support=支持采纳（离线初筛上限 => pilot，永不输出 adopt），contradict=反对采纳（oppose-only 时 => reject；与 support 并存属未决冲突，应交 engine.decision_policy.decision_outcome 判为 INSUFFICIENT_EVIDENCE），neutral=中性；金标准条目按 expected_decision_range 粗粒度映射方向（纯 reject 问题反向映射），conflict 与混合方向问题的单条断言方向可能不精确。仅用于离线初步裁决（preliminary，保守），从不直接给出 adopt；完整 ADOPT 只能由 engine.decision_policy.decision_outcome 给出（High + support + 主要结果 directness 2）。"
 }

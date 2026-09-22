@@ -1,0 +1,66 @@
+{
+  "domain": "_neutral",
+  "section_titles": {
+    "zh": {},
+    "en": {}
+  },
+  "section_leads": {
+    "zh": {},
+    "en": {}
+  },
+  "default_chapters": [],
+  "brief_blocks": {
+    "zh": {
+      "decision": [
+        "先看结论",
+        "该不该做、把握多高、证据边界在哪里。"
+      ],
+      "lieflat": [
+        "实证图表画廊",
+        "按数据形状选型编排；数字均可溯源到 result.json。"
+      ],
+      "outcomes": [
+        "结果分离",
+        "不同构念的结果分开呈现；正向、负向与零效应分别编码。"
+      ],
+      "tribunal": [
+        "证据裁决",
+        "支持、不确定、被反驳与缺失证据分开放置。"
+      ],
+      "action": [
+        "从证据到行动",
+        "适用性、护栏、停止条件与评价连成可执行路径。"
+      ],
+      "sources": [
+        "关键来源",
+        "摘要页只列最关键来源；完整溯源在完整报告展开。"
+      ]
+    },
+    "en": {
+      "decision": [
+        "Start with the decision",
+        "Whether to act, how confident, and where the evidence stops."
+      ],
+      "lieflat": [
+        "Evidence figure gallery",
+        "Charts selected from the catalog; every number traces to result.json."
+      ],
+      "outcomes": [
+        "Outcome separation",
+        "Distinct constructs shown separately; positive, negative, and null effects encoded apart."
+      ],
+      "tribunal": [
+        "Evidence tribunal",
+        "Supported, uncertain, contradicted, and missing evidence kept apart."
+      ],
+      "action": [
+        "Evidence to action",
+        "Applicability, guardrails, stop rules, and evaluation as one path."
+      ],
+      "sources": [
+        "Key sources",
+        "Summary lists only critical sources; full provenance in the full report."
+      ]
+    }
+  }
+}

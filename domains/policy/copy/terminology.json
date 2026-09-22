@@ -1,0 +1,64 @@
+{
+  "domain": "policy",
+  "purpose": "Domain terminology (policy voice). target_learners → 目标人群; intervention → 干预方案; no teaching vocabulary.",
+  "methodology_labels": {
+    "zh": {
+      "evidence_level": "证据等级",
+      "causal_identification": "因果识别",
+      "external_validity": "外部效度",
+      "cost_evidence": "成本证据",
+      "stakeholder_representation": "利益相关者代表",
+      "implementation_evidence": "实施证据",
+      "equity_analysis": "公平性分析",
+      "effect_size_reported": "效应量报告",
+      "uncertainty_quantified": "不确定性量化",
+      "comparator_clarity": "对照与反事实清晰",
+      "publication_bias_risk": "发表偏倚风险",
+      "generalizability_claims": "可推广性声明"
+    },
+    "en": {
+      "evidence_level": "Evidence level",
+      "causal_identification": "Causal identification",
+      "external_validity": "External validity",
+      "cost_evidence": "Cost evidence",
+      "stakeholder_representation": "Stakeholder representation",
+      "implementation_evidence": "Implementation evidence",
+      "equity_analysis": "Equity analysis",
+      "effect_size_reported": "Effect size reported",
+      "uncertainty_quantified": "Uncertainty quantified",
+      "comparator_clarity": "Comparator clarity",
+      "publication_bias_risk": "Publication-bias risk",
+      "generalizability_claims": "Generalizability claims"
+    }
+  },
+  "field_labels": {
+    "zh": {
+      "target_learners": "目标人群",
+      "target_population": "目标人群",
+      "ai_usage_policy": "干预使用规则",
+      "ai_usage_rule": "干预规则",
+      "task_vs_learning_guard": "产出 vs 效果护栏",
+      "learning_metrics": "效果指标",
+      "process_metrics": "过程指标",
+      "risk_metrics": "风险指标",
+      "task_performance": "过程产出",
+      "learning_gain": "目标效果",
+      "retention": "持续性",
+      "transfer": "扩散效果"
+    },
+    "en": {
+      "target_learners": "Target population",
+      "target_population": "Target population",
+      "ai_usage_policy": "Intervention usage policy",
+      "ai_usage_rule": "Intervention rule",
+      "task_vs_learning_guard": "Output vs effect guard",
+      "learning_metrics": "Effect metrics",
+      "process_metrics": "Process metrics",
+      "risk_metrics": "Risk metrics",
+      "task_performance": "Process output",
+      "learning_gain": "Target effect",
+      "retention": "Durability",
+      "transfer": "Spillover"
+    }
+  }
+}

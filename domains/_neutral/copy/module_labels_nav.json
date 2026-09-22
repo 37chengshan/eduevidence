@@ -1,0 +1,126 @@
+{
+  "domain": "_neutral",
+  "purpose": "Neutral UI labels — module_labels_nav.",
+  "labels": {
+    "theme_label": {
+      "zh": "主题",
+      "en": "Theme"
+    },
+    "lang_label": {
+      "zh": "语言",
+      "en": "Language"
+    },
+    "zh": {
+      "zh": "中文",
+      "en": "中文"
+    },
+    "en": {
+      "zh": "EN",
+      "en": "EN"
+    },
+    "visual_brief": {
+      "zh": "可视化摘要",
+      "en": "Visual Brief"
+    },
+    "full_report": {
+      "zh": "完整报告",
+      "en": "Full Report"
+    },
+    "toolbar_brief": {
+      "zh": "摘要",
+      "en": "Brief"
+    },
+    "toolbar_full": {
+      "zh": "完整报告",
+      "en": "Full report"
+    },
+    "toolbar_print": {
+      "zh": "打印",
+      "en": "Print"
+    },
+    "brief_nav_aria": {
+      "zh": "摘要导航",
+      "en": "Brief navigation"
+    },
+    "contents": {
+      "zh": "目录",
+      "en": "Contents"
+    },
+    "collapse_contents": {
+      "zh": "收起目录",
+      "en": "Collapse contents"
+    },
+    "expand_contents": {
+      "zh": "展开目录",
+      "en": "Expand contents"
+    },
+    "expand_evidence": {
+      "zh": "查看完整证据",
+      "en": "View full evidence"
+    },
+    "expand_methodology": {
+      "zh": "查看审计依据",
+      "en": "View audit rationale"
+    },
+    "expand_source": {
+      "zh": "查看来源与溯源",
+      "en": "View source & provenance"
+    },
+    "expand_details": {
+      "zh": "展开完整说明",
+      "en": "Expand full explanation"
+    },
+    "what_this_means": {
+      "zh": "这意味着什么",
+      "en": "What this means"
+    },
+    "original_title": {
+      "zh": "原文标题",
+      "en": "Original title"
+    },
+    "original_text": {
+      "zh": "原文",
+      "en": "Original text"
+    },
+    "full_report_intro": {
+      "zh": "结论前置：全部可追溯证据与方法学细节都在这里，关键论证位置穿插有意义的可视化，每个数字都能回查到 result.json。",
+      "en": "Conclusions first: every traceable piece of evidence and method note lives here, with visuals only at points where they add meaning. Every number traces back to result.json."
+    },
+    "raw_tag_title": {
+      "zh": "原始标识",
+      "en": "raw id"
+    },
+    "colon": {
+      "zh": "：",
+      "en": ": "
+    },
+    "trace_claim_sep": {
+      "zh": "：",
+      "en": ": "
+    },
+    "lang_switcher_aria": {
+      "zh": "语言切换 / Language switch",
+      "en": "语言切换 / Language switch"
+    },
+    "theme_switcher_aria": {
+      "zh": "主题 / Theme",
+      "en": "主题 / Theme"
+    },
+    "no_data": {
+      "zh": "无数据。",
+      "en": "No data."
+    },
+    "cite_doi_ok": {
+      "zh": "DOI 可验证",
+      "en": "DOI verified"
+    },
+    "benchmark_note": {
+      "zh": "result.json 未携带 benchmark.baselines，本图不绘制；基准表现见独立基准报告。",
+      "en": "result.json carries no benchmark.baselines, so this visual is omitted; see the standalone benchmark report."
+    },
+    "method_target": {
+      "zh": "审查目标",
+      "en": "Audit target"
+    }
+  }
+}

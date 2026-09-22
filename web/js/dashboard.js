@@ -49,14 +49,14 @@ function renderVerdictChart() {
     backgroundColor: "transparent",
     tooltip: { trigger: "axis" },
     grid: { left: 8, right: 8, top: 20, bottom: 20, containLabel: true },
-    xAxis: { type: "category", data: ["PILOT", "ADOPT", "REJECT", "证据不足"], axisLabel: { color: textColor(), fontSize: 11, fontFamily: 'ui-sans-serif, system-ui, sans-serif' } },
+    xAxis: { type: "category", data: ["ADOPT", "PILOT", "REJECT", "证据不足"], axisLabel: { color: textColor(), fontSize: 11, fontFamily: 'ui-sans-serif, system-ui, sans-serif' } },
     yAxis: { type: "value", minInterval: 1, axisLabel: { color: textColor(), fontFamily: 'ui-sans-serif, system-ui, sans-serif' }, splitLine: { lineStyle: { type: 'dashed', color: 'rgba(150,150,150,0.15)' } } },
     series: [{
       type: "bar",
       barWidth: '45%',
       data: [
-        { value: counts.pilot, itemStyle: { color: '#D97757', borderRadius: [4,4,0,0] } },
         { value: counts.adopt, itemStyle: { color: "#10B981", borderRadius: [4,4,0,0] } },
+        { value: counts.pilot, itemStyle: { color: '#D97757', borderRadius: [4,4,0,0] } },
         { value: counts.reject, itemStyle: { color: "#EF4444", borderRadius: [4,4,0,0] } },
         { value: counts.insufficient + counts.other, itemStyle: { color: "#A39E96", borderRadius: [4,4,0,0] } }
       ]
@@ -134,6 +134,7 @@ function renderProjCards() {
       </div>
       <div style="margin-top: auto; padding-top: 8px;">
         <span class="badge ${badgeClass(p.verdict)}">${esc(p.verdict || "—")}</span>
+        ${downgradeReason(p) ? `<span class="stat" style="margin-left: 6px;" title="downgrade_reason">↓ ${esc(downgradeReason(p))}</span>` : ""}
         <span style="font-size: 0.72rem; color: var(--text-muted); margin-left: 8px;">置信度 ${esc(conf)}</span>
       </div>
     </div>`;
@@ -151,7 +152,9 @@ export function renderMatrix() {
       <td>${p.evidence_count || 0} 条</td>
       <td style="color: var(--text-muted);"><span style="color:var(--green)">${dc.support}</span> / <span style="color:var(--red)">${dc.contradict}</span> / ${dc.neutral}</td>
       <td style="font-family: var(--font-mono); font-weight: 500;">${esc(g)}</td>
-      <td><span class="badge ${badgeClass(p.verdict)}">${esc(p.verdict || "—")}</span></td>
+      <td><span class="badge ${badgeClass(p.verdict)}">${esc(p.verdict || "—")}</span>${
+        downgradeReason(p) ? ` <span style="font-size:0.7rem;color:var(--text-muted);">↓${esc(downgradeReason(p))}</span>` : ""
+      }</td>
       <td>${esc(conf)}</td>
     </tr>`;
   }).join("");
@@ -163,4 +166,10 @@ export function badgeClass(v) {
   if (s === "reject") return "reject";
   if (s === "pilot") return "pilot";
   return "insufficient";
+}
+
+export function downgradeReason(p) {
+  const r = p && (p.downgrade_reason
+    || (p.extensions && p.extensions.gate_enforcement && p.extensions.gate_enforcement.downgrade_reason));
+  return r ? String(r) : "";
 }

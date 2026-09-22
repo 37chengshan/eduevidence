@@ -29,7 +29,7 @@ export function initWizard() {
 
 function runWizardSimulation() {
   const q = $("#wizard-question-input")?.value.trim() || "高校大一计算机系引入 AI 编程助手评估";
-  const domain = $("#wizard-domain-input")?.value.trim() || "Higher Education / CS1";
+  const domain = $("#wizard-domain-input")?.value.trim() || "Unspecified domain";
   const complexity = $("#wizard-complexity-select")?.value || "M";
 
   const statusEl = $("#wizard-status-banner");
@@ -131,10 +131,12 @@ function renderVerdictBox(data) {
   const planEl = $("#wizard-action-plan");
 
   if (vEl) {
-    vEl.textContent = v.verdict || "PILOT";
-    vEl.className = "tag font-bold text-base " + (v.verdict === "ADOPT" ? "tag-emerald" : "tag-terracotta");
+    vEl.textContent = v.verdict || "—";
+    const vs = String(v.verdict || "").toLowerCase();
+    const cls = vs === "adopt" ? "adopt" : vs === "pilot" ? "pilot" : vs === "reject" ? "reject" : "insufficient";
+    vEl.className = "badge font-bold text-base " + cls;
   }
   if (gEl) gEl.textContent = `+${v.pooled_g}g`;
   if (confEl) confEl.textContent = `${Math.round(v.confidence_score * 100)}%`;
-  if (planEl) planEl.textContent = v.action_plan || "阶段性试点推进";
+  if (planEl) planEl.textContent = v.action_plan || "No action plan produced";
 }

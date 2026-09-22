@@ -24,7 +24,8 @@ Conservative verdict rules (offline preliminary gate):
     any matched contradict entry -> reject
     else any matched support  entry -> pilot
     else                            -> insufficient_evidence
-    adopt is NEVER returned by the preliminary gate.
+    The preliminary gate is a screening bound only; a full ADOPT still requires
+    the deterministic decision_action gate (High + support + direct primary).
 
 Output:
     {"verdict": ..., "coverage": {"matched_entries": [...],
@@ -228,8 +229,9 @@ def preliminary_verdict(question: str, *, top_k: int = 10) -> dict[str, Any]:
     claim_text + effect_summary + title; the top_k entries are considered and an
     entry counts as matched when overlap >= MATCH_THRESHOLD and it shares at
     least MIN_SHARED_BIGRAMS tokens. Verdict: contradict => reject, else
-    support => pilot, else insufficient_evidence. Never adopt. Never crashes on
-    empty/blank questions.
+    support => pilot, else insufficient_evidence. This is a screening bound
+    only; full ADOPT is decided by engine.decision_policy.decision_action.
+    Never crashes on empty/blank questions.
     """
     try:
         top_k = int(top_k)
@@ -298,6 +300,7 @@ def _build_note(
         f"离线初步裁决在 top_k={top_k} 内匹配到 {len(matched)} 条内置证据："
         f"support={counts['support']}、contradict={counts['contradict']}、"
         f"neutral={counts['neutral']}；匹配结局词：{outcome_str}。"
-        "本裁决为初步（preliminary=true）且保守，从不直接给出 adopt，"
+        "本裁决为初步（preliminary=true）筛查上界；完整四态裁决仍须经 "
+        "decision_action 闸门（High + support + 主结果直接证据才可 adopt）。"
         "建议结合完整证据库与在线检索复核。"
     )

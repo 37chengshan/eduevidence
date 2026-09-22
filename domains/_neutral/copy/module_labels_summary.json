@@ -1,0 +1,98 @@
+{
+  "domain": "_neutral",
+  "purpose": "Neutral UI labels — module_labels_summary.",
+  "labels": {
+    "summary_title": {
+      "zh": "一句话结论",
+      "en": "Bottom line"
+    },
+    "summary_question": {
+      "zh": "问题",
+      "en": "Question"
+    },
+    "summary_evidence": {
+      "zh": "依据",
+      "en": "Evidence"
+    },
+    "summary_action": {
+      "zh": "行动",
+      "en": "Action"
+    },
+    "outcome_table": {
+      "zh": [
+        "结果类型",
+        "正向效应",
+        "负向效应",
+        "零效应",
+        "证据"
+      ],
+      "en": [
+        "Outcome",
+        "Positive effect",
+        "Negative effect",
+        "Null effect",
+        "Evidence"
+      ]
+    },
+    "figure1_caption": {
+      "zh": "图 1. 各结果类型的正向 / 负向 / 零效应证据数量（基于 effect_direction，不等同于 Claim 是否被支持）。",
+      "en": "Fig. 1. Positive / negative / null effect counts per outcome (based on effect_direction, not claim support)."
+    },
+    "hero_action": {
+      "zh": "建议决策",
+      "en": "Recommended decision"
+    },
+    "hero_confidence": {
+      "zh": "置信度",
+      "en": "Confidence"
+    },
+    "hero_supported": {
+      "zh": "最强支持结论",
+      "en": "Strongest supported conclusion"
+    },
+    "hero_uncertain": {
+      "zh": "关键不确定性 / 反例",
+      "en": "Key uncertainty / contradiction"
+    },
+    "hero_risk": {
+      "zh": "主要风险",
+      "en": "Main risk"
+    },
+    "hero_next": {
+      "zh": "下一步",
+      "en": "Next action"
+    },
+    "hero_provenance": {
+      "zh": "证据 / 来源",
+      "en": "Evidence / sources"
+    },
+    "effect_positive": {
+      "zh": "正向效应",
+      "en": "Positive effect"
+    },
+    "effect_negative": {
+      "zh": "负向效应",
+      "en": "Negative effect"
+    },
+    "effect_null": {
+      "zh": "零效应",
+      "en": "Null effect"
+    },
+    "summary_tag_support": {
+      "zh": "支持",
+      "en": "Support"
+    },
+    "summary_tag_contradict": {
+      "zh": "反驳",
+      "en": "Contradict"
+    },
+    "summary_confidence_prefix": {
+      "zh": "（置信度：",
+      "en": " (confidence: "
+    },
+    "summary_confidence_suffix": {
+      "zh": "）",
+      "en": ")"
+    }
+  }
+}

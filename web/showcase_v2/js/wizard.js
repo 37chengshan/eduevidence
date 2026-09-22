@@ -29,7 +29,7 @@ export function initWizard() {
 
 function runWizardSimulation() {
   const q = $("#wizard-question-input")?.value.trim() || "高校大一计算机系引入 AI 编程助手评估";
-  const domain = $("#wizard-domain-input")?.value.trim() || "Higher Education / CS1";
+  const domain = $("#wizard-domain-input")?.value.trim() || "Unspecified domain";
   const complexity = $("#wizard-complexity-select")?.value || "M";
 
   const statusEl = $("#wizard-status-banner");
@@ -131,10 +131,14 @@ function renderVerdictBox(data) {
   const planEl = $("#wizard-action-plan");
 
   if (vEl) {
-    vEl.textContent = v.verdict || "PILOT";
+    vEl.textContent = v.verdict || "—";
     vEl.className = "tag font-bold text-base " + (v.verdict === "ADOPT" ? "tag-emerald" : "tag-terracotta");
   }
-  if (gEl) gEl.textContent = `+${v.pooled_g}g`;
+  if (gEl) {
+    // Do not invent a pooled Hedges' g when the payload has none.
+    const pg = v.pooled_g;
+    gEl.textContent = (pg === undefined || pg === null || pg === "") ? "不汇总 g" : `${pg > 0 ? "+" : ""}${pg}g`;
+  }
   if (confEl) confEl.textContent = `${Math.round(v.confidence_score * 100)}%`;
-  if (planEl) planEl.textContent = v.action_plan || "阶段性试点推进";
+  if (planEl) planEl.textContent = v.action_plan || "No action plan produced";
 }

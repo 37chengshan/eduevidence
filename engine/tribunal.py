@@ -199,6 +199,7 @@ def _confidence(store: GraphStore, syntheses: tuple[ClaimSynthesis, ...]) -> dic
         if relation in ("support_adoption", "oppose_adoption"):
             decisive[sid] = relation
         elif relation == "conditional":
+            decisive[sid] = "conditional"
             critical_uncertainty_units += 1
         quality_sum += (
             audit.get("design_quality", 0) + audit.get("sample_quality", 0)
@@ -209,7 +210,8 @@ def _confidence(store: GraphStore, syntheses: tuple[ClaimSynthesis, ...]) -> dic
             directness_sum += sum(dirs) / len(dirs) / 2.0
             directness_count += 1
 
-    n_decisive = len(decisive)
+    n_decisive = sum(1 for r in decisive.values()
+                     if r in ("support_adoption", "oppose_adoption"))
     n_usable = len(usable_studies)
     if n_decisive == 0:
         return {"score": 0.0, "label": "Insufficient",
@@ -312,6 +314,14 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
 
     decision = _decision_action(syn_statuses, confidence, decisive_relations,
                                 has_direct_primary_evidence=direct_learning)
+    from engine.decision_policy import decision_outcome as _outcome_fn
+    outcome = _outcome_fn(
+        confidence_label=str(confidence.get("label") or ""),
+        decisive_relations=decisive_relations,
+        has_direct_primary_evidence=direct_learning,
+    )
+    decision = str(outcome.get("action") or decision)
+    downgrade_reason = outcome.get("downgrade_reason")
 
     key_links: list[str] = []
     for syn in syntheses:
@@ -322,7 +332,8 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
     for syn in syntheses:
         risks.extend(syn.unresolved_conflicts)
     if not risks and decision == "ADOPT":
-        risks.append("long-term retention/transfer may still be untested")
+        risks.append(
+            "primary-outcome durability beyond the observed window may still be untested")
 
     missing: list[str] = []
     for syn in syntheses:
@@ -343,6 +354,7 @@ def adjudicate(store: GraphStore, *, project: ProjectWorkspace,
     snapshot = {
         "decision_snapshot_id": new_local_id("DEC", set()),
         "decision": decision,
+        "downgrade_reason": downgrade_reason,
         "confidence_label": confidence["label"],
         "confidence_score_internal": confidence["score"],
         "claim_assessments": claim_assessments,

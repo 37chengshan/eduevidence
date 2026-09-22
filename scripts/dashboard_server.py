@@ -524,7 +524,8 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
         self._send_report_bytes(html_path.read_bytes())
 
 
-def run_dashboard_server(host: str = "127.0.0.1", port: int = 8765) -> None:
+def run_dashboard_server(host: str = "127.0.0.1", port: int = 8765,
+                         open_browser: bool = False) -> None:
     server = None
     actual_port = port
     for offset in range(10):
@@ -541,12 +542,20 @@ def run_dashboard_server(host: str = "127.0.0.1", port: int = 8765) -> None:
     if server is None:
         print(f"❌ 端口 {port}-{port + 9} 均被占用。")
         return
+    studio_url = f"http://{host}:{actual_port}/studio/"
     print("============================================================")
     print(f"🚀 EduEvidence Web Studio running at http://{host}:{actual_port}/")
     print("   Research Studio  /studio/  (read-only)")
     print("   Projects, evidence, revisions and five-theme reports")
     print("   Projection API   /api/studio/catalog")
     print("============================================================")
+    if open_browser:
+        try:
+            import webbrowser
+            webbrowser.open(studio_url)
+            print(f"🌐 opened {studio_url}")
+        except Exception as exc:  # pragma: no cover - browser may be absent
+            print(f"⚠️  failed to open browser: {exc}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -557,8 +566,10 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--open", action="store_true",
+                        help="open the Studio URL in the system browser once the server is up")
     args = parser.parse_args()
-    run_dashboard_server(args.host, args.port)
+    run_dashboard_server(args.host, args.port, open_browser=args.open)
 
 
 if __name__ == "__main__":

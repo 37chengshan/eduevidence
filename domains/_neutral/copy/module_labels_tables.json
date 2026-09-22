@@ -1,0 +1,164 @@
+{
+  "domain": "_neutral",
+  "purpose": "Neutral UI labels — module_labels_tables.",
+  "labels": {
+    "matrix_filter": {
+      "zh": "筛选 / 搜索",
+      "en": "Filter / Search"
+    },
+    "matrix_search_ph": {
+      "zh": "搜索证据…",
+      "en": "Search evidence…"
+    },
+    "matrix_all_dir": {
+      "zh": "全部效应",
+      "en": "All effects"
+    },
+    "matrix_all_outcome": {
+      "zh": "全部结果",
+      "en": "All outcomes"
+    },
+    "matrix_heads": {
+      "zh": [
+        "ID",
+        "结果",
+        "效应",
+        "质量",
+        "主张",
+        "来源"
+      ],
+      "en": [
+        "ID",
+        "Outcome",
+        "Effect",
+        "Quality",
+        "Claim",
+        "Source"
+      ]
+    },
+    "matrix_details": {
+      "zh": "查看完整证据",
+      "en": "View full evidence"
+    },
+    "matrix_detail_labels": {
+      "zh": [
+        "研究标题",
+        "研究设计",
+        "人群",
+        "干预",
+        "直接性"
+      ],
+      "en": [
+        "Study title",
+        "Design",
+        "Population",
+        "Intervention",
+        "Directness"
+      ]
+    },
+    "matrix_source_missing": {
+      "zh": "无可验证来源",
+      "en": "No verifiable source"
+    },
+    "matrix_search_label": {
+      "zh": "筛选 / 搜索证据",
+      "en": "Filter / search evidence"
+    },
+    "matrix_dir_filter": {
+      "zh": "按效应方向筛选",
+      "en": "Filter by effect direction"
+    },
+    "matrix_outcome_filter": {
+      "zh": "按结果类型筛选",
+      "en": "Filter by outcome type"
+    },
+    "method_audit_heads": {
+      "zh": [
+        "检查项",
+        "状态",
+        "说明"
+      ],
+      "en": [
+        "Item",
+        "Status",
+        "Note"
+      ]
+    },
+    "conflict_verdict": {
+      "zh": "裁决说明",
+      "en": "Tribunal note"
+    },
+    "trace_decision": {
+      "zh": "决策",
+      "en": "Decision"
+    },
+    "trace_claim_prefix": {
+      "zh": "主张",
+      "en": "Claim"
+    },
+    "trace_no_source": {
+      "zh": "无来源",
+      "en": "No source"
+    },
+    "sources_title": {
+      "zh": "来源列表",
+      "en": "Source list"
+    },
+    "sources_heads": {
+      "zh": [
+        "ID",
+        "标题",
+        "年份",
+        "权威级别",
+        "可验证位置"
+      ],
+      "en": [
+        "ID",
+        "Title",
+        "Year",
+        "Authority",
+        "Verifiable location"
+      ]
+    },
+    "provenance_title": {
+      "zh": "Fetch 溯源",
+      "en": "Fetch provenance"
+    },
+    "provenance_heads": {
+      "zh": [
+        "来源",
+        "Fetch 方式",
+        "状态",
+        "降级",
+        "时间"
+      ],
+      "en": [
+        "Source",
+        "Fetch method",
+        "Status",
+        "Fallback",
+        "Time"
+      ]
+    },
+    "provenance_search": {
+      "zh": "搜索提供方",
+      "en": "Search provider"
+    },
+    "provenance_time": {
+      "zh": "检索时间",
+      "en": "Fetched at"
+    },
+    "provenance_empty": {
+      "zh": "无逐条 fetch 记录（来源由研究管线直接提供）。",
+      "en": "No per-source fetch records (sources provided directly by the research pipeline)."
+    },
+    "applicability_not_suitable": {
+      "zh": "不适用于",
+      "en": "Not suitable for"
+    },
+    "applicability_conditions": {
+      "zh": "适用条件",
+      "en": "Conditions"
+    }
+  }
+}

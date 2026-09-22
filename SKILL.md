@@ -28,6 +28,7 @@ Treat roles, models, Agent MCP, retrievers, scripts, and HTML reports as **execu
 ---
 
 ## 2. Route the Request to a Workflow
+Before selecting a primary workflow, run the one-shot two-round intake in `skill/workflows/intake.md` (research question → execution enhancements → depth; then enhancement mappings + Frame boundary confirmation). Persist non-question preferences via `scripts/intake/` to `~/.eduevidence/prefs.json`. After the wrap-up summary is confirmed once, continue unattended.
 Load exactly one primary workflow for the current task:
 - `skill/workflows/evidence-review.md` — use for evidence synthesis and decision appraisal from existing research.
 - `skill/workflows/decision-and-pilot.md` — use when the evidence must be converted into an actionable pilot or intervention plan.
@@ -109,7 +110,7 @@ Applicability → Intervene → Evaluate
 | 3 | **Extract** | `evidence.schema.json` | Extract findings, effect sizes, confidence intervals, sample sizes, outcomes, population characteristics, and study design information when available. |
 | 4 | **Challenge** | `evidence.schema.json` | Search explicitly for null findings, negative findings, contradictory evidence, alternative explanations, and confounders. |
 | 5 | **Audit** | `methodology.schema.json` | Appraise study quality and evidence certainty. Apply WWC 5.0 criteria where relevant to education-study design; use GRADE-informed certainty assessment at the body-of-evidence level where appropriate. |
-| 6 | **Adjudicate** | `verdict.schema.json` | Integrate evidence and emit a bounded decision: `ADOPT`, `PILOT`, `DO_NOT_ADOPT`, or `INSUFFICIENT`. Pass the Pre-Verdict Gate before finalizing. |
+| 6 | **Adjudicate** | `verdict.schema.json` | Integrate evidence and emit a bounded decision: `ADOPT`, `PILOT`, `REJECT`, or `INSUFFICIENT_EVIDENCE`. Pass the Pre-Verdict Gate before finalizing. |
 | 7 | **Applicability** | `references/applicability-policy.md` | State who the evidence applies to, in which contexts, for which outcomes, and under what conditions. |
 | 8 | **Intervene** | `intervention.schema.json` | Design the minimum viable intervention or pilot and define explicit success, failure, and stop conditions. |
 | 9 | **Evaluate** | `evaluation.schema.json` | Define baseline, post-intervention, retention/maintenance, transfer, and decision-update logic. |
@@ -138,7 +139,7 @@ Include, where relevant:
 ### Gate C — No Direct Learning Evidence, No ADOPT
 For education interventions, do not issue `ADOPT` based only on task speed, task completion, productivity, usability, preference, or subjective experience.
 Require direct evidence on learning, retention, independent transfer, or another explicitly decision-relevant outcome before `ADOPT` can be considered.
-If direct evidence is missing, bound the decision to `PILOT`, `INSUFFICIENT`, or `DO_NOT_ADOPT` as justified by the evidence.
+If direct evidence is missing, bound the decision to `PILOT`, `INSUFFICIENT_EVIDENCE`, or `REJECT` as justified by the evidence.
 ### Gate D — No False Precision
 Never invent missing uncertainty statistics.
 - If a confidence interval is not reported, do not fabricate one.
@@ -303,13 +304,13 @@ The example demonstrates:
 - Empirical evidence re-injection followed by decision revision.
 Do not generalize the flagship verdict to unrelated populations, courses, tools, or policy contexts.
 
-The four-state output is reachable on both ends, and each public case records which end it reached:
+The four-state matrix (`engine.decision_policy.decision_outcome`) is the gate-enforced landing; each public case also records the adjudicator's own `recommended_action`. Recomputed from the pack's own `evidence.jsonl` + confidence label:
 
-- `examples/ai-coding-assistant-evidence/` - `PILOT` / Moderate / 0.586. Primary evidence stops at task performance, so the decision is bounded.
-- `examples/spaced-retrieval-practice/` - `ADOPT` / High / 0.893. Retention and transfer, the primary outcomes, carry direct evidence at directness 2.
-- `examples/workplace-ai-assistant/` - `PILOT` / Moderate / 0.578, using the policy domain contract.
+- `examples/ai-coding-assistant-evidence/` - matrix `INSUFFICIENT_EVIDENCE` (`unresolved_conflict`: decisive relations mix `support_adoption`, `oppose_adoption` and `conditional`) / Moderate / 0.586. The pack records `PILOT`; primary evidence stops at task performance (no directness-2 learning outcome), so the decision is bounded — but the matrix does not let a conflicted relation set claim `PILOT`.
+- `examples/spaced-retrieval-practice/` - matrix `ADOPT` / High / 0.893. Retention and transfer, the primary outcomes, carry direct evidence at directness 2. The pack records `ADOPT`; this is the only public case where stated and matrix landings agree.
+- `examples/workplace-ai-assistant/` - matrix `INSUFFICIENT_EVIDENCE` (`unresolved_conflict`: every decisive relation is `conditional`) / Moderate / 0.578, using the policy domain contract. The pack records `PILOT`.
 
-A verdict never awards itself an action: the Pre-Verdict Gate re-derives primary-outcome directness from the evidence corpus and caps an unsupported `ADOPT` to `PILOT`. Never present a case as ADOPT without that derivation passing.
+A verdict never awards itself an action: the Pre-Verdict Gate re-derives primary-outcome directness from the evidence corpus and caps an unsupported `ADOPT` to `PILOT`. Never present a case as ADOPT without that derivation passing. Where the matrix landing is `INSUFFICIENT_EVIDENCE`, do not describe the case as having landed at `PILOT` — report both the recorded action and the matrix bound, and do not invent evidence to force a stronger landing.
 
 ---
 
@@ -451,7 +452,7 @@ This appendix keeps the deterministic repository gates (skill lint / version / m
 - **EduEvidence Research Engine** — the runnable engine delivered as a Skill package (`engine/`, `retrieval/`, `scripts/`, `schemas/`).
 - **Shared Research Library** — verified external facts (`Source` / `Study` / `Finding` / `Audit`) may be reused across project snapshots; interpretive objects (`Claim` / `EvidenceLink` / `Applicability` / `Decision`) stay project-local.
 - **No new study design without evidence grounding** — every study or pilot must cite an explicit, evidence-supported `KnowledgeGap` identifier.
-- **Schema 版本口径**：schemas/ 顶层 13 个 = V1 契约（evidence.schema.json 当前修订 1.1、education-frame / verdict 等）；schemas/v2/ 17 个 = V2 契约（evidence-link / research-intent / study / graph-revision / project 等）。文档与代理配置一律以此口径命名。
+- **Schema 版本口径**：schemas/ 顶层 13 个 = V1 契约（evidence.schema.json 当前修订 1.1、education-frame / verdict 等）；schemas/v2/ 18 个 = V2 契约（evidence-link / research-intent / intake / study / graph-revision / project 等）。文档与代理配置一律以此口径命名。
 - Five baked report themes (presentation systems, not science):
 
     ├─ Claude Research      [Light]

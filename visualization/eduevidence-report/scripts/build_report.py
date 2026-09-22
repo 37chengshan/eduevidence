@@ -65,197 +65,23 @@ DATA_ORIGIN_LABELS = {
 # Full report is intentionally NOT a fixed 12-chapter template. The template exposes
 # semantic modules; an upstream AI may group them into any 5–7 chapter outline by writing
 # `report_outline.chapters`. If it does not, a six-chapter fallback keeps the report usable.
-FULL_REPORT_MODULES = (
-    "decision", "scope", "retrieval", "outcomes", "evidence", "quality", "conflicts",
-    "trace", "applicability", "intervention", "evaluation", "sources",
+# Domain copy packs (domains/<id>/copy/) — UI 词典 + 域文案, see report_copy_pack.py.
+from report_copy_pack import (  # noqa: E402
+    FULL_REPORT_MODULES,
+    activate_copy_pack,
+    active_copy_pack,
+    brief_block_titles,
+    build_ui,
+    copy_warnings,
+    default_full_report_plan,
+    default_leads,
+    evidence_detail_label_table,
+    frame_enum_table,
+    methodology_label_table,
+    outcome_group_map,
+    scope_field_labels,
+    scope_subfield_labels,
 )
-DEFAULT_FULL_REPORT_PLAN = (
-    {"key": "decision", "title_zh": "结论、裁决与研究边界", "title_en": "Decision, Adjudication & Research Boundary",
-     "modules": ("decision", "scope")},
-    {"key": "evidence", "title_zh": "关键证据与结果分离", "title_en": "Key Evidence & Outcome Separation",
-     "modules": ("retrieval", "outcomes", "evidence")},
-    {"key": "quality", "title_zh": "证据可信度、反证与方法审计", "title_en": "Evidence Quality, Counterevidence & Method Audit",
-     "modules": ("quality", "conflicts", "trace")},
-    {"key": "action", "title_zh": "适用范围与教学行动", "title_en": "Applicability & Teaching Action",
-     "modules": ("applicability", "intervention")},
-    {"key": "evaluation", "title_zh": "试点设计、评估与停止条件", "title_en": "Pilot, Evaluation & Stop Conditions",
-     "modules": ("evaluation",)},
-    {"key": "sources", "title_zh": "来源、溯源与附录", "title_en": "Sources, Traceability & Appendix",
-     "modules": ("sources",)},
-)
-
-METHODOLOGY_LABELS_ZH = {
-    "control_group": "对照组", "randomization": "随机分配", "pre_test": "前测",
-    "post_test": "后测", "retention_test": "保持测试", "transfer_test": "迁移测试",
-    "sample_bias": "样本偏差", "self_selection": "自我选择偏差",
-    "measurement_validity": "测量效度", "confounders": "混杂因素",
-    "instructor_effect": "教师效应", "novelty_effect": "新奇效应",
-    "tool_version_effect": "工具版本效应", "ai_usage_policy": "AI 使用规则",
-    "dropout": "样本流失",
-}
-
-FRAME_ENUM_ZH = {
-    "teaching_decision": "教学决策",
-    "evidence_review": "证据评审",
-    "pilot_design": "试点设计",
-    "evaluation_design": "评价设计",
-    "undergraduate_year_1": "大学一年级",
-    "undergraduate_year_2": "大学二年级",
-    "undergraduate_year_3": "大学三年级",
-    "undergraduate_year_4": "大学四年级",
-    "postgraduate": "研究生",
-    "high_school": "高中",
-    "middle_school": "初中",
-    "primary_school": "小学",
-    "workplace_adult": "在职成人",
-    "computer_science": "计算机科学与技术",
-    "information_systems": "信息管理",
-    "software_engineering": "软件工程",
-    "data_science": "数据科学",
-    "mathematics": "数学",
-    "medicine": "医学",
-    "humanities": "人文",
-    "social_sciences": "社会科学",
-    "business": "商科",
-    "C_programming": "C 语言程序设计",
-    "introductory_programming": "程序设计入门",
-    "data_structures": "数据结构",
-    "algorithms": "算法",
-    "database_systems": "数据库系统",
-    "machine_learning": "机器学习",
-    "academic_writing": "学术写作",
-    "tesol": "英语教学",
-    "compulsory_core_course": "必修核心课程",
-    "elective_course": "选修课程",
-    "lecture_lab": "讲授 + 实验课",
-    "seminar": "研讨课",
-    "online_course": "在线课程",
-    "blended_learning": "混合式教学",
-    "professional_training": "职业培训",
-    "enterprise_customer_support": "企业客户支持",
-    "software_development": "软件开发",
-    "knowledge_work": "知识型工作",
-    "primary": "主要结果",
-    "secondary": "次要结果",
-    "risk": "风险结果",
-    "adopt": "采纳",
-    "modify": "修改",
-    "terminate": "终止",
-    "maintain": "维持",
-    "evaluate_impact": "评估影响",
-    "rct": "随机对照试验",
-    "quasi_experimental": "准实验",
-    "observational": "观察性研究",
-    "meta_analysis": "元分析",
-    "systematic_review": "系统综述",
-    "qualitative": "质性研究",
-    "mixed_methods": "混合方法",
-    "survey": "调查研究",
-    "case_study": "案例研究",
-    "literature_review": "文献综述",
-    "online": "线上",
-    "offline": "线下",
-    "hybrid": "混合",
-    "under_design_pending_evidence_review": "设计中（待证据评审）",
-    "human_supervised_customer_support_assistant": "人工监督的客服助手",
-    "approved_knowledge_base_and_agent_review": "已批准知识库 + 坐席复核",
-    "institutional_reform": "机构改革",
-    "enterprise_customer_support_staff": "企业客服人员",
-    "autonomous_agents_and_high_stakes_specialist_advice": "自主代理与高风险专业建议",
-    "lecture_with_lab_exercises": "讲授 + 实验练习",
-    "generative_ai_coding_assistant": "生成式 AI 编程助手",
-    "first_programming_course_no_prior_text_based_programming": "首次程序设计课程，无文本编程基础",
-    "mixed_ability_large_class_60_students": "混合能力大班（60 人）",
-    "weekly_lab_sessions": "每周实验课",
-    "one_semester": "一学期",
-    "16_weeks_one_semester": "16 周（一学期）",
-    "60_students": "60 名学生",
-    "TA_supported_two_TAs": "助教支持（2 名助教）",
-    "daily": "每日",
-    "weekly": "每周",
-    "monthly": "每月",
-}
-
-FRAME_ENUM_EN = {
-    "teaching_decision": "Teaching decision",
-    "evidence_review": "Evidence review",
-    "pilot_design": "Pilot design",
-    "evaluation_design": "Evaluation design",
-    "undergraduate_year_1": "First-year undergraduate",
-    "undergraduate_year_2": "Second-year undergraduate",
-    "undergraduate_year_3": "Third-year undergraduate",
-    "undergraduate_year_4": "Fourth-year undergraduate",
-    "postgraduate": "Postgraduate",
-    "high_school": "High school",
-    "middle_school": "Middle school",
-    "primary_school": "Primary school",
-    "workplace_adult": "Working adults",
-    "computer_science": "Computer science",
-    "information_systems": "Information systems",
-    "software_engineering": "Software engineering",
-    "data_science": "Data science",
-    "mathematics": "Mathematics",
-    "medicine": "Medicine",
-    "humanities": "Humanities",
-    "social_sciences": "Social sciences",
-    "business": "Business",
-    "C_programming": "C programming",
-    "introductory_programming": "Introductory programming",
-    "data_structures": "Data structures",
-    "algorithms": "Algorithms",
-    "database_systems": "Database systems",
-    "machine_learning": "Machine learning",
-    "academic_writing": "Academic writing",
-    "tesol": "TESOL",
-    "compulsory_core_course": "Compulsory core course",
-    "elective_course": "Elective course",
-    "lecture_lab": "Lecture + lab",
-    "seminar": "Seminar",
-    "online_course": "Online course",
-    "blended_learning": "Blended learning",
-    "professional_training": "Professional training",
-    "enterprise_customer_support": "Enterprise customer support",
-    "software_development": "Software development",
-    "knowledge_work": "Knowledge work",
-    "primary": "Primary outcomes",
-    "secondary": "Secondary outcomes",
-    "risk": "Risk outcomes",
-    "adopt": "Adopt",
-    "modify": "Modify",
-    "terminate": "Terminate",
-    "maintain": "Maintain",
-    "evaluate_impact": "Evaluate impact",
-    "rct": "Randomised controlled trial",
-    "quasi_experimental": "Quasi-experimental",
-    "observational": "Observational",
-    "meta_analysis": "Meta-analysis",
-    "systematic_review": "Systematic review",
-    "qualitative": "Qualitative",
-    "mixed_methods": "Mixed methods",
-    "survey": "Survey",
-    "case_study": "Case study",
-    "literature_review": "Literature review",
-    "online": "Online",
-    "offline": "Offline",
-    "hybrid": "Hybrid",
-    "under_design_pending_evidence_review": "Under design (pending evidence review)",
-    "approved_knowledge_base_and_agent_review": "Approved knowledge base + agent review",
-    "institutional_reform": "Institutional reform",
-    "enterprise_customer_support_staff": "Customer-support staff",
-    "autonomous_agents_and_high_stakes_specialist_advice": "Autonomous agents and high-stakes specialist advice",
-    "lecture_with_lab_exercises": "Lecture with lab exercises",
-    "generative_ai_coding_assistant": "Generative AI coding assistant",
-    "first_programming_course_no_prior_text_based_programming": "First programming course, no prior text-based programming",
-    "mixed_ability_large_class_60_students": "Mixed-ability large class (60 students)",
-    "weekly_lab_sessions": "Weekly lab sessions",
-    "one_semester": "One semester",
-    "16_weeks_one_semester": "16 weeks (one semester)",
-    "60_students": "60 students",
-    "TA_supported_two_TAs": "TA supported (2 TAs)",
-    "daily": "Daily",
-    "weekly": "Weekly",
-    "monthly": "Monthly",
-}
 
 DIR_LABEL = {"support": "支持", "contradict": "反驳", "neutral": "中性"}
 DIR_CLASS = {"support": "pos", "contradict": "neg", "neutral": "neu"}
@@ -265,359 +91,6 @@ EFFECT_CLASS = {"positive": "pos", "negative": "neg", "null": "neu", "neutral": 
 # ---------------------------------------------------------------------------
 # 双语 UI 文案
 # ---------------------------------------------------------------------------
-
-UI_ZH = {
-    "theme_label": "主题",
-    "lang_label": "语言",
-    "zh": "中文",
-    "en": "EN",
-    "visual_brief": "可视化摘要",
-    "full_report": "完整报告",
-    "contents": "目录",
-    "collapse_contents": "收起目录",
-    "expand_contents": "展开目录",
-    "expand_evidence": "查看完整证据",
-    "expand_methodology": "查看审计依据",
-    "expand_source": "查看来源与溯源",
-    "expand_details": "展开完整说明",
-    "what_this_means": "这意味着什么",
-    "original_title": "原文标题",
-    "original_text": "原文",
-    "full_report_intro": "结论前置：全部可追溯证据与方法学细节都在这里，关键论证位置穿插有意义的可视化，每个数字都能回查到 result.json。",
-    "section_titles": {
-        "01": "01 执行决策", "02": "02 结果证据概览", "03": "03 证据矩阵",
-        "04": "04 证据裁决", "05": "05 方法学审计", "06": "06 冲突分析",
-        "07": "07 主张-证据追溯", "08": "08 适用性", "09": "09 教学干预",
-        "10": "10 评价方案", "11": "11 基准测试", "12": "12 来源与溯源",
-    },
-    "section_leads": {
-        "01": "本节先给结论：最终怎么裁决、置信度多高、靠哪几条证据。",
-        "02": "一图看清：哪些学习结果有支持证据、哪些被反驳。",
-        "03": "每条证据来自哪项研究、测了什么、方向与质量如何；可筛选、可搜索。",
-        "04": "证据允许主张什么、不允许主张什么；缺失的关键证据是什么。",
-        "05": "研究质量可靠吗？哪些方法学问题让结论打折。",
-        "06": "不同研究为何结论不同；分歧出在哪一环。",
-        "07": "从结论到证据到原始来源，每一步都可追查。",
-        "08": "结论适用于谁、什么课程与结果、需要什么条件。",
-        "09": "试点怎么分阶段放开 AI 规则；什么情况必须叫停。",
-        "10": "如何验证效果：指标、对照、成功阈值。",
-        "11": "EduEvidence 自身基准表现：引用精度与成本。",
-        "12": "每篇文献是谁、出自哪里、如何获取。",
-    },
-    "decision_kpi": ["决策", "置信度", "证据最充分的结果", "最不确定的结果", "主要风险", "来源数量"],
-    "summary_title": "一句话结论",
-    "summary_question": "问题",
-    "summary_evidence": "依据",
-    "summary_action": "行动",
-    "outcome_table": ["结果类型", "正向效应", "负向效应", "零效应", "证据"],
-    "figure1_caption": "图 1. 各结果类型的正向 / 负向 / 零效应证据数量（基于 effect_direction，不等同于 Claim 是否被支持）。",
-    "matrix_filter": "筛选 / 搜索",
-    "matrix_search_ph": "搜索证据…",
-    "matrix_all_dir": "全部效应",
-    "matrix_all_outcome": "全部结果",
-    "matrix_heads": ["ID", "结果", "效应", "质量", "主张", "来源"],
-    "matrix_details": "查看完整证据",
-    "matrix_detail_labels": ["研究标题", "研究设计", "人群", "干预", "直接性"],
-    "matrix_source_missing": "无可验证来源",
-    "hero_action": "建议决策",
-    "hero_confidence": "置信度",
-    "hero_supported": "最强支持结论",
-    "hero_uncertain": "关键不确定性 / 反例",
-    "hero_risk": "主要风险",
-    "hero_next": "下一步",
-    "hero_provenance": "证据 / 来源",
-    "outcome_separation_title": "结果分离 · 任务表现 ≠ 学习效果",
-    "effect_positive": "正向效应",
-    "effect_negative": "负向效应",
-    "effect_null": "零效应",
-    "outcome_group_task": "任务 / 近端表现",
-    "outcome_group_learning": "学习 / 保持 / 迁移",
-    "outcome_group_risk": "风险 / 依赖",
-    "outcome_group_other": "其他结果",
-    "outcome_sep_note": "将不同结果类型分开裁决，避免把训练时更快、更高分直接等同于真正学会。",
-    "tribunal_decision": "决策",
-    "tribunal_confidence": "置信度",
-    "tribunal_can": "可以主张",
-    "tribunal_uncertain": "尚不能主张",
-    "tribunal_cannot": "被反驳的主张",
-    "tribunal_missing": "缺失证据",
-    "tribunal_flow": "EvidenceFlow 协议",
-    "tribunal_figure": "裁决信息图",
-    "method_audit_heads": ["检查项", "状态", "说明"],
-    "method_guard": "任务 vs 学习护栏",
-    "conflict_verdict": "裁决说明",
-    "trace_decision": "决策",
-    "trace_claim_prefix": "主张",
-    "trace_no_source": "无来源",
-    "applicability": ["适用于谁", "适用课程", "适用结果", "适用条件", "目标人群", "目标情境"],
-    "intervention_learners": "目标学习者",
-    "intervention_duration": "试点时长",
-    "intervention_policy": "AI 使用规则",
-    "intervention_rule": "AI 规则",
-    "intervention_activities": "活动",
-    "intervention_check": "结果检查",
-    "intervention_stop": "停止条件",
-    "intervention_timeline": "干预时间线信息图",
-    "evaluation_question": "研究问题",
-    "evaluation_measures": ["基线", "后测", "保持测试", "迁移测试"],
-    "evaluation_metrics": ["过程指标", "学习指标", "风险指标"],
-    "evaluation_threshold": "成功阈值",
-    "evaluation_plan": "分析计划",
-    "evaluation_figure": "评价设计信息图",
-    "benchmark_note": "result.json 未携带 benchmark.baselines，本图不绘制；基准表现见独立基准报告。",
-    "sources_title": "来源列表",
-    "sources_heads": ["ID", "标题", "年份", "权威级别", "可验证位置"],
-    "provenance_title": "Fetch 溯源",
-    "provenance_heads": ["来源", "Fetch 方式", "状态", "降级", "时间"],
-    "provenance_search": "搜索提供方",
-    "provenance_time": "检索时间",
-    "provenance_empty": "无逐条 fetch 记录（来源由研究管线直接提供）。",
-    "no_data": "无数据。",
-    "header_evidence": "证据 ",
-    "header_sources": "来源 ",
-    "header_mode": "模式：",
-    "header_generated": "生成时间：",
-    "header_evidence_suffix": " 条",
-    "header_sources_suffix": " 个",
-    "footer_schema": "Schema",
-    "footer_claims": "Claim Binding",
-    "footer_numbers": "Numeric Consistency",
-    "footer_bilingual": "Bilingual Structure",
-    "footer_language": "语言人话化",
-    "footer_no_false_precision": "无伪精度",
-    "footer_lieflat_bound": "Lieflat 数据溯源",
-    "footer_no_axis_distortion": "坐标轴无失真",
-    "footer_colorblind_safe": "色盲安全",
-    "footer": "EduEvidence 证据报告 · {integrity} · 单文件离线可打开 · 数据源：result.json",
-    "matrix_search_label": "筛选 / 搜索证据",
-    "matrix_dir_filter": "按效应方向筛选",
-    "matrix_outcome_filter": "按结果类型筛选",
-    "svg_balance_title": "各结果类型证据效应分布",
-    "svg_balance_desc": "各结果类型的正向 / 负向 / 零效应证据条数（基于 effect_direction，不等同于 Claim 是否被支持）。",
-    "svg_figure1_title": "各结果类型效应方向分布（出版级学术图）",
-    "svg_figure1_desc": "各结果类型的正向 / 负向 / 零效应证据条数；计数轴整数刻度，不随主题变化。来源：EduEvidence result.json。",
-    "svg_benchmark_title": "基准对比：各基线引用支持精度",
-    "svg_benchmark_desc": "各基线的引用支持精度（Citation support precision）对比；无基准数据时不绘制。",
-    "svg_workflow_title": "EvidenceFlow 协议流程",
-    "svg_workflow_desc": "从问题框架、检索、抓取验证、证据抽取、反方质疑、方法审计、裁决到适用性与干预评价的完整流程。",
-    "svg_tribunal_title": "证据裁决信息图",
-    "svg_tribunal_desc": "可以主张与不可主张的证据 ID 与建议决策徽章；完整主张文本见下方裁决卡片。",
-    "svg_intervention_title": "教学干预时间线",
-    "svg_intervention_desc": "各试点阶段的短名称与活动数量；完整 AI 使用规则见阶段说明块。",
-    "svg_evaluation_title": "评价设计流程",
-    "svg_evaluation_desc": "基线、后测、保持测试与迁移测试的评价流程；完整指标与分析计划见评估章节。",
-    "raw_tag_title": "原始标识",
-    "summary_tag_support": "支持",
-    "summary_tag_contradict": "反驳",
-    "summary_confidence_prefix": "（置信度：",
-    "summary_confidence_suffix": "）",
-    "method_target": "审查目标",
-    "applicability_not_suitable": "不适用于",
-    "applicability_conditions": "适用条件",
-    "trace_claim_sep": "：",
-    "colon": "：",
-    "lang_switcher_aria": "语言切换 / Language switch",
-    "theme_switcher_aria": "主题 / Theme",
-    "v2_project_title": "项目与研究历史",
-    "v2_project_id": "项目 ID",
-    "v2_graph_revision": "证据图版本",
-    "v2_decision_snapshot": "决策快照",
-    "v2_timeline": "项目时间线",
-    "v2_gaps_title": "知识缺口",
-    "v2_gap_type": "缺口类型",
-    "v2_gap_priority": "优先级",
-    "v2_gap_reasoning": "依据",
-    "v2_design_title": "研究设计",
-    "v2_design_type": "设计类型",
-    "v2_design_question": "研究问题",
-    "v2_provenance_title": "数据集与分析溯源",
-    "v2_diff_title": "决策变更",
-    "v2_diff_action": "决策动作",
-    "v2_diff_confidence": "置信度",
-    "v2_diff_claims": "变更的主张",
-    "v2_diff_gaps": "已解决/新增缺口",
-    "v2_revision": "版本",
-    "v2_decision": "决策",
-    "v2_no_v2_data": "（无 V2 项目数据）",
-}
-
-UI_EN = {
-    "theme_label": "Theme",
-    "lang_label": "Language",
-    "zh": "中文",
-    "en": "EN",
-    "visual_brief": "Visual Brief",
-    "full_report": "Full Report",
-    "contents": "Contents",
-    "collapse_contents": "Collapse contents",
-    "expand_contents": "Expand contents",
-    "expand_evidence": "View full evidence",
-    "expand_methodology": "View audit rationale",
-    "expand_source": "View source & provenance",
-    "expand_details": "Expand full explanation",
-    "what_this_means": "What this means",
-    "original_title": "Original title",
-    "original_text": "Original text",
-    "full_report_intro": "Conclusions first: every traceable piece of evidence and method note lives here, with visuals only at points where they add meaning. Every number traces back to result.json.",
-    "section_titles": {
-        "01": "01 Executive Decision", "02": "02 Outcome Evidence Overview",
-        "03": "03 Evidence Matrix", "04": "04 Evidence Tribunal",
-        "05": "05 Methodology Audit", "06": "06 Conflict Analysis",
-        "07": "07 Claim-Evidence Trace", "08": "08 Applicability",
-        "09": "09 Teaching Intervention", "10": "10 Evaluation Plan",
-        "11": "11 Benchmark", "12": "12 Sources & Provenance",
-    },
-    "section_leads": {
-        "01": "The verdict first: what we decide, at what confidence, on which evidence.",
-        "02": "At a glance: which learning outcomes have supporting evidence, which are contradicted.",
-        "03": "Where each piece of evidence comes from, what it measures, its direction and quality — filterable and searchable.",
-        "04": "What the evidence lets us claim, what it does not, and what is still missing.",
-        "05": "How reliable are these studies, and which methodological concerns discount the conclusions.",
-        "06": "Why studies disagree — and where exactly they diverge.",
-        "07": "Every step from conclusion to evidence to source stays traceable.",
-        "08": "Who the conclusion applies to, for which course and outcomes, under what conditions.",
-        "09": "How AI usage rules phase in during a pilot, and when we must stop.",
-        "10": "How we verify real effects: metrics, comparison, success threshold.",
-        "11": "How EduEvidence itself performs: citation precision and cost.",
-        "12": "Who wrote each cited study, where it came from, how it was fetched.",
-    },
-    "decision_kpi": ["Decision", "Confidence", "Best-supported outcome", "Most uncertain outcome", "Main risk", "Sources"],
-    "summary_title": "Bottom line",
-    "summary_question": "Question",
-    "summary_evidence": "Evidence",
-    "summary_action": "Action",
-    "outcome_table": ["Outcome", "Positive effect", "Negative effect", "Null effect", "Evidence"],
-    "figure1_caption": "Fig. 1. Positive / negative / null effect counts per outcome (based on effect_direction, not claim support).",
-    "matrix_filter": "Filter / Search",
-    "matrix_search_ph": "Search evidence…",
-    "matrix_all_dir": "All effects",
-    "matrix_all_outcome": "All outcomes",
-    "matrix_heads": ["ID", "Outcome", "Effect", "Quality", "Claim", "Source"],
-    "matrix_details": "View full evidence",
-    "matrix_detail_labels": ["Study title", "Design", "Population", "Intervention", "Directness"],
-    "matrix_source_missing": "No verifiable source",
-    "hero_action": "Recommended decision",
-    "hero_confidence": "Confidence",
-    "hero_supported": "Strongest supported conclusion",
-    "hero_uncertain": "Key uncertainty / contradiction",
-    "hero_risk": "Main risk",
-    "hero_next": "Next action",
-    "hero_provenance": "Evidence / sources",
-    "outcome_separation_title": "Outcome Separation · Task performance ≠ learning",
-    "effect_positive": "Positive effect",
-    "effect_negative": "Negative effect",
-    "effect_null": "Null effect",
-    "outcome_group_task": "Task / proximal performance",
-    "outcome_group_learning": "Learning / retention / transfer",
-    "outcome_group_risk": "Risk / dependency",
-    "outcome_group_other": "Other outcomes",
-    "outcome_sep_note": "Outcomes are adjudicated separately so faster training performance is not silently treated as evidence of learning.",
-    "tribunal_decision": "Decision",
-    "tribunal_confidence": "Confidence",
-    "tribunal_can": "Can claim",
-    "tribunal_uncertain": "Cannot yet claim",
-    "tribunal_cannot": "Contradicted claims",
-    "tribunal_missing": "Missing evidence",
-    "tribunal_flow": "EvidenceFlow Protocol",
-    "tribunal_figure": "Tribunal infographic",
-    "method_audit_heads": ["Item", "Status", "Note"],
-    "method_guard": "Task vs learning guard",
-    "conflict_verdict": "Tribunal note",
-    "trace_decision": "Decision",
-    "trace_claim_prefix": "Claim",
-    "trace_no_source": "No source",
-    "applicability": ["Suitable for", "Course", "Outcomes", "Conditions", "Target population", "Target context"],
-    "intervention_learners": "Target learners",
-    "intervention_duration": "Pilot duration",
-    "intervention_policy": "AI usage policy",
-    "intervention_rule": "AI rule",
-    "intervention_activities": "Activities",
-    "intervention_check": "Outcome check",
-    "intervention_stop": "Stop conditions",
-    "intervention_timeline": "Intervention timeline infographic",
-    "evaluation_question": "Research question",
-    "evaluation_measures": ["Baseline", "Post test", "Retention", "Transfer"],
-    "evaluation_metrics": ["Process metrics", "Learning metrics", "Risk metrics"],
-    "evaluation_threshold": "Success threshold",
-    "evaluation_plan": "Analysis plan",
-    "evaluation_figure": "Evaluation design infographic",
-    "benchmark_note": "result.json carries no benchmark.baselines, so this visual is omitted; see the standalone benchmark report.",
-    "sources_title": "Source list",
-    "sources_heads": ["ID", "Title", "Year", "Authority", "Verifiable location"],
-    "provenance_title": "Fetch provenance",
-    "provenance_heads": ["Source", "Fetch method", "Status", "Fallback", "Time"],
-    "provenance_search": "Search provider",
-    "provenance_time": "Fetched at",
-    "provenance_empty": "No per-source fetch records (sources provided directly by the research pipeline).",
-    "no_data": "No data.",
-    "header_evidence": "Evidence: ",
-    "header_sources": "Sources: ",
-    "header_mode": "Mode: ",
-    "header_generated": "Generated: ",
-    "header_evidence_suffix": "",
-    "header_sources_suffix": "",
-    "footer_schema": "Schema",
-    "footer_claims": "Claim Binding",
-    "footer_numbers": "Numeric Consistency",
-    "footer_bilingual": "Bilingual Structure",
-    "footer_language": "Human Language",
-    "footer_no_false_precision": "False Precision",
-    "footer_lieflat_bound": "Lieflat Data Bound",
-    "footer_no_axis_distortion": "Axis Distortion",
-    "footer_colorblind_safe": "Colorblind Safe",
-    "footer": "EduEvidence Evidence Report · {integrity} · single-file offline · source: result.json",
-    "matrix_search_label": "Filter / search evidence",
-    "matrix_dir_filter": "Filter by effect direction",
-    "matrix_outcome_filter": "Filter by outcome type",
-    "svg_balance_title": "Outcome evidence effect balance",
-    "svg_balance_desc": "Positive / negative / null effect counts per outcome (based on effect_direction, not claim support).",
-    "svg_figure1_title": "Effect direction by outcome type (publication figure)",
-    "svg_figure1_desc": "Counts of positive / negative / null effects per outcome type with an integer count axis, theme-independent. Source: EduEvidence result.json.",
-    "svg_benchmark_title": "Benchmark: citation support precision by baseline",
-    "svg_benchmark_desc": "Citation support precision per baseline; not drawn when no baseline data exists.",
-    "svg_workflow_title": "EvidenceFlow Protocol",
-    "svg_workflow_desc": "Research flow from framing, retrieval, fetch/verify, extraction, challenge, method audit and adjudication to applicability and intervention evaluation.",
-    "svg_tribunal_title": "Evidence Tribunal infographic",
-    "svg_tribunal_desc": "Evidence IDs for claims that can and cannot be claimed, plus the recommended action badge; full claim text is in the tribunal cards below.",
-    "svg_intervention_title": "Teaching intervention timeline",
-    "svg_intervention_desc": "Short phase names and activity counts; full AI usage rules are in the phase blocks.",
-    "svg_evaluation_title": "Evaluation design flow",
-    "svg_evaluation_desc": "Evaluation flow across baseline, post test, retention and transfer; full metrics and analysis plan are in the evaluation section.",
-    "raw_tag_title": "raw id",
-    "summary_tag_support": "Support",
-    "summary_tag_contradict": "Contradict",
-    "summary_confidence_prefix": " (confidence: ",
-    "summary_confidence_suffix": ")",
-    "method_target": "Audit target",
-    "applicability_not_suitable": "Not suitable for",
-    "applicability_conditions": "Conditions",
-    "trace_claim_sep": ": ",
-    "colon": ": ",
-    "lang_switcher_aria": "语言切换 / Language switch",
-    "theme_switcher_aria": "主题 / Theme",
-    "v2_project_title": "Project & Research History",
-    "v2_project_id": "Project ID",
-    "v2_graph_revision": "Graph revision",
-    "v2_decision_snapshot": "Decision snapshot",
-    "v2_timeline": "Project timeline",
-    "v2_gaps_title": "Knowledge gaps",
-    "v2_gap_type": "Gap type",
-    "v2_gap_priority": "Priority",
-    "v2_gap_reasoning": "Reasoning",
-    "v2_design_title": "Study design",
-    "v2_design_type": "Design type",
-    "v2_design_question": "Research question",
-    "v2_provenance_title": "Dataset & analysis provenance",
-    "v2_diff_title": "Decision diff",
-    "v2_diff_action": "Decision action",
-    "v2_diff_confidence": "Confidence",
-    "v2_diff_claims": "Changed claims",
-    "v2_diff_gaps": "Resolved/new gaps",
-    "v2_revision": "Revision",
-    "v2_decision": "Decision",
-    "v2_no_v2_data": "(no V2 project data)",
-}
-
 
 class ReportInvalid(Exception):
     """Scientific Integrity Gate failure (§27/§60): report must not be published."""
@@ -630,7 +103,7 @@ def esc(text: Any) -> str:
 def _svg_a11y(svg: str, title: str, desc: str) -> str:
     """6.5: 为嵌入的 SVG 注入双语 <title>/<desc>，并把 aria-label 换成 UI 字典文案。
 
-    title/desc 由调用方按当前语言从 UI_ZH / UI_EN 取；aria-label 已存在时覆盖，
+    title/desc 由调用方按当前语言从 build_ui() 取；aria-label 已存在时覆盖，
     不存在时补上，保证英文模式下不残留中文 aria-label。
     """
     if not svg:
@@ -1345,7 +818,7 @@ _ZH_RESIDUE_RE = [
 ]
 
 #: Raw storage identifiers inside a sentence. A single-token value may be an
-#: enum rendered through FRAME_ENUM_*, but an underscore inside a multi-word
+#: enum rendered through frame_enum_table(), but an underscore inside a multi-word
 #: string or inside a zh sentence is a copy defect the reader would see.
 _RAW_IDENTIFIER_RE = re.compile(r"[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]+")
 
@@ -1361,7 +834,8 @@ def _scan_raw_identifiers(problems: list[str], path: str, text: str) -> None:
         return
     for match in _RAW_IDENTIFIER_RE.finditer(cleaned):
         token = match.group(0)
-        if token in FRAME_ENUM_ZH or token in FRAME_ENUM_EN:
+        enum_tokens = set(frame_enum_table("zh")) | set(frame_enum_table("en"))
+        if token in enum_tokens:
             continue
         problems.append(path + ": raw identifier " + repr(token) + " leaked into prose")
         return
@@ -1464,7 +938,7 @@ def check_language_parallel(result_en: dict, result_zh: dict) -> list[str]:
             z_text = z_item.get("claim") if isinstance(z_item, dict) else None
             if z_text:
                 _scan_narrative(problems, key + "[" + str(i) + "].claim", e_text, z_text, strict=False)
-    # Frame prose: field values may be enums (rendered via FRAME_ENUM_*), but a
+    # Frame prose: field values may be enums (rendered via frame_enum_table), but a
     # storage identifier must never reach the reader inside a sentence. Both
     # language versions are checked because the leak is an authoring defect.
     # Weeks and pilot duration are structural tokens (W1, W2-W13, one_semester):
@@ -1684,7 +1158,7 @@ def diverging_bar_svg(option: dict, width: int = 720, height: int = 300,
     """真 diverging 静态图（P0-10）：support 从中心向右、contradict 从中心向左，
     neutral 走独立的细条道（第二网格），三系列互不覆盖。计数轴整数刻度（P0-11）。
     6.5: aria-label / title / desc 从 UI 字典按语言取。"""
-    ui = ui or UI_ZH
+    ui = ui or build_ui("zh")
     cats = option.get("yAxis", [{}])[0].get("data", []) if isinstance(option.get("yAxis"), list) \
         else option.get("yAxis", {}).get("data", [])
     series = option.get("series", [])
@@ -1772,7 +1246,7 @@ def diverging_bar_svg(option: dict, width: int = 720, height: int = 300,
 
 def grouped_bar_svg(option: dict, width: int = 720, height: int = 260,
                     note: str = "", lang: str = "zh", ui: dict | None = None) -> str:
-    ui = ui or UI_ZH
+    ui = ui or build_ui("zh")
     cats = option.get("xAxis", {}).get("data", [])
     series = option.get("series", [])
     parts = [f'<rect x="0" y="0" width="{width}" height="{height}" fill="#FFFFFF"/>']
@@ -1924,23 +1398,17 @@ def first_screen(result: dict, lang: str, ui: dict) -> str:
 </div>"""
 
 
-OUTCOME_GROUPS = {
-    "task": {"completion_time", "accuracy", "assignment_score", "task_performance", "code_quality"},
-    "learning": {"knowledge_gain", "learning_gain", "concept_understanding", "retention", "transfer",
-                 "independent_problem_solving", "programming_skill", "writing_skill"},
-    "risk": {"ai_dependency", "over_reliance", "reduced_effort", "reduced_transfer",
-             "academic_integrity_risk", "false_confidence", "cognitive_load"},
-}
-
-
 def render_outcome_separation(result: dict, lang: str, ui: dict) -> str:
     outcomes = effect_outcomes(result)
     if len(outcomes) < 2:
         return ""
     buckets: dict[str, list[dict]] = {"task": [], "learning": [], "risk": [], "other": []}
+    group_map = outcome_group_map()
     for outcome in outcomes:
         kind = outcome.get("outcome_type") or ""
-        group = next((name for name, values in OUTCOME_GROUPS.items() if kind in values), "other")
+        group = next((name for name, values in group_map.items() if kind in values), "other")
+        if group not in buckets:
+            group = "other"
         buckets[group].append(outcome)
     group_labels = {
         "task": ui["outcome_group_task"], "learning": ui["outcome_group_learning"],
@@ -2086,31 +1554,7 @@ def _quality_dims_text(lang: str, dims: Any) -> str:
 
 def render_evidence_detail(ev: dict, source: dict, lang: str, ui: dict) -> str:
     """Render complete traceable evidence detail without inventing missing fields."""
-    labels = ({
-        "study_id": "研究 ID", "sample_id": "样本 ID", "title": "研究标题",
-        "year": "年份", "study_type": "研究设计", "education_level": "教育阶段",
-        "population": "研究人群", "sample_size": "样本量", "intervention": "干预",
-        "comparison": "对照 / 比较条件", "outcome_measure": "结果测量", "claim": "完整主张",
-        "effect": "效应 / 结果", "effect_direction": "效应方向", "relation_to_claim": "与主张关系",
-        "duration": "干预时长", "method": "方法", "strengths": "优势",
-        "limitations": "局限", "confounders": "混杂因素", "quality_dimensions": "质量维度",
-        "quality_score": "质量分", "evidence_level": "证据等级", "directness": "直接性",
-        "applicability": "适用性", "confidence": "置信度", "status": "证据状态",
-        "source_location": "来源位置", "source_title": "来源标题", "source_url": "可验证链接",
-        "claim_id": "Claim ID",
-    } if lang == "zh" else {
-        "study_id": "Study ID", "sample_id": "Sample ID", "title": "Study title",
-        "year": "Year", "study_type": "Study design", "education_level": "Education level",
-        "population": "Population", "sample_size": "Sample size", "intervention": "Intervention",
-        "comparison": "Comparison", "outcome_measure": "Outcome measure", "claim": "Full claim",
-        "effect": "Effect / result", "effect_direction": "Effect direction", "relation_to_claim": "Relation to claim",
-        "duration": "Duration", "method": "Method", "strengths": "Strengths",
-        "limitations": "Limitations", "confounders": "Confounders", "quality_dimensions": "Quality dimensions",
-        "quality_score": "Quality score", "evidence_level": "Evidence level", "directness": "Directness",
-        "applicability": "Applicability", "confidence": "Confidence", "status": "Evidence status",
-        "source_location": "Source location", "source_title": "Source title", "source_url": "Verifiable link",
-        "claim_id": "Claim ID",
-    })
+    labels = evidence_detail_label_table(lang)
 
     values: list[tuple[str, Any]] = []
     source_title = source.get("title") or ev.get("title")
@@ -2368,9 +1812,10 @@ def render_tribunal(result: dict, workflow_svg: str, tribunal_svg: str, lang: st
 
 def methodology_item_label(lang: str, item: Any) -> str:
     key = str(item or "")
-    if lang == "zh":
-        return METHODOLOGY_LABELS_ZH.get(key, key.replace("_", " "))
-    return key.replace("_", " ").strip().title()
+    table = methodology_label_table(lang)
+    if key in table:
+        return table[key]
+    return key.replace("_", " ").strip().title() if lang != "zh" else key.replace("_", " ")
 
 
 def render_methodology(result: dict, lang: str, ui: dict) -> str:
@@ -2478,7 +1923,8 @@ def render_intervention(result: dict, svg: str, lang: str, ui: dict) -> str:
     if not intervention:
         return f"<p>{esc(ui['no_data'])}</p>"
     population = intervention.get("target_population") or intervention.get("target_learners")
-    population_label = ("目标人群" if lang == "zh" else "Target population") if intervention.get("target_population") else ui['intervention_learners']
+    population_key = "intervention_population" if intervention.get("target_population") else "intervention_learners"
+    population_label = ui.get(population_key) or ui.get("intervention_learners") or ("目标人群" if lang == "zh" else "Target population")
     lines = [f"<p><strong>{esc(population_label)}{esc(ui['colon'])}</strong>{esc(population)} · "
              f"<strong>{esc(ui['intervention_duration'])}{esc(ui['colon'])}</strong>{esc(intervention.get('pilot_duration'))}</p>"]
     if intervention.get("ai_usage_policy"):
@@ -2645,16 +2091,16 @@ def resolve_full_report_plan(result: dict) -> list[dict[str, Any]]:
     raw = result.get("report_outline") or result.get("report_structure") or {}
     chapters = raw.get("chapters") if isinstance(raw, dict) else raw if isinstance(raw, list) else None
     if not isinstance(chapters, list) or not 5 <= len(chapters) <= 7:
-        return [dict(chapter) for chapter in DEFAULT_FULL_REPORT_PLAN]
+        return default_full_report_plan()
 
     normalized: list[dict[str, Any]] = []
     seen_modules: list[str] = []
     for index, chapter in enumerate(chapters, 1):
         if not isinstance(chapter, dict):
-            return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+            return default_full_report_plan()
         modules = [m for m in (chapter.get("modules") or []) if m in FULL_REPORT_MODULES]
         if not modules or any(m in seen_modules for m in modules):
-            return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+            return [dict(item) for item in default_full_report_plan()]
         seen_modules.extend(modules)
         key = re.sub(r"[^a-z0-9-]+", "-", str(chapter.get("key") or f"chapter-{index}").lower()).strip("-")
         normalized.append({
@@ -2666,9 +2112,9 @@ def resolve_full_report_plan(result: dict) -> list[dict[str, Any]]:
             "modules": tuple(modules),
         })
     if set(seen_modules) != set(FULL_REPORT_MODULES):
-        return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+        return [dict(item) for item in default_full_report_plan()]
     if "decision" not in normalized[0]["modules"] or "sources" not in normalized[-1]["modules"]:
-        return [dict(item) for item in DEFAULT_FULL_REPORT_PLAN]
+        return [dict(item) for item in default_full_report_plan()]
     return normalized
 
 
@@ -2699,7 +2145,7 @@ def frame_enum_label(lang: str, value: Any) -> str:
     text = str(value or "")
     if not text:
         return ""
-    table = FRAME_ENUM_ZH if lang == "zh" else FRAME_ENUM_EN
+    table = frame_enum_table(lang)
     if text in table:
         return table[text]
     return _humanize_identifier(text, lang)
@@ -2738,7 +2184,7 @@ def _frame_value_label(lang: str, value: Any) -> str:
     if value in (None, "", [], {}):
         return ""
     text_value = str(value)
-    table = FRAME_ENUM_ZH if lang == "zh" else FRAME_ENUM_EN
+    table = frame_enum_table(lang)
     if text_value in table:
         return table[text_value]
     if " " in text_value.strip() or _HAS_CJK.search(text_value):
@@ -2752,26 +2198,10 @@ def render_research_scope(result: dict, lang: str, ui: dict) -> str:
     course = frame.get("course", {}) or {}
     intervention = frame.get("intervention", {}) or {}
     scope = frame.get("scope", {}) or {}
-    labels = ({
-        "question": "研究问题", "learner": "目标学习者", "course": "课程情境", "intervention": "AI 干预",
-        "comparison": "比较条件", "outcomes": "结果构念", "scope": "研究范围", "success": "决策成功条件",
-    } if lang == "zh" else {
-        "question": "Research question", "learner": "Target learners", "course": "Course context", "intervention": "AI intervention",
-        "comparison": "Comparison", "outcomes": "Outcome constructs", "scope": "Research scope", "success": "Decision success condition",
-    })
-    learner_text = labeled_pairs(lang, learner,
-        {"education_level":"教育阶段", "major":"专业", "prior_knowledge":"先验知识", "special_characteristics":"学习者特征"},
-        {"education_level":"Education level", "major":"Major", "prior_knowledge":"Prior knowledge", "special_characteristics":"Learner characteristics"})
-    course_text = labeled_pairs(lang, course,
-        {"subject":"课程", "course_type":"课程类型", "duration":"课程周期"},
-        {"subject":"Subject", "course_type":"Course type", "duration":"Duration"})
-    intervention_text = labeled_pairs(lang, intervention,
-        {"teaching_method": "干预方式", "ai_tool": "AI 工具", "allowed_usage": "允许使用",
-         "frequency": "使用频率", "duration": "干预周期", "policy_name": "政策名称",
-         "policy_type": "政策类型", "jurisdiction": "适用辖区", "mechanism": "作用机制"},
-        {"teaching_method": "Method", "ai_tool": "AI tool", "allowed_usage": "Allowed usage",
-         "frequency": "Frequency", "duration": "Duration", "policy_name": "Policy",
-         "policy_type": "Policy type", "jurisdiction": "Jurisdiction", "mechanism": "Mechanism"})
+    labels = scope_field_labels(lang)
+    learner_text = labeled_pairs(lang, learner, scope_subfield_labels(lang, "learner"), scope_subfield_labels(lang, "learner"))
+    course_text = labeled_pairs(lang, course, scope_subfield_labels(lang, "course"), scope_subfield_labels(lang, "course"))
+    intervention_text = labeled_pairs(lang, intervention, scope_subfield_labels(lang, "intervention"), scope_subfield_labels(lang, "intervention"))
     outcome_map = frame.get("outcomes", {}) or {}
     outcome_parts = []
     for group, values in outcome_map.items():
@@ -2779,8 +2209,8 @@ def render_research_scope(result: dict, lang: str, ui: dict) -> str:
             rendered = "、".join(label(lang, "outcome", v) for v in values) if lang == "zh" else ", ".join(label(lang, "outcome", v) for v in values)
             outcome_parts.append(f"{frame_enum_label(lang, group)}：{rendered}" if lang == "zh" else f"{frame_enum_label(lang, group)}: {rendered}")
     scope_parts = []
-    scope_labels_zh = {"time_range":"时间范围", "geography":"地域", "study_types":"研究设计"}
-    scope_labels_en = {"time_range":"Time range", "geography":"Geography", "study_types":"Study designs"}
+    scope_labels_zh = scope_subfield_labels("zh", "scope")
+    scope_labels_en = scope_subfield_labels("en", "scope")
     for key, value in scope.items():
         if value in (None, "", [], {}):
             continue
@@ -2890,20 +2320,13 @@ def render_full_report(result: dict, lang: str, ui: dict, charts: dict, infograp
                     + render_v2_history(result, lang, ui)),
     }
 
-    default_leads = {
-        "decision": ("先明确最终裁决与研究边界，再解释为什么。" if lang == "zh" else "State the final adjudication and research boundary before explaining why."),
-        "evidence": ("把任务表现、真实学习、保持与风险放在同一证据地图中，但不混为一谈。" if lang == "zh" else "Place task performance, actual learning, retention and risk on one evidence map without conflating them."),
-        "quality": ("检查证据为什么可信、哪里冲突，以及哪些结论必须降级。" if lang == "zh" else "Examine why evidence is credible, where it conflicts, and which conclusions require downgrading."),
-        "action": ("把可外推范围、护栏和教学动作连接到具体证据。" if lang == "zh" else "Connect applicability, guardrails and teaching actions to specific evidence."),
-        "evaluation": ("用独立学习结果验证试点，并预先写清停止条件。" if lang == "zh" else "Validate the pilot with independent learning outcomes and pre-specified stop conditions."),
-        "sources": ("保留原始来源、URL、证据 ID 和获取信息，确保可回查。" if lang == "zh" else "Preserve original sources, URLs, evidence IDs and retrieval metadata for auditability."),
-    }
+    leads_by_key = default_leads(lang)
 
     plan = resolve_full_report_plan(result)
     rendered = []
     for index, chapter in enumerate(plan, 1):
         content = "".join(module_content.get(module, "") for module in chapter.get("modules", ()))
-        lead = chapter.get("lead_zh" if lang == "zh" else "lead_en") or default_leads.get(chapter.get("key"), "")
+        lead = chapter.get("lead_zh" if lang == "zh" else "lead_en") or leads_by_key.get(chapter.get("key"), "")
         rendered.append(render_full_chapter(
             chapter_dom_id(lang, str(chapter.get("key") or f"chapter-{index}"), index),
             full_chapter_title(chapter, lang, index), content, str(lead or "")))
@@ -3326,24 +2749,7 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
     outcome_chart = next((c for c in charts.get("charts", [])
                           if c.get("chart_id") == "outcome-evidence-overview"), None)
 
-    if lang == "zh":
-        brief_titles = {
-            "decision": ("先看结论", "该不该做、置信度多高、最关键的证据边界在哪。"),
-            "lieflat": ("Lieflat 实证手作画廊", "AI 按数据形状从 Lieflat 目录选型编排；每张图的数字都可溯源到 result.json。"),
-            "outcomes": ("任务表现 ≠ 学习效果", "只展示真正有解释力的结果分离；正向、负向与零效应按 effect_direction 编码。"),
-            "tribunal": ("证据裁决", "支持、不确定、被反驳与缺失证据分开放置，不把长段落平铺在同一层。"),
-            "action": ("从证据到行动", "适用性、护栏、停止条件与评价连成一条可执行路径。"),
-            "sources": ("关键来源", "摘要页只列最关键的来源；完整溯源在完整报告中展开。"),
-        }
-    else:
-        brief_titles = {
-            "decision": ("Decision first", "What to do, how confident we are, and the most important evidence boundary."),
-            "lieflat": ("Lieflat Editorial Gallery", "Charts selected and composed by AI from the Lieflat catalog; every number traces back to result.json."),
-            "outcomes": ("Task performance ≠ learning", "Only informative outcome separation; positive, negative and null effects use effect_direction."),
-            "tribunal": ("Evidence tribunal", "Supported, uncertain, contradicted and missing evidence stay separated instead of flattened into long prose."),
-            "action": ("Evidence to action", "Applicability, guardrails, stop conditions and evaluation form one executable path."),
-            "sources": ("Key sources", "Only the key sources in the brief; full traceability expands in the full report."),
-        }
+    brief_titles = brief_block_titles(lang)
 
     lieflat_layout = viz.get("lieflat_layout") or {"entries": []}
     lieflat_meta = (viz.get("lieflat_meta") or {}).get(lang, {})
@@ -3369,7 +2775,7 @@ def render_body(result: dict, lang: str, ui: dict, charts: dict, infographics: d
     nav_items = [("decision", brief_titles["decision"][0]), ("outcomes", brief_titles["outcomes"][0]),
                  ("tribunal", brief_titles["tribunal"][0]), ("action", brief_titles["action"][0]),
                  ("sources", brief_titles["sources"][0])]
-    brief_nav = '<nav class="brief-navigation" aria-label="' + ("摘要导航" if lang == "zh" else "Brief navigation") + '">' + ''.join(
+    brief_nav = '<nav class="brief-navigation" aria-label="' + esc(ui["brief_nav_aria"]) + '">' + ''.join(
         f'<a href="#brief-{key}-{lang}"><span>{i:02d}</span>{esc(title)}</a>'
         for i, (key, title) in enumerate(nav_items, 1)) + '</nav>'
     full_report = render_full_report(result, lang, ui, charts, infographics, figures, viz)
@@ -3414,9 +2820,11 @@ def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: di
                 figures_en: dict, theme: str, viz: dict,
                 result_sha256: str = "", integrity: dict | None = None) -> str:
     # Theme is fixed at generation time; language remains switchable in the HTML.
-    body_zh = render_body(result_zh, "zh", UI_ZH, charts_zh, infographics_zh, figures_zh, viz, theme,
+    ui_zh = build_ui("zh")
+    ui_en = build_ui("en")
+    body_zh = render_body(result_zh, "zh", ui_zh, charts_zh, infographics_zh, figures_zh, viz, theme,
                           integrity=integrity)
-    body_en = render_body(result_en, "en", UI_EN, charts_en, infographics_en, figures_en, viz, theme,
+    body_en = render_body(result_en, "en", ui_en, charts_en, infographics_en, figures_en, viz, theme,
                           integrity=integrity)
     hash_meta = (f'<meta name="eduevidence-result-sha256" content="{esc(result_sha256)}">\n'
                  if result_sha256 else "")
@@ -3440,10 +2848,10 @@ def render_html(result_en: dict, result_zh: dict, charts_zh: dict, charts_en: di
 <div class="controls reader-toolbar">
 <a class="reader-home" href="#" aria-label="Back to report start">EduEvidence<span class="generated-theme">{esc(THEME_DISPLAY[theme])}</span></a>
 <div class="reader-view-controls" role="group" aria-label="Report view">
-<button type="button" class="report-view-btn active" data-report-view="brief" data-copy="brief" aria-pressed="true">摘要</button>
-<button type="button" class="report-view-btn" data-report-view="full" data-copy="full" aria-pressed="false">完整报告</button>
+<button type="button" class="report-view-btn active" data-report-view="brief" data-copy="brief" aria-pressed="true">{esc(ui_zh['toolbar_brief'])}</button>
+<button type="button" class="report-view-btn" data-report-view="full" data-copy="full" aria-pressed="false">{esc(ui_zh['toolbar_full'])}</button>
 </div>
-<div class="reader-tools">{_lang_switcher(UI_ZH, UI_EN)}<button class="reader-print" type="button" data-copy="print">打印</button></div>
+<div class="reader-tools">{_lang_switcher(ui_zh, ui_en)}<button class="reader-print" type="button" data-copy="print">{esc(ui_zh['toolbar_print'])}</button></div>
 </div>
 {body_zh}
 {body_en}
@@ -3540,6 +2948,13 @@ def main() -> int:
         return 2
     result_zh = json.loads(zh_path.read_text(encoding="utf-8"))
 
+    # 0. Domain copy pack（result.meta.domain / frame.extensions.domain）
+    try:
+        activate_copy_pack(result_en)
+    except AssertionError as exc:
+        print(f"REPORT_INVALID — domain copy pack rejected:\n{exc}")
+        return 2
+
     # 1. Contract validation（两份数据分别校验）
     for label, data in (("result.json", result_en), ("result.zh.json", result_zh)):
         problems = validate_contract(data)
@@ -3569,8 +2984,8 @@ def main() -> int:
     # 3. Adapters（两份数据分别生成 spec / 信息图 / 学术图；数字同构）
     charts_zh = build_chart_specs(result_zh, lang="zh")
     charts_en = build_chart_specs(result_en, lang="en")
-    infographics_zh = build_infographics(result_zh, lang="zh")
-    infographics_en = build_infographics(result_en, lang="en")
+    infographics_zh = build_infographics(result_zh, lang="zh", ui=build_ui("zh"))
+    infographics_en = build_infographics(result_en, lang="en", ui=build_ui("en"))
     figure_data = build_figure_data(result_en)
     figures_zh = render_figures(figure_data, theme=args.theme, lang="zh")
     figures_en = render_figures(figure_data, theme=args.theme, lang="en")
@@ -3645,6 +3060,15 @@ def main() -> int:
     spec_out.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"wrote {html_out} ({html_out.stat().st_size} bytes) + {spec_out.name} — integrity: {integrity['status']} (zh+en)")
     return 0
+
+
+def __getattr__(name: str):
+    """Back-compat UI dicts for tests: br.UI_ZH / br.UI_EN."""
+    if name == "UI_ZH":
+        return build_ui("zh")
+    if name == "UI_EN":
+        return build_ui("en")
+    raise AttributeError(name)
 
 
 if __name__ == "__main__":

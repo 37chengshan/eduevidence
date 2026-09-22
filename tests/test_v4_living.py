@@ -190,14 +190,14 @@ def test_refresh_new_evidence_increments_revision_and_reports_changed(
     assert drift["to_revision"] == 2
     assert drift["new_evidence_ids"] == ["FND-new1"]
     assert drift["suggested_action"] == "changed"
-    assert "ADOPT" in drift["summary"] and "REJECT" in drift["summary"]
+    assert "ADOPT" in drift["summary"] and "INSUFFICIENT_EVIDENCE" in drift["summary"]
     assert drift["extensions"]["diff"]["action_changed"] is True
     assert drift["extensions"]["diff"]["to_decision_snapshot_id"] ==         result["snapshot"]["decision_snapshot_id"]
     validate_schema(drift, json.loads(
         (ROOT / "schemas/v4/drift-report.schema.json").read_text(encoding="utf-8")))
 
     # new snapshot persisted and bound to the refreshed revision
-    assert result["snapshot"]["decision"] == "REJECT"
+    assert result["snapshot"]["decision"] == "INSUFFICIENT_EVIDENCE"
     assert result["snapshot"]["graph_revision"] == 2
     assert (project.path / "decisions" /
             f"{result['snapshot']['decision_snapshot_id']}.json").is_file()

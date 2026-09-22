@@ -1,0 +1,169 @@
+{
+  "domain": "education",
+  "purpose": "Domain-sensitive module/UI labels. Merged over the neutral UI base.",
+  "labels": {
+    "section_key_note": "section titles live in section_titles.json",
+    "outcome_separation_title": {
+      "zh": "结果分离 · 任务表现 ≠ 学习效果",
+      "en": "Outcome Separation · Task performance ≠ learning"
+    },
+    "outcome_sep_note": {
+      "zh": "将不同结果类型分开裁决，避免把训练时更快、更高分直接等同于真正学会。",
+      "en": "Outcomes are adjudicated separately so faster training performance is not silently treated as evidence of learning."
+    },
+    "outcome_group_task": {
+      "zh": "任务 / 近端表现",
+      "en": "Task / proximal performance"
+    },
+    "outcome_group_learning": {
+      "zh": "学习 / 保持 / 迁移",
+      "en": "Learning / retention / transfer"
+    },
+    "outcome_group_risk": {
+      "zh": "风险 / 依赖",
+      "en": "Risk / dependency"
+    },
+    "outcome_group_other": {
+      "zh": "其他结果",
+      "en": "Other outcomes"
+    },
+    "method_guard": {
+      "zh": "任务 vs 学习护栏",
+      "en": "Task vs learning guard"
+    },
+    "applicability": {
+      "zh": [
+        "适用于谁",
+        "适用课程",
+        "适用结果",
+        "适用条件",
+        "目标人群",
+        "目标情境"
+      ],
+      "en": [
+        "Suitable for",
+        "Course",
+        "Outcomes",
+        "Conditions",
+        "Target population",
+        "Target context"
+      ]
+    },
+    "intervention_learners": {
+      "zh": "目标学习者",
+      "en": "Target learners"
+    },
+    "intervention_population": {
+      "zh": "目标人群",
+      "en": "Target population"
+    },
+    "intervention_duration": {
+      "zh": "试点时长",
+      "en": "Pilot duration"
+    },
+    "intervention_policy": {
+      "zh": "AI 使用规则",
+      "en": "AI usage policy"
+    },
+    "intervention_rule": {
+      "zh": "AI 规则",
+      "en": "AI rule"
+    },
+    "intervention_activities": {
+      "zh": "活动",
+      "en": "Activities"
+    },
+    "intervention_check": {
+      "zh": "结果检查",
+      "en": "Outcome check"
+    },
+    "intervention_stop": {
+      "zh": "停止条件",
+      "en": "Stop conditions"
+    },
+    "intervention_timeline": {
+      "zh": "干预时间线信息图",
+      "en": "Intervention timeline infographic"
+    },
+    "evaluation_measures": {
+      "zh": [
+        "基线",
+        "后测",
+        "保持测试",
+        "迁移测试"
+      ],
+      "en": [
+        "Baseline",
+        "Post test",
+        "Retention",
+        "Transfer"
+      ]
+    },
+    "evaluation_metrics": {
+      "zh": [
+        "过程指标",
+        "学习指标",
+        "风险指标"
+      ],
+      "en": [
+        "Process metrics",
+        "Learning metrics",
+        "Risk metrics"
+      ]
+    },
+    "evaluation_question": {
+      "zh": "研究问题",
+      "en": "Research question"
+    },
+    "evaluation_threshold": {
+      "zh": "成功阈值",
+      "en": "Success threshold"
+    },
+    "evaluation_plan": {
+      "zh": "分析计划",
+      "en": "Analysis plan"
+    },
+    "evaluation_figure": {
+      "zh": "评价设计信息图",
+      "en": "Evaluation design infographic"
+    },
+    "svg_intervention_title": {
+      "zh": "教学干预时间线",
+      "en": "Teaching intervention timeline"
+    },
+    "svg_intervention_desc": {
+      "zh": "各试点阶段的短名称与活动数量；完整 AI 使用规则见阶段说明块。",
+      "en": "Short phase names and activity counts; full AI usage rules are in the phase blocks."
+    },
+    "svg_evaluation_title": {
+      "zh": "评价设计流程",
+      "en": "Evaluation design flow"
+    },
+    "svg_evaluation_desc": {
+      "zh": "基线、后测、保持测试与迁移测试的评价流程；完整指标与分析计划见评估章节。",
+      "en": "Evaluation flow across baseline, post test, retention and transfer; full metrics and analysis plan are in the evaluation section."
+    },
+    "svg_workflow_desc": {
+      "zh": "从问题框架、检索、抓取验证、证据抽取、反方质疑、方法审计、裁决到适用性与干预评价的完整流程。",
+      "en": "Research flow from framing, retrieval, fetch/verify, extraction, challenge, method audit and adjudication to applicability and intervention evaluation."
+    },
+    "decision_kpi": {
+      "zh": [
+        "决策",
+        "置信度",
+        "证据最充分的结果",
+        "最不确定的结果",
+        "主要风险",
+        "来源数量"
+      ],
+      "en": [
+        "Decision",
+        "Confidence",
+        "Best-supported outcome",
+        "Most uncertain outcome",
+        "Main risk",
+        "Sources"
+      ]
+    }
+  }
+}

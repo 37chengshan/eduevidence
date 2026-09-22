@@ -17,9 +17,15 @@ schemas/v4/evidence-library.schema.json using the repo's zero-dependency
 validator (scripts/validate_schema.py).
 
 Direction semantics (adoption-relevant, conservative):
-  support    -> evidence favors adopting the intervention  (=> pilot)
-  contradict -> evidence opposes adopting the intervention (=> reject)
+  support    -> evidence favors adopting the intervention
+                (offline screening cap => pilot; never adopt)
+  contradict -> evidence opposes adopting the intervention
+                (oppose-only => reject; mixed with support is an unresolved
+                conflict and must fall to INSUFFICIENT_EVIDENCE via
+                engine.decision_policy.decision_outcome)
   neutral    -> inconclusive
+The library never emits adopt: full ADOPT is decided only by
+engine.decision_policy.decision_outcome (High + support + direct primary).
 For gold units the coarse rule is: if a question's expected decision range is
 purely reject-oriented ("reject" present and "pilot" absent), its
 key_claims/key_supporting_sources are harmful evidence => contradict, and its
@@ -266,10 +272,14 @@ def build(generated_at: str | None = None) -> tuple[dict[str, Any], int]:
             "key_claims/key_supporting_sources/known_contradictions/correct_outcome_types）"
             "+ 3 个示例工作流 evidence.jsonl（ai-coding-assistant / ai-tutor / ai-writing-assistant）"
             "抽取生成；按 (source_id, outcome_token, claim_text) 去重合并。"
-            "direction 语义为采纳方向：support=支持采纳（初步裁决=>pilot），"
-            "contradict=反对采纳（=>reject），neutral=中性；金标准条目按 expected_decision_range "
+            "direction 语义为采纳方向：support=支持采纳（离线初筛上限 => pilot，永不输出 adopt），"
+            "contradict=反对采纳（oppose-only 时 => reject；与 support 并存属未决冲突，应交 "
+            "engine.decision_policy.decision_outcome 判为 INSUFFICIENT_EVIDENCE），neutral=中性；"
+            "金标准条目按 expected_decision_range "
             "粗粒度映射方向（纯 reject 问题反向映射），conflict 与混合方向问题的单条断言方向可能不精确。"
-            "仅用于离线初步裁决（preliminary，保守），从不直接给出 adopt。"
+            "仅用于离线初步裁决（preliminary，保守），从不直接给出 adopt；"
+            "完整 ADOPT 只能由 engine.decision_policy.decision_outcome 给出"
+            "（High + support + 主要结果 directness 2）。"
         ),
     }
     _validate(library)

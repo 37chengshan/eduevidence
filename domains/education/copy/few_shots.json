@@ -1,0 +1,22 @@
+{
+  "domain": "education",
+  "purpose": "One written example per decision state (adopt / pilot / reject / insufficient_evidence), education voice.",
+  "states": {
+    "adopt": {
+      "zh": "延迟保持与迁移证据一致为正，独立后测无伤害信号 → 在目标课程中采用每周短时闭卷检索练习，并以统一延迟后测验收。",
+      "en": "Delayed retention and transfer evidence is consistently positive with no independent post-test harm → adopt weekly short closed-book retrieval practice in the target course, verified by a common delayed post-test."
+    },
+    "pilot": {
+      "zh": "任务表现证据强，但真实学习与保持证据不足或有护栏依赖 → 有界、分阶段、带独立后测的试点，而不是全面铺开。",
+      "en": "Task-performance evidence is strong, but independent learning and retention evidence is thin or guardrail-dependent → a bounded, phased pilot with independent post-tests rather than full rollout."
+    },
+    "reject": {
+      "zh": "无护栏使用已显示独立表现受损，且无补偿性学习收益证据 → 不建议采用，并明确替代方案的证据边界。",
+      "en": "Unguarded use already shows independent-performance harm with no compensatory learning gain → do not adopt, and state the evidence boundary of alternatives."
+    },
+    "insufficient_evidence": {
+      "zh": "现有研究未测量独立学习/保持/迁移，或人群与目标课程错位 → 证据不足，先补关键测量设计，再谈决策。",
+      "en": "Existing studies do not measure independent learning/retention/transfer, or the population mismatches the target course → insufficient evidence; fill the key measurement design before deciding."
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "domain": "policy",
+  "purpose": "One written example per decision state, policy voice. No teaching vocabulary; intervention is 干预方案.",
+  "states": {
+    "adopt": {
+      "zh": "独立效果、成本与公平证据一致为正，实施风险可控 → 在目标辖区采用该干预方案，并保留持续监测与退出条款。",
+      "en": "Independent effect, cost and equity evidence is consistently positive with controllable implementation risk → adopt the intervention plan in the target jurisdiction, with ongoing monitoring and exit clauses."
+    },
+    "pilot": {
+      "zh": "试点期产出改善明确，但独立效果与成本证据仍薄 → 有界、分阶段、带对照与成本核算的试点，而不是全面铺开。",
+      "en": "Pilot-period output gains are clear, but independent effect and cost evidence is still thin → a bounded, phased pilot with comparison and cost accounting rather than full rollout."
+    },
+    "reject": {
+      "zh": "已观察到实施风险或分配恶化，且无补偿性目标效果证据 → 不建议采用，并写明受影响人群与补救边界。",
+      "en": "Implementation risk or distributional harm is already observed with no compensatory target-effect evidence → do not adopt, and state affected populations and the remediation boundary."
+    },
+    "insufficient_evidence": {
+      "zh": "现有研究未测量独立效果、成本或分配，或辖区与目标人群错位 → 证据不足，先补关键测量设计，再谈决策。",
+      "en": "Existing studies do not measure independent effects, cost or distribution, or the jurisdiction mismatches the target population → insufficient evidence; fill the key measurement design before deciding."
+    }
+  }
+}

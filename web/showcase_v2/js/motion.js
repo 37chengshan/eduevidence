@@ -204,8 +204,9 @@ function initParadoxSlider() {
       }
     }
 
-    if (speedCounter) speedCounter.textContent = `+${(0.64 * (1 - val/200)).toFixed(2)}g`;
-    if (examCounter) examCounter.textContent = `-${(0.28 * (0.5 + val/200)).toFixed(2)}g`;
+    // Real flagship findings (8 sources / 12 findings, PILOT) — do not interpolate invented g values.
+    if (speedCounter) speedCounter.textContent = "1.15× 完成率";
+    if (examCounter) examCounter.textContent = "−17% 独立考核";
   }
 
   slider.addEventListener("input", updateParadox);

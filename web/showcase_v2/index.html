@@ -39,7 +39,7 @@
           <li><a href="#section-paradox" class="nav-link">实证悖论</a></li>
           <li><a href="#section-protocol" class="nav-link">9步规范协议</a></li>
           <li><a href="#section-themes" class="nav-link">5套报告主题</a></li>
-          <li><a href="/lieflat/lupi" target="_blank" class="nav-link" title="查看 Lieflat Charts 图表品味法典画廊">🎨 Lieflat 图表库 ↗</a></li>
+          <li><span class="nav-link" title="Lieflat 画廊不在本包；见 visualization/eduevidence-report/references/lieflat-composition.md">🎨 Lieflat（文档内）</span></li>
         </ul>
       </nav>
       <div class="nav-actions">
@@ -77,7 +77,7 @@
             面向教育与社会科学重大决策的通用实证引擎 · 契约门控 · 悖论消解 · 因果推断闭环
           </p>
           <div class="hero-live-ticker">
-            <span class="ticker-chip">📚 50+ 顶刊实证研究合成</span>
+            <span class="ticker-chip">📚 8 真实旗舰来源 · 12 findings · PILOT</span>
             <span class="ticker-chip">🛡️ 13 项 JSON Schema 契约门控</span>
             <span class="ticker-chip">⚖️ WWC 5.0 方法学偏倚审计</span>
             <span class="ticker-chip">🔄 田野课堂 DID 回归回注</span>
@@ -105,10 +105,11 @@
     <!-- Section: CS1 AI Coding Assistant Paradox Comparison -->
     <section class="landing-section" id="section-paradox">
       <div class="section-header">
-        <span class="section-tag">Killer Demo Case</span>
+        <span class="section-tag">Flagship PILOT Case</span>
         <h2 class="section-title serif-text">高校 CS1 引入 AI 编程助手的实证悖论</h2>
         <p class="section-desc">
-          基于 PNAS 2025、ACM CHI、ICER、SIGCSE 等 50 篇实证文献合成，揭示「任务内提速」与「独立考核退步」的认知鸿沟。
+          真实旗舰约 <strong>8 来源 / 12 findings</strong>（registry 核验 DOI，非随机合成），结论 <strong>PILOT</strong>。
+          揭示「任务内提速」与「独立考核退步」的认知鸿沟：无护栏大样本试验中独立考核约 −17%。
         </p>
       </div>
 
@@ -118,8 +119,8 @@
           <div class="paradox-card card-speed" id="paradox-split-left">
             <div>
               <span class="paradox-badge badge-speed">⚡ 任务内完成速度 (In-Task)</span>
-              <div class="paradox-stat-num stat-speed-color" id="paradox-speed-val">+0.64g</div>
-              <p class="text-slate font-medium text-sm">95% CI: [+0.48, +0.80] · p < 0.001 (极显著提速)</p>
+              <div class="paradox-stat-num stat-speed-color" id="paradox-speed-val">1.15× 完成率</div>
+              <p class="text-slate font-medium text-sm">RCT n=69 · 耗时 0.57× · 正确率 1.8×（Kazemitabaar 2023）</p>
             </div>
             <p class="text-muted text-xs">
               学生编写代码耗时大幅下降，主观体验极佳，快速生成并通过基础测试用例。
@@ -130,8 +131,8 @@
           <div class="paradox-card card-exam" id="paradox-split-right">
             <div>
               <span class="paradox-badge badge-exam">⚠️ 独立闭卷考核 (Delayed Solo)</span>
-              <div class="paradox-stat-num stat-exam-color" id="paradox-exam-val">-0.28g</div>
-              <p class="text-slate font-medium text-sm">95% CI: [-0.42, -0.14] · p = 0.003 (显著下滑)</p>
+              <div class="paradox-stat-num stat-exam-color" id="paradox-exam-val">−17% 独立考核</div>
+              <p class="text-slate font-medium text-sm">无护栏 GPT 组独立考试分下降约 17%（Bastani 2025）</p>
             </div>
             <p class="text-muted text-xs">
               脱离 AI 辅助后，学生独立调试与心智模型构建能力出现断崖式衰减。
@@ -141,7 +142,7 @@
 
         <!-- Interactive Comparison Slider -->
         <div class="paradox-slider-wrap">
-          <label for="paradox-range-slider" class="text-xs font-semibold text-muted">拖动滑块对比实证效应比重：</label>
+          <label for="paradox-range-slider" class="text-xs font-semibold text-muted">拖动滑块对比真实旗舰发现的视觉权重（数值固定，不随滑块缩放）：</label>
           <input type="range" id="paradox-range-slider" class="paradox-range" min="0" max="100" value="50">
         </div>
 
@@ -150,7 +151,8 @@
           <div>
             <div class="font-bold text-sm text-terracotta" style="margin-bottom: 4px;">WWC 5.0 偏倚审计核心洞察：支架依赖陷阱 (Scaffolding Dependency Trap)</div>
             <p class="text-xs text-slate-200" style="max-width: 680px; line-height: 1.5;">
-              语法提示词掌握 ≠ 心智模型形成。法庭终局裁决：<strong>PILOT</strong>（限制性 4 阶段渐退式试点），严禁一刀切全面放开或全面封禁！
+              语法提示词掌握 ≠ 心智模型形成。真实旗舰 8 来源 / 12 findings，置信度 Moderate（0.586）。
+              法庭终局裁决：<strong>PILOT</strong>（限制性 4 阶段渐退式试点 + hints-not-answers 护栏），严禁一刀切全面放开或全面封禁。
             </p>
           </div>
           <div class="insight-verdict-pill">法庭裁决：PILOT 试点</div>
@@ -348,10 +350,10 @@
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
             <span>🚀 9步向导推演</span>
           </button>
-          <a href="/lieflat/lupi" target="_blank" class="console-nav-item" style="text-decoration:none;" title="查看 Lieflat 图表品味法典">
+          <div class="console-nav-item" title="Lieflat 画廊不在本包；注册表见 visualization/eduevidence-report/references/lieflat-composition.md">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l9.402-9.402"/></svg>
-            <span>🎨 Lieflat 画廊 ↗</span>
-          </a>
+            <span>🎨 Lieflat（文档内）</span>
+          </div>
         </nav>
       </div>
 
@@ -665,18 +667,21 @@
                   <span style="font-weight:800; font-size:1.05rem;">🏛️ 法庭终局裁决结果 (Tribunal Verdict)</span>
                   <span id="wizard-verdict-tag" class="tag tag-terracotta font-bold text-base">PILOT</span>
                 </div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">
+                  默认展示真实旗舰结果：8 真实来源 / 12 findings · data_origin=manual_curated · 非随机合成
+                </div>
                 <div class="grid-cols-3" style="margin-bottom:12px;">
                   <div class="kpi-box">
                     <div class="kpi-box-label">综合效应量</div>
-                    <div id="wizard-pooled-g" class="kpi-box-val text-terracotta">+0.38g</div>
+                    <div id="wizard-pooled-g" class="kpi-box-val text-terracotta">不汇总 g</div>
                   </div>
                   <div class="kpi-box">
                     <div class="kpi-box-label">裁决置信度</div>
-                    <div id="wizard-conf-score" class="kpi-box-val text-emerald">82%</div>
+                    <div id="wizard-conf-score" class="kpi-box-val text-emerald">58.6%</div>
                   </div>
                   <div class="kpi-box">
-                    <div class="kpi-box-label">契约校验率</div>
-                    <div class="kpi-box-val font-mono">13 / 13</div>
+                    <div class="kpi-box-label">证据规模</div>
+                    <div class="kpi-box-val font-mono">8 来源 / 12 findings</div>
                   </div>
                 </div>
                 <div style="font-size:0.82rem; color:var(--text-secondary);">

@@ -7,6 +7,7 @@ import sys
 
 TREES = (
     "agents", "engine", "domains", "skill", "references", "schemas", "scripts",
+    "integrations", "visualization/eduevidence-report",
     "retrieval", "integrations", "visualization/eduevidence-report", "web/studio",
     "assets/readme",
 )

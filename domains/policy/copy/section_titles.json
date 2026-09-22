@@ -1,0 +1,186 @@
+{
+  "domain": "policy",
+  "purpose": "Section titles/leads + default full-report chapter plan (policy voice; no teaching vocabulary).",
+  "section_titles": {
+    "zh": {
+      "01": "01 执行决策",
+      "02": "02 结果证据概览",
+      "03": "03 证据矩阵",
+      "04": "04 证据裁决",
+      "05": "05 方法学审计",
+      "06": "06 冲突分析",
+      "07": "07 主张-证据追溯",
+      "08": "08 适用性",
+      "09": "09 干预方案",
+      "10": "10 评价方案",
+      "11": "11 基准测试",
+      "12": "12 来源与溯源"
+    },
+    "en": {
+      "01": "01 Executive Decision",
+      "02": "02 Outcome Evidence Overview",
+      "03": "03 Evidence Matrix",
+      "04": "04 Evidence Tribunal",
+      "05": "05 Methodology Audit",
+      "06": "06 Conflict Analysis",
+      "07": "07 Claim-Evidence Trace",
+      "08": "08 Applicability",
+      "09": "09 Intervention Plan",
+      "10": "10 Evaluation Plan",
+      "11": "11 Benchmark",
+      "12": "12 Sources & Provenance"
+    }
+  },
+  "section_leads": {
+    "zh": {
+      "01": "本节先给结论：最终怎么裁决、置信度多高、靠哪几条证据。",
+      "02": "一图看清：哪些政策效果有支持证据、哪些被反驳。",
+      "03": "每条证据来自哪项研究、测了什么、方向与质量如何；可筛选、可搜索。",
+      "04": "证据允许主张什么、不允许主张什么；缺失的关键证据是什么。",
+      "05": "研究质量可靠吗？哪些方法学问题让结论打折。",
+      "06": "不同研究为何结论不同；分歧出在哪一环。",
+      "07": "从结论到证据到原始来源，每一步都可追查。",
+      "08": "结论适用于谁、什么人群与效果、需要什么条件。",
+      "09": "试点怎么分阶段放开干预规则；什么情况必须叫停。",
+      "10": "如何验证效果：指标、对照、成功阈值。",
+      "11": "EduEvidence 自身基准表现：引用精度与成本。",
+      "12": "每篇文献是谁、出自哪里、如何获取。"
+    },
+    "en": {
+      "01": "The verdict first: what we decide, at what confidence, on which evidence.",
+      "02": "At a glance: which policy outcomes have supporting evidence, which are contradicted.",
+      "03": "Where each piece of evidence comes from, what it measures, its direction and quality — filterable and searchable.",
+      "04": "What the evidence lets us claim, what it does not, and what is still missing.",
+      "05": "How reliable are these studies, and which methodological concerns discount the conclusions.",
+      "06": "Why studies disagree — and where exactly they diverge.",
+      "07": "Every step from conclusion to evidence to source stays traceable.",
+      "08": "Who the conclusion applies to, for which population and outcomes, under what conditions.",
+      "09": "How intervention rules phase in during a pilot, and when we must stop.",
+      "10": "How we verify real effects: metrics, comparison, success threshold.",
+      "11": "How EduEvidence itself performs: citation precision and cost.",
+      "12": "Who wrote each cited study, where it came from, how it was fetched."
+    }
+  },
+  "default_chapters": [
+    {
+      "key": "decision",
+      "title_zh": "结论、裁决与研究边界",
+      "title_en": "Decision, Adjudication & Research Boundary",
+      "lead_zh": "先明确最终裁决与研究边界，再解释为什么。",
+      "lead_en": "State the final adjudication and research boundary before explaining why.",
+      "modules": [
+        "decision",
+        "scope"
+      ]
+    },
+    {
+      "key": "evidence",
+      "title_zh": "关键证据与结果分离",
+      "title_en": "Key Evidence & Outcome Separation",
+      "lead_zh": "把过程产出、真实效果、持续性与风险放在同一证据地图中，但不混为一谈。",
+      "lead_en": "Place process outputs, real effects, durability and risk on one evidence map without conflating them.",
+      "modules": [
+        "retrieval",
+        "outcomes",
+        "evidence"
+      ]
+    },
+    {
+      "key": "quality",
+      "title_zh": "证据可信度、反证与方法审计",
+      "title_en": "Evidence Quality, Counterevidence & Method Audit",
+      "lead_zh": "检查证据为什么可信、哪里冲突，以及哪些结论必须降级。",
+      "lead_en": "Examine why evidence is credible, where it conflicts, and which conclusions require downgrading.",
+      "modules": [
+        "quality",
+        "conflicts",
+        "trace"
+      ]
+    },
+    {
+      "key": "action",
+      "title_zh": "适用范围与政策行动",
+      "title_en": "Applicability & Policy Action",
+      "lead_zh": "把可外推范围、护栏和政策动作连接到具体证据。",
+      "lead_en": "Connect applicability, guardrails and policy actions to specific evidence.",
+      "modules": [
+        "applicability",
+        "intervention"
+      ]
+    },
+    {
+      "key": "evaluation",
+      "title_zh": "试点设计、评估与停止条件",
+      "title_en": "Pilot, Evaluation & Stop Conditions",
+      "lead_zh": "用独立效果测量验证试点，并预先写清停止条件。",
+      "lead_en": "Validate the pilot with independent effect measures and pre-specified stop conditions.",
+      "modules": [
+        "evaluation"
+      ]
+    },
+    {
+      "key": "sources",
+      "title_zh": "来源、溯源与附录",
+      "title_en": "Sources, Traceability & Appendix",
+      "lead_zh": "保留原始来源、URL、证据 ID 和获取信息，确保可回查。",
+      "lead_en": "Preserve original sources, URLs, evidence IDs and retrieval metadata for auditability.",
+      "modules": [
+        "sources"
+      ]
+    }
+  ],
+  "brief_blocks": {
+    "zh": {
+      "decision": [
+        "先看结论",
+        "该不该做、置信度多高、最关键的证据边界在哪。"
+      ],
+      "lieflat": [
+        "Lieflat 实证手作画廊",
+        "AI 按数据形状从 Lieflat 目录选型编排；每张图的数字都可溯源到 result.json。"
+      ],
+      "outcomes": [
+        "过程产出 ≠ 政策效果",
+        "只展示真正有解释力的结果分离；正向、负向与零效应按 effect_direction 编码。"
+      ],
+      "tribunal": [
+        "证据裁决",
+        "支持、不确定、被反驳与缺失证据分开放置，不把长段落平铺在同一层。"
+      ],
+      "action": [
+        "从证据到行动",
+        "适用性、护栏、停止条件与评价连成一条可执行路径。"
+      ],
+      "sources": [
+        "关键来源",
+        "摘要页只列最关键的来源；完整溯源在完整报告中展开。"
+      ]
+    },
+    "en": {
+      "decision": [
+        "Decision first",
+        "What to do, how confident we are, and the most important evidence boundary."
+      ],
+      "lieflat": [
+        "Lieflat Editorial Gallery",
+        "Charts selected and composed by AI from the Lieflat catalog; every number traces back to result.json."
+      ],
+      "outcomes": [
+        "Process output ≠ policy effect",
+        "Only informative outcome separation; positive, negative and null effects use effect_direction."
+      ],
+      "tribunal": [
+        "Evidence tribunal",
+        "Supported, uncertain, contradicted and missing evidence stay separated instead of flattened into long prose."
+      ],
+      "action": [
+        "Evidence to action",
+        "Applicability, guardrails, stop conditions and evaluation form one executable path."
+      ],
+      "sources": [
+        "Key sources",
+        "Only the key sources in the brief; full traceability expands in the full report."
+      ]
+    }
+  }
+}

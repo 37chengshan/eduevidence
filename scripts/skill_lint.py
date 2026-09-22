@@ -130,6 +130,17 @@ def lint_skill() -> list[str]:
         if re.search(r"theme-btn|theme-switcher|data-theme-target", ltext):
             errors.append("scripts/render_report_html.py still contains runtime theme switcher")
 
+    # 10. File-layer hard gate (also runnable alone: python3 scripts/lint_file_layers.py)
+    try:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from lint_file_layers import check_file_layers  # noqa: PLC0415
+        layer_errors, layer_warnings = check_file_layers()
+        errors.extend(layer_errors)
+        for w in layer_warnings:
+            print(f"    ! {w}")
+    except Exception as exc:  # pragma: no cover - lint must still run
+        errors.append(f"file-layer gate failed to load: {exc}")
+
     return errors
 
 

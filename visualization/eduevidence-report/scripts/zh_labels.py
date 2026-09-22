@@ -9,6 +9,10 @@
 """
 from __future__ import annotations
 
+import json
+from pathlib import Path
+from typing import Any
+
 OUTCOME_ZH = {
     "knowledge_gain": "知识获得",
     "concept_understanding": "概念理解",
@@ -34,6 +38,12 @@ OUTCOME_ZH = {
     "task_performance": "任务表现",
     "programming_skill": "编程技能",
     "writing_skill": "写作技能",
+    # policy-domain outcome tokens (domains/policy/outcome_taxonomy.json)
+    "policy_effectiveness": "政策有效性",
+    "cost_effectiveness": "成本效益",
+    "equity": "公平性",
+    "feasibility": "可行性",
+    "implementation_risk": "实施风险",
 }
 
 STUDY_ZH = {
@@ -145,6 +155,12 @@ OUTCOME_EN = {
     "task_performance": "Task performance",
     "programming_skill": "Programming skill",
     "writing_skill": "Writing skill",
+    # policy-domain outcome tokens (domains/policy/outcome_taxonomy.json)
+    "policy_effectiveness": "Policy effectiveness",
+    "cost_effectiveness": "Cost-effectiveness",
+    "equity": "Equity",
+    "feasibility": "Feasibility",
+    "implementation_risk": "Implementation risk",
 }
 STUDY_EN = {
     "rct": "Randomized controlled trial",
@@ -322,3 +338,48 @@ def humanize_identifier(value: str, lang: str = "en") -> str:
             out.append(word[:1].upper() + word[1:])
     return " ".join(out)
 
+
+# ---------------------------------------------------------------------------
+# Neutral UI dictionary lives in domains/_neutral/copy/module_labels.json.
+# Domain packs overlay it via merge_ui(); this module stays enum-label only.
+# ---------------------------------------------------------------------------
+_NEUTRAL_UI_PATH = Path(__file__).resolve().parents[3] / "domains" / "_neutral" / "copy" / "module_labels.json"
+
+
+def load_neutral_ui() -> dict[str, dict]:
+    """Return {key: {"zh": ..., "en": ...}} for domain-neutral UI labels.
+
+    Neutral labels may be topic-split across module_labels*.json.
+    """
+    labels: dict[str, dict] = {}
+    root = _NEUTRAL_UI_PATH.parent
+    if not root.is_dir():
+        return labels
+    for path in sorted(root.glob("module_labels*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        labels.update(data.get("labels") or {})
+    return labels
+
+
+def merge_ui(lang: str, domain_labels: dict | None = None) -> dict:
+    """Neutral UI overlaid with domain module_labels for `lang`."""
+    base: dict[str, Any] = {}
+    for key, value in load_neutral_ui().items():
+        if isinstance(value, dict) and ("zh" in value or "en" in value):
+            picked = value.get(lang)
+            if picked is not None:
+                base[key] = picked
+        else:
+            base[key] = value
+    if not domain_labels:
+        return base
+    for key, value in domain_labels.items():
+        if key == "section_key_note":
+            continue
+        if isinstance(value, dict) and ("zh" in value or "en" in value):
+            picked = value.get(lang)
+            if picked is not None:
+                base[key] = picked
+        else:
+            base[key] = value
+    return base

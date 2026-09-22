@@ -1,0 +1,48 @@
+{
+  "domain": "education",
+  "purpose": "Outcome grouping + separation guard constructs (task performance is not learning).",
+  "outcome_groups": {
+    "task": [
+      "completion_time",
+      "accuracy",
+      "assignment_score",
+      "task_performance",
+      "code_quality"
+    ],
+    "learning": [
+      "knowledge_gain",
+      "learning_gain",
+      "concept_understanding",
+      "retention",
+      "transfer",
+      "independent_problem_solving",
+      "programming_skill",
+      "writing_skill"
+    ],
+    "risk": [
+      "ai_dependency",
+      "over_reliance",
+      "reduced_effort",
+      "reduced_transfer",
+      "academic_integrity_risk",
+      "false_confidence",
+      "cognitive_load"
+    ]
+  },
+  "separation_title": {
+    "zh": "结果分离 · 任务表现 ≠ 学习效果",
+    "en": "Outcome Separation · Task performance ≠ learning"
+  },
+  "separation_note": {
+    "zh": "将不同结果类型分开裁决，避免把训练时更快、更高分直接等同于真正学会。",
+    "en": "Outcomes are adjudicated separately so faster training performance is not silently treated as evidence of learning."
+  },
+  "method_guard": {
+    "zh": "任务 vs 学习护栏",
+    "en": "Task vs learning guard"
+  },
+  "guard_principle": {
+    "zh": "任务表现提升 ≠ 学习效果提升；ADOPT 需要独立学习/保持/迁移证据。",
+    "en": "Task performance is not learning; ADOPT requires independent learning/retention/transfer evidence."
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "domain": "policy",
+  "purpose": "policy frame field/subfield labels (framing_lexicon part 1).",
+  "frame_fields": {
+    "zh": {
+      "question": "研究问题",
+      "decision_object": "决策对象",
+      "intervention": "干预方案",
+      "population": "目标人群",
+      "stakeholders": "利益相关者",
+      "outcomes": "结果构念",
+      "context": "政策情境",
+      "scope": "研究范围",
+      "comparison": "比较条件",
+      "success": "决策成功条件",
+      "success_condition": "决策成功条件",
+      "learner": "目标人群",
+      "course": "适用情境"
+    },
+    "en": {
+      "question": "Research question",
+      "decision_object": "Decision object",
+      "intervention": "Intervention plan",
+      "population": "Target population",
+      "stakeholders": "Stakeholders",
+      "outcomes": "Outcome constructs",
+      "context": "Policy context",
+      "scope": "Research scope",
+      "comparison": "Comparison",
+      "success": "Decision success condition",
+      "success_condition": "Decision success condition",
+      "learner": "Target population",
+      "course": "Operating context"
+    }
+  },
+  "frame_subfields": {
+    "zh": {
+      "learner": {
+        "education_level": "覆盖层级",
+        "major": "岗位序列",
+        "prior_knowledge": "先验经验",
+        "special_characteristics": "人群特征"
+      },
+      "course": {
+        "subject": "业务域",
+        "course_type": "组织形态",
+        "duration": "实施周期"
+      },
+      "intervention": {
+        "teaching_method": "干预方式",
+        "ai_tool": "技术工具",
+        "allowed_usage": "允许使用",
+        "frequency": "使用频率",
+        "duration": "干预周期",
+        "policy_name": "政策名称",
+        "policy_type": "政策类型",
+        "jurisdiction": "适用辖区",
+        "mechanism": "作用机制"
+      },
+      "population": {
+        "definition": "人群定义",
+        "size": "覆盖规模",
+        "vulnerability": "脆弱性"
+      },
+      "scope": {
+        "time_range": "时间范围",
+        "geography": "地域",
+        "study_types": "研究设计"
+      }
+    },
+    "en": {
+      "learner": {
+        "education_level": "Coverage level",
+        "major": "Role track",
+        "prior_knowledge": "Prior experience",
+        "special_characteristics": "Population characteristics"
+      },
+      "course": {
+        "subject": "Domain",
+        "course_type": "Organisation type",
+        "duration": "Rollout window"
+      },
+      "intervention": {
+        "teaching_method": "Method",
+        "ai_tool": "Technology",
+        "allowed_usage": "Allowed usage",
+        "frequency": "Frequency",
+        "duration": "Duration",
+        "policy_name": "Policy",
+        "policy_type": "Policy type",
+        "jurisdiction": "Jurisdiction",
+        "mechanism": "Mechanism"
+      },
+      "population": {
+        "definition": "Definition",
+        "size": "Scale",
+        "vulnerability": "Vulnerability"
+      },
+      "scope": {
+        "time_range": "Time range",
+        "geography": "Geography",
+        "study_types": "Study designs"
+      }
+    }
+  },
+  "evidence_detail_labels": {
+    "zh": {
+      "study_id": "研究 ID",
+      "sample_id": "样本 ID",
+      "title": "研究标题",
+      "year": "年份",
+      "study_type": "研究设计",
+      "education_level": "覆盖层级",
+      "population": "研究人群",
+      "sample_size": "样本量",
+      "intervention": "干预方案",
+      "comparison": "对照 / 比较条件",
+      "outcome_measure": "结果测量",
+      "claim": "完整主张",
+      "effect": "效应 / 结果",
+      "effect_direction": "效应方向",
+      "relation_to_claim": "与主张关系",
+      "duration": "干预时长",
+      "method": "方法",
+      "strengths": "优势",
+      "limitations": "局限",
+      "confounders": "混杂因素",
+      "quality_dimensions": "质量维度",
+      "quality_score": "质量分",
+      "evidence_level": "证据等级",
+      "directness": "直接性",
+      "applicability": "适用性",
+      "confidence": "置信度",
+      "status": "证据状态",
+      "source_location": "来源位置",
+      "source_title": "来源标题",
+      "source_url": "可验证链接",
+      "claim_id": "Claim ID"
+    },
+    "en": {
+      "study_id": "Study ID",
+      "sample_id": "Sample ID",
+      "title": "Study title",
+      "year": "Year",
+      "study_type": "Study design",
+      "education_level": "Coverage level",
+      "population": "Population",
+      "sample_size": "Sample size",
+      "intervention": "Intervention plan",
+      "comparison": "Comparison",
+      "outcome_measure": "Outcome measure",
+      "claim": "Full claim",
+      "effect": "Effect / result",
+      "effect_direction": "Effect direction",
+      "relation_to_claim": "Relation to claim",
+      "duration": "Duration",
+      "method": "Method",
+      "strengths": "Strengths",
+      "limitations": "Limitations",
+      "confounders": "Confounders",
+      "quality_dimensions": "Quality dimensions",
+      "quality_score": "Quality score",
+      "evidence_level": "Evidence level",
+      "directness": "Directness",
+      "applicability": "Applicability",
+      "confidence": "Confidence",
+      "status": "Evidence status",
+      "source_location": "Source location",
+      "source_title": "Source title",
+      "source_url": "Verifiable URL",
+      "claim_id": "Claim ID"
+    }
+  }
+}

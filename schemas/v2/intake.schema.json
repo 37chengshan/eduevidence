@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eduevidence.dev/schemas/v2/intake.schema.json",
+  "title": "Intake",
+  "description": "One-shot two-round user intake for a run: research question, execution enhancements, depth, optional enhancement mappings, Frame boundary hints, and wrap-up confirmation. User answers only mode and questions; the agent infers the rest. Non-question preferences live in ~/.eduevidence/prefs.json (see definitions.Prefs) and never record the research question. All five report themes stay rendered; default_main_theme only selects which one to open.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "research_question",
+    "enhancements",
+    "depth",
+    "summary_confirmed"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "research_question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Canonical research question collected in round 1. Stored on the run, never in prefs."
+    },
+    "enhancements": {
+      "type": "array",
+      "description": "Execution enhancements selected in round 1. Use [\"none\"] when the user enables nothing.",
+      "items": {
+        "type": "string",
+        "enum": ["agent_mcp", "jev", "semdecide", "none"]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "depth": {
+      "type": "string",
+      "enum": ["S", "M", "L"],
+      "description": "Resolved complexity depth after auto rules (S quick check / M standard / L deep)."
+    },
+    "depth_choice": {
+      "type": "string",
+      "enum": ["S", "M", "L", "auto"],
+      "description": "What the user picked in round 1. auto means the agent applies the depth guideline."
+    },
+    "depth_rationale": {
+      "type": "string",
+      "description": "Why depth resolved to S/M/L (auto guideline or explicit choice)."
+    },
+    "mcp": {
+      "type": ["object", "null"],
+      "description": "Round-2 Agent MCP block. Present only when agent_mcp is selected.",
+      "additionalProperties": false,
+      "properties": {
+        "authorized": { "type": "boolean" },
+        "role_mapping": {
+          "type": "object",
+          "description": "role -> {cli, model} authorization table confirmed by the user.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["cli", "model"],
+            "properties": {
+              "cli": { "type": "string", "minLength": 1 },
+              "model": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "jev": {
+      "type": ["object", "null"],
+      "description": "Round-2 Jev block. Present only when jev is selected.",
+      "additionalProperties": false,
+      "properties": {
+        "tool_subset": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "semdecide": {
+      "type": ["object", "null"],
+      "description": "Round-2 SemDecide block. Present only when semdecide is selected.",
+      "additionalProperties": false,
+      "properties": {
+        "purpose": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" }
+      }
+    },
+    "frame_hints": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Background deep-dive boundary hints (population / intervention / comparison / primary_outcome / context). Inferred values are proposals only; unknown fields stay absent (never fabricated).",
+      "properties": {
+        "population": { "type": "string" },
+        "intervention": { "type": "string" },
+        "comparison": { "type": "string" },
+        "primary_outcome": { "type": "string" },
+        "context": { "type": "string" },
+        "domain": { "type": "string" },
+        "confirmed": { "type": "boolean" }
+      }
+    },
+    "summary_confirmed": {
+      "type": "boolean",
+      "description": "Wrap-up summary accepted once; the run then continues unattended."
+    },
+    "open_browser": {
+      "type": "boolean",
+      "description": "Whether to open the main report in a browser when the run finishes."
+    },
+    "default_main_theme": {
+      "type": "string",
+      "enum": ["claude", "academic", "datalab", "datalab-dark", "presentation"],
+      "description": "Which of the five baked themes to open as the main report. All five remain rendered."
+    },
+    "interactive": { "type": "boolean" },
+    "prefs_path": {
+      "type": "string",
+      "description": "Absolute path of the prefs file written for this intake (never contains the research question)."
+    },
+    "source": {
+      "type": "string",
+      "enum": ["interactive", "silent", "yes_flag", "prefs"]
+    }
+  },
+  "definitions": {
+    "Prefs": {
+      "title": "Prefs",
+      "description": "Durable non-question preferences at ~/.eduevidence/prefs.json. Never store a research question here.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "type": "integer", "minimum": 1 },
+        "enhancement": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["agent_mcp", "jev", "semdecide", "none"]
+          },
+          "uniqueItems": true
+        },
+        "mcp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "role_mapping": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["cli", "model"],
+                "properties": {
+                  "cli": { "type": "string", "minLength": 1 },
+                  "model": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "jev": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tool_subset": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            }
+          }
+        },
+        "semdecide": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "purpose": { "type": "string" }
+          }
+        },
+        "depth_preference": {
+          "type": "string",
+          "enum": ["S", "M", "L", "auto"]
+        },
+        "open_browser": { "type": "boolean" },
+        "default_main_theme": {
+          "type": "string",
+          "enum": ["claude", "academic", "datalab", "datalab-dark", "presentation"]
+        }
+      }
+    }
+  }
+}

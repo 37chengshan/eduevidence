@@ -1,0 +1,21 @@
+{
+  "domain": "_neutral",
+  "states": {
+    "adopt": {
+      "zh": "",
+      "en": ""
+    },
+    "pilot": {
+      "zh": "",
+      "en": ""
+    },
+    "reject": {
+      "zh": "",
+      "en": ""
+    },
+    "insufficient_evidence": {
+      "zh": "",
+      "en": ""
+    }
+  }
+}

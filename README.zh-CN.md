@@ -284,13 +284,13 @@ B4 EduEvidence + Agent MCP      ← 证明多 Agent 增强价值（B3 vs B4）
 `examples/ai-coding-assistant-evidence/` 完整展示了从问题到决策的全过程：
 
 - **证据**（12 条发现、8 个来源）：任务表现提升（Kazemitabaar 2023）、无护栏访问损害独立考试表现 -17%（Bastani 2025, PNAS）、护栏设计消除负效应（Bastani 2025）、形成性反馈写作证据（Marzuki 2024）。
-- **决策**：**PILOT** —— 任务表现证据强，但大学编程课程的直接学习效应证据缺失，无护栏风险已被证实。
+- **决策**：落档动作 `PILOT`（Moderate，0.586）；矩阵落点（`engine.decision_policy.decision_outcome`）为 `INSUFFICIENT_EVIDENCE`（`unresolved_conflict`）—— 任务表现证据强，但大学编程课程的直接学习效应证据缺失，无护栏风险已被证实，且 decisive relations 混有 support / oppose / conditional。
 - **干预**：4 阶段试点（Independent Foundation → Explain Don't Solve → Structured Collaboration → Transfer Check）。
 - **评价**：无 AI 基线/后测/期末考试保持/无 AI 迁移任务 + AI 依赖风险指标。
 
-另一公开案例 `examples/workplace-ai-assistant/` 使用组织政策领域，讨论企业客服是否引入 AI 助手：3 项研究、4 条发现，区分直接客服证据与间接写作/咨询证据，判定 **PILOT**（Moderate）。详见 [来源核验与边界](docs/demo-workplace-ai.md)。
+另一公开案例 `examples/workplace-ai-assistant/` 使用组织政策领域，讨论企业客服是否引入 AI 助手：3 项研究、4 条发现，区分直接客服证据与间接写作/咨询证据，落档动作 `PILOT`（Moderate，0.578），矩阵落点为 `INSUFFICIENT_EVIDENCE`（`unresolved_conflict`，全部 decisive relation 为 `conditional`）。详见 [来源核验与边界](docs/demo-workplace-ai.md)。
 
-第三个公开案例 `examples/spaced-retrieval-practice/`（来源经 Sciverse 通道逐条读回原文）讨论间隔重复与检索练习能否替代集中式复习：6 条证据、7 篇 tier-1 DOI 来源，判定 **ADOPT**（High，引擎复算 0.893）。它是“ADOPT 出口真实可达”的实证：延迟保持与迁移两个主要结果上都有 directness=2 的直接且一致证据；另两例因为主要学习结果上缺直接证据而停在 PILOT。
+第三个公开案例 `examples/spaced-retrieval-practice/`（来源经 Sciverse 通道逐条读回原文）讨论间隔重复与检索练习能否替代集中式复习：6 条证据、7 篇 tier-1 DOI 来源，判定 **ADOPT**（High，引擎复算 0.893）—— 唯一一个落档动作与矩阵落点一致的公开案例。它是“ADOPT 出口真实可达”的实证：延迟保持与迁移两个主要结果上都有 directness=2 的直接且一致证据；另两例因为主要学习结果上缺直接证据、且 decisive relations 未决，矩阵落点为 `INSUFFICIENT_EVIDENCE`，不得表述为已落在 PILOT。
 
 三个公开案例的数据来源各自如实标注：编程与企业客服两例为人工整理文献（`manual_curated`），间隔重复一例为真实 Sciverse 检索运行记录（`real_run_sciverse`），报告生成不等于九阶段模型研究已运行，也不代表试点已经执行。四个旧教学示例迁入 `tests/fixtures/legacy-examples/`，仅供软件兼容测试，排除于公共目录和分发包；未核验或合成数据不能引用为研究证据。旧 `ai-coding-assistant` 路径保留兼容别名。
 

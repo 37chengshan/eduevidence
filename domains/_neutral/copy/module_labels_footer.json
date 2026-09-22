@@ -1,0 +1,102 @@
+{
+  "domain": "_neutral",
+  "purpose": "Neutral UI labels — module_labels_footer.",
+  "labels": {
+    "tribunal_decision": {
+      "zh": "决策",
+      "en": "Decision"
+    },
+    "tribunal_confidence": {
+      "zh": "置信度",
+      "en": "Confidence"
+    },
+    "tribunal_can": {
+      "zh": "可以主张",
+      "en": "Can claim"
+    },
+    "tribunal_uncertain": {
+      "zh": "尚不能主张",
+      "en": "Cannot yet claim"
+    },
+    "tribunal_cannot": {
+      "zh": "被反驳的主张",
+      "en": "Contradicted claims"
+    },
+    "tribunal_missing": {
+      "zh": "缺失证据",
+      "en": "Missing evidence"
+    },
+    "tribunal_flow": {
+      "zh": "EvidenceFlow 协议",
+      "en": "EvidenceFlow Protocol"
+    },
+    "tribunal_figure": {
+      "zh": "裁决信息图",
+      "en": "Tribunal infographic"
+    },
+    "header_evidence": {
+      "zh": "证据 ",
+      "en": "Evidence: "
+    },
+    "header_sources": {
+      "zh": "来源 ",
+      "en": "Sources: "
+    },
+    "header_mode": {
+      "zh": "模式：",
+      "en": "Mode: "
+    },
+    "header_generated": {
+      "zh": "生成时间：",
+      "en": "Generated: "
+    },
+    "header_evidence_suffix": {
+      "zh": " 条",
+      "en": ""
+    },
+    "header_sources_suffix": {
+      "zh": " 个",
+      "en": ""
+    },
+    "footer_schema": {
+      "zh": "Schema",
+      "en": "Schema"
+    },
+    "footer_claims": {
+      "zh": "Claim Binding",
+      "en": "Claim Binding"
+    },
+    "footer_numbers": {
+      "zh": "Numeric Consistency",
+      "en": "Numeric Consistency"
+    },
+    "footer_bilingual": {
+      "zh": "Bilingual Structure",
+      "en": "Bilingual Structure"
+    },
+    "footer_language": {
+      "zh": "语言人话化",
+      "en": "Human Language"
+    },
+    "footer_no_false_precision": {
+      "zh": "无伪精度",
+      "en": "False Precision"
+    },
+    "footer_lieflat_bound": {
+      "zh": "Lieflat 数据溯源",
+      "en": "Lieflat Data Bound"
+    },
+    "footer_no_axis_distortion": {
+      "zh": "坐标轴无失真",
+      "en": "Axis Distortion"
+    },
+    "footer_colorblind_safe": {
+      "zh": "色盲安全",
+      "en": "Colorblind Safe"
+    },
+    "footer": {
+      "zh": "EduEvidence 证据报告 · {integrity} · 单文件离线可打开 · 数据源：result.json",
+      "en": "EduEvidence Evidence Report · {integrity} · single-file offline · source: result.json"
+    }
+  }
+}

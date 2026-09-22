@@ -204,7 +204,27 @@ def _phase_short(name: Any, index: int, lang: str) -> str:
     return f"Phase {index + 1}"
 
 
-def intervention_svg(intervention: dict, lang: str = "zh") -> str:
+def _ui_title(ui: dict | None, lang: str, key: str) -> str:
+    """Domain copy pack title when provided; else the built-in bilingual default."""
+    if ui:
+        title = ui.get(f"svg_{key}_title")
+        if title:
+            return str(title)
+    return TITLES[lang][key]
+
+
+def _eval_nodes(lang: str, ui: dict | None = None) -> list[tuple[str, str]]:
+    """Eval node labels; retention/transfer keywords come from evaluation_measures."""
+    nodes = [list(n) for n in EVAL_NODES[lang]]
+    measures = list((ui or {}).get("evaluation_measures") or [])
+    if len(measures) > 2 and measures[2]:
+        nodes[2][1] = str(measures[2])
+    if len(measures) > 3 and measures[3]:
+        nodes[3][1] = str(measures[3])
+    return [(lab, kw) for lab, kw in nodes]
+
+
+def intervention_svg(intervention: dict, lang: str = "zh", ui: dict | None = None) -> str:
     """干预时间线：只放阶段短名与活动数（HTML-02），长规则文本在 HTML 阶段块。"""
     phases = [intervention.get(p) for p in ("phase_1", "phase_2", "phase_3", "phase_4")]
     phases = [p for p in phases if isinstance(p, dict)]
@@ -220,12 +240,12 @@ def intervention_svg(intervention: dict, lang: str = "zh") -> str:
         boxes.append(_box(x, y, bw, 96, name, PALETTE["primary"], font_size=12, sub=sub))
         if i < len(phases) - 1:
             boxes.append(_arrow(x + bw, y + 48, x + bw + gap, y + 48))
-    return _svg(TITLES[lang]["intervention"], "".join(boxes))
+    return _svg(_ui_title(ui, lang, "intervention"), "".join(boxes))
 
 
-def evaluation_svg(evaluation: dict, lang: str = "zh") -> str:
+def evaluation_svg(evaluation: dict, lang: str = "zh", ui: dict | None = None) -> str:
     """评价设计流程：只放阶段关键词（HTML-02），评估长文本在 HTML 段落。"""
-    nodes = EVAL_NODES[lang]
+    nodes = _eval_nodes(lang, ui)
     keys = ("baseline", "post_test", "retention_test", "transfer_test")
     bw, gap, y = 150, 12, 110
     boxes = []
@@ -236,22 +256,22 @@ def evaluation_svg(evaluation: dict, lang: str = "zh") -> str:
                      f'fill="#fff" opacity="0.95">{_esc(keyword)}</text>')
         if i < len(nodes) - 1:
             boxes.append(_arrow(x + bw, y + 28, x + bw + gap, y + 28))
-    return _svg(TITLES[lang]["evaluation"], "".join(boxes))
+    return _svg(_ui_title(ui, lang, "evaluation"), "".join(boxes))
 
 
-def render_infographics(result: dict, lang: str = "zh") -> dict[str, str]:
-    """按语言渲染 4 张信息图（zh 数据 = result.zh.json，en 数据 = result.json）。"""
+def render_infographics(result: dict, lang: str = "zh", ui: dict | None = None) -> dict[str, str]:
+    """按语言渲染 4 张信息图；ui 提供域文案标题/评价关键词（缺省用内置双语表）。"""
     return {
         "workflow": workflow_svg(lang),
         "tribunal": tribunal_svg(result.get("decision", {}), lang),
-        "intervention": intervention_svg(result.get("intervention", {}), lang),
-        "evaluation": evaluation_svg(result.get("evaluation", {}), lang),
+        "intervention": intervention_svg(result.get("intervention", {}), lang, ui=ui),
+        "evaluation": evaluation_svg(result.get("evaluation", {}), lang, ui=ui),
     }
 
 
-def build_all(result: dict, lang: str = "zh") -> dict[str, str]:
-    """兼容别名：等价于 render_infographics(result, lang)。"""
-    return render_infographics(result, lang)
+def build_all(result: dict, lang: str = "zh", ui: dict | None = None) -> dict[str, str]:
+    """兼容别名：等价于 render_infographics(result, lang, ui)。"""
+    return render_infographics(result, lang, ui=ui)
 
 
 def main() -> int:

@@ -1,0 +1,5 @@
+{
+  "domain": "_neutral",
+  "purpose": "Neutral UI labels index; companions module_labels_*.json hold the actual keys.",
+  "labels": {}
+}

@@ -304,8 +304,9 @@ def test_conflict_penalty_applied_only_for_independent_opposition(tmp_path):
                _link("LNK-B1", "FND-B1", "contradict", "oppose_adoption")],
         audits=[_audit("AUD-A", "STU-A"), _audit("AUD-B", "STU-B")])
     snap = adjudicate(store, project=ws)
-    # both directions present -> contested/negative evidence -> REJECT
-    assert snap["decision"] == "REJECT"
+    # both directions present -> unresolved conflict -> INSUFFICIENT (not REJECT)
+    assert snap["decision"] == "INSUFFICIENT_EVIDENCE"
+    assert snap.get("downgrade_reason") == "unresolved_conflict"
     components = snap["extensions"]["confidence_components"]
     assert components["decisive_studies"] == 2
 

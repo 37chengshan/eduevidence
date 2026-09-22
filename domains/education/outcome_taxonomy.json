@@ -1,8 +1,8 @@
 {
   "domain": "education",
   "source": {
-    "tokens": "schemas/evidence.schema.json -> outcome_type enum（20 token）",
-    "categories": "engine/pilot.py -> _OUTCOME_CATEGORY（learning/task_performance/process/risk 四类）"
+    "authority": "engine/taxonomy.py",
+    "note": "Sole reader of this contract. Token set and token-to-category mapping live in this file; callers must use engine/taxonomy.py (fail-closed) and must not keep private copies of either table."
   },
   "categories": {
     "learning": {

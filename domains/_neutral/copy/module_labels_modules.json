@@ -1,0 +1,204 @@
+{
+  "domain": "_neutral",
+  "purpose": "Neutral UI module/visual labels (part 2).",
+  "labels": {
+    "svg_balance_desc": {
+      "zh": "各结果类型的正向 / 负向 / 零效应证据条数（基于 effect_direction，不等同于 Claim 是否被支持）。",
+      "en": "Positive / negative / null effect counts per outcome (based on effect_direction, not claim support)."
+    },
+    "svg_balance_title": {
+      "zh": "各结果类型证据效应分布",
+      "en": "Outcome evidence effect balance"
+    },
+    "svg_benchmark_desc": {
+      "zh": "各基线的引用支持精度（Citation support precision）对比；无基准数据时不绘制。",
+      "en": "Citation support precision per baseline; not drawn when no baseline data exists."
+    },
+    "svg_benchmark_title": {
+      "zh": "基准对比：各基线引用支持精度",
+      "en": "Benchmark: citation support precision by baseline"
+    },
+    "svg_figure1_desc": {
+      "zh": "各结果类型的正向 / 负向 / 零效应证据条数；计数轴整数刻度，不随主题变化。来源：EduEvidence result.json。",
+      "en": "Counts of positive / negative / null effects per outcome type with an integer count axis, theme-independent. Source: EduEvidence result.json."
+    },
+    "svg_figure1_title": {
+      "zh": "各结果类型效应方向分布（出版级学术图）",
+      "en": "Effect direction by outcome type (publication figure)"
+    },
+    "svg_tribunal_desc": {
+      "zh": "可以主张与不可主张的证据 ID 与建议决策徽章；完整主张文本见下方裁决卡片。",
+      "en": "Evidence IDs for claims that can and cannot be claimed, plus the recommended action badge; full claim text is in the tribunal cards below."
+    },
+    "svg_tribunal_title": {
+      "zh": "证据裁决信息图",
+      "en": "Evidence Tribunal infographic"
+    },
+    "svg_workflow_title": {
+      "zh": "EvidenceFlow 协议流程",
+      "en": "EvidenceFlow Protocol"
+    },
+    "outcome_separation_title": {
+      "zh": "结果分离",
+      "en": "Outcome separation"
+    },
+    "outcome_sep_note": {
+      "zh": "将不同结果类型分开裁决。",
+      "en": "Outcomes are adjudicated separately."
+    },
+    "outcome_group_task": {
+      "zh": "过程 / 近端",
+      "en": "Proximal / process"
+    },
+    "outcome_group_learning": {
+      "zh": "目标结果",
+      "en": "Target outcomes"
+    },
+    "outcome_group_risk": {
+      "zh": "风险",
+      "en": "Risk"
+    },
+    "outcome_group_other": {
+      "zh": "其他结果",
+      "en": "Other outcomes"
+    },
+    "method_guard": {
+      "zh": "构念护栏",
+      "en": "Construct guard"
+    },
+    "applicability": {
+      "zh": [
+        "适用于谁",
+        "适用范围",
+        "适用结果",
+        "适用条件",
+        "目标人群",
+        "目标情境"
+      ],
+      "en": [
+        "Suitable for",
+        "Scope",
+        "Outcomes",
+        "Conditions",
+        "Target population",
+        "Target context"
+      ]
+    },
+    "intervention_lesaners": {
+      "zh": "目标人群",
+      "en": "Target population"
+    },
+    "intervention_population": {
+      "zh": "目标人群",
+      "en": "Target population"
+    },
+    "intervention_duration": {
+      "zh": "试点时长",
+      "en": "Pilot duration"
+    },
+    "intervention_policy": {
+      "zh": "使用规则",
+      "en": "Usage policy"
+    },
+    "intervention_rule": {
+      "zh": "规则",
+      "en": "Rule"
+    },
+    "intervention_activities": {
+      "zh": "活动",
+      "en": "Activities"
+    },
+    "intervention_check": {
+      "zh": "结果检查",
+      "en": "Outcome check"
+    },
+    "intervention_stop": {
+      "zh": "停止条件",
+      "en": "Stop conditions"
+    },
+    "intervention_timeline": {
+      "zh": "干预时间线信息图",
+      "en": "Intervention timeline infographic"
+    },
+    "evaluation_measures": {
+      "zh": [
+        "基线",
+        "后测",
+        "持续",
+        "扩展"
+      ],
+      "en": [
+        "Baseline",
+        "Post",
+        "Durability",
+        "Scale-out"
+      ]
+    },
+    "evaluation_metrics": {
+      "zh": [
+        "过程指标",
+        "效果指标",
+        "风险指标"
+      ],
+      "en": [
+        "Process metrics",
+        "Effect metrics",
+        "Risk metrics"
+      ]
+    },
+    "evaluation_question": {
+      "zh": "研究问题",
+      "en": "Research question"
+    },
+    "evaluation_threshold": {
+      "zh": "成功阈值",
+      "en": "Success threshold"
+    },
+    "evaluation_plan": {
+      "zh": "分析计划",
+      "en": "Analysis plan"
+    },
+    "evaluation_figure": {
+      "zh": "评价设计信息图",
+      "en": "Evaluation design infographic"
+    },
+    "svg_intervention_title": {
+      "zh": "干预时间线",
+      "en": "Intervention timeline"
+    },
+    "svg_intervention_desc": {
+      "zh": "各试点阶段的短名称与活动数量。",
+      "en": "Short phase names and activity counts."
+    },
+    "svg_evaluation_title": {
+      "zh": "评价设计流程",
+      "en": "Evaluation design flow"
+    },
+    "svg_evaluation_desc": {
+      "zh": "基线、后测、持续与扩展的评价流程。",
+      "en": "Evaluation flow across baseline, post, durability and scale-out."
+    },
+    "svg_workflow_desc": {
+      "zh": "从问题框架到裁决与适用性的完整流程。",
+      "en": "Research flow from framing to adjudication and applicability."
+    },
+    "decision_kpi": {
+      "zh": [
+        "决策",
+        "置信度",
+        "证据最充分的结果",
+        "最不确定的结果",
+        "主要风险",
+        "来源数量"
+      ],
+      "en": [
+        "Decision",
+        "Confidence",
+        "Best-supported outcome",
+        "Most uncertain outcome",
+        "Main risk",
+        "Sources"
+      ]
+    }
+  }
+}

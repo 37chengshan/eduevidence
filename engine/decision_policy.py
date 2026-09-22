@@ -1,4 +1,4 @@
-"""Single source of truth for the ADOPT direct-evidence gate.
+"""Single source of truth for the four-state decision gate.
 
 The four-state decision (ADOPT / PILOT / REJECT / INSUFFICIENT EVIDENCE) is
 computed by two layers that must never drift apart:
@@ -11,6 +11,15 @@ gate could not enforce it and a hand-written verdict could carry any action it
 liked. Both layers now resolve the 'which outcome categories count for this
 domain' question here, and the V1 gate additionally re-derives direct-evidence
 presence from the pack's own evidence records.
+
+Decision matrix (gate-enforced):
+
+  conflict/mixed/support+oppose        -> INSUFFICIENT_EVIDENCE (unresolved_conflict)
+  oppose_adoption (oppose-only)        -> REJECT
+  High    + support + direct_primary   -> ADOPT
+  High    + support + missing direct   -> PILOT   (downgrade_reason=missing_direct_primary)
+  Moderate+ support (+/- direct)    -> PILOT   (confidence_band | missing_direct_primary)
+  Low / 无支持 / 间接无 Moderate    -> INSUFFICIENT_EVIDENCE
 
 Stdlib only, consistent with the "Native Core" policy of engine/.
 """
@@ -32,6 +41,18 @@ ADOPT_DIRECTNESS = 2
 
 #: Confidence band required before ADOPT is possible at all.
 ADOPT_REQUIRED_LABEL = "High"
+
+#: Confidence band that can still reach PILOT given a verifiable primary path.
+PILOT_REQUIRED_LABEL = "Moderate"
+
+#: Auditable reasons a decision was stepped down from a higher action.
+DOWNGRADE_MISSING_DIRECT_PRIMARY = "missing_direct_primary"
+DOWNGRADE_CONFIDENCE_BAND = "confidence_band"
+DOWNGRADE_GATE_CRITICAL = "gate_critical"
+DOWNGRADE_UNRESOLVED_CONFLICT = "unresolved_conflict"
+
+#: Relation values that mark unresolved conflict rather than a clean vote.
+CONFLICT_RELATIONS = frozenset({"conflict", "mixed"})
 
 
 def primary_effect_categories(domain: str) -> tuple[str, ...]:
@@ -72,25 +93,75 @@ def outcome_category(domain: str, value: str, primary: tuple[str, ...]) -> str |
         return None
 
 
-def decision_action(*, confidence_label: str, decisive_relations: dict[str, str],
-                    has_direct_primary_evidence: bool) -> str:
-    """Gate-enforced decision action (uppercase four-state).
+def decision_outcome(*, confidence_label: str, decisive_relations: dict[str, str],
+                     has_direct_primary_evidence: bool) -> dict[str, str | None]:
+    """Gate-enforced decision action plus auditable downgrade_reason.
 
-    REJECT requires usable direct opposition evidence (an independent Study
-    folded to oppose_adoption). Low/Insufficient can never yield ADOPT.
-    ADOPT additionally requires direct evidence on the domain's PRIMARY
-    outcome category: High + decisive support WITHOUT such evidence downgrades
-    to PILOT - task performance and procedural efficiency are not
-    decision-grade effects. Moderate + decisive support -> PILOT; otherwise
-    INSUFFICIENT_EVIDENCE.
+    Returns ``{"action": <uppercase four-state>, "downgrade_reason": <str|None>}``.
+
+    REJECT requires usable direct opposition evidence and no decisive support
+    (oppose-only). Mixed support+oppose or any conflict/conditional/mixed
+    relation is an unresolved conflict → INSUFFICIENT_EVIDENCE (never ADOPT,
+    never a bare REJECT). ADOPT requires High confidence, decisive support,
+    AND direct evidence on the domain's PRIMARY outcome category. PILOT is
+    the bounded-trial exit: High + support missing that direct primary
+    evidence (``missing_direct_primary``), or Moderate + support on a
+    verifiable primary-outcome path (``confidence_band``).
     """
     has_oppose = any(r == "oppose_adoption" for r in decisive_relations.values())
     has_support = any(r == "support_adoption" for r in decisive_relations.values())
+    has_conflict = any(r in CONFLICT_RELATIONS for r in decisive_relations.values())
+
+    # Unresolved conflict (mixed votes or explicit conflict tags) fails closed
+    # before any ADOPT/PILOT/REJECT claim.
+    if has_conflict or (has_oppose and has_support):
+        return {"action": "INSUFFICIENT_EVIDENCE",
+                "downgrade_reason": DOWNGRADE_UNRESOLVED_CONFLICT}
+
     if has_oppose:
-        return "REJECT"
+        return {"action": "REJECT", "downgrade_reason": None}
+
     if (confidence_label == ADOPT_REQUIRED_LABEL and has_support
             and has_direct_primary_evidence):
-        return "ADOPT"
-    if confidence_label in ("High", "Moderate") and has_support:
-        return "PILOT"
-    return "INSUFFICIENT_EVIDENCE"
+        return {"action": "ADOPT", "downgrade_reason": None}
+
+    if confidence_label == ADOPT_REQUIRED_LABEL and has_support:
+        return {"action": "PILOT", "downgrade_reason": DOWNGRADE_MISSING_DIRECT_PRIMARY}
+
+    # Bounded-trial exit: Moderate + support reaches PILOT even without a
+    # verified primary path (Gate C allows PILOT / INSUFFICIENT / REJECT).
+    if confidence_label == PILOT_REQUIRED_LABEL and has_support:
+        reason = (None if has_direct_primary_evidence
+                  else DOWNGRADE_MISSING_DIRECT_PRIMARY)
+        if has_direct_primary_evidence:
+            reason = DOWNGRADE_CONFIDENCE_BAND
+        return {"action": "PILOT", "downgrade_reason": reason}
+
+    # Low / 间接 (Moderate without a verifiable primary path) -> INSUFFICIENT.
+    if confidence_label in ("Low", "Insufficient"):
+        return {"action": "INSUFFICIENT_EVIDENCE",
+                "downgrade_reason": DOWNGRADE_CONFIDENCE_BAND}
+    if confidence_label == PILOT_REQUIRED_LABEL and has_support:
+        return {"action": "INSUFFICIENT_EVIDENCE",
+                "downgrade_reason": DOWNGRADE_MISSING_DIRECT_PRIMARY}
+    return {"action": "INSUFFICIENT_EVIDENCE", "downgrade_reason": None}
+
+
+def decision_action(*, confidence_label: str, decisive_relations: dict[str, str],
+                    has_direct_primary_evidence: bool) -> str:
+    """Gate-enforced decision action (uppercase four-state)."""
+    return decision_outcome(
+        confidence_label=confidence_label,
+        decisive_relations=decisive_relations,
+        has_direct_primary_evidence=has_direct_primary_evidence,
+    )["action"]
+
+
+def downgrade_reason(*, confidence_label: str, decisive_relations: dict[str, str],
+                     has_direct_primary_evidence: bool) -> str | None:
+    """Auditable reason the action was stepped down (or None when not downgraded)."""
+    return decision_outcome(
+        confidence_label=confidence_label,
+        decisive_relations=decisive_relations,
+        has_direct_primary_evidence=has_direct_primary_evidence,
+    )["downgrade_reason"]

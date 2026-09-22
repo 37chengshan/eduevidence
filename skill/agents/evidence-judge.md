@@ -24,12 +24,54 @@ critical_path: true
 
 ## 四态决策规则（硬标准）
 
-| 决策 | 要求 |
-|---|---|
-| ADOPT | 多项关键 Outcome 有较强直接证据 + 风险可控 + 场景匹配 |
-| PILOT | 有积极证据，但长期效果/迁移/风险仍不明确 |
-| REJECT | 关键结果稳定负效应，或风险明显大于收益 |
-| INSUFFICIENT EVIDENCE | 来源不足 / 直接性差 / 设计弱 / 冲突无法解释 |
+| 决策 | 要求 | downgrade_reason |
+|---|---|---|
+| ADOPT | High + support + 主结果 directness=2 直接证据 + 风险可控 + 场景匹配 | （无） |
+| PILOT | High + support 但缺主结果直接证据；或 Moderate + support + 可验证主结果路径 | `missing_direct_primary` / `confidence_band` |
+| REJECT | 关键结果稳定负效应（oppose），或风险明显大于收益 | （无） |
+| INSUFFICIENT EVIDENCE | Low / 间接（Moderate 无可验证主结果路径）/ 冲突无法解释 / 来源不足 | `confidence_band` / `missing_direct_primary` |
+
+闸门强制降级（`GATE_CRITICAL_FAILURE`）时记录 `downgrade_reason=gate_critical`。
+
+### 四态均衡 Few-shot
+
+**ADOPT**（High + support + 主结果直接证据）
+```json
+{
+  "confidence": "High",
+  "recommended_action": "adopt",
+  "decision_rationale": "延迟保持与迁移两项主要结果上均有直接且一致的支持证据，风险可控，场景高度匹配，因此可以推广。"
+}
+```
+
+**PILOT**（Moderate + support + 可验证主结果路径；或 High 缺主结果直接证据）
+```json
+{
+  "confidence": "Moderate",
+  "recommended_action": "pilot",
+  "decision_rationale": "任务表现与部分学习指标方向积极，主要结果上存在可验证的测量路径，但长期保持与迁移仍不确定，因此建议有边界的试点。"
+}
+```
+
+**REJECT**（oppose / 稳定负效应）
+```json
+{
+  "confidence": "Moderate",
+  "recommended_action": "reject",
+  "decision_rationale": "多项独立研究在关键结果上呈现稳定负效应，且风险大于收益，因此不建议采纳。"
+}
+```
+
+**INSUFFICIENT EVIDENCE**（Low / 间接 / 冲突）
+```json
+{
+  "confidence": "Low",
+  "recommended_action": "insufficient_evidence",
+  "decision_rationale": "现有来源多为间接证据且结论互相冲突，主要结果上缺少可验证路径，因此证据不足以支持采纳或试点。"
+}
+```
+
+禁止把四态收成「一律 PILOT」：ADOPT 与 INSUFFICIENT、REJECT 都必须按上表真实可达。
 
 ## 输入
 
@@ -154,6 +196,6 @@ critical_path: true
 | 失败 | 处理 |
 |---|---|
 | `PRE_VERDICT_FAILED` | 修复前置产物后重跑闸门，不得跳过。 |
-| `GATE_CRITICAL_FAILURE` | 封顶置信度，强制降级为 PILOT 或 INSUFFICIENT EVIDENCE。 |
+| `GATE_CRITICAL_FAILURE` | 封顶置信度，强制降级为 PILOT 或 INSUFFICIENT EVIDENCE，并记录 `downgrade_reason=gate_critical`。 |
 | `CONFLICT_UNRESOLVED` | 保持不确定，不强行裁决。 |
 | 证据只支持任务表现 | 不得产出学习效果类结论。 |
