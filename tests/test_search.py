@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 from unittest.mock import patch, MagicMock
+from urllib.parse import parse_qs, urlsplit
 
 from retrieval.search import (
     SearchHit,
@@ -84,21 +85,50 @@ def test_crossref_provider(mock_get):
 @patch("retrieval.search._safe_get_json")
 def test_aihot_provider(mock_get):
     mock_get.return_value = {
-        "code": 0,
-        "data": [
+        "schemaVersion": 1,
+        "items": [
             {
                 "title": "OpenAI Introduces New Socratic Reasoning Model for Tutors",
-                "url": "https://aihot.today/item/123",
+                "links": {
+                    "aihot": "https://aihot.news/items/example-item",
+                    "original": "https://example.com/news",
+                },
                 "summary": "Benchmark evaluation on high school physics and coding.",
-                "category": "EdTech",
             }
-        ]
+        ],
     }
-    provider = AIHotProvider()
-    hits = provider.search("Socratic reasoning tutor", limit=5)
+    query = "AI 教育 / tutoring & assessment"
+    hits = AIHotProvider().search(query, limit=20)
+    url = urlsplit(mock_get.call_args.args[0])
+    assert (url.scheme, url.netloc, url.path) == ("https", "aihot.news", "/api/v1/items")
+    assert parse_qs(url.query) == {"q": [query], "limit": ["15"]}
+    assert mock_get.call_args.kwargs == {"timeout": 6}
     assert len(hits) == 1
-    assert "OpenAI" in hits[0].title
+    assert hits[0].title == "OpenAI Introduces New Socratic Reasoning Model for Tutors"
+    assert hits[0].url == "https://aihot.news/items/example-item"
+    assert hits[0].snippet == "Benchmark evaluation on high school physics and coding."
     assert hits[0].provider == "aihot"
+    assert hits[0].is_academic is False
+
+
+@patch("retrieval.search._safe_get_json")
+def test_aihot_provider_handles_empty_and_invalid_responses(mock_get):
+    provider = AIHotProvider()
+    for response in (None, {"items": []}, {"items": {"error": True}}, {"results": []}):
+        mock_get.return_value = response
+        assert provider.search("edtech", limit=1) == []
+    assert parse_qs(urlsplit(mock_get.call_args.args[0]).query)["limit"] == ["1"]
+
+    mock_get.return_value = {
+        "items": [
+            None,
+            {"title": "Missing AIHOT link", "links": {"original": "https://example.com/news"}},
+            {"title": "Valid", "links": {"aihot": "https://aihot.news/items/example-item"}},
+        ],
+    }
+    hits = provider.search("AI", limit=3)
+    assert len(hits) == 1
+    assert hits[0].snippet == "Valid"
 
 
 def test_router_and_deduplication():

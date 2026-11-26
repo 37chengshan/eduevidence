@@ -5,6 +5,7 @@ Secrets stay in env files; never passed on argv.
 """
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess

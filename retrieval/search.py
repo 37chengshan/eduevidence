@@ -6,7 +6,7 @@ Supports both:
    - OpenAlex (250M+ scholarly works with DOIs, abstracts, citations)
    - Semantic Scholar (Academic papers & citations)
    - CrossRef (Official DOI metadata registry)
-   - AIHot (AI & EdTech dynamic trend feed / search via aihot.virxact.com)
+   - AIHot (AI & EdTech dynamic trend feed / search via aihot.news)
    - AgentSearch / ArXiv (Open scientific papers)
    - DuckDuckGo (Zero-auth general web search fallback)
 
@@ -222,24 +222,34 @@ class AIHotProvider:
     name = "aihot"
 
     def search(self, query: str, limit: int = 10) -> List[SearchHit]:
-        hits = []
-        encoded = urllib.parse.quote(query)
-        url = f"https://aihot.virxact.com/api/search?q={encoded}&limit={min(limit, 15)}"
+        if limit <= 0:
+            return []
+        params = urllib.parse.urlencode({"q": query, "limit": min(limit, 15)})
+        url = f"https://aihot.news/api/v1/items?{params}"
         data = _safe_get_json(url, timeout=6)
-        if data and isinstance(data, dict):
-            items = data.get("data") or data.get("results") or data.get("items") or []
-            for item in items:
-                title = item.get("title") or "AIHot News"
-                link = item.get("url") or item.get("link") or "https://aihot.virxact.com"
-                snippet = item.get("summary") or item.get("content") or title
-                hits.append(SearchHit(
-                    title=title,
-                    url=link,
-                    snippet=snippet,
-                    provider=self.name,
-                    is_academic=False,
-                    score=0.9,
-                ))
+        items = data.get("items") if isinstance(data, dict) else None
+        if not isinstance(items, list):
+            log.debug("AIHOT search returned no valid items payload")
+            return []
+
+        hits = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            links = item.get("links")
+            link = links.get("aihot") if isinstance(links, dict) else None
+            if not isinstance(link, str) or not link.strip():
+                continue
+            title = item.get("title") or "AIHot News"
+            snippet = item.get("summary") or title
+            hits.append(SearchHit(
+                title=title,
+                url=link,
+                snippet=snippet,
+                provider=self.name,
+                is_academic=False,
+                score=0.9,
+            ))
         return hits
 
 

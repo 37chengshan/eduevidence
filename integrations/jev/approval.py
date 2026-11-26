@@ -168,9 +168,11 @@ def is_approval_current(
         changes.append("model changed")
     if mode is not None and int(approval.get("mode", -1)) != int(mode):
         changes.append("experimental mode changed")
-    disk = load_approval(path)
+    disk = load_approval()
     if not disk:
         changes.append("approval file missing on disk")
+    elif not disk.get("approved"):
+        changes.append("approval on disk is not approved")
     elif disk.get("tools_hash") != approval.get("tools_hash"):
         changes.append("approval file tampered (disk tools_hash mismatch)")
     return (not changes), changes
