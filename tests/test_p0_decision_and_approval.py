@@ -12,9 +12,12 @@ from engine.decision_policy import decision_action, decision_outcome  # noqa: E4
 from integrations.jev.approval import (  # noqa: E402
     _check_approval,
     _tools_hash,
+    build_approval_record,
+    is_approval_current,
     write_approval,
 )
 from integrations.jev.config import JEV_APPROVAL_REQUIRED, TIER0_TOOLS  # noqa: E402
+from integrations import semantic_decide  # noqa: E402
 
 
 def test_mixed_support_oppose_is_insufficient_not_adopt():
@@ -79,3 +82,38 @@ def test_prefs_schema_allows_semdecide_key():
     prefs = schema["definitions"]["Prefs"]
     assert "semdecide" in prefs["properties"]
     assert prefs["additionalProperties"] is False
+
+
+def test_jev_current_approval_requires_matching_disk_record(tmp_path, monkeypatch):
+    path = tmp_path / "approval.json"
+    monkeypatch.setattr("integrations.jev.approval.JEV_APPROVAL_PATH", str(path))
+    record = build_approval_record()
+
+    assert is_approval_current(record) == (False, ["approval file missing on disk"])
+    record = write_approval()
+    assert is_approval_current(record) == (True, [])
+    path.write_text(json.dumps({**record, "approved": False}), encoding="utf-8")
+    assert is_approval_current(record) == (False, ["approval on disk is not approved"])
+    path.write_text(json.dumps({**record, "tools_hash": "tampered"}), encoding="utf-8")
+    assert is_approval_current(record) == (
+        False, ["approval file tampered (disk tools_hash mismatch)"],
+    )
+
+
+def test_semdecide_decodes_json_and_round_trips_json_lines(monkeypatch):
+    from subprocess import CompletedProcess
+
+    monkeypatch.setattr(semantic_decide, "binary_path", lambda: "semdecide")
+    monkeypatch.setattr(semantic_decide, "_env_file_values", dict)
+
+    def fake_run(argv, **kwargs):
+        if argv[1] == "is":
+            return CompletedProcess(argv, 0, '{"verdict": true}', "")
+        assert argv[1] == "filter"
+        assert [json.loads(line) for line in kwargs["input"].splitlines()] == [{"text": "课程"}]
+        return CompletedProcess(argv, 0, '{"text": "课程"}\n', "")
+
+    monkeypatch.setattr(semantic_decide.subprocess, "run", fake_run)
+    assert semantic_decide.is_predicate("课程", "learning")["verdict"] is True
+    filtered = semantic_decide.filter_records([{"text": "课程"}], "learning")
+    assert filtered["matched"] == [{"text": "课程"}]
