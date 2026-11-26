@@ -27,7 +27,7 @@ Triggered when an inquiry involves fast-moving generative AI tools (Cursor, Clau
   "trend_items": [
     {
       "title": "Socratic tutoring framework evaluated across 10 universities",
-      "url": "https://aihot.virxact.com/api/item/...",
+      "url": "https://aihot.news/items/...",
       "summary": "Benchmark evaluation on novice retention and prompt scaffolding.",
       "category": "EdTech",
       "publish_time": "2026-08-15"
